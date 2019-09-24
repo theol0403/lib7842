@@ -22,9 +22,10 @@ jobs:
       pip install $(pros-cli-v5)
     displayName: Install CLI
   - bash: |
+      make
       make template
       mkdir -p artifacts
-      cp template/*.zip artifacts
+      cp *.zip artifacts
     displayName: Build template
   - bash: |
       echo "##vso[build.UpdateBuildNumber]`cat version`"
