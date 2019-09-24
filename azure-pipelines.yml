@@ -4,6 +4,7 @@ jobs:
     toolchain_update_short: 8-2019q3
     toolchain_update: 8-2019-q3
     toolchain: https://developer.arm.com/-/media/Files/downloads/gnu-rm/$(toolchain_update_short)/RC1.1/gcc-arm-none-eabi-$(toolchain_update)-update-linux.tar.bz2
+    pros-cli-v5: https://github.com/purduesigbots/pros-cli/releases/download/3.1.4/pros_cli_v5-3.1.4-py3-none-any.whl
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
@@ -13,19 +14,12 @@ jobs:
       tar -xjvf toolchain.tar.bz2
       echo "##vso[task.prependpath]$(pwd)/gcc-arm-none-eabi-$(toolchain_update)-update/bin"
     displayName: Install gcc-arm-embedded
-  - bash: |
-      sudo apt install clang-format
-      find include/lib7842/ -iname *.hpp | xargs clang-format -i -style=file
-      find src/ -iname *.cpp | xargs clang-format -i -style=file
-    displayName: Clang-Format
   - task: UsePythonVersion@0
     inputs:
       addToPath: true
       versionSpec: '3.6'
-  - task: PipAuthenticate@0
-    inputs:
-      artifactFeeds: 'pros-cli'
-  - bash: pip install pros-cli-v5
+  - bash: |
+      pip install $(pros-cli-v5)
     displayName: Install CLI
   - bash: |
       make template
