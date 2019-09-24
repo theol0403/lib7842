@@ -13,6 +13,11 @@ jobs:
       tar -xjvf toolchain.tar.bz2
       echo "##vso[task.prependpath]$(pwd)/gcc-arm-none-eabi-$(toolchain_update)-update/bin"
     displayName: Install gcc-arm-embedded
+  - bash: |
+      sudo apt install clang-format
+      find include/lib7842/ -iname *.hpp | xargs clang-format -i -style=file
+      find src/ -iname *.cpp | xargs clang-format -i -style=file
+    displayName: Clang-Format
   - task: UsePythonVersion@0
     inputs:
       addToPath: true
@@ -39,13 +44,3 @@ jobs:
       targetPath: artifacts
       artifactName: template
     condition: succeeded()
-  # - task: UniversalPackages@0
-  #   inputs:
-  #     command: publish
-  #     publishDirectory: artifacts
-  #     vstsFeedPublish: 'pros-depot-nightly'
-  #     vstsFeedPackagePublish: 'kernel'
-  #     versionOption: custom
-  #     versionPublish: $(KernelVersion)
-  #     packagePublishDescription: 'CI Build of Kernel'
-  #   condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
