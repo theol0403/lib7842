@@ -17,49 +17,59 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
+
+  # install tools
+  - script: |
+    sudo apt install cmake valgrind -y
+  displayName: Install Tools
+
+  # install PROS
+  - script: |
+    curl -LSso toolchain.tar.bz2 $(toolchain)
+    tar -xjvf toolchain.tar.bz2
+    echo "##vso[task.prependpath]$(pwd)/gcc-arm-none-eabi-$(toolchain_update)-update/bin"
+  displayName: Install GCC
+- task: UsePythonVersion@0
+  inputs:
+    addToPath: true
+    versionSpec: '3.6'
+  displayName: Install Python
+- script: |
+    pip install $(pros-cli-v5)
+  displayName: Install PROS CLI
+
+  # checkout repo
   - checkout: self
-
-  - bash: |
+  - script: |
       git submodule update --init --recursive
-    displayName: Update Submodules
+    displayName: Download Submodules
 
-  - bash: |
-      sudo apt install cmake valgrind -y
-    displayName: Install cmake and valgrind
-
-  - bash: |
-      curl -LSso toolchain.tar.bz2 $(toolchain)
-      tar -xjvf toolchain.tar.bz2
-      echo "##vso[task.prependpath]$(pwd)/gcc-arm-none-eabi-$(toolchain_update)-update/bin"
-    displayName: Install gcc-arm-embedded
-  - task: UsePythonVersion@0
-    inputs:
-      addToPath: true
-      versionSpec: '3.6'
-  - bash: |
-      pip install $(pros-cli-v5)
-    displayName: Install CLI
-
-  - bash: |
-      make
-    displayName: Build binaries
-  - bash: |
+  # make template
+  - script: |
       make
       make template
       mkdir -p artifacts
       cp *.zip artifacts
     displayName: Build template
+  # publish template
   - task: PublishPipelineArtifact@0
     inputs:
       targetPath: artifacts
       artifactName: template
     condition: succeeded()
+    displayName: "Publish Template"
 
-  - bash: |
+  # make
+  - script: |
+      make
+    displayName: Build binaries
+
+  # build google
+  - script: |
       cd googletest/
       cmake .
       make
-    displayName: Build googletest
+    displayName: Build GoogleTest
 
 
 
