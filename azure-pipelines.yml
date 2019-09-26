@@ -1,5 +1,14 @@
+
+trigger:
+  branches:
+    include:
+      - '*'
+  tags:
+    include:
+      - '*'
+
 jobs:
-- job: BuildTemplate
+- job: Build
   variables:
     toolchain_update_short: 8-2019q3
     toolchain_update: 8-2019-q3
@@ -9,6 +18,15 @@ jobs:
     vmImage: 'ubuntu-16.04'
   steps:
   - checkout: self
+
+  - bash: |
+      git submodule update --init --recursive
+    displayName: Update Submodules
+
+  - bash: |
+      sudo apt install cmake valgrind -y
+    displayName: Install cmake and valgrind
+
   - bash: |
       curl -LSso toolchain.tar.bz2 $(toolchain)
       tar -xjvf toolchain.tar.bz2
@@ -21,17 +39,27 @@ jobs:
   - bash: |
       pip install $(pros-cli-v5)
     displayName: Install CLI
+
+  - bash: |
+      make
+    displayName: Build binaries
   - bash: |
       make
       make template
       mkdir -p artifacts
       cp *.zip artifacts
     displayName: Build template
-  - bash: |
-      make
-    displayName: Build binaries
   - task: PublishPipelineArtifact@0
     inputs:
       targetPath: artifacts
       artifactName: template
     condition: succeeded()
+
+  - bash: |
+      cd googletest/
+      cmake .
+      make
+    displayName: Build googletest
+
+
+
