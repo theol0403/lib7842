@@ -20,15 +20,15 @@ jobs:
 
   # install tools
   - script: |
-    sudo apt install cmake valgrind -y
-  displayName: Install Tools
+      sudo apt install cmake valgrind -y
+    displayName: Install Tools
 
   # install PROS
   - script: |
-    curl -LSso toolchain.tar.bz2 $(toolchain)
-    tar -xjvf toolchain.tar.bz2
-    echo "##vso[task.prependpath]$(pwd)/gcc-arm-none-eabi-$(toolchain_update)-update/bin"
-  displayName: Install GCC
+      curl -LSso toolchain.tar.bz2 $(toolchain)
+      tar -xjvf toolchain.tar.bz2
+      echo "##vso[task.prependpath]$(pwd)/gcc-arm-none-eabi-$(toolchain_update)-update/bin"
+    displayName: Install GCC
 - task: UsePythonVersion@0
   inputs:
     addToPath: true
