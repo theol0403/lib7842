@@ -56,7 +56,7 @@ jobs:
 
   # install tools
   - bash: |
-      sudo apt install cmake valgrind -y
+      sudo apt install cmake valgrind libgtest-dev -y
     displayName: Install Tools
 
   # build google
