@@ -5,24 +5,16 @@
 
 namespace lib7842 {
 
-class PathPoint {
+class PathPoint : public QPoint {
+
+  using pathData_t = std::variant<double, QLength, QSpeed>;
 
   public:
-  PathPoint();
-  PathPoint(QPoint ipoint);
-
-  QLength x();
-  QLength y();
-  QPoint operator()();
-
-  // void setDistance(QLength idistance);
-
-  // void setVelocity(QSpeed ivelocity);
-  // void setCurvature(double icurvature);
+  void setData(std::string iid, pathData_t idata);
+  pathData_t getData(std::string iid);
 
   protected:
-  QPoint point {};
-  std::map<std::string, std::variant<double, QLength, QSpeed>> pathData {};
+  std::map<std::string, pathData_t> pathData {};
 };
 
 } // namespace lib7842

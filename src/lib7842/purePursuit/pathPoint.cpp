@@ -2,23 +2,14 @@
 
 namespace lib7842 {
 
-PathPoint::PathPoint() {}
-
-PathPoint::PathPoint(QPoint ipoint) : point(ipoint) {}
-
-QLength PathPoint::x() {
-  return point.x;
-}
-QLength PathPoint::y() {
-  return point.y;
-}
-QPoint PathPoint::operator()() {
-  return point;
+void PathPoint::setData(std::string iid, pathData_t idata) {
+  pathData[iid] = idata;
 }
 
-// void PathPoint::setDistance(QLength idistance);
-
-// void PathPoint::setVelocity(QSpeed ivelocity);
-// void PathPoint::setCurvature(double icurvature);
+PathPoint::pathData_t PathPoint::getData(std::string iid) {
+  try {
+    return pathData.at(iid);
+  } catch(const std::out_of_range& e) { std::cerr << e.what() << std::endl; }
+}
 
 } // namespace lib7842
