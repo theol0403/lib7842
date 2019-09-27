@@ -11,9 +11,15 @@ BINDIR=$(ROOT)/bin
 SRCDIR=$(PROJECTROOT)/src
 INCDIR=$(PROJECTROOT)/include
 
-WARNFLAGS+= -Wall -Wextra -Wshadow -Wnull-dereference -Wno-psabi -Wno-unused-function
 EXTRA_CFLAGS=
-EXTRA_CXXFLAGS= -std=gnu++17 -pthread -g -O0 -fprofile-arcs -ftest-coverage -D THREADS_STD
+EXTRA_CXXFLAGS= -std=gnu++17 -std=c++17 -pthread -g -O0 -fprofile-arcs -ftest-coverage -D THREADS_STD
+
+WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function # -Wnull-dereference
+CFLAGS= $(WARNFLAGS) --std=gnu11
+CXXFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -I googletest/googletest/include
+
+
+LDFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -lm -lgcc -lstdc++ -lsupc++ -lgcov googletest/lib/libgtest.a googletest/lib/libgtest_main.a
 
 .DEFAULT_GOAL=quick
 
@@ -21,10 +27,6 @@ EXTRA_CXXFLAGS= -std=gnu++17 -pthread -g -O0 -fprofile-arcs -ftest-coverage -D T
 ARCHTUPLE=
 
 WARNFLAGS+=
-
-CFLAGS= $(WARNFLAGS) --std=gnu11
-CXXFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) 
-LDFLAGS= $(WARNFLAGS) -lm -lgcc -lstdc++ -lsupc++ -lgcov
 
 AR:=$(ARCHTUPLE)ar
 CC:=$(ARCHTUPLE)gcc

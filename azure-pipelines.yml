@@ -6,7 +6,7 @@ jobs:
     toolchain: https://developer.arm.com/-/media/Files/downloads/gnu-rm/$(toolchain_update_short)/RC1.1/gcc-arm-none-eabi-$(toolchain_update)-update-linux.tar.bz2
     pros-cli-v5: https://github.com/purduesigbots/pros-cli/releases/download/3.1.4/pros_cli_v5-3.1.4-py3-none-any.whl
   pool:
-    vmImage: 'ubuntu-18.04'
+    vmImage: 'ubuntu-latest'
 
   steps:
 
@@ -56,7 +56,8 @@ jobs:
 
   # install tools
   - bash: |
-      sudo apt install cmake valgrind libgtest-dev -y
+      sudo apt install cmake valgrind libgtest-dev -y --no-install-recommends
+      sudo apt upgrade gcc -y --no-install-recommends
     displayName: Install Tools
 
   # build google
