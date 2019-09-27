@@ -7,9 +7,62 @@ jobs:
     pros-cli-v5: https://github.com/purduesigbots/pros-cli/releases/download/3.1.4/pros_cli_v5-3.1.4-py3-none-any.whl
   pool:
     vmImage: 'ubuntu-16.04'
+
   steps:
 
-  # # install tools
-  - script: |
-     sudo apt install cmake valgrind -y
+  # checkout repo
+  - checkout: self
+  - bash: |
+      git submodule update --init --recursive
+    displayName: Download Submodules
+
+  # install PROS
+  - bash: |
+      curl -LSso toolchain.tar.bz2 $(toolchain)
+      tar -xjvf toolchain.tar.bz2
+      echo "##vso[task.prependpath]$(pwd)/gcc-arm-none-eabi-$(toolchain_update)-update/bin"
+    displayName: Install GCC
+  - task: UsePythonVersion@0
+    inputs:
+      addToPath: true
+      versionSpec: '3.6'
+    displayName: Install Python
+  - task: PipAuthenticate@0
+    inputs:
+      artifactFeeds: 'pros-cli'
+  - bash: |
+        pip install $(pros-cli-v5)
+    displayName: Install PROS CLI
+
+  # make template
+  - bash: |
+      make
+      make template
+      mkdir -p artifacts
+      cp *.zip artifacts
+    displayName: Build template
+  # publish template
+  - task: PublishPipelineArtifact@0
+    inputs:
+      targetPath: artifacts
+      artifactName: template
+    condition: succeeded()
+    displayName: "Publish Template"
+
+  # make
+  - bash: |
+      make
+    displayName: Build binaries
+
+  # install tools
+  - bash: |
+      sudo apt install cmake valgrind -y
     displayName: Install Tools
+
+  # build google
+  - bash: |
+      cd googletest/
+      cmake .
+      make
+    displayName: Build GoogleTest
+
