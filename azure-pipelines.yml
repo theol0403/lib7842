@@ -61,8 +61,14 @@ jobs:
 
   # build google
   - bash: |
-      cd googletest/
+      cd test/googletest/
       cmake .
       make
     displayName: Build GoogleTest
+
+  # build tests
+  - bash: |
+      cd test/
+      make
+    displayName: Build Tests
 

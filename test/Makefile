@@ -6,10 +6,10 @@ CXXEXTS:=cpp c++ cc
 
 # probably shouldn't modify these, but you may need them below
 ROOT=.
-FWDIR:=$(ROOT)/firmware
+PROJECTROOT=..
 BINDIR=$(ROOT)/bin
-SRCDIR=$(ROOT)/src
-INCDIR=$(ROOT)/include
+SRCDIR=$(PROJECTROOT)/src
+INCDIR=$(PROJECTROOT)/include
 
 WARNFLAGS+= -Wall -Wextra -Wshadow -Wnull-dereference -Wno-psabi -Wno-unused-function
 EXTRA_CFLAGS=
