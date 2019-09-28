@@ -5,7 +5,7 @@ resources:
     image: 'theol0403/lib7842-image:latest'
 
 jobs:
-- job: BuildTemplate
+- job: Build
   timeoutInMinutes: 5
 
   pool:
@@ -32,16 +32,6 @@ jobs:
       make
     displayName: Build Arm Binaries
 
-- job: Test
-  timeoutInMinutes: 5
-  dependsOn: BuildTemplate
-
-  pool:
-    vmImage: 'ubuntu-latest'
-  container: lib7842image
-
-  steps:
-  - checkout: self
   - bash: |
       git submodule update --init --recursive
     displayName: Checkout Submodules
