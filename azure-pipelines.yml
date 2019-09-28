@@ -1,18 +1,14 @@
-jobs:
-- job: Build
-  
-  pool:
-    vmImage: 'ubuntu-latest'
-
+pool:
+  vmImage: 'ubuntu-latest'
   container: 'theol0403/lib7842-image:latest'
 
+jobs:
+- job: BuildTemplate
+  timeoutInMinutes: 5
   steps:
 
   # checkout repo
   - checkout: self
-  - bash: |
-      git submodule update --init --recursive
-    displayName: Download Submodules
 
   # make template
   - bash: |
@@ -20,7 +16,7 @@ jobs:
       make template
       mkdir -p artifacts
       cp *.zip artifacts
-    displayName: Build template
+    displayName: Build Template
   # publish template
   - task: PublishPipelineArtifact@0
     inputs:
@@ -32,7 +28,15 @@ jobs:
   # make
   - bash: |
       make
-    displayName: Build binaries
+    displayName: Build Arm Binaries
+
+- job: Test
+  timeoutInMinutes: 5
+  steps:
+
+  - bash: |
+      git submodule update --init --recursive
+    displayName: Checkout Submodules
 
   # build google
   - bash: |
@@ -46,4 +50,10 @@ jobs:
       cd test/
       make
     displayName: Build Tests
+
+  # run tests
+  - bash: |
+      cd test/
+      ./bin/main.exe
+    displayName: Run Tests
 
