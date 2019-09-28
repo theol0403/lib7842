@@ -33,16 +33,6 @@ jobs:
     displayName: Build Arm Binaries
 
   - bash: |
-      git submodule update --init --recursive
-    displayName: Checkout Submodules
-
-  - bash: |
-      cd test/googletest/
-      cmake .
-      make
-    displayName: Build GoogleTest
-
-  - bash: |
       cd test/
       make
     displayName: Build Tests
