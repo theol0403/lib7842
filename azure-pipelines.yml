@@ -13,18 +13,14 @@ jobs:
   container: lib7842image
 
   steps:
-
-  # checkout repo
   - checkout: self
 
-  # make template
   - bash: |
       make
       make template
       mkdir -p artifacts
       cp *.zip artifacts
     displayName: Build Template
-  # publish template
   - task: PublishPipelineArtifact@0
     inputs:
       targetPath: artifacts
@@ -32,7 +28,6 @@ jobs:
     condition: succeeded()
     displayName: "Publish Template"
 
-  # make
   - bash: |
       make
     displayName: Build Arm Binaries
@@ -46,25 +41,22 @@ jobs:
   container: lib7842image
 
   steps:
-
+  - checkout: self
   - bash: |
       git submodule update --init --recursive
     displayName: Checkout Submodules
 
-  # build google
   - bash: |
       cd test/googletest/
       cmake .
       make
     displayName: Build GoogleTest
 
-  # build tests
   - bash: |
       cd test/
       make
     displayName: Build Tests
 
-  # run tests
   - bash: |
       cd test/
       ./bin/main.exe
