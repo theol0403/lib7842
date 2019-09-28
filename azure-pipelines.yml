@@ -1,10 +1,17 @@
-pool:
-  vmImage: 'ubuntu-latest'
-  container: 'theol0403/lib7842-image:latest'
+
+resources:
+  containers:
+  - container: lib7842image
+    image: 'theol0403/lib7842-image:latest'
 
 jobs:
 - job: BuildTemplate
   timeoutInMinutes: 5
+
+  pool:
+    vmImage: 'ubuntu-latest'
+  container: lib7842image
+
   steps:
 
   # checkout repo
@@ -32,6 +39,12 @@ jobs:
 
 - job: Test
   timeoutInMinutes: 5
+  dependsOn: BuildTemplate
+
+  pool:
+    vmImage: 'ubuntu-latest'
+  container: lib7842image
+
   steps:
 
   - bash: |
