@@ -17,14 +17,10 @@ EXTRA_CXXFLAGS= -std=gnu++17 -std=c++17 -pthread -g -O0 -fprofile-arcs -ftest-co
 CXXFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -I googletest/googletest/include
 LDFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -lm -lgcc -lstdc++ -lsupc++ -lgcov -lgtest_main -lgtest
 
-.DEFAULT_GOAL=quick
-
 CXX:=g++
 LD:=g++
 
 rwildcard=$(foreach d,$(filter-out $3,$(wildcard $1*)),$(call rwildcard,$d/,$2,$3)$(filter $(subst *,%,$2),$d))
-
-# Colors
 NO_COLOR=\x1b[0m
 OK_COLOR=\x1b[32;01m
 ERROR_COLOR=\x1b[31;01m
@@ -37,7 +33,6 @@ WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
 ECHO=/bin/echo -e
 echo=@$(ECHO) "$2$1$(NO_COLOR)"
 echon=@$(ECHO) -n "$2$1$(NO_COLOR)"
-
 define test_output
 @rm -f temp.log temp.errors
 $1 2> temp.log || touch temp.errors
@@ -45,7 +40,6 @@ $1 2> temp.log || touch temp.errors
 @if test -e temp.errors; then rm -f temp.log temp.errors && false; fi;
 @rm -f temp.log temp.errors
 endef
-
 R = @echo
 D = @
 VV = @
@@ -60,6 +54,7 @@ CXXOBJTEST=$(addprefix $(BINDIR)/,$(patsubst $(TESTDIR)/%,%.o,$(call CXXSRCTEST,
 
 GETALLOBJ=$(sort $(call CXXOBJ,$1) $(call CXXOBJTEST,$1))
 
+.DEFAULT_GOAL=quick
 
 .PHONY: all clean quick
 
