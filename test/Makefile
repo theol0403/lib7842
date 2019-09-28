@@ -1,37 +1,26 @@
 #
 # Makefile
 #
-CEXTS:=c
-CXXEXTS:=cpp c++ cc
 
-# probably shouldn't modify these, but you may need them below
 ROOT=.
 PROJECTROOT=..
+
 BINDIR=$(ROOT)/bin
 SRCDIR=$(PROJECTROOT)/src
 INCDIR=$(PROJECTROOT)/include
-
-EXTRA_CFLAGS=
-EXTRA_CXXFLAGS= -std=gnu++17 -std=c++17 -pthread -g -O0 -fprofile-arcs -ftest-coverage -D THREADS_STD
+TESTDIR=$(ROOT)/src
+OUTBIN:=$(BINDIR)/main.exe
 
 WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function # -Wnull-dereference
-CFLAGS= $(WARNFLAGS) --std=gnu11
+EXTRA_CXXFLAGS= -std=gnu++17 -std=c++17 -pthread -g -O0 -fprofile-arcs -ftest-coverage -D THREADS_STD
+
 CXXFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -I googletest/googletest/include
-
-
-LDFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -lm -lgcc -lstdc++ -lsupc++ -lgcov googletest/lib/libgtest.a googletest/lib/libgtest_main.a
+LDFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -lm -lgcc -lstdc++ -lsupc++ -lgcov googletest/lib/libgtest_main.a googletest/lib/libgtest.a
 
 .DEFAULT_GOAL=quick
 
-# common.mk
-ARCHTUPLE=
-
-WARNFLAGS+=
-
-AR:=$(ARCHTUPLE)ar
-CC:=$(ARCHTUPLE)gcc
-CXX:=$(ARCHTUPLE)g++
-LD:=$(ARCHTUPLE)g++
+CXX:=g++
+LD:=g++
 
 rwildcard=$(foreach d,$(filter-out $3,$(wildcard $1*)),$(call rwildcard,$d/,$2,$3)$(filter $(subst *,%,$2),$d))
 
@@ -57,48 +46,20 @@ $1 2> temp.log || touch temp.errors
 @rm -f temp.log temp.errors
 endef
 
-# Makefile Verbosity
-ifeq ("$(origin VERBOSE)", "command line")
-BUILD_VERBOSE = $(VERBOSE)
-endif
-ifeq ("$(origin V)", "command line")
-BUILD_VERBOSE = $(V)
-endif
-
-ifndef BUILD_VERBOSE
-BUILD_VERBOSE = 0
-endif
-
-# R is reduced (default messages) - build verbose = 0
-# V is verbose messages - verbosity = 1
-# VV is super verbose - verbosity = 2
-ifeq ($(BUILD_VERBOSE), 0)
 R = @echo
 D = @
 VV = @
-endif
-ifeq ($(BUILD_VERBOSE), 1)
-R = @echo
-D =
-VV = @
-endif
-ifeq ($(BUILD_VERBOSE), 2)
-R =
-D =
-VV =
-endif
-# common.mk
 
 INCLUDE=-iquote$(INCDIR)
 
-CSRC=$(foreach cext,$(CEXTS),$(call rwildcard, $(SRCDIR),*.$(cext), $1))
-COBJ=$(addprefix $(BINDIR)/,$(patsubst $(SRCDIR)/%,%.o,$(call CSRC, $1)))
-CXXSRC=$(foreach cxxext,$(CXXEXTS),$(call rwildcard, $(SRCDIR),*.$(cxxext), $1))
+CXXSRC=$(call rwildcard, $(SRCDIR),*.cpp, $1)
 CXXOBJ=$(addprefix $(BINDIR)/,$(patsubst $(SRCDIR)/%,%.o,$(call CXXSRC,$1)))
 
-GETALLOBJ=$(sort $(call ASMOBJ,$1) $(call COBJ,$1) $(call CXXOBJ,$1))
+CXXSRCTEST=$(call rwildcard, $(TESTDIR),*.cpp, $1)
+CXXOBJTEST=$(addprefix $(BINDIR)/,$(patsubst $(TESTDIR)/%,%.o,$(call CXXSRCTEST,$1)))
 
-OUTBIN:=$(BINDIR)/main.exe
+GETALLOBJ=$(sort $(call CXXOBJ,$1) $(call CXXOBJTEST,$1))
+
 
 .PHONY: all clean quick
 
@@ -112,16 +73,7 @@ clean:
 
 $(OUTBIN): $(GETALLOBJ) $(BINDIR)
 	@echo -n "Creating $@ "
-	$(call test_output,$(LD) -o $(OUTBIN) $(CXXOBJ) $(LDFLAGS),$(DONE_STRING))
-
-
-define c_rule
-$(BINDIR)/%.$1.o: $(SRCDIR)/%.$1
-	$(VV)mkdir -p $$(dir $$@)
-	@echo -n "Compiling $$< "
-	$$(call test_output,$D$(CC) -c $(INCLUDE) -iquote$(INCDIR)/$$(dir $$*) $(CFLAGS) $(EXTRA_CFLAGS) -o $$@ $$<,$(OK_STRING))
-endef
-$(foreach cext,$(CEXTS),$(eval $(call c_rule,$(cext))))
+	$(call test_output,$D$(LD) -o $(OUTBIN) $(GETALLOBJ) $(LDFLAGS),$(DONE_STRING))
 
 define cxx_rule
 $(BINDIR)/%.$1.o: $(SRCDIR)/%.$1
@@ -129,5 +81,13 @@ $(BINDIR)/%.$1.o: $(SRCDIR)/%.$1
 	@echo -n "Compiling $$< "
 	$$(call test_output,$D$(CXX) -c $(INCLUDE) -iquote$(INCDIR)/$$(dir $$*) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o $$@ $$<,$(OK_STRING))
 endef
-$(foreach cxxext,$(CXXEXTS),$(eval $(call cxx_rule,$(cxxext))))
+$(eval $(call cxx_rule,cpp))
+
+define cxx_rule_test
+$(BINDIR)/%.$1.o: $(TESTDIR)/%.$1
+	$(VV)mkdir -p $$(dir $$@)
+	@echo -n "Compiling $$< "
+	$$(call test_output,$D$(CXX) -c $(INCLUDE) -iquote$(INCDIR)/$$(dir $$*) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o $$@ $$<,$(OK_STRING))
+endef
+$(eval $(call cxx_rule_test,cpp))
 
