@@ -1,12 +1,10 @@
 jobs:
-- job: BuildTemplate
-  variables:
-    toolchain_update_short: 8-2019q3
-    toolchain_update: 8-2019-q3
-    toolchain: https://developer.arm.com/-/media/Files/downloads/gnu-rm/$(toolchain_update_short)/RC1.1/gcc-arm-none-eabi-$(toolchain_update)-update-linux.tar.bz2
-    pros-cli-v5: https://github.com/purduesigbots/pros-cli/releases/download/3.1.4/pros_cli_v5-3.1.4-py3-none-any.whl
+- job: Build
+  
   pool:
     vmImage: 'ubuntu-latest'
+
+  container: 'theol0403/lib7842-image:latest'
 
   steps:
 
@@ -15,25 +13,6 @@ jobs:
   - bash: |
       git submodule update --init --recursive
     displayName: Download Submodules
-
-  # install PROS
-  - bash: |
-      curl -LSso toolchain.tar.bz2 $(toolchain)
-      tar -xjvf toolchain.tar.bz2
-      echo "##vso[task.prependpath]$(pwd)/gcc-arm-none-eabi-$(toolchain_update)-update/bin"
-      rm toolchain.tar.bz2
-    displayName: Install GCC-arm
-  - task: UsePythonVersion@0
-    inputs:
-      addToPath: true
-      versionSpec: '3.6'
-    displayName: Install Python
-  - task: PipAuthenticate@0
-    inputs:
-      artifactFeeds: 'pros-cli'
-  - bash: |
-        pip install $(pros-cli-v5)
-    displayName: Install PROS CLI
 
   # make template
   - bash: |
@@ -54,11 +33,6 @@ jobs:
   - bash: |
       make
     displayName: Build binaries
-
-  # install tools
-  - bash: |
-      sudo apt install cmake valgrind -y
-    displayName: Install Tools
 
   # build google
   - bash: |
