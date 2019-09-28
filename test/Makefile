@@ -15,7 +15,7 @@ WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function # -Wnull-dere
 EXTRA_CXXFLAGS= -std=gnu++17 -std=c++17 -pthread -g -O0 -fprofile-arcs -ftest-coverage -D THREADS_STD
 
 CXXFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -I googletest/googletest/include
-LDFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -lm -lgcc -lstdc++ -lsupc++ -lgcov googletest/lib/libgtest_main.a googletest/lib/libgtest.a
+LDFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -lm -lgcc -lstdc++ -lsupc++ -lgcov -lgtest_main -lgtest
 
 .DEFAULT_GOAL=quick
 
