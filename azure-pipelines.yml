@@ -21,7 +21,8 @@ jobs:
       curl -LSso toolchain.tar.bz2 $(toolchain)
       tar -xjvf toolchain.tar.bz2
       echo "##vso[task.prependpath]$(pwd)/gcc-arm-none-eabi-$(toolchain_update)-update/bin"
-    displayName: Install GCC
+      rm toolchain.tar.bz2
+    displayName: Install GCC-arm
   - task: UsePythonVersion@0
     inputs:
       addToPath: true
@@ -56,8 +57,7 @@ jobs:
 
   # install tools
   - bash: |
-      sudo apt install cmake valgrind libgtest-dev -y --no-install-recommends
-      sudo apt upgrade gcc -y --no-install-recommends
+      sudo apt install cmake valgrind -y
     displayName: Install Tools
 
   # build google
