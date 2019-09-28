@@ -11,4 +11,6 @@ done
 for i in $(find include/lib7842/ -iname *.hpp); do clang-format-9 -i -style=file $i || true
 done
 
+for i in $(find test/src/ -iname *.cpp); do clang-format-9 -i -style=file $i || true
+done
 
