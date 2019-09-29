@@ -7,22 +7,30 @@ namespace lib7842 {
 class PathSegment {
 
   using segment_t = std::variant<PathPoint, PathSegment>;
-  using segments_t = std::vector<segment_t>;
 
  public:
   PathSegment() = default;
-  PathSegment(const PathPoint& ipoint);
-  PathSegment(const segment_t& isegment);
-  PathSegment(const segments_t& isegments);
 
-  void addSegment(const PathPoint& ipoint);
+  PathSegment(const PathPoint& ipoint);
+  PathSegment(const PathSegment& isegment) = default;
+  PathSegment(const segment_t& isegment);
+
+  PathSegment(const std::vector<PathPoint>& ipoints);
+  PathSegment(const std::vector<PathSegment>& isegments);
+  PathSegment(const std::vector<segment_t>& isegments);
+
+  void addPoint(const PathPoint& ipoint);
+  void addSegment(const PathSegment& isegment);
   void addSegment(const segment_t& isegment);
-  void addSegments(const segments_t& isegments);
+
+  void addPoints(const std::vector<PathPoint>& ipoints);
+  void addSegments(const std::vector<PathSegment>& isegments);
+  void addSegments(const std::vector<segment_t>& isegments);
 
   std::vector<PathPoint> extract() const;
 
  protected:
-  segments_t segments {};
+  std::vector<segment_t> segments {};
 };
 
 } // namespace lib7842

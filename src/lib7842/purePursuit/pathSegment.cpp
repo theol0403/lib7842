@@ -3,28 +3,52 @@
 namespace lib7842 {
 
 PathSegment::PathSegment(const PathPoint& ipoint) {
-  addSegment(ipoint);
+  addPoint(ipoint);
 }
 
 PathSegment::PathSegment(const segment_t& isegment) {
   addSegment(isegment);
 }
 
-PathSegment::PathSegment(const segments_t& isegments) {
+PathSegment::PathSegment(const std::vector<PathPoint>& ipoints) {
+  addPoints(ipoints);
+}
+
+PathSegment::PathSegment(const std::vector<PathSegment>& isegments) {
   addSegments(isegments);
 }
 
-void PathSegment::addSegment(const PathPoint& ipoint) {
+PathSegment::PathSegment(const std::vector<segment_t>& isegments) {
+  addSegments(isegments);
+}
+
+void PathSegment::addPoint(const PathPoint& ipoint) {
   segments.push_back(ipoint);
+}
+
+void PathSegment::addSegment(const PathSegment& isegment) {
+  segments.push_back(isegment);
 }
 
 void PathSegment::addSegment(const segment_t& isegment) {
   segments.push_back(isegment);
 }
 
-void PathSegment::addSegments(const segments_t& isegments) {
+void PathSegment::addPoints(const std::vector<PathPoint>& ipoints) {
+  for (auto&& ipoint : ipoints) {
+    addPoint(ipoint);
+  }
+}
+
+void PathSegment::addSegments(const std::vector<PathSegment>& isegments) {
   for (auto&& isegment : isegments) {
-    segments.push_back(isegment);
+    addSegment(isegment);
+  }
+}
+
+void PathSegment::addSegments(const std::vector<segment_t>& isegments) {
+  for (auto&& isegment : isegments) {
+    addSegment(isegment);
   }
 }
 
