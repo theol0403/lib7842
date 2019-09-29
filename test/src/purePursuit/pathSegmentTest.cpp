@@ -31,3 +31,18 @@ TEST_F(PathSegmentTest, ExtractSegments) {
     ASSERT_EQ(point, point1);
   }
 }
+
+TEST_F(PathSegmentTest, ProperOrder) {
+  segment.addSegment(PathPoint {1_in, 2_in});
+  segment.addSegments({PathPoint {2_in, 3_in}, PathPoint {3_in, 4_in}});
+  segment.addSegment(PathSegment({PathPoint {4_in, 5_in}, PathPoint {5_in, 6_in}}));
+  segment.addSegment(
+    {PathSegment({PathSegment(PathPoint {6_in, 7_in}), PathSegment(PathPoint {7_in, 8_in})})});
+  segment.addSegment(PathSegment({PathPoint(8_in, 9_in)}));
+  std::vector<PathPoint> path = segment.extract();
+
+  ASSERT_EQ(path.size(), 8);
+  for (size_t i = 0; i < path.size(); ++i) {
+    ASSERT_EQ(path[i], (PathPoint {(i + 1) * inch, (i + 2) * inch}));
+  }
+}
