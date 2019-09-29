@@ -3,38 +3,36 @@
 
 namespace lib7842 {
 
-struct dPoint; //Forward declare
-
 struct QPoint {
   QLength x {0_in};
   QLength y {0_in};
-  QAngle theta {0_rad};
 
-  QPoint(const QPoint&);
+  QPoint(const QLength& ix, const QLength& iy);
+  QPoint() = default;
+  QPoint(const QPoint& ipoint) = default;
 
-  QPoint(QLength, QLength, QAngle);
-  QPoint(QLength, QLength);
-  QPoint();
+  virtual QPoint operator+(const QPoint& rhs) const;
+  virtual QPoint operator-(const QPoint& rhs) const;
+  virtual bool operator==(const QPoint& rhs) const;
 
-  QPoint(dPoint);
-
-  QPoint operator+(QPoint);
+  QPoint normalize() const;
+  QPoint scalarMult(const QLength& scalar) const;
+  QArea dot(const QPoint& rhs) const;
+  QLength mag() const;
+  QLength dist(const QPoint& rhs) const;
 };
 
-struct dPoint {
-  double x {0};
-  double y {0};
-  double theta {0};
+struct QState : public QPoint {
+  QAngle theta {0_rad};
 
-  dPoint(const dPoint&);
+  using QPoint::QPoint;
+  QState(const QLength& ix, const QLength& iy, const QAngle& itheta);
+  QState(const QState& ipoint) = default;
+  QState(const QPoint& ipoint);
 
-  dPoint(double, double, double);
-  dPoint(double, double);
-  dPoint();
-
-  dPoint(QPoint);
-
-  dPoint operator+(dPoint);
+  virtual QState operator+(const QState& rhs) const;
+  virtual QState operator-(const QState& rhs) const;
+  virtual bool operator==(const QState& rhs) const;
 };
 
 } // namespace lib7842

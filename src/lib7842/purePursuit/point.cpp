@@ -2,34 +2,55 @@
 
 namespace lib7842 {
 
-/**
-  * QPoint
-  */
-QPoint::QPoint(const QPoint& ipoint) : x(ipoint.x), y(ipoint.y), theta(ipoint.theta) {}
+QPoint::QPoint(const QLength& ix, const QLength& iy) : x(ix), y(iy) {}
 
-QPoint::QPoint(QLength ix, QLength iy, QAngle itheta) : x(ix), y(iy), theta(itheta) {}
-QPoint::QPoint(QLength ix, QLength iy) : x(ix), y(iy) {}
-QPoint::QPoint() {}
-
-QPoint::QPoint(dPoint ipoint) : x(ipoint.x * inch), y(ipoint.y * inch), theta(ipoint.theta * radian) {}
-
-QPoint QPoint::operator+(QPoint rhs) {
-  return {x + rhs.x, y + rhs.y, theta + rhs.theta};
+QPoint QPoint::operator+(const QPoint& rhs) const {
+  return {x + rhs.x, y + rhs.y};
 }
 
-/**
-  * dPoint
-  */
-dPoint::dPoint(const dPoint& ipoint) : x(ipoint.x), y(ipoint.y), theta(ipoint.theta) {}
+QPoint QPoint::operator-(const QPoint& rhs) const {
+  return {x - rhs.x, y - rhs.y};
+}
 
-dPoint::dPoint(double ix, double iy, double itheta) : x(ix), y(iy), theta(itheta) {}
-dPoint::dPoint(double ix, double iy) : x(ix), y(iy) {}
-dPoint::dPoint() {}
+bool QPoint::operator==(const QPoint& rhs) const {
+  return x == rhs.x && y == rhs.y;
+}
 
-dPoint::dPoint(QPoint ipoint) : x(ipoint.x.convert(inch)), y(ipoint.y.convert(inch)), theta(ipoint.theta.convert(radian)) {}
+QPoint QPoint::normalize() const {
+  return {x / mag().convert(meter), y / mag().convert(meter)};
+}
 
-dPoint dPoint::operator+(dPoint rhs) {
-  return {x + rhs.x, y + rhs.y, theta + rhs.theta};
+QPoint QPoint::scalarMult(const QLength& scalar) const {
+  return {x * scalar.convert(meter), y * scalar.convert(meter)};
+}
+
+QArea QPoint::dot(const QPoint& rhs) const {
+  return (x * rhs.x) + (y * rhs.y);
+}
+
+QLength QPoint::mag() const {
+  return meter * std::sqrt((x * x + y * y).convert(meter2));
+}
+
+QLength QPoint::dist(const QPoint& rhs) const {
+  return meter * std::sqrt(((x - rhs.x) * (x - rhs.x) + (y - rhs.y) * (y - rhs.y)).convert(meter2));
+}
+
+QState::QState(const QLength& ix, const QLength& iy, const QAngle& itheta) :
+  QPoint(ix, iy), theta(itheta) {}
+
+QState::QState(const QPoint& ipoint) : QPoint(ipoint) {};
+
+QState QState::operator+(const QState& rhs) const {
+  return {x + rhs.x, y + rhs.y};
+}
+
+QState QState::operator-(const QState& rhs) const {
+  return {x - rhs.x, y - rhs.y};
+}
+
+bool QState::operator==(const QState& rhs) const {
+  return x == rhs.x && y == rhs.y && theta == rhs.theta;
 }
 
 } // namespace lib7842
