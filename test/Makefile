@@ -14,7 +14,7 @@ OUTBIN:=$(BINDIR)/main.exe
 WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function # -Wnull-dereference
 EXTRA_CXXFLAGS= -std=gnu++17 -std=c++17 -pthread -g -O0 -fprofile-arcs -ftest-coverage -D THREADS_STD
 
-CXXFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -I googletest/googletest/include
+CXXFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -I googletest/googletest/include -I ./include
 LDFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -lm -lgcc -lstdc++ -lsupc++ -lgcov -lgtest_main -lgtest
 
 CXX:=g++
