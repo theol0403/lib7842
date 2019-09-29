@@ -16,14 +16,12 @@ class PathPoint : public QPoint {
 
   template <typename T> T getValue(std::string iid) {
     pathData_t data = getData(iid);
-    try {
+    if (std::holds_alternative<T>(data)) {
       return std::get<T>(data);
-    } catch (const std::bad_variant_access& e) {
-      if (std::get_if<std::monostate>(&data)) {
-        return T(0.0);
-      } else {
-        throw std::runtime_error("PathPoint::getValue:: \"" + iid + "\" contains wrong type");
-      }
+    } else if (std::holds_alternative<std::monostate>(data)) {
+      return T(0.0);
+    } else {
+      throw std::runtime_error("PathPoint::getValue:: \"" + iid + "\" contains wrong type");
     }
   }
 
