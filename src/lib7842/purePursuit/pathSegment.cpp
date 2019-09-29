@@ -20,18 +20,17 @@ void PathSegment::addSegments(const segments_t& isegments) {
   }
 }
 
-PathPoint PathSegment::extractPoint(const segment_t& isegment) const {
-  if (std::holds_alternative<PathPoint>(isegment)) {
-    return std::get<PathPoint>(isegment);
-  } else {
-    return extractPoint(std::get<PathSegment>(isegment));
-  }
-}
-
 std::vector<PathPoint> PathSegment::extract() const {
   std::vector<PathPoint> temp;
   for (auto&& segment : segments) {
-    temp.push_back(extractPoint(segment));
+    if (std::holds_alternative<PathPoint>(segment)) {
+      temp.push_back(std::get<PathPoint>(segment));
+    } else {
+      std::vector<PathPoint> points = std::get<PathSegment>(segment).extract();
+      for (auto&& point : points) {
+        temp.push_back(point);
+      }
+    }
   }
   return temp;
 }

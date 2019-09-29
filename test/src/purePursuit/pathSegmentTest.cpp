@@ -25,4 +25,9 @@ TEST_F(PathSegmentTest, ExtractSegments) {
   segment.addSegments({point1, point1});
   segment.addSegment(PathSegment({point1, point1}));
   std::vector<PathPoint> path = segment.extract();
+
+  ASSERT_EQ(path.size(), 5);
+  for (auto&& point : path) {
+    ASSERT_EQ(point, point1);
+  }
 }
