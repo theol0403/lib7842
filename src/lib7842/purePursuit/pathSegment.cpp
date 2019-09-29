@@ -2,12 +2,20 @@
 
 namespace lib7842 {
 
+PathSegment::PathSegment(const PathPoint& ipoint) {
+  addSegment(ipoint);
+}
+
 PathSegment::PathSegment(const segment_t& isegment) {
   addSegment(isegment);
 }
 
 PathSegment::PathSegment(const segments_t& isegments) {
   addSegments(isegments);
+}
+
+void PathSegment::addSegment(const PathPoint& ipoint) {
+  segments.push_back(ipoint);
 }
 
 void PathSegment::addSegment(const segment_t& isegment) {

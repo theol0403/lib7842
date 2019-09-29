@@ -11,9 +11,11 @@ class PathSegment {
 
  public:
   PathSegment() = default;
+  PathSegment(const PathPoint& ipoint);
   PathSegment(const segment_t& isegment);
   PathSegment(const segments_t& isegments);
 
+  void addSegment(const PathPoint& ipoint);
   void addSegment(const segment_t& isegment);
   void addSegments(const segments_t& isegments);
 

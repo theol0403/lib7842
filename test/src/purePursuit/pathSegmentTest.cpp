@@ -10,6 +10,7 @@ class PathSegmentTest : public ::testing::Test {
 TEST_F(PathSegmentTest, Constructors) {
   PathSegment();
   PathSegment({});
+  PathSegment point2(point1);
   PathSegment({point1});
   PathSegment({{point1, point1}});
 }
@@ -33,7 +34,7 @@ TEST_F(PathSegmentTest, ExtractSegments) {
 }
 
 TEST_F(PathSegmentTest, ProperOrder) {
-  segment.addSegment(PathPoint {1_in, 2_in});
+  segment.addSegment({1_in, 2_in});
   segment.addSegments({PathPoint {2_in, 3_in}, PathPoint {3_in, 4_in}});
   segment.addSegment(PathSegment({PathPoint {4_in, 5_in}, PathPoint {5_in, 6_in}}));
   segment.addSegment(
