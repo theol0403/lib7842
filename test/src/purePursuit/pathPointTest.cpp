@@ -31,17 +31,21 @@ TEST_F(PathPointTest, TypeErrors) {
   point.setData("velocity", 5);
   point.setData("segmentIndex", 5_mps);
 
-  EXPECT_EQ(point.getCurvature(), 0);
-  EXPECT_EQ(point.getDistance(), 0_m);
-  EXPECT_EQ(point.getVelocity(), 0_mps);
-  EXPECT_EQ(point.getSegmentIndex(), 0);
+  ASSERT_THROW(point.getCurvature(), std::runtime_error);
+  ASSERT_THROW(point.getDistance(), std::runtime_error);
+  ASSERT_THROW(point.getVelocity(), std::runtime_error);
+  ASSERT_THROW(point.getSegmentIndex(), std::runtime_error);
+}
+
+TEST_F(PathPointTest, NoType) {
+  ASSERT_NO_THROW(point.getCurvature());
+  ASSERT_NO_THROW(point.getDistance());
+  ASSERT_NO_THROW(point.getVelocity());
+  ASSERT_NO_THROW(point.getSegmentIndex());
 }
 
 TEST_F(PathPointTest, IdErrors) {
-  testing::internal::CaptureStderr();
-  point.getCurvature();
-  std::string output = testing::internal::GetCapturedStderr();
-  ASSERT_EQ(output, "PathPoint::getData: invalid ID \"curvature\"\n");
+  EXPECT_EQ(point.getCurvature(), 0);
 }
 
 TEST_F(PathPointTest, Constructors) {

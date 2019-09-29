@@ -7,36 +7,59 @@ void PathPoint::setData(std::string iid, pathData_t idata) {
 }
 
 PathPoint::pathData_t PathPoint::getData(std::string iid) {
-  try {
-    return pathData.at(iid);
-  } catch (const std::out_of_range& e) {
-    std::cerr << "PathPoint::getData: invalid ID \"" << iid << "\"" << std::endl;
-    return pathData_t();
-  }
+  return pathData[iid];
 }
 
 double PathPoint::getCurvature() {
+  pathData_t data = getData("curvature");
   try {
-    return std::get<double>(getData("curvature"));
-  } catch (const std::bad_variant_access& e) { return 0; }
+    return std::get<double>(data);
+  } catch (const std::bad_variant_access& e) {
+    if (std::get_if<std::monostate>(&data)) {
+      return 0;
+    } else {
+      throw std::runtime_error("PathPoint::getCurvature:: \"curvature\" contains wrong type");
+    }
+  }
 }
 
 QLength PathPoint::getDistance() {
+  pathData_t data = getData("distance");
   try {
-    return std::get<QLength>(getData("distance"));
-  } catch (const std::bad_variant_access& e) { return 0_in; }
+    return std::get<QLength>(data);
+  } catch (const std::bad_variant_access& e) {
+    if (std::get_if<std::monostate>(&data)) {
+      return 0_in;
+    } else {
+      throw std::runtime_error("PathPoint::getDistance:: \"distance\" contains wrong type");
+    }
+  }
 }
 
 QSpeed PathPoint::getVelocity() {
+  pathData_t data = getData("velocity");
   try {
-    return std::get<QSpeed>(getData("velocity"));
-  } catch (const std::bad_variant_access& e) { return 0_mps; }
+    return std::get<QSpeed>(data);
+  } catch (const std::bad_variant_access& e) {
+    if (std::get_if<std::monostate>(&data)) {
+      return 0_mps;
+    } else {
+      throw std::runtime_error("PathPoint::getVelocity:: \"velocity\" contains wrong type");
+    }
+  }
 }
 
 int PathPoint::getSegmentIndex() {
+  pathData_t data = getData("segmentIndex");
   try {
-    return std::get<double>(getData("segmentIndex"));
-  } catch (const std::bad_variant_access& e) { return 0; }
+    return std::get<double>(data);
+  } catch (const std::bad_variant_access& e) {
+    if (std::get_if<std::monostate>(&data)) {
+      return 0;
+    } else {
+      throw std::runtime_error("PathPoint::getSegmentIndex:: \"segmentIndex\" contains wrong type");
+    }
+  }
 }
 
 } // namespace lib7842
