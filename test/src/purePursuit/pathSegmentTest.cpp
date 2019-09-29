@@ -10,24 +10,21 @@ class PathSegmentTest : public ::testing::Test {
 TEST_F(PathSegmentTest, Constructors) {
   PathSegment();
   PathSegment({});
-  PathSegment point2(point1);
-  PathSegment({point1});
-  PathSegment({{point1, point1}});
 }
 
 TEST_F(PathSegmentTest, AddSegments) {
   segment.addPoint(point1);
   segment.addPoints({point1, point1});
-  segment.addSegment({point1});
+  segment.addSegment(PathSegment {});
 }
 
 TEST_F(PathSegmentTest, ExtractSegments) {
   segment.addPoint(point1);
   segment.addPoints({point1, point1});
-  segment.addSegment(PathSegment({point1, point1}));
+  segment.addSegment(PathSegment());
   std::vector<PathPoint> path = segment.extract();
 
-  ASSERT_EQ(path.size(), 5);
+  ASSERT_EQ(path.size(), 3);
   for (auto&& point : path) {
     ASSERT_EQ(point, point1);
   }
@@ -36,10 +33,24 @@ TEST_F(PathSegmentTest, ExtractSegments) {
 TEST_F(PathSegmentTest, ProperOrder) {
   segment.addPoint({1_in, 2_in});
   segment.addPoints({{2_in, 3_in}, {3_in, 4_in}});
-  segment.addSegment(PathSegment({PathPoint {4_in, 5_in}, PathPoint {5_in, 6_in}}));
-  segment.addSegments(
-    {PathSegment({PathSegment(PathPoint {6_in, 7_in}), PathSegment(PathPoint {7_in, 8_in})}),
-     PathSegment({PathPoint(8_in, 9_in)})});
+
+  PathSegment segment1;
+  segment1.addPoints({{4_in, 5_in}, {5_in, 6_in}});
+  segment.addSegment(segment1);
+
+  PathSegment segment2;
+  segment2.addPoint({6_in, 7_in});
+
+  PathSegment segment3;
+  segment3.addPoint({7_in, 8_in});
+
+  PathSegment segment4;
+  segment4.addSegments({segment2, PathSegment(segment3)});
+
+  PathSegment segment5;
+  segment5.addPoint({8_in, 9_in});
+
+  segment.addSegments({segment4, segment5});
   std::vector<PathPoint> path = segment.extract();
 
   ASSERT_EQ(path.size(), 8);
