@@ -1,6 +1,7 @@
 #pragma once
 #include "main.h"
 #include "pathPoint.hpp"
+#include <list>
 
 namespace lib7842 {
 
@@ -19,7 +20,7 @@ class PathSegment {
   std::vector<PathPoint> extract() const;
 
  protected:
-  std::vector<std::variant<PathPoint, PathSegment>> segments {};
+  std::list<std::variant<PathPoint, PathSegment>> segments {};
 };
 
 } // namespace lib7842
