@@ -18,10 +18,10 @@ TEST_F(PathPointTest, SetAndReadData) {
   point.setData("velocity", 5_mps);
   point.setData("segmentIndex", 5);
 
-  EXPECT_EQ(point.getCurvature(), 5);
-  EXPECT_EQ(point.getDistance(), 5_m);
-  EXPECT_EQ(point.getVelocity(), 5_mps);
-  EXPECT_EQ(point.getSegmentIndex(), 5);
+  EXPECT_EQ(point.getValue<double>("curvature"), 5);
+  EXPECT_EQ(point.getValue<QLength>("distance"), 5_m);
+  EXPECT_EQ(point.getValue<QSpeed>("velocity"), 5_mps);
+  EXPECT_EQ(point.getValue<double>("segmentIndex"), 5);
 }
 
 TEST_F(PathPointTest, TypeErrors) {
@@ -30,19 +30,19 @@ TEST_F(PathPointTest, TypeErrors) {
   point.setData("velocity", 5);
   point.setData("segmentIndex", 5_mps);
 
-  ASSERT_THROW(point.getCurvature(), std::runtime_error);
-  ASSERT_THROW(point.getDistance(), std::runtime_error);
-  ASSERT_THROW(point.getVelocity(), std::runtime_error);
-  ASSERT_THROW(point.getSegmentIndex(), std::runtime_error);
+  ASSERT_THROW(point.getValue<double>("curvature"), std::runtime_error);
+  ASSERT_THROW(point.getValue<QLength>("distance"), std::runtime_error);
+  ASSERT_THROW(point.getValue<QSpeed>("velocity"), std::runtime_error);
+  ASSERT_THROW(point.getValue<double>("segmentIndex"), std::runtime_error);
 }
 
 TEST_F(PathPointTest, NoTypeNoThrow) {
-  ASSERT_NO_THROW(point.getCurvature());
-  ASSERT_NO_THROW(point.getDistance());
-  ASSERT_NO_THROW(point.getVelocity());
-  ASSERT_NO_THROW(point.getSegmentIndex());
+  ASSERT_NO_THROW(point.getValue<double>("curvature"));
+  ASSERT_NO_THROW(point.getValue<QLength>("distance"));
+  ASSERT_NO_THROW(point.getValue<QSpeed>("velocity"));
+  ASSERT_NO_THROW(point.getValue<double>("segmentIndex"));
 }
 
 TEST_F(PathPointTest, NoID) {
-  EXPECT_EQ(point.getCurvature(), 0);
+  EXPECT_EQ(point.getValue<double>("curvature"), 0);
 }
