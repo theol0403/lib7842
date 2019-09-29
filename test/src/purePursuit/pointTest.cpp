@@ -2,7 +2,7 @@
 #include "lib7842/purePursuit/point.hpp"
 
 class QPointTest : public ::testing::Test {
-  protected:
+ protected:
   QPoint point {5_in, 2_in};
   QPoint emptyPoint;
 };
@@ -28,7 +28,7 @@ TEST_F(QPointTest, Operators) {
 }
 
 class QStateTest : public ::testing::Test {
-  protected:
+ protected:
   QState state {5_in, 2_in, 3_rad};
   QPoint point {5_in, 2_in};
 };

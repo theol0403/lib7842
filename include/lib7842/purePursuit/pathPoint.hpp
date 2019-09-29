@@ -10,7 +10,7 @@ class PathPoint : public QPoint {
   using QPoint::QPoint;
   using pathData_t = std::variant<std::monostate, double, QLength, QSpeed>;
 
-  public:
+ public:
   void setData(std::string iid, pathData_t idata);
   pathData_t getData(std::string iid);
 
@@ -19,7 +19,7 @@ class PathPoint : public QPoint {
   QSpeed getVelocity();
   int getSegmentIndex();
 
-  protected:
+ protected:
   std::map<std::string, pathData_t> pathData {};
 };
 
