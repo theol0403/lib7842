@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "lib7842/purePursuit/point.hpp"
+namespace lib7842 {};
 
 using namespace lib7842;
 

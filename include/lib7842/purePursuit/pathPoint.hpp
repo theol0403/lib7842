@@ -7,6 +7,7 @@ namespace lib7842 {
 
 class PathPoint : public QPoint {
 
+  using QPoint::QPoint;
   using pathData_t = std::variant<std::monostate, double, QLength, QSpeed>;
 
   public:

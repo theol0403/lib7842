@@ -1,4 +1,5 @@
 #include "test.hpp"
+#include "lib7842/purePursuit/point.hpp"
 
 QPoint point(5_in, 2_in);
 QPoint emptyPoint;

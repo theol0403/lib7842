@@ -10,7 +10,7 @@ PathPoint::pathData_t PathPoint::getData(std::string iid) {
   try {
     return pathData.at(iid);
   } catch (const std::out_of_range& e) {
-    std::cerr << "PathPoint::getData: " << e.what() << std::endl;
+    std::cerr << "PathPoint::getData: invalid ID \"" << iid << "\"" << std::endl;
     return pathData_t();
   }
 }
