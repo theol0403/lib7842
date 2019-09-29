@@ -10,11 +10,11 @@ class PathSegment {
   PathSegment() = default;
   PathSegment(const PathSegment& isegment) = default;
 
-  void addPoint(const PathPoint& ipoint);
-  void addSegment(const PathSegment& isegment);
+  PathSegment& addPoint(const PathPoint& ipoint);
+  PathSegment& addSegment(const PathSegment& isegment);
 
-  void addPoints(const std::vector<PathPoint>& ipoints);
-  void addSegments(const std::vector<PathSegment>& isegments);
+  PathSegment& addPoints(const std::vector<PathPoint>& ipoints);
+  PathSegment& addSegments(const std::vector<PathSegment>& isegments);
 
   std::vector<PathPoint> extract() const;
 

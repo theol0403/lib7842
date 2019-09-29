@@ -34,23 +34,16 @@ TEST_F(PathSegmentTest, ProperOrder) {
   segment.addPoint({1_in, 2_in});
   segment.addPoints({{2_in, 3_in}, {3_in, 4_in}});
 
-  PathSegment segment1;
-  segment1.addPoints({{4_in, 5_in}, {5_in, 6_in}});
+  PathSegment segment1 = PathSegment().addPoints({{4_in, 5_in}, {5_in, 6_in}});
+  PathSegment segment2 = PathSegment().addPoint({6_in, 7_in});
+  PathSegment segment3 = PathSegment().addPoint({7_in, 8_in});
+  PathSegment segment4 = PathSegment(). //
+                         addSegments({segment2, PathSegment(segment3)});
+  PathSegment segment5 = PathSegment().addPoint({8_in, 9_in});
+
   segment.addSegment(segment1);
+  segment.addSegments({PathSegment(segment4), segment5});
 
-  PathSegment segment2;
-  segment2.addPoint({6_in, 7_in});
-
-  PathSegment segment3;
-  segment3.addPoint({7_in, 8_in});
-
-  PathSegment segment4;
-  segment4.addSegments({segment2, PathSegment(segment3)});
-
-  PathSegment segment5;
-  segment5.addPoint({8_in, 9_in});
-
-  segment.addSegments({segment4, segment5});
   std::vector<PathPoint> path = segment.extract();
 
   ASSERT_EQ(path.size(), 8);

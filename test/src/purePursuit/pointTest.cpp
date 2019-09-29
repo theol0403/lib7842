@@ -34,7 +34,6 @@ class QStateTest : public ::testing::Test {
 };
 
 TEST_F(QStateTest, Constructors) {
-  //inherited
   QState(5_in, 2_in);
   QState();
 

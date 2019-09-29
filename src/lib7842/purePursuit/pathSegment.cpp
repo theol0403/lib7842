@@ -2,24 +2,28 @@
 
 namespace lib7842 {
 
-void PathSegment::addPoint(const PathPoint& ipoint) {
+PathSegment& PathSegment::addPoint(const PathPoint& ipoint) {
   segments.push_back(ipoint);
+  return *this;
 }
 
-void PathSegment::addSegment(const PathSegment& isegment) {
+PathSegment& PathSegment::addSegment(const PathSegment& isegment) {
   segments.push_back(isegment);
+  return *this;
 }
 
-void PathSegment::addPoints(const std::vector<PathPoint>& ipoints) {
+PathSegment& PathSegment::addPoints(const std::vector<PathPoint>& ipoints) {
   for (auto&& ipoint : ipoints) {
     addPoint(ipoint);
   }
+  return *this;
 }
 
-void PathSegment::addSegments(const std::vector<PathSegment>& isegments) {
+PathSegment& PathSegment::addSegments(const std::vector<PathSegment>& isegments) {
   for (auto&& isegment : isegments) {
     addSegment(isegment);
   }
+  return *this;
 }
 
 std::vector<PathPoint> PathSegment::extract() const {
