@@ -17,6 +17,7 @@ class PathSegment {
   void addSegment(const segment_t& isegment);
   void addSegments(const segments_t& isegments);
 
+  PathPoint extractPoint(const segment_t& isegment) const;
   std::vector<PathPoint> extract() const;
 
  protected:

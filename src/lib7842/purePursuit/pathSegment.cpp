@@ -20,8 +20,20 @@ void PathSegment::addSegments(const segments_t& isegments) {
   }
 }
 
+PathPoint PathSegment::extractPoint(const segment_t& isegment) const {
+  if (std::holds_alternative<PathPoint>(isegment)) {
+    return std::get<PathPoint>(isegment);
+  } else {
+    return extractPoint(std::get<PathSegment>(isegment));
+  }
+}
+
 std::vector<PathPoint> PathSegment::extract() const {
-  return {};
+  std::vector<PathPoint> temp;
+  for (auto&& segment : segments) {
+    temp.push_back(extractPoint(segment));
+  }
+  return temp;
 }
 
 } // namespace lib7842

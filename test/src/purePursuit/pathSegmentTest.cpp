@@ -19,3 +19,10 @@ TEST_F(PathSegmentTest, AddSegments) {
   segment.addSegments({point1, point1});
   segment.addSegment(PathSegment({point1}));
 }
+
+TEST_F(PathSegmentTest, ExtractSegments) {
+  segment.addSegment(point1);
+  segment.addSegments({point1, point1});
+  segment.addSegment(PathSegment({point1, point1}));
+  std::vector<PathPoint> path = segment.extract();
+}
