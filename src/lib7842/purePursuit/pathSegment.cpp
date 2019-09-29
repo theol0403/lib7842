@@ -20,8 +20,8 @@ void PathSegment::addSegments(const segments_t& isegments) {
   }
 }
 
-PathSegment::segments_t PathSegment::concat() const {
-  return segments;
+std::vector<PathPoint> PathSegment::extract() const {
+  return {};
 }
 
 } // namespace lib7842

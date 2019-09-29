@@ -6,8 +6,7 @@ namespace lib7842 {
 
 class PathSegment {
 
-  // using segment_t = std::variant<PathPoint, PathSegment>;
-  using segment_t = PathPoint;
+  using segment_t = std::variant<PathPoint, PathSegment>;
   using segments_t = std::vector<segment_t>;
 
  public:
@@ -18,7 +17,7 @@ class PathSegment {
   void addSegment(const segment_t& isegment);
   void addSegments(const segments_t& isegments);
 
-  segments_t concat() const;
+  std::vector<PathPoint> extract() const;
 
  protected:
   segments_t segments {};
