@@ -6,14 +6,13 @@ class PathPointTest : public ::testing::Test {
   PathPoint point {5_in, 2_in};
 };
 
-TEST_F(PathPointTest, SetData) {
-  point.setData("curvature", 5);
-  point.setData("distance", 5_m);
-  point.setData("velocity", 5_mps);
-  point.setData("segmentIndex", 5);
+TEST_F(PathPointTest, Constructors) {
+  PathPoint();
+  PathPoint(5_in, 2_in);
+  PathPoint pointCopy(point);
 }
 
-TEST_F(PathPointTest, ReadData) {
+TEST_F(PathPointTest, SetAndReadData) {
   point.setData("curvature", 5);
   point.setData("distance", 5_m);
   point.setData("velocity", 5_mps);
@@ -37,19 +36,13 @@ TEST_F(PathPointTest, TypeErrors) {
   ASSERT_THROW(point.getSegmentIndex(), std::runtime_error);
 }
 
-TEST_F(PathPointTest, NoType) {
+TEST_F(PathPointTest, NoTypeNoThrow) {
   ASSERT_NO_THROW(point.getCurvature());
   ASSERT_NO_THROW(point.getDistance());
   ASSERT_NO_THROW(point.getVelocity());
   ASSERT_NO_THROW(point.getSegmentIndex());
 }
 
-TEST_F(PathPointTest, IdErrors) {
+TEST_F(PathPointTest, NoID) {
   EXPECT_EQ(point.getCurvature(), 0);
-}
-
-TEST_F(PathPointTest, Constructors) {
-  PathPoint();
-  PathPoint(5_in, 2_in);
-  PathPoint pointCopy(point);
 }
