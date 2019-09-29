@@ -20,7 +20,7 @@ void PathSegment::addSegments(const segments_t& isegments) {
   }
 }
 
-segments_t PathSegment::concat() {
+PathSegment::segments_t PathSegment::concat() const {
   return segments;
 }
 
