@@ -11,11 +11,11 @@ class PathPoint : public QPoint {
   using pathData_t = std::variant<std::monostate, double, QLength, QSpeed, QAcceleration>;
 
  public:
-  void setData(std::string iid, pathData_t idata);
-  pathData_t getData(std::string iid);
+  void setData(const std::string& iid, const pathData_t& idata);
+  pathData_t& getData(const std::string& iid);
 
-  template <typename T> T getValue(std::string iid) {
-    pathData_t data = getData(iid);
+  template <typename T> T getValue(const std::string& iid) {
+    pathData_t& data = getData(iid);
     if (std::holds_alternative<T>(data)) {
       return std::get<T>(data);
     } else if (std::holds_alternative<std::monostate>(data)) {
