@@ -26,7 +26,7 @@ std::vector<PathPoint> PathSegment::extract() const {
     if (std::holds_alternative<PathPoint>(segment)) {
       temp.push_back(std::get<PathPoint>(segment));
     } else {
-      std::vector<PathPoint> points = std::get<PathSegment>(segment).extract();
+      auto&& points = std::get<PathSegment>(segment).extract();
       for (auto&& point : points) {
         temp.push_back(point);
       }
