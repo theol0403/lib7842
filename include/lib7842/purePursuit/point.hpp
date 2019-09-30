@@ -39,8 +39,6 @@ struct QState : public QPoint {
   virtual QState operator-(const QState& rhs) const;
   virtual bool operator==(const QState& rhs) const;
   virtual bool operator!=(const QState& rhs) const;
-
-  operator QPoint() const;
 };
 
 } // namespace lib7842

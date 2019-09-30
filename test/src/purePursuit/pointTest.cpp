@@ -101,4 +101,16 @@ TEST_F(QStateTest, AccessorOperator) {
 TEST_F(QStateTest, Conversions) {
   EXPECT_EQ(QPoint(QState(point)), point);
   EXPECT_EQ(point, QPoint(state));
+
+  [&](const QPoint& ipoint) {
+    EXPECT_EQ(ipoint, QPoint(state));
+  }(state);
+
+  [&](const QState& istate) {
+    EXPECT_EQ(QState(QPoint(istate)), QState(QPoint(state)));
+  }(state);
+
+  [&](const QState& istate) {
+    EXPECT_EQ(QState(QPoint(istate)), QState(point));
+  }(QState(point));
 }
