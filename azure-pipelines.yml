@@ -45,3 +45,7 @@ jobs:
       valgrind --tool=memcheck --leak-check=full --leak-resolution=med --show-leak-kinds=all --undef-value-errors=yes --track-origins=yes  --error-exitcode=1 --show-reachable=no ./test/bin/main.exe
     displayName: "Run Valgrind"
 
+  - bash: |
+    ./cppCheck.sh
+  displayName: "Run CppCheck"
+
