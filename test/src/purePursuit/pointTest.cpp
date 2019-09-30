@@ -97,3 +97,8 @@ TEST_F(QStateTest, AccessorOperator) {
   ASSERT_THROW(state[5], std::runtime_error);
   ASSERT_THROW(state[-1], std::runtime_error);
 }
+
+TEST_F(QStateTest, Conversions) {
+  EXPECT_EQ(QPoint(QState(point)), point);
+  EXPECT_EQ(point, QPoint(state));
+}

@@ -3,13 +3,15 @@
 
 namespace lib7842 {
 
+struct QState; //forward declare
+
 struct QPoint {
   QLength x {0_in};
   QLength y {0_in};
 
   QPoint(const QLength& ix, const QLength& iy);
   QPoint() = default;
-  QPoint(const QPoint& ipoint) = default;
+  explicit QPoint(const QPoint& ipoint) = default;
 
   virtual QPoint operator+(const QPoint& rhs) const;
   virtual QPoint operator-(const QPoint& rhs) const;
@@ -30,13 +32,15 @@ struct QState : public QPoint {
 
   using QPoint::QPoint;
   QState(const QLength& ix, const QLength& iy, const QAngle& itheta);
-  QState(const QState& ipoint) = default;
-  QState(const QPoint& ipoint);
+  explicit QState(const QState& ipoint) = default;
+  explicit QState(const QPoint& ipoint);
 
   virtual QState operator+(const QState& rhs) const;
   virtual QState operator-(const QState& rhs) const;
   virtual bool operator==(const QState& rhs) const;
   virtual bool operator!=(const QState& rhs) const;
+
+  operator QPoint() const;
 };
 
 } // namespace lib7842
