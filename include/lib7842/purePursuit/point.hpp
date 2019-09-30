@@ -14,6 +14,9 @@ struct QPoint {
   virtual QPoint operator+(const QPoint& rhs) const;
   virtual QPoint operator-(const QPoint& rhs) const;
   virtual bool operator==(const QPoint& rhs) const;
+  virtual bool operator!=(const QPoint& rhs) const;
+
+  QLength& operator[](const size_t& index);
 
   QPoint normalize() const;
   QPoint scalarMult(const QLength& scalar) const;
@@ -33,6 +36,7 @@ struct QState : public QPoint {
   virtual QState operator+(const QState& rhs) const;
   virtual QState operator-(const QState& rhs) const;
   virtual bool operator==(const QState& rhs) const;
+  virtual bool operator!=(const QState& rhs) const;
 };
 
 } // namespace lib7842
