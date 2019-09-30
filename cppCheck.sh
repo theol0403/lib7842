@@ -1,4 +1,4 @@
-
+#!/bin/bash
 for I in $(find include/lib7842/ -type d); do
     DIR=$DIR" -I$I"
 done
