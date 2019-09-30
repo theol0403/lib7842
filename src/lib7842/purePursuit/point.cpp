@@ -100,4 +100,11 @@ bool QState::operator!=(const QState& rhs) const {
   return !(rhs == *this);
 }
 
+/**
+ * QState QPoint conversion overload
+ */
+QState::operator QPoint() const {
+  return {x, y};
+}
+
 } // namespace lib7842
