@@ -18,7 +18,7 @@ struct QPoint {
   virtual bool operator==(const QPoint& rhs) const;
   virtual bool operator!=(const QPoint& rhs) const;
 
-  QLength& operator[](const size_t& index);
+  QLength& operator[](const size_t& iindex);
 
   QPoint normalize() const;
   QPoint scalarMult(const QLength& scalar) const;
@@ -32,7 +32,7 @@ struct QState : public QPoint {
 
   using QPoint::QPoint;
   QState(const QLength& ix, const QLength& iy, const QAngle& itheta);
-  explicit QState(const QState& ipoint) = default;
+  explicit QState(const QState& istate) = default;
   explicit QState(const QPoint& ipoint);
 
   virtual QState operator+(const QState& rhs) const;
