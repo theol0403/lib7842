@@ -17,7 +17,7 @@ class PathSegment {
   PathSegment& addPoints(const std::vector<PathPoint>& ipoints);
   PathSegment& addSegments(const std::vector<PathSegment>& isegments);
 
-  std::vector<PathPoint> extract();
+  std::vector<PathPoint> extract() const;
 
   using PointRefList = std::vector<std::reference_wrapper<PathPoint>>;
   PointRefList extractRef();

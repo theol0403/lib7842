@@ -26,8 +26,8 @@ PathSegment& PathSegment::addSegments(const std::vector<PathSegment>& isegments)
   return *this;
 }
 
-std::vector<PathPoint> PathSegment::extract() {
-  PointRefList temp = extractRef();
+std::vector<PathPoint> PathSegment::extract() const {
+  PointRefList temp = const_cast<PathSegment*>(this)->extractRef();
   return std::vector<PathPoint>(temp.begin(), temp.end());
 }
 

@@ -21,7 +21,7 @@ struct QPoint {
   QLength& operator[](const size_t& iindex);
 
   QPoint normalize() const;
-  QPoint scalarMult(const QLength& scalar) const;
+  QPoint scalarMult(const double& scalar) const;
   QArea dot(const QPoint& rhs) const;
   QLength mag() const;
   QLength dist(const QPoint& rhs) const;

@@ -50,8 +50,8 @@ QPoint QPoint::normalize() const {
   return {x / mag().convert(meter), y / mag().convert(meter)};
 }
 
-QPoint QPoint::scalarMult(const QLength& scalar) const {
-  return {x * scalar.convert(meter), y * scalar.convert(meter)};
+QPoint QPoint::scalarMult(const double& scalar) const {
+  return {x * scalar, y * scalar};
 }
 
 QArea QPoint::dot(const QPoint& rhs) const {
