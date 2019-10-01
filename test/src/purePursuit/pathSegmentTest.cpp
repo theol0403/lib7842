@@ -30,6 +30,17 @@ TEST_F(PathSegmentTest, ExtractSegments) {
   }
 }
 
+TEST_F(PathSegmentTest, ExtractSegmentsRef) {
+  segment.addPoint(point1);
+  segment.addPoints({point1, point1});
+  PathSegment::PointRefList path = segment.extractRef();
+  PathSegment::PointRefList path2 = segment.extractRef();
+
+  for (size_t i = 0; i < path.size(); i++) {
+    ASSERT_EQ(&path[i].get(), &path2[i].get());
+  }
+}
+
 TEST_F(PathSegmentTest, ProperOrder) {
   segment.addPoint({1_in, 2_in});
   segment.addPoints({{2_in, 3_in}, {3_in, 4_in}});

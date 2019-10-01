@@ -26,18 +26,24 @@ PathSegment& PathSegment::addSegments(const std::vector<PathSegment>& isegments)
   return *this;
 }
 
-std::vector<PathPoint> PathSegment::extract() const {
-  std::vector<PathPoint> temp;
+std::vector<PathPoint> PathSegment::extract() {
+  PointRefList temp = extractRef();
+  return std::vector<PathPoint>(temp.begin(), temp.end());
+}
+
+PathSegment::PointRefList PathSegment::extractRef() {
+  PointRefList temp;
   for (auto&& segment : segments) {
     if (std::holds_alternative<PathPoint>(segment)) {
       temp.push_back(std::get<PathPoint>(segment));
     } else {
-      auto&& points = std::get<PathSegment>(segment).extract();
+      auto&& points = std::get<PathSegment>(segment).extractRef();
       for (auto&& point : points) {
         temp.push_back(point);
       }
     }
   }
+
   return temp;
 }
 
