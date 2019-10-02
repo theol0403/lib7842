@@ -21,6 +21,7 @@ jobs:
       mkdir -p artifacts
       cp *.zip artifacts
     displayName: Build Template
+
   - task: PublishPipelineArtifact@0
     inputs:
       targetPath: artifacts
@@ -48,3 +49,16 @@ jobs:
   - bash: |
       ./cppCheck.sh
     displayName: "Run CppCheck"
+
+  - bash: |
+      valgrind --tool=callgrind  --error-exitcode=1 ./test/bin/main.exe
+      mkdir -p callgrindOut
+      cp callgrind.out.* callgrindOut
+    displayName: "Run Callgrind"
+
+  - task: PublishPipelineArtifact@0
+    inputs:
+      targetPath: callgrindOut
+      artifactName: callgrind
+    condition: succeeded()
+    displayName: "Publish Callgrind"
