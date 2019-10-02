@@ -67,14 +67,14 @@ PathGenerator& PathGenerator::smoothen(const smoothGains& ismoothGains) {
   return *this;
 }
 
-// PathGenerator& PathGenerator::computeDistances(path) {
-//   path[0].setDistance(0);
-//   for (let i = 0; i < path.size() - 1; i++) {
-//     let distance = path[i].distance + distPathPoint(path[i], path[i + 1]);
-//     path[i + 1].setDistance(distance);
-//   }
-//   return path;
-// }
+PathGenerator& PathGenerator::computeDistances() {
+  path[0].setData("distance", 0_in);
+  for (size_t i = 0; i < path.size() - 1; i++) {
+    QLength distance = path[i].getValue<QLength>("distance") + path[i].dist(path[i + 1]);
+    path[i + 1].setData("distance", std::move(distance));
+  }
+  return *this;
+}
 
 // PathGenerator& PathGenerator::computeSingleCurvature(prevPoint, point, nextPoint) {
 //   let distOne = distPathPoint(point, prevPoint);
