@@ -18,15 +18,17 @@ PathGenerator::PathGenerator(const PathSegment& isegment) : path(isegment.extrac
 
 PathGenerator& PathGenerator::insertPoints(const QLength& iresolution) {
   Path newPath;
-  size_t numPoints = path.size();
 
-  for (size_t i = 0; i < numPoints - 1; i++) {
+  for (size_t i = 0; i < path.size() - 1; i++) {
     QPoint& start = path[i];
     QPoint& end = path[i + 1];
-
     QPoint diff = end - start;
+
     size_t numInsert =
       std::ceil((diff.mag() / iresolution).convert(number)); // number of points needed
+
+    newPath.reserve(newPath.capacity() + numInsert); // reserve vector capacity
+
     QPoint step = diff.scalarMult(1.0 / numInsert); // how much to increment each point
 
     for (size_t j = 0; j < numInsert; j++) {
@@ -34,13 +36,14 @@ PathGenerator& PathGenerator::insertPoints(const QLength& iresolution) {
       QLength yNew = start.y + step.y * j;
       PathPoint newPoint(xNew, yNew);
       newPoint.setData("segmentIndex", i);
-      newPath.push_back(newPoint);
+      newPath.push_back(std::move(newPoint));
     }
   }
 
   // push the last point
-  if (numPoints > 0) newPath.push_back(path.back());
-  // return path;
+  if (path.size() > 0) newPath.push_back(std::move(path.back()));
+  path = std::move(newPath);
+  return *this;
 }
 
 // PathGenerator& PathGenerator::smoothen(inp, dataWeight, tolerance) {
