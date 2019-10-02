@@ -10,7 +10,7 @@ class PathGenerator {
 
   struct smoothGains {
     const double& weight;
-    const double& threshold;
+    const QLength& tolerance;
   };
 
   struct velGains {
@@ -22,7 +22,7 @@ class PathGenerator {
   using Path = std::vector<PathPoint>;
 
  public:
-  PathGenerator(const PathSegment& isegment);
+  explicit PathGenerator(const PathSegment& isegment);
 
   Path generate(
     const QLength& iresolution, const smoothGains& ismoothGains, const velGains& ivelGains);

@@ -46,25 +46,26 @@ PathGenerator& PathGenerator::insertPoints(const QLength& iresolution) {
   return *this;
 }
 
-// PathGenerator& PathGenerator::smoothen(inp, dataWeight, tolerance) {
-//   let path = _.cloneDeep(inp); //copy
-//   let smoothWeight = 1.0 - dataWeight;
-//   let change = tolerance;
-//   while (change >= tolerance) {
-//     change = 0.0;
-//     for (let i = 1; i < inp.size() - 1; i++) {
-//       for (let j = 0; j < 2; j++) {
-//         let aux = path[i].loc[j];
-//         let dataFac = dataWeight * (inp[i].loc[j] - path[i].loc[j]);
-//         let smoothFac =
-//           smoothWeight * (path[i - 1].loc[j] + path[i + 1].loc[j] - (2.0 * path[i].loc[j]));
-//         path[i].loc[j] += (dataFac + smoothFac);
-//         change = std::abs(aux - path[i].loc[j]);
-//       }
-//     }
-//   }
-//   return path;
-// }
+PathGenerator& PathGenerator::smoothen(const smoothGains& ismoothGains) {
+  Path newPath = path; //copy
+  double smoothWeight = 1.0 - ismoothGains.weight;
+  QLength change = ismoothGains.tolerance;
+  while (change >= ismoothGains.tolerance) {
+    change = 0.0_in;
+    for (size_t i = 1; i < path.size() - 1; i++) {
+      for (size_t j = 0; j < 2; j++) {
+        QLength aux = newPath[i][j];
+        QLength dataFac = ismoothGains.weight * (path[i][j] - newPath[i][j]);
+        QLength smoothFac =
+          smoothWeight * (newPath[i - 1][j] + path[i + 1][j] - (2.0 * newPath[i][j]));
+        newPath[i][j] += (dataFac + smoothFac);
+        change = (aux - newPath[i][j]).abs();
+      }
+    }
+  }
+  path = std::move(newPath);
+  return *this;
+}
 
 // PathGenerator& PathGenerator::computeDistances(path) {
 //   path[0].setDistance(0);
