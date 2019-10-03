@@ -6,7 +6,7 @@ resources:
 
 jobs:
 - job: Build
-  timeoutInMinutes: 5
+  timeoutInMinutes: 10
 
   pool:
     vmImage: 'ubuntu-latest'
@@ -21,6 +21,7 @@ jobs:
       mkdir -p artifacts
       cp *.zip artifacts
     displayName: Build Template
+
   - task: PublishPipelineArtifact@0
     inputs:
       targetPath: artifacts
@@ -38,13 +39,28 @@ jobs:
     displayName: Build Tests
 
   - bash: |
+      valgrind --tool=memcheck --leak-check=full --leak-resolution=med --show-leak-kinds=all --undef-value-errors=yes --track-origins=yes --show-reachable=no ./test/bin/main.exe
+    displayName: "Run Valgrind"
+    continueOnError: true
+
+  - bash: |
       ./test/bin/main.exe
     displayName: Run Tests
 
   - bash: |
-      valgrind --tool=memcheck --leak-check=full --leak-resolution=med --show-leak-kinds=all --undef-value-errors=yes --track-origins=yes  --error-exitcode=1 --show-reachable=no ./test/bin/main.exe
-    displayName: "Run Valgrind"
-
-  - bash: |
       ./cppCheck.sh
     displayName: "Run CppCheck"
+    condition: always()
+
+  - bash: |
+      valgrind --tool=callgrind  --error-exitcode=0 ./test/bin/main.exe
+      mkdir -p callgrindOut
+      cp callgrind.out.* callgrindOut
+    displayName: "Run Callgrind"
+
+  - task: PublishPipelineArtifact@0
+    inputs:
+      targetPath: callgrindOut
+      artifactName: callgrind
+    condition: succeeded()
+    displayName: "Publish Callgrind"
