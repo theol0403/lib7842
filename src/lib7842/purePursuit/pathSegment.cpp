@@ -2,7 +2,7 @@
 
 namespace lib7842 {
 
-PathSegment& PathSegment::addPoint(const PathPoint& ipoint) {
+PathSegment& PathSegment::addPoint(const QPoint& ipoint) {
   segments.push_back(ipoint);
   return *this;
 }
@@ -12,7 +12,7 @@ PathSegment& PathSegment::addSegment(const PathSegment& isegment) {
   return *this;
 }
 
-PathSegment& PathSegment::addPoints(const std::vector<PathPoint>& ipoints) {
+PathSegment& PathSegment::addPoints(const std::vector<QPoint>& ipoints) {
   for (auto&& ipoint : ipoints) {
     addPoint(ipoint);
   }
@@ -26,16 +26,16 @@ PathSegment& PathSegment::addSegments(const std::vector<PathSegment>& isegments)
   return *this;
 }
 
-std::vector<PathPoint> PathSegment::extract() const {
+std::vector<QPoint> PathSegment::extract() const {
   PointRefList temp = const_cast<PathSegment*>(this)->extractRef();
-  return std::vector<PathPoint>(temp.begin(), temp.end());
+  return std::vector<QPoint>(temp.begin(), temp.end());
 }
 
 PathSegment::PointRefList PathSegment::extractRef() {
   PointRefList temp;
   for (auto&& segment : segments) {
-    if (std::holds_alternative<PathPoint>(segment)) {
-      temp.push_back(std::get<PathPoint>(segment));
+    if (std::holds_alternative<QPoint>(segment)) {
+      temp.push_back(std::get<QPoint>(segment));
     } else {
       auto&& points = std::get<PathSegment>(segment).extractRef();
       for (auto&& point : points) {
