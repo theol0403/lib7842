@@ -3,8 +3,8 @@
 namespace lib7842 {
 
 PathGenerator::PathGenerator(const PathSegment& isegment) {
-  std::vector<QPoint> points = isegment.extract();
-  path = std::move(std::vector<PathPoint>(points.begin(), points.end()));
+  PathSegment::PointRefList temp = isegment.extractRef();
+  path = std::move(std::vector<PathPoint>(temp.begin(), temp.end()));
 }
 
 // PathGenerator::Path PathGenerator::generate(
