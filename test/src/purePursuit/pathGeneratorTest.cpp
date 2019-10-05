@@ -63,3 +63,15 @@ TEST_F(PathGeneratorTest, ComputeDistances) {
     ASSERT_NEAR(generator.path[i].getValue<QLength>("distance").convert(inch), i, 1e-10);
   }
 }
+
+TEST_F(PathGeneratorTest, ComputeSingleCurvature) {
+  double straight =
+    PathGenerator::computeSingleCurvature({0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in});
+  ASSERT_EQ(straight, 0);
+
+  double curv = PathGenerator::computeSingleCurvature({0_in, 0_in}, {3_in, 5_in}, {0_in, 10_in});
+  ASSERT_NE(curv, 0);
+
+  double turn = PathGenerator::computeSingleCurvature({0_in, 0_in}, {3_in, 5_in}, {0_in, 0_in});
+  ASSERT_EQ(turn, 0);
+}

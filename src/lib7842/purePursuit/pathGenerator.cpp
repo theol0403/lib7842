@@ -76,22 +76,6 @@ PathGenerator& PathGenerator::computeDistances() {
   return *this;
 }
 
-// PathGenerator& PathGenerator::computeSingleCurvature(prevPoint, point, nextPoint) {
-//   let distOne = distPathPoint(point, prevPoint);
-//   let distTwo = distPathPoint(point, nextPoint);
-//   let distThree = distPathPoint(nextPoint, prevPoint);
-
-//   let productOfSides = distOne * distTwo * distThree;
-//   let semiPerimeter = (distOne + distTwo + distThree) / 2;
-//   let triangleArea = std::sqrt(
-//     semiPerimeter * (semiPerimeter - distOne) * (semiPerimeter - distTwo)
-//     * (semiPerimeter - distThree));
-
-//   let r = (productOfSides) / (4 * triangleArea);
-//   let curvature = isNaN(1 / r) ? 0 : 1 / r;
-//   return curvature;
-// }
-
 // PathGenerator& PathGenerator::computeCurvatures(path) {
 //   path[0].setCurvature(0);
 //   for (let i = 1; i < path.size() - 1; i++) {
@@ -129,4 +113,26 @@ PathGenerator& PathGenerator::computeDistances() {
 //   }
 //   return path;
 // }
+
+double PathGenerator::computeSingleCurvature(
+  const QPoint& prevPoint, const QPoint& point, const QPoint& nextPoint) {
+  double distOne = point.dist(prevPoint).convert(meter);
+  double distTwo = point.dist(nextPoint).convert(meter);
+  double distThree = nextPoint.dist(prevPoint).convert(meter);
+
+  double productOfSides = distOne * distTwo * distThree;
+  double semiPerimeter = (distOne + distTwo + distThree) / 2;
+
+  double triangleArea = std::sqrt(
+    semiPerimeter * //
+    (semiPerimeter - distOne) * //
+    (semiPerimeter - distTwo) * //
+    (semiPerimeter - distThree));
+
+  double r = (productOfSides) / (4 * triangleArea);
+  double curvature = std::isnan(1 / r) ? 0 : 1 / r;
+  std::cout << std::isnan(1 / r) << std::endl;
+  return curvature;
+}
+
 } // namespace lib7842
