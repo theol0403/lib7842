@@ -130,8 +130,7 @@ QCurvature PathGenerator::computeSingleCurvature(
     (semiPerimeter - distThree));
 
   double r = (productOfSides) / (4 * triangleArea);
-  double curv = std::isnan(1 / r) ? 0 : 1 / r;
-  std::cout << std::isnan(1 / r) << std::endl;
+  double curv = std::isnormal(1 / r) ? 1 / r : 0;
   return curv * curvature;
 }
 

@@ -9,14 +9,18 @@ namespace lib7842 {
 constexpr Number number(1.0);
 
 /**
- * Define Curvature dimention which is length-1
+ * Define Curvature dimension which is length-1
  */
 QUANTITY_TYPE(0, -1, 0, 0, QCurvature)
 
 /**
- * Curvature unit and literals
+ * Curvature unit
  */
 constexpr QCurvature curvature(1.0);
+
+/**
+ * Curvature literals
+ */
 constexpr QCurvature operator"" _curv(long double x) {
   return QCurvature(x);
 }
