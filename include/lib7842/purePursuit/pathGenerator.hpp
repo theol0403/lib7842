@@ -39,7 +39,7 @@ class PathGenerator {
   Path get() const;
   Path& getRef();
 
-  static double
+  static QCurvature
     computeSingleCurvature(const QPoint& prevPoint, const QPoint& point, const QPoint& nextPoint);
 
  protected:

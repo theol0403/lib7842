@@ -1,6 +1,7 @@
 #pragma once
 #include "main.h"
 #include "point.hpp"
+#include "lib7842/other/utility.hpp"
 #include <variant>
 
 namespace lib7842 {
@@ -8,7 +9,8 @@ namespace lib7842 {
 class PathPoint : public QPoint {
 
   using QPoint::QPoint;
-  using pathData_t = std::variant<std::monostate, double, QLength, QSpeed, QAcceleration>;
+  using pathData_t =
+    std::variant<std::monostate, double, QLength, QSpeed, QAcceleration, QCurvature>;
 
  public:
   void setData(const std::string& iid, const pathData_t& idata);

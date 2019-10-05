@@ -65,13 +65,14 @@ TEST_F(PathGeneratorTest, ComputeDistances) {
 }
 
 TEST_F(PathGeneratorTest, ComputeSingleCurvature) {
-  double straight =
+  QCurvature straight =
     PathGenerator::computeSingleCurvature({0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in});
-  ASSERT_EQ(straight, 0);
+  ASSERT_EQ(straight, 0_curv);
 
-  double curv = PathGenerator::computeSingleCurvature({0_in, 0_in}, {3_in, 5_in}, {0_in, 10_in});
-  ASSERT_NE(curv, 0);
+  QCurvature curv =
+    PathGenerator::computeSingleCurvature({0_in, 0_in}, {3_in, 5_in}, {0_in, 10_in});
+  ASSERT_NE(curv, 0_curv);
 
-  double turn = PathGenerator::computeSingleCurvature({0_in, 0_in}, {3_in, 5_in}, {0_in, 0_in});
-  ASSERT_EQ(turn, 0);
+  QCurvature turn = PathGenerator::computeSingleCurvature({0_in, 0_in}, {3_in, 5_in}, {0_in, 0_in});
+  ASSERT_EQ(turn, 0_curv);
 }

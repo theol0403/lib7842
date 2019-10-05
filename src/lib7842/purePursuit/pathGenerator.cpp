@@ -76,8 +76,8 @@ PathGenerator& PathGenerator::computeDistances() {
   return *this;
 }
 
-// PathGenerator& PathGenerator::computeCurvatures(path) {
-//   path[0].setCurvature(0);
+// PathGenerator& PathGenerator::computeCurvatures() {
+//   path[0].setData("curvature", 0);
 //   for (let i = 1; i < path.size() - 1; i++) {
 //     let curvature = computeSingleCurvature(path[i - 1], path[i], path[i + 1]);
 //     path[i].setCurvature(curvature);
@@ -114,7 +114,7 @@ PathGenerator& PathGenerator::computeDistances() {
 //   return path;
 // }
 
-double PathGenerator::computeSingleCurvature(
+QCurvature PathGenerator::computeSingleCurvature(
   const QPoint& prevPoint, const QPoint& point, const QPoint& nextPoint) {
   double distOne = point.dist(prevPoint).convert(meter);
   double distTwo = point.dist(nextPoint).convert(meter);
@@ -130,9 +130,9 @@ double PathGenerator::computeSingleCurvature(
     (semiPerimeter - distThree));
 
   double r = (productOfSides) / (4 * triangleArea);
-  double curvature = std::isnan(1 / r) ? 0 : 1 / r;
+  double curv = std::isnan(1 / r) ? 0 : 1 / r;
   std::cout << std::isnan(1 / r) << std::endl;
-  return curvature;
+  return curv * curvature;
 }
 
 } // namespace lib7842
