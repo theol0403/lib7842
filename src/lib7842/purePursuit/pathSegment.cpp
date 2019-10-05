@@ -27,11 +27,11 @@ PathSegment& PathSegment::addSegments(const std::vector<PathSegment>& isegments)
 }
 
 std::vector<QPoint> PathSegment::extract() const {
-  PointRefList temp = const_cast<PathSegment*>(this)->extractRef();
+  PointRefList temp = extractRef();
   return std::vector<QPoint>(temp.begin(), temp.end());
 }
 
-PathSegment::PointRefList PathSegment::extractRef() {
+PathSegment::PointRefList PathSegment::extractRef() const {
   PointRefList temp;
   for (auto&& segment : segments) {
     if (std::holds_alternative<QPoint>(segment)) {

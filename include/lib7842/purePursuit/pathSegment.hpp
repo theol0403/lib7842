@@ -20,8 +20,8 @@ class PathSegment {
 
   std::vector<QPoint> extract() const;
 
-  using PointRefList = std::vector<std::reference_wrapper<QPoint>>;
-  PointRefList extractRef();
+  using PointRefList = std::vector<std::reference_wrapper<const QPoint>>;
+  PointRefList extractRef() const;
 
  protected:
   std::list<std::variant<QPoint, PathSegment>> segments {};
