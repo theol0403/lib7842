@@ -76,15 +76,15 @@ PathGenerator& PathGenerator::computeDistances() {
   return *this;
 }
 
-// PathGenerator& PathGenerator::computeCurvatures() {
-//   path[0].setData("curvature", 0);
-//   for (let i = 1; i < path.size() - 1; i++) {
-//     let curvature = computeSingleCurvature(path[i - 1], path[i], path[i + 1]);
-//     path[i].setCurvature(curvature);
-//   }
-//   path[path.size() - 1].setCurvature(0);
-//   return path;
-// }
+PathGenerator& PathGenerator::computeCurvatures() {
+  path[0].setData("curvature", 0_curv);
+  for (size_t i = 1; i < path.size() - 1; i++) {
+    QCurvature curv = computeSingleCurvature(path[i - 1], path[i], path[i + 1]);
+    path[i].setData("curvature", curv);
+  }
+  path.back().setData("curvature", 0_curv);
+  return *this;
+}
 
 // PathGenerator& PathGenerator::computeVelocity(path, maxVel, maxRate, k) {
 //   path[path.size() - 1].setVelocity(0);

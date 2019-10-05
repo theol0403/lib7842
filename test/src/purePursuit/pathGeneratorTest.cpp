@@ -76,3 +76,29 @@ TEST_F(PathGeneratorTest, ComputeSingleCurvature) {
   QCurvature turn = PathGenerator::computeSingleCurvature({0_in, 0_in}, {3_in, 5_in}, {0_in, 0_in});
   ASSERT_EQ(turn, 0_curv);
 }
+
+TEST_F(PathGeneratorTest, ComputeCurvatures) {
+  PathGeneratorTester generatorStraight(
+    PathSegment().addPoints({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}));
+  generatorStraight.computeCurvatures();
+  ASSERT_EQ(generatorStraight.path[1].getValue<QCurvature>("curvature"), 0_curv);
+
+  ASSERT_EQ(generatorStraight.path[0].getValue<QCurvature>("curvature"), 0_curv);
+  ASSERT_EQ(generatorStraight.path[2].getValue<QCurvature>("curvature"), 0_curv);
+
+  PathGeneratorTester generatorCurv(
+    PathSegment().addPoints({{0_in, 0_in}, {3_in, 5_in}, {0_in, 10_in}}));
+  generatorCurv.computeCurvatures();
+  ASSERT_NE(generatorCurv.path[1].getValue<QCurvature>("curvature"), 0_curv);
+
+  ASSERT_EQ(generatorCurv.path[0].getValue<QCurvature>("curvature"), 0_curv);
+  ASSERT_EQ(generatorCurv.path[2].getValue<QCurvature>("curvature"), 0_curv);
+
+  PathGeneratorTester generatorTurn(
+    PathSegment().addPoints({{0_in, 0_in}, {3_in, 5_in}, {0_in, 0_in}}));
+  generatorTurn.computeCurvatures();
+  ASSERT_EQ(generatorTurn.path[1].getValue<QCurvature>("curvature"), 0_curv);
+
+  ASSERT_EQ(generatorTurn.path[0].getValue<QCurvature>("curvature"), 0_curv);
+  ASSERT_EQ(generatorTurn.path[2].getValue<QCurvature>("curvature"), 0_curv);
+}
