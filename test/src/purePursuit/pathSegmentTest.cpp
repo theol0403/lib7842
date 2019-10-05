@@ -4,7 +4,7 @@
 class PathSegmentTest : public ::testing::Test {
  protected:
   PathSegment segment;
-  PathPoint point1 {5_in, 3_in};
+  QPoint point1 {5_in, 3_in};
 };
 
 TEST_F(PathSegmentTest, Constructors) {
@@ -22,7 +22,7 @@ TEST_F(PathSegmentTest, ExtractSegments) {
   segment.addPoint(point1);
   segment.addPoints({point1, point1});
   segment.addSegment(PathSegment());
-  std::vector<PathPoint> path = segment.extract();
+  std::vector<QPoint> path = segment.extract();
 
   ASSERT_EQ(path.size(), 3);
   for (auto&& point : path) {
@@ -55,10 +55,10 @@ TEST_F(PathSegmentTest, ProperOrder) {
   segment.addSegment(segment1);
   segment.addSegments({PathSegment(segment4), segment5});
 
-  std::vector<PathPoint> path = segment.extract();
+  std::vector<QPoint> path = segment.extract();
 
   ASSERT_EQ(path.size(), 8);
   for (size_t i = 0; i < path.size(); ++i) {
-    ASSERT_EQ(path[i], (PathPoint {(i + 1) * inch, (i + 2) * inch}));
+    ASSERT_EQ(path[i], (QPoint {(i + 1) * inch, (i + 2) * inch}));
   }
 }
