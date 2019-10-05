@@ -2,6 +2,12 @@
 
 namespace lib7842 {
 
+/**
+ * QState Constructor 
+ * import QPoint 
+ */
+PathPoint::PathPoint(const QPoint& ipoint) : QPoint(ipoint) {};
+
 void PathPoint::setData(const std::string& iid, const pathData_t& idata) {
   pathData[iid] = idata;
 }
