@@ -22,10 +22,10 @@ class CompoundPath : AbstractPath {
    * Explicit Functions
    */
   CompoundPath& addPoint(const QPoint& ipoint);
-  CompoundPath& addSegment(const AbstractPath& isegment);
+  CompoundPath& addPath(const AbstractPath& ipath);
 
   CompoundPath& addPoints(const std::vector<QPoint>& ipoints);
-  CompoundPath& addSegments(const std::vector<AbstractPath>& isegments);
+  CompoundPath& addPaths(const std::vector<AbstractPath>& ipaths);
 
   /**
    * Extractors
