@@ -1,6 +1,6 @@
 #pragma once
 #include "main.h"
-#include "lib7842/path/point.hpp"
+#include "lib7842/point/point.hpp"
 #include <variant>
 #include <list>
 
