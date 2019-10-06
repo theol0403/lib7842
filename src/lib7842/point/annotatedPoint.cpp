@@ -1,4 +1,4 @@
-#include "AnnotatedPoint.hpp"
+#include "annotatedPoint.hpp"
 
 namespace lib7842 {
 
