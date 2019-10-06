@@ -37,7 +37,7 @@ ReferencePath CompoundPath::extractRef() const {
     if (std::holds_alternative<QPoint>(segment)) {
       temp.push_back(std::get<QPoint>(segment));
     } else {
-      auto&& points = std::get<AbstractPath>(segment).extractRef();
+      auto&& points = std::get<AbstractPathRef>(segment).get().extractRef();
       for (auto&& point : points) {
         temp.push_back(point);
       }

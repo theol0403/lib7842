@@ -34,7 +34,8 @@ class CompoundPath : AbstractPath {
   virtual ReferencePath extractRef() const override;
 
  protected:
-  std::vector<std::variant<QPoint, AbstractPath>> path {};
+  using AbstractPathRef = std::reference_wrapper<const AbstractPath>;
+  std::vector<std::variant<QPoint, AbstractPathRef>> path {};
 };
 
 } // namespace lib7842
