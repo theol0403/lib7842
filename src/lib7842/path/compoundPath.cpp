@@ -2,21 +2,23 @@
 
 namespace lib7842 {
 
+CompoundPath::CompoundPath(const CompoundPath& ipath) : AbstractPath() {
+  CompoundPath& ipathc = const_cast<CompoundPath&>(ipath);
+  std::move(ipathc.path.begin(), ipathc.path.end(), std::back_inserter(path));
+}
+
+CompoundPath::CompoundPath(const AbstractPath& ipath) {
+  addPath(ipath);
+}
+
 CompoundPath::CompoundPath(std::unique_ptr<AbstractPath> ipath) {
   addPath(std::move(ipath));
 }
 
-CompoundPath& CompoundPath::addPoint(const QPoint& ipoint) {
-  path.emplace_back(ipoint);
-  return *this;
-}
-
-CompoundPath& CompoundPath::addPoints(const std::vector<QPoint>& ipoints) {
-  for (auto&& ipoint : ipoints) {
-    addPoint(ipoint);
-  }
-  return *this;
-}
+// CompoundPath& CompoundPath::addPath(const AbstractPath& ipath) {
+//   addPath(std::make_unique<AbstractPath>(ipath));
+//   return *this;
+// }
 
 CompoundPath& CompoundPath::addPath(std::unique_ptr<AbstractPath> ipath) {
   path.emplace_back(std::move(ipath));
@@ -31,16 +33,10 @@ SimplePath CompoundPath::extract() const {
 ReferencePath CompoundPath::extractRef() const {
   std::vector<ReferencePath::PointRef> temp;
   for (auto&& segment : path) {
-    if (std::holds_alternative<QPoint>(segment)) {
-      temp.emplace_back(std::get<QPoint>(segment));
-    } else {
-      ReferencePath ipath = std::get<AbstractPathPtr>(segment).get()->extractRef();
-      for (auto&& ipoint : ipath.get()) {
-        temp.emplace_back(ipoint);
-      }
+    for (auto&& ipoint : segment->extractRef().get()) {
+      temp.emplace_back(ipoint);
     }
   }
-
   return ReferencePath(temp);
 }
 

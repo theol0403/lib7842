@@ -14,15 +14,15 @@ TEST_F(CompoundPathTest, Constructors) {
 }
 
 TEST_F(CompoundPathTest, AddPaths) {
-  path.addPoint(point1);
-  path.addPoints({point1, point1});
   path.addPath(std::make_unique<SimplePath>());
   path.addPath(std::make_unique<ReferencePath>());
+  path.addPath(SimplePath {point1});
+  path.addPath(SimplePath({point1, point1}));
 }
 
 TEST_F(CompoundPathTest, ExtractSegments) {
-  path.addPoint(point1);
-  path.addPoints({point1, point1});
+  path.addPath(SimplePath({point1}));
+  path.addPath(SimplePath({point1, point1}));
   path.addPath(std::make_unique<SimplePath>());
 
   std::vector<QPoint> ipath = path.extract().get();
@@ -33,10 +33,11 @@ TEST_F(CompoundPathTest, ExtractSegments) {
 }
 
 TEST_F(CompoundPathTest, ExtractSegmentsRef) {
-  path.addPoint(point1);
-  path.addPoints({point1, point1});
-  SimplePath simple({{5_in, 3_in}});
+  path.addPath(SimplePath({point1}));
+  path.addPath(SimplePath({point1, point1}));
   path.addPath(std::make_unique<SimplePath>());
+  path.addPath(SimplePath({{5_in, 3_in}}));
+
   ReferencePath ipath = path.extractRef();
   ReferencePath ipath2 = path.extractRef();
 
@@ -46,21 +47,21 @@ TEST_F(CompoundPathTest, ExtractSegmentsRef) {
 }
 
 TEST_F(CompoundPathTest, ProperOrder) {
-  path.addPoint({1_in, 2_in});
-  path.addPoints({{2_in, 3_in}, {3_in, 4_in}});
+  path.addPath(SimplePath({{1_in, 2_in}}));
+  path.addPath(SimplePath({{2_in, 3_in}, {3_in, 4_in}}));
 
-  CompoundPath segment1 = CompoundPath().addPoints({{4_in, 5_in}, {5_in, 6_in}});
-  CompoundPath segment2 = CompoundPath().addPoint({6_in, 7_in});
-  CompoundPath segment3 = CompoundPath().addPoint({7_in, 8_in});
+  CompoundPath segment1 = CompoundPath().addPath(SimplePath({{4_in, 5_in}, {5_in, 6_in}}));
+  CompoundPath segment2 = CompoundPath().addPath(SimplePath({{6_in, 7_in}}));
+  CompoundPath segment3 = CompoundPath().addPath(SimplePath({{7_in, 8_in}}));
   CompoundPath segment3b = CompoundPath(std::make_unique<CompoundPath>(segment3));
   CompoundPath segment4 = CompoundPath()
-                            .addPath(std::unique_ptr<CompoundPath>(&segment2))
-                            .addPath(std::unique_ptr<CompoundPath>(&segment3b));
-  CompoundPath segment5 = CompoundPath().addPoint({8_in, 9_in});
+                            .addPath(std::move(std::unique_ptr<CompoundPath>(&segment2)))
+                            .addPath(std::move(std::unique_ptr<CompoundPath>(&segment3b)));
+  CompoundPath segment5 = CompoundPath().addPath(SimplePath({{8_in, 9_in}}));
 
-  path.addPath(std::unique_ptr<CompoundPath>(&segment1));
-  path.addPath(std::unique_ptr<CompoundPath>(&segment4))
-    .addPath(std::unique_ptr<CompoundPath>(&segment5));
+  path.addPath(std::move(std::unique_ptr<CompoundPath>(&segment1)));
+  path.addPath(std::move(std::unique_ptr<CompoundPath>(&segment4)))
+    .addPath(std::move(std::unique_ptr<CompoundPath>(&segment5)));
 
   std::vector<QPoint> ipath = path.extract().get();
 

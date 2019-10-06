@@ -1,6 +1,7 @@
 #pragma once
 #include "main.h"
 #include "abstractPath.hpp"
+#include "simplePath.hpp"
 #include "referencePath.hpp"
 
 #include "lib7842/point/point.hpp"
@@ -15,20 +16,19 @@ class CompoundPath : public AbstractPath {
    * Default Constructors
    */
   CompoundPath() = default;
-  CompoundPath(const CompoundPath& ipath) = default;
+  CompoundPath(const CompoundPath& ipath); // moves pointer
   virtual ~CompoundPath() = default;
 
   /**
    * Explicit Constructors
    */
+  explicit CompoundPath(const AbstractPath& ipath);
   explicit CompoundPath(std::unique_ptr<AbstractPath> ipath);
 
   /**
    * Explicit Functions
    */
-  CompoundPath& addPoint(const QPoint& ipoint);
-  CompoundPath& addPoints(const std::vector<QPoint>& ipoints);
-
+  CompoundPath& addPath(const AbstractPath& ipath);
   CompoundPath& addPath(std::unique_ptr<AbstractPath> ipath);
 
   /**
@@ -37,31 +37,8 @@ class CompoundPath : public AbstractPath {
   virtual SimplePath extract() const override;
   virtual ReferencePath extractRef() const override;
 
- private:
-  /**
-   * Wrapper Class to provide fake copy to unique_ptr
-   */
-  class AbstractPathPtr {
-   public:
-    AbstractPathPtr(std::unique_ptr<AbstractPath> ipath) : path(std::move(ipath)) {}
-    AbstractPathPtr(const AbstractPathPtr& ipath) {
-      // if (ipath.path.get()) {
-      //   std::stringstream ss;
-      //   ss << "AbstractPathPtr: Called copy constructor: ";
-      //   ss << ipath.path.get();
-      //   throw std::runtime_error(ss.str());
-      // }
-    }
-    const std::unique_ptr<AbstractPath>& get() const {
-      return path;
-    };
-
-   protected:
-    std::unique_ptr<AbstractPath> path {nullptr};
-  };
-
  protected:
-  std::vector<std::variant<QPoint, AbstractPathPtr>> path;
+  std::vector<std::unique_ptr<AbstractPath>> path {};
 }; // namespace lib7842
 
 } // namespace lib7842

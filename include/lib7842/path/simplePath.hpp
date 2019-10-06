@@ -20,6 +20,7 @@ class SimplePath : public AbstractPath {
   /**
    * Explicit Constructors
    */
+  explicit SimplePath(const std::initializer_list<QPoint>& ipath);
   explicit SimplePath(const std::vector<QPoint>& ipath);
 
   /**
