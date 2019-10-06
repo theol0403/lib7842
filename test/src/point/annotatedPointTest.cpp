@@ -36,9 +36,21 @@ TEST_F(AnnotatedPointTest, TypeErrors) {
   ASSERT_THROW(point.getData<double>("segmentIndex"), std::runtime_error);
 }
 
-TEST_F(AnnotatedPointTest, NoTypeNoThrow) {
+TEST_F(AnnotatedPointTest, NoID) {
   ASSERT_THROW(point.getData<QCurvature>("curvature"), std::runtime_error);
   ASSERT_THROW(point.getData<QLength>("distance"), std::runtime_error);
   ASSERT_THROW(point.getData<QSpeed>("velocity"), std::runtime_error);
   ASSERT_THROW(point.getData<double>("segmentIndex"), std::runtime_error);
+}
+
+TEST_F(AnnotatedPointTest, NoData) {
+  point.setData("curvature", std::monostate());
+  point.setData("distance", std::monostate());
+  point.setData("velocity", std::monostate());
+  point.setData("segmentIndex", std::monostate());
+
+  EXPECT_EQ(point.getData<QCurvature>("curvature"), 0_curv);
+  EXPECT_EQ(point.getData<QLength>("distance"), 0_m);
+  EXPECT_EQ(point.getData<QSpeed>("velocity"), 0_mps);
+  EXPECT_EQ(point.getData<double>("segmentIndex"), 0);
 }
