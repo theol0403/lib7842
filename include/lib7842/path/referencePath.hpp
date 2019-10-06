@@ -23,12 +23,15 @@ class ReferencePath : public AbstractPath {
   ReferencePath(const std::vector<PointRef>& ipath);
 
   /**
+   * Explicit Functions
+   */
+  std::vector<PointRef>& get();
+
+  /**
    * Extractors
    */
   virtual SimplePath extract() const override;
   virtual ReferencePath extractRef() const override;
-
-  std::vector<PointRef>& get();
 
  protected:
   std::vector<PointRef> path {};
