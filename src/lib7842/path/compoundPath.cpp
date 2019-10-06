@@ -2,8 +2,8 @@
 
 namespace lib7842 {
 
-CompoundPath::CompoundPath(const AbstractPath& ipath) {
-  addPath(ipath);
+CompoundPath::CompoundPath(std::unique_ptr<AbstractPath> ipath) {
+  addPath(std::move(ipath));
 }
 
 CompoundPath& CompoundPath::addPoint(const QPoint& ipoint) {
@@ -11,8 +11,8 @@ CompoundPath& CompoundPath::addPoint(const QPoint& ipoint) {
   return *this;
 }
 
-CompoundPath& CompoundPath::addPath(const AbstractPath& ipath) {
-  path.push_back(ipath);
+CompoundPath& CompoundPath::addPath(std::unique_ptr<AbstractPath> ipath) {
+  path.push_back(std::move(ipath));
   return *this;
 }
 
@@ -41,7 +41,7 @@ ReferencePath CompoundPath::extractRef() const {
     if (std::holds_alternative<QPoint>(segment)) {
       temp.push_back(std::get<QPoint>(segment));
     } else {
-      auto&& ipath = std::get<AbstractPathRef>(segment).get().extractRef();
+      ReferencePath ipath = std::get<AbstractPathPtr>(segment).get()->extractRef();
       for (auto&& ipoint : ipath.get()) {
         temp.push_back(ipoint);
       }
