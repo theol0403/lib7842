@@ -1,9 +1,10 @@
 #pragma once
 #include "main.h"
 #include "abstractPath.hpp"
+#include "referencePath.hpp"
+
 #include "lib7842/point/point.hpp"
 #include <variant>
-#include <list>
 
 namespace lib7842 {
 
@@ -33,7 +34,7 @@ class CompoundPath : AbstractPath {
   virtual ReferencePath extractRef() const override;
 
  protected:
-  std::vector<std::variant<QPoint, CompoundPath>> path {};
+  std::vector<std::variant<QPoint, AbstractPath>> path {};
 };
 
 } // namespace lib7842

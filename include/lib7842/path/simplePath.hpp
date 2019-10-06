@@ -1,6 +1,8 @@
 #pragma once
 #include "main.h"
 #include "abstractPath.hpp"
+#include "referencePath.hpp"
+
 #include "lib7842/point/point.hpp"
 
 namespace lib7842 {

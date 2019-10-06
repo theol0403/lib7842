@@ -8,7 +8,12 @@ std::vector<QPoint>& SimplePath::get() {
   return path;
 }
 
-// SimplePath SimplePath::extract() const {}
-// ReferencePath SimplePath::extractRef() const {}
+SimplePath SimplePath::extract() const {
+  return SimplePath(path);
+}
+
+ReferencePath SimplePath::extractRef() const {
+  return ReferencePath({path.begin(), path.end()});
+}
 
 } // namespace lib7842

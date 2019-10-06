@@ -18,7 +18,7 @@ class AbstractPath {
    */
   AbstractPath() = default;
   AbstractPath(const AbstractPath& ipath) = default;
-  virtual ~AbstractPath() = 0;
+  virtual ~AbstractPath() = default;
 
   /**
    * Extractors
