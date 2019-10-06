@@ -2,6 +2,10 @@
 
 namespace lib7842 {
 
+CompoundPath::CompoundPath(const AbstractPath& ipath) {
+  addPath(ipath);
+}
+
 CompoundPath& CompoundPath::addPoint(const QPoint& ipoint) {
   path.push_back(ipoint);
   return *this;
@@ -19,7 +23,7 @@ CompoundPath& CompoundPath::addPoints(const std::vector<QPoint>& ipoints) {
   return *this;
 }
 
-CompoundPath& CompoundPath::addPaths(const std::vector<AbstractPath>& ipaths) {
+CompoundPath& CompoundPath::addPaths(const std::vector<AbstractPathRef>& ipaths) {
   for (auto&& ipath : ipaths) {
     addPath(ipath);
   }
@@ -44,7 +48,7 @@ ReferencePath CompoundPath::extractRef() const {
     }
   }
 
-  return temp;
+  return ReferencePath(temp);
 }
 
 } // namespace lib7842

@@ -8,9 +8,14 @@
 
 namespace lib7842 {
 
-class CompoundPath : AbstractPath {
+class CompoundPath : public AbstractPath {
 
  public:
+  /**
+   * Custom Types
+   */
+  using AbstractPathRef = std::reference_wrapper<const AbstractPath>;
+
   /**
    * Default Constructors
    */
@@ -19,13 +24,18 @@ class CompoundPath : AbstractPath {
   virtual ~CompoundPath() = default;
 
   /**
+   * Explicit Constructors
+   */
+  explicit CompoundPath(const AbstractPath& ipath);
+
+  /**
    * Explicit Functions
    */
   CompoundPath& addPoint(const QPoint& ipoint);
   CompoundPath& addPath(const AbstractPath& ipath);
 
   CompoundPath& addPoints(const std::vector<QPoint>& ipoints);
-  CompoundPath& addPaths(const std::vector<AbstractPath>& ipaths);
+  CompoundPath& addPaths(const std::vector<AbstractPathRef>& ipaths);
 
   /**
    * Extractors
@@ -34,7 +44,6 @@ class CompoundPath : AbstractPath {
   virtual ReferencePath extractRef() const override;
 
  protected:
-  using AbstractPathRef = std::reference_wrapper<const AbstractPath>;
   std::vector<std::variant<QPoint, AbstractPathRef>> path {};
 };
 

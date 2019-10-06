@@ -25,7 +25,7 @@ class ReferencePath : public AbstractPath {
   /**
    * Explicit Constructors
    */
-  ReferencePath(const std::vector<PointRef>& ipath);
+  explicit ReferencePath(const std::vector<PointRef>& ipath);
 
   /**
    * Explicit Functions
