@@ -13,6 +13,7 @@ class QState : public QPoint {
   virtual ~QState() = default;
 
   QState(const QLength& ix, const QLength& iy, const QAngle& itheta);
+  explicit QState(const QPoint& ipoint);
 
   virtual QState operator+(const QState& rhs) const;
   virtual QState operator-(const QState& rhs) const;

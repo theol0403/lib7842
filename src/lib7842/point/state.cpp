@@ -9,6 +9,12 @@ QState::QState(const QLength& ix, const QLength& iy, const QAngle& itheta) :
   QPoint(ix, iy), theta(itheta) {}
 
 /**
+ * QState Constructor 
+ * Upcast QPoint 
+ */
+QState::QState(const QPoint& ipoint) : QPoint(ipoint) {};
+
+/**
  * QState Math Operators
  */
 QState QState::operator+(const QState& rhs) const {
