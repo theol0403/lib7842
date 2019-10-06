@@ -11,12 +11,13 @@ class ReferencePath;
  * Interface Path Class
  */
 class AbstractPath {
+
  public:
   /**
    * Default Constructors
    */
-  AbstractPath() = delete;
-  AbstractPath(const AbstractPath& ipath) = delete;
+  AbstractPath() = default;
+  AbstractPath(const AbstractPath& ipath) = default;
   virtual ~AbstractPath() = 0;
 
   /**
