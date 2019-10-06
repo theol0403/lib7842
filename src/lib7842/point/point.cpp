@@ -18,6 +18,14 @@ QPoint QPoint::operator-(const QPoint& rhs) const {
   return {x - rhs.x, y - rhs.y};
 }
 
+QPoint QPoint::operator*(const double scalar) const {
+  return {x * scalar, y * scalar};
+}
+
+QPoint QPoint::operator/(const double scalar) const {
+  return {x / scalar, y / scalar};
+}
+
 /**
  * QPoint Equality Operators
  */
@@ -46,24 +54,26 @@ QLength& QPoint::operator[](const size_t& iindex) {
 /**
  * QPoint Vector Functoins
  */
-QPoint QPoint::normalize() const {
-  return {x / mag().convert(meter), y / mag().convert(meter)};
+QPoint QPoint::normalize(const QPoint& lhs) {
+  return lhs / mag(lhs).convert(meter);
 }
 
-QPoint QPoint::scalarMult(const double& scalar) const {
-  return {x * scalar, y * scalar};
+QPoint QPoint::scalarMult(const QPoint& lhs, const double scalar) {
+  return lhs * scalar;
 }
 
-QArea QPoint::dot(const QPoint& rhs) const {
-  return (x * rhs.x) + (y * rhs.y);
+QArea QPoint::dot(const QPoint& lhs, const QPoint& rhs) {
+  return (lhs.x * rhs.x) + (lhs.y * rhs.y);
 }
 
-QLength QPoint::mag() const {
-  return meter * std::sqrt((x * x + y * y).convert(meter2));
+QLength QPoint::mag(const QPoint& lhs) {
+  return meter * std::sqrt((lhs.x * lhs.x + lhs.y * lhs.y).convert(meter2));
 }
 
-QLength QPoint::dist(const QPoint& rhs) const {
-  return meter * std::sqrt(((x - rhs.x) * (x - rhs.x) + (y - rhs.y) * (y - rhs.y)).convert(meter2));
+QLength QPoint::dist(const QPoint& lhs, const QPoint& rhs) {
+  return meter
+         * std::sqrt(
+           ((lhs.x - rhs.x) * (lhs.x - rhs.x) + (lhs.y - rhs.y) * (lhs.y - rhs.y)).convert(meter2));
 }
 
 } // namespace lib7842
