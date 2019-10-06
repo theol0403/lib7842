@@ -7,12 +7,7 @@ CompoundPath::CompoundPath(std::unique_ptr<AbstractPath> ipath) {
 }
 
 CompoundPath& CompoundPath::addPoint(const QPoint& ipoint) {
-  path.push_back(ipoint);
-  return *this;
-}
-
-CompoundPath& CompoundPath::addPath(std::unique_ptr<AbstractPath> ipath) {
-  path.push_back(std::move(ipath));
+  path.emplace_back(ipoint);
   return *this;
 }
 
@@ -23,10 +18,8 @@ CompoundPath& CompoundPath::addPoints(const std::vector<QPoint>& ipoints) {
   return *this;
 }
 
-CompoundPath& CompoundPath::addPaths(std::vector<std::unique_ptr<AbstractPath>> ipaths) {
-  for (auto&& ipath : ipaths) {
-    addPath(std::move(ipath));
-  }
+CompoundPath& CompoundPath::addPath(std::unique_ptr<AbstractPath> ipath) {
+  path.emplace_back(std::move(ipath));
   return *this;
 }
 
@@ -39,11 +32,11 @@ ReferencePath CompoundPath::extractRef() const {
   std::vector<ReferencePath::PointRef> temp;
   for (auto&& segment : path) {
     if (std::holds_alternative<QPoint>(segment)) {
-      temp.push_back(std::get<QPoint>(segment));
+      temp.emplace_back(std::get<QPoint>(segment));
     } else {
       ReferencePath ipath = std::get<AbstractPathPtr>(segment).get()->extractRef();
       for (auto&& ipoint : ipath.get()) {
-        temp.push_back(ipoint);
+        temp.emplace_back(ipoint);
       }
     }
   }

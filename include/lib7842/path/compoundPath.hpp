@@ -27,10 +27,9 @@ class CompoundPath : public AbstractPath {
    * Explicit Functions
    */
   CompoundPath& addPoint(const QPoint& ipoint);
-  CompoundPath& addPath(std::unique_ptr<AbstractPath> ipath);
-
   CompoundPath& addPoints(const std::vector<QPoint>& ipoints);
-  CompoundPath& addPaths(std::vector<std::unique_ptr<AbstractPath>> ipaths);
+
+  CompoundPath& addPath(std::unique_ptr<AbstractPath> ipath);
 
   /**
    * Extractors
@@ -45,13 +44,20 @@ class CompoundPath : public AbstractPath {
   class AbstractPathPtr {
    public:
     AbstractPathPtr(std::unique_ptr<AbstractPath> ipath) : path(std::move(ipath)) {}
-    AbstractPathPtr(const AbstractPathPtr&) {} // empty constructor
+    AbstractPathPtr(const AbstractPathPtr& ipath) {
+      // if (ipath.path.get()) {
+      //   std::stringstream ss;
+      //   ss << "AbstractPathPtr: Called copy constructor: ";
+      //   ss << ipath.path.get();
+      //   throw std::runtime_error(ss.str());
+      // }
+    }
     const std::unique_ptr<AbstractPath>& get() const {
       return path;
     };
 
    protected:
-    std::unique_ptr<AbstractPath> path;
+    std::unique_ptr<AbstractPath> path {nullptr};
   };
 
  protected:
