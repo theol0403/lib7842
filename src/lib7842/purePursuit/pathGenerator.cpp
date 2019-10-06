@@ -89,22 +89,22 @@ PathGenerator& PathGenerator::computeCurvatures() {
   return *this;
 }
 
-// PathGenerator& PathGenerator::computeVelocity(path, maxVel, maxRate, k) {
-//   path[path.size() - 1].setVelocity(0);
-//   for (let i = path.size() - 1; i > 0; i--) {
-//     let start = path[i];
-//     let end = path[i - 1];
-//     let wantedVel = std::min(maxVel, (k / path[i].curvature));
+// PathGenerator& PathGenerator::computeVelocity(const velGains& ivelGains) {
+//   path[path.size() - 1].setData("velocity", 0_mps);
+//   for (size_t i = path.size() - 1; i > 0; i--) {
+//     QPoint& start = path[i];
+//     QPoint& end = path[i - 1];
+//     QSpeed wantedVel = std::min(maxVel, (k / path[i].curvature));
 //     let distance = distPathPoint(start, end);
 //     let newVel =
 //       std::min(wantedVel, std::sqrt(std::pow(start.velocity, 2) + (2 * maxRate * distance)));
-//     path[i - 1].setVelocity(newVel);
+//     path[i - 1].setData("velocity", newVel);
 //   }
 //   return path;
 // }
 
 // PathGenerator& PathGenerator::limitVelocity(path, minVel, maxRate) {
-//   path[0].setVelocity(minVel);
+//   path[0].setData("velocity", minVel);
 //   for (let i = 0; i < path.size() - 1; i++) {
 //     let start = path[i];
 //     let end = path[i + 1];
@@ -112,7 +112,7 @@ PathGenerator& PathGenerator::computeCurvatures() {
 //     let wantedVel =
 //       std::min(end.velocity, std::sqrt(std::pow(start.velocity, 2) + (2 * maxRate * distance)));
 //     let newVel = std::max(wantedVel, minVel);
-//     path[i + 1].setVelocity(newVel);
+//     path[i + 1].setData("velocity", newVel);
 //   }
 //   return path;
 // }

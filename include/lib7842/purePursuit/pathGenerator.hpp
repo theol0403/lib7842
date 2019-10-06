@@ -43,7 +43,7 @@ class PathGenerator {
     computeSingleCurvature(const QPoint& prevPoint, const QPoint& point, const QPoint& nextPoint);
 
  protected:
-  Path path;
+  Path path {};
 };
 
 } // namespace lib7842
