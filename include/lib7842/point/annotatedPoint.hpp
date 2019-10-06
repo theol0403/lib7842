@@ -1,37 +1,40 @@
 #pragma once
 #include "main.h"
-#include "lib7842/point/point.hpp"
+#include "point.hpp"
+
 #include "lib7842/other/utility.hpp"
 #include <variant>
 
 namespace lib7842 {
 
-class PathPoint : public QPoint {
+class AnnotatedPoint : public QPoint {
 
+ public:
   using pathData_t =
     std::variant<std::monostate, double, QLength, QSpeed, QAcceleration, QCurvature>;
 
- public:
   using QPoint::QPoint;
-  explicit PathPoint(const PathPoint& istate) = default;
-  explicit PathPoint(const QPoint& ipoint);
+  AnnotatedPoint(const AnnotatedPoint& istate) = default;
+  virtual ~AnnotatedPoint() = default;
 
   void setData(const std::string& iid, const pathData_t& idata);
-  pathData_t& getData(const std::string& iid);
 
-  template <typename T> T getValue(const std::string& iid) {
-    pathData_t& data = getData(iid);
+  template <typename T> T getData(const std::string& iid) {
+    pathData_t& data = getID(iid);
     if (std::holds_alternative<T>(data)) {
       return std::get<T>(data);
     } else if (std::holds_alternative<std::monostate>(data)) {
       return T(0.0);
     } else {
-      throw std::runtime_error("PathPoint::getValue:: \"" + iid + "\" contains wrong type");
+      throw std::runtime_error("AnnotatedPoint::getValue:: \"" + iid + "\" contains wrong type");
     }
   }
 
  protected:
   std::map<std::string, pathData_t> pathData {};
+
+ private:
+  pathData_t& getID(const std::string& iid);
 };
 
 } // namespace lib7842
