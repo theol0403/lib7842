@@ -1,10 +1,9 @@
 #pragma once
 #include "main.h"
-#include "abstractPoint.hpp"
 
 namespace lib7842 {
 
-struct QPoint : AbstractPoint {
+class QPoint {
  public:
   QLength x {0_in};
   QLength y {0_in};
@@ -12,19 +11,20 @@ struct QPoint : AbstractPoint {
   QPoint(const QLength& ix, const QLength& iy);
   QPoint() = default;
   QPoint(const QPoint& ipoint) = default;
+  virtual ~QPoint() = default;
 
-  virtual const QPoint& operator+(const QPoint& rhs) const override;
-  virtual const QPoint& operator-(const QPoint& rhs) const override;
-  virtual bool operator==(const QPoint& rhs) const override;
-  virtual bool operator!=(const QPoint& rhs) const override;
+  virtual QPoint operator+(const QPoint& rhs) const;
+  virtual QPoint operator-(const QPoint& rhs) const;
+  virtual bool operator==(const QPoint& rhs) const;
+  virtual bool operator!=(const QPoint& rhs) const;
 
-  // virtual const QLength& operator[](const size_t& iindex) const override;
+  virtual QLength& operator[](const size_t& iindex) final;
 
-  // QPoint normalize() const;
-  // QPoint scalarMult(const double& scalar) const;
-  // QArea dot(const QPoint& rhs) const;
-  // QLength mag() const;
-  // QLength dist(const QPoint& rhs) const;
+  QPoint normalize() const;
+  QPoint scalarMult(const double& scalar) const;
+  QArea dot(const QPoint& rhs) const;
+  QLength mag() const;
+  QLength dist(const QPoint& rhs) const;
 };
 
 } // namespace lib7842
