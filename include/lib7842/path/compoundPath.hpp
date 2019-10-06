@@ -30,7 +30,7 @@ class CompoundPath : public AbstractPath {
   CompoundPath& addPath(std::unique_ptr<AbstractPath> ipath);
 
   CompoundPath& addPoints(const std::vector<QPoint>& ipoints);
-  // CompoundPath& addPaths(const std::initializer_list<std::unique_ptr<AbstractPath>>& ipaths);
+  CompoundPath& addPaths(std::vector<std::unique_ptr<AbstractPath>> ipaths);
 
   /**
    * Extractors

@@ -23,9 +23,9 @@ CompoundPath& CompoundPath::addPoints(const std::vector<QPoint>& ipoints) {
   return *this;
 }
 
-CompoundPath& CompoundPath::addPaths(const std::vector<AbstractPathRef>& ipaths) {
+CompoundPath& CompoundPath::addPaths(std::vector<std::unique_ptr<AbstractPath>> ipaths) {
   for (auto&& ipath : ipaths) {
-    addPath(ipath);
+    addPath(std::move(ipath));
   }
   return *this;
 }
