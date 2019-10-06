@@ -19,8 +19,8 @@ class AnnotatedPoint : public QPoint {
 
   void setData(const std::string& iid, const pathData_t& idata);
 
-  template <typename T> T getData(const std::string& iid) {
-    pathData_t& data = getID(iid);
+  template <typename T> T getData(const std::string& iid) const {
+    const pathData_t& data = getID(iid);
     if (std::holds_alternative<T>(data)) {
       return std::get<T>(data);
     } else if (std::holds_alternative<std::monostate>(data)) {
@@ -34,7 +34,7 @@ class AnnotatedPoint : public QPoint {
   std::map<std::string, pathData_t> pathData {};
 
  private:
-  pathData_t& getID(const std::string& iid);
+  const pathData_t& getID(const std::string& iid) const;
 };
 
 } // namespace lib7842
