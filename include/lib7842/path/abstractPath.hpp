@@ -25,6 +25,7 @@ class AbstractPath {
    */
   virtual SimplePath extract() const = 0;
   virtual ReferencePath extractRef() const = 0;
+  virtual std::unique_ptr<AbstractPath> copyPtr() const = 0;
 };
 
 } // namespace lib7842

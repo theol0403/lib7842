@@ -16,7 +16,7 @@ class CompoundPath : public AbstractPath {
    * Default Constructors
    */
   CompoundPath() = default;
-  CompoundPath(const CompoundPath& ipath); // moves pointer
+  CompoundPath(const CompoundPath& ipath) = default;
   virtual ~CompoundPath() = default;
 
   /**
@@ -36,6 +36,7 @@ class CompoundPath : public AbstractPath {
    */
   virtual SimplePath extract() const override;
   virtual ReferencePath extractRef() const override;
+  virtual std::unique_ptr<AbstractPath> copyPtr() const override;
 
  protected:
   std::vector<std::unique_ptr<AbstractPath>> path {};
