@@ -20,4 +20,8 @@ std::shared_ptr<AbstractPath> ReferencePath::copyPtr() const {
   return std::make_shared<ReferencePath>(*this);
 }
 
+std::shared_ptr<AbstractPath> ReferencePath::movePtr() const {
+  return std::make_shared<ReferencePath>(std::move(*this));
+}
+
 } // namespace lib7842

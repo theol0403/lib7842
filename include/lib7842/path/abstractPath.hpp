@@ -26,6 +26,7 @@ class AbstractPath {
   virtual SimplePath extract() const = 0;
   virtual ReferencePath extractRef() const = 0;
   virtual std::shared_ptr<AbstractPath> copyPtr() const = 0;
+  virtual std::shared_ptr<AbstractPath> movePtr() const = 0;
 };
 
 } // namespace lib7842

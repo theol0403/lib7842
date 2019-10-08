@@ -22,14 +22,15 @@ class CompoundPath : public AbstractPath {
   /**
    * Explicit Constructors
    */
-  explicit CompoundPath(const AbstractPath& ipath);
   explicit CompoundPath(const std::shared_ptr<AbstractPath>& ipath);
 
   /**
    * Explicit Functions
    */
-  CompoundPath& addPath(const AbstractPath& ipath);
   CompoundPath& addPath(const std::shared_ptr<AbstractPath>& ipath);
+
+  CompoundPath& copyPath(const AbstractPath& ipath);
+  CompoundPath& importPath(const AbstractPath& ipath);
 
   /**
    * Extractors
@@ -37,6 +38,7 @@ class CompoundPath : public AbstractPath {
   virtual SimplePath extract() const override;
   virtual ReferencePath extractRef() const override;
   virtual std::shared_ptr<AbstractPath> copyPtr() const override;
+  virtual std::shared_ptr<AbstractPath> movePtr() const override;
 
  protected:
   std::vector<std::shared_ptr<AbstractPath>> paths {};
