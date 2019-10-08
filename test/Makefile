@@ -11,14 +11,16 @@ INCDIR=$(PROJECTROOT)/include
 TESTDIR=$(ROOT)/src
 OUTBIN:=$(BINDIR)/main.exe
 
-WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function # -Wnull-dereference
-EXTRA_CXXFLAGS= -std=gnu++17 -std=c++17 -pthread -g -O0 -fprofile-arcs -ftest-coverage -D THREADS_STD
+WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function -Wnull-dereference
+EXTRA_CXXFLAGS= -std=gnu++17 -g -pthread -D THREADS_STD 
+EXTRA_CXXFLAGS+= -fsanitize=undefined -fsanitize=vptr -fsanitize=integer-divide-by-zero -fsanitize=null
+# EXTRA_CXXFLAGS+= -fsanitize=address 
 
 CXXFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -I googletest/googletest/include -I ./include
-LDFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -lm -lgcc -lstdc++ -lsupc++ -lgcov -lgtest_main -lgtest
+LDFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -lm -lgcc -lstdc++ -lsupc++ -lgtest_main -lgtest
 
-CXX:=g++
-LD:=g++
+CXX:=g++-9
+LD:=g++-9
 
 rwildcard=$(foreach d,$(filter-out $3,$(wildcard $1*)),$(call rwildcard,$d/,$2,$3)$(filter $(subst *,%,$2),$d))
 NO_COLOR=\x1b[0m
