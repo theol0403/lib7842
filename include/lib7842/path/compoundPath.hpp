@@ -38,7 +38,7 @@ class CompoundPath : public AbstractPath {
   virtual ReferencePath extractRef() const override;
   virtual std::shared_ptr<AbstractPath> copyPtr() const override;
 
-  // protected:
+ protected:
   std::vector<std::shared_ptr<AbstractPath>> paths {};
 }; // namespace lib7842
 
