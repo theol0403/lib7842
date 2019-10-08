@@ -28,7 +28,8 @@ SimplePath CompoundPath::extract() const {
 ReferencePath CompoundPath::extractRef() const {
   std::vector<ReferencePath::PointRef> temp;
   for (auto&& path : paths) {
-    for (auto&& point : path->extractRef().get()) {
+    ReferencePath ref = path->extractRef();
+    for (auto&& point : ref.get()) {
       temp.emplace_back(point);
     }
   }
