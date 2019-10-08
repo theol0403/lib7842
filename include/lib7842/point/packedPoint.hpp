@@ -7,15 +7,15 @@
 
 namespace lib7842 {
 
-class AnnotatedPoint : public QPoint {
+class PackedPoint : public QPoint {
 
  public:
   using pathData_t =
     std::variant<std::monostate, double, QLength, QSpeed, QAcceleration, QCurvature>;
 
   using QPoint::QPoint;
-  AnnotatedPoint(const AnnotatedPoint& istate) = default;
-  virtual ~AnnotatedPoint() = default;
+  PackedPoint(const PackedPoint& istate) = default;
+  virtual ~PackedPoint() = default;
 
   void setData(const std::string& iid, const pathData_t& idata);
 
@@ -26,7 +26,7 @@ class AnnotatedPoint : public QPoint {
     } else if (std::holds_alternative<std::monostate>(data)) {
       return T(0.0);
     } else {
-      throw std::runtime_error("AnnotatedPoint::getValue:: \"" + iid + "\" contains wrong type");
+      throw std::runtime_error("PackedPoint::getValue:: \"" + iid + "\" contains wrong type");
     }
   }
 

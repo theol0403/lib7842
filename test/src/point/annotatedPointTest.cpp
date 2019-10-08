@@ -1,18 +1,18 @@
 #include "test.hpp"
-#include "lib7842/point/annotatedPoint.hpp"
+#include "lib7842/point/packedPoint.hpp"
 
-class AnnotatedPointTest : public ::testing::Test {
+class PackedPointTest : public ::testing::Test {
  protected:
-  AnnotatedPoint point {5_in, 2_in};
+  PackedPoint point {5_in, 2_in};
 };
 
-TEST_F(AnnotatedPointTest, Constructors) {
-  AnnotatedPoint();
-  AnnotatedPoint(5_in, 2_in);
-  AnnotatedPoint pointCopy(point);
+TEST_F(PackedPointTest, Constructors) {
+  PackedPoint();
+  PackedPoint(5_in, 2_in);
+  PackedPoint pointCopy(point);
 }
 
-TEST_F(AnnotatedPointTest, SetAndReadData) {
+TEST_F(PackedPointTest, SetAndReadData) {
   point.setData("curvature", 5_curv);
   point.setData("distance", 5_m);
   point.setData("velocity", 5_mps);
@@ -24,7 +24,7 @@ TEST_F(AnnotatedPointTest, SetAndReadData) {
   EXPECT_EQ(point.getData<double>("segmentIndex"), 5);
 }
 
-TEST_F(AnnotatedPointTest, TypeErrors) {
+TEST_F(PackedPointTest, TypeErrors) {
   point.setData("curvature", 5_m);
   point.setData("distance", 5_curv);
   point.setData("velocity", 5);
@@ -36,14 +36,14 @@ TEST_F(AnnotatedPointTest, TypeErrors) {
   ASSERT_THROW(point.getData<double>("segmentIndex"), std::runtime_error);
 }
 
-TEST_F(AnnotatedPointTest, NoID) {
+TEST_F(PackedPointTest, NoID) {
   ASSERT_THROW(point.getData<QCurvature>("curvature"), std::runtime_error);
   ASSERT_THROW(point.getData<QLength>("distance"), std::runtime_error);
   ASSERT_THROW(point.getData<QSpeed>("velocity"), std::runtime_error);
   ASSERT_THROW(point.getData<double>("segmentIndex"), std::runtime_error);
 }
 
-TEST_F(AnnotatedPointTest, NoData) {
+TEST_F(PackedPointTest, NoData) {
   point.setData("curvature", std::monostate());
   point.setData("distance", std::monostate());
   point.setData("velocity", std::monostate());
