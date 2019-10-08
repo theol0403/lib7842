@@ -15,10 +15,10 @@ class QState : public QPoint {
   QState(const QLength& ix, const QLength& iy, const QAngle& itheta);
   explicit QState(const QPoint& ipoint);
 
-  virtual QState operator+(const QState& rhs) const;
-  virtual QState operator-(const QState& rhs) const;
-  virtual bool operator==(const QState& rhs) const;
-  virtual bool operator!=(const QState& rhs) const;
+  QState operator+(const QState& rhs) const;
+  QState operator-(const QState& rhs) const;
+  bool operator==(const QState& rhs) const;
+  bool operator!=(const QState& rhs) const;
 };
 
 } // namespace lib7842

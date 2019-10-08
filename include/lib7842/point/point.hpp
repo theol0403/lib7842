@@ -14,14 +14,14 @@ class QPoint {
 
   QPoint(const QLength& ix, const QLength& iy);
 
-  virtual QPoint operator+(const QPoint& rhs) const;
-  virtual QPoint operator-(const QPoint& rhs) const;
-  virtual QPoint operator*(const double scalar) const;
-  virtual QPoint operator/(const double scalar) const;
-  virtual bool operator==(const QPoint& rhs) const;
-  virtual bool operator!=(const QPoint& rhs) const;
+  QPoint operator+(const QPoint& rhs) const;
+  QPoint operator-(const QPoint& rhs) const;
+  QPoint operator*(const double scalar) const;
+  QPoint operator/(const double scalar) const;
+  bool operator==(const QPoint& rhs) const;
+  bool operator!=(const QPoint& rhs) const;
 
-  virtual QLength& operator[](const size_t& iindex);
+  QLength& operator[](const size_t& iindex);
 
   static QPoint normalize(const QPoint& lhs);
   static QPoint scalarMult(const QPoint& lhs, const double scalar);
