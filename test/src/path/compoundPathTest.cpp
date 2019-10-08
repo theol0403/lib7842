@@ -51,28 +51,36 @@ TEST_F(CompoundPathTest, ExtractSegmentsRef) {
   }
 }
 
-TEST_F(CompoundPathTest, ProperOrder) {
+TEST_F(CompoundPathTest, StressTest) {
   path.addPath(SimplePath({{1_in, 2_in}}));
   path.addPath(SimplePath({{2_in, 3_in}, {3_in, 4_in}}));
 
-  CompoundPath segment1 = CompoundPath().addPath(SimplePath({{4_in, 5_in}, {5_in, 6_in}}));
-  CompoundPath segment2 = CompoundPath().addPath(SimplePath({{6_in, 7_in}}));
-  CompoundPath segment3 = CompoundPath().addPath(SimplePath({{7_in, 8_in}}));
-  CompoundPath segment3b = CompoundPath().addPath(std::make_shared<CompoundPath>(segment3));
+  QPoint refPoint1 {4_in, 5_in};
+  QPoint refPoint2 {5_in, 6_in};
+  CompoundPath segment1 {CompoundPath().addPath(ReferencePath({refPoint1, refPoint2}))};
+  CompoundPath segment2 {CompoundPath().addPath(SimplePath({{6_in, 7_in}}))};
+  CompoundPath segment3 {CompoundPath().addPath(SimplePath({{7_in, 8_in}}))};
+  CompoundPath segment3b {CompoundPath().addPath(segment3)};
 
-  CompoundPath segment4 = CompoundPath()
-                            .addPath(std::make_shared<CompoundPath>(std::move(segment2)))
-                            .addPath(std::make_shared<CompoundPath>(segment3b));
-  CompoundPath segment5 = CompoundPath().addPath(SimplePath({{8_in, 9_in}}));
+  CompoundPath segment4 {CompoundPath().addPath(segment2).addPath(segment3b)};
+  CompoundPath segment5 {CompoundPath().addPath(SimplePath({{8_in, 9_in}}))};
 
-  path.addPath(std::move(std::shared_ptr<CompoundPath>(&segment1, [](AbstractPath*) {})));
-  path.addPath(std::move(std::make_shared<CompoundPath>(std::move(segment4))))
-    .addPath(std::move(std::make_shared<CompoundPath>(segment5)));
+  path
+    .addPath(std::shared_ptr<CompoundPath>(&segment1, [](AbstractPath*) {})) // empty deleter
+    .addPath(std::make_shared<CompoundPath>(std::move(segment4))) // move the local into shared
+    .addPath(std::make_shared<CompoundPath>(segment5)); // make copy
 
-  std::vector<QPoint> ipath = path.extract().get();
+  SimplePath ipath = path.extract();
 
-  ASSERT_EQ(ipath.size(), 8);
-  for (size_t i = 0; i < ipath.size(); ++i) {
-    ASSERT_EQ(ipath[i], (QPoint {(i + 1) * inch, (i + 2) * inch}));
+  // test point values
+  ASSERT_EQ(ipath.get().size(), 8);
+  for (size_t i = 0; i < ipath.get().size(); ++i) {
+    ASSERT_EQ(ipath.get()[i], (QPoint {(i + 1) * inch, (i + 2) * inch}));
   }
+
+  // test refpath addresses
+  ReferencePath iref = path.extractRef();
+  ASSERT_EQ(iref.get().size(), 8);
+  ASSERT_EQ(&refPoint1, &iref.get()[3].get());
+  ASSERT_EQ(&refPoint2, &iref.get()[4].get());
 }
