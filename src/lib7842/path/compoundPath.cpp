@@ -6,7 +6,7 @@ CompoundPath::CompoundPath(const AbstractPath& ipath) {
   addPath(ipath);
 }
 
-CompoundPath::CompoundPath(std::unique_ptr<AbstractPath> ipath) {
+CompoundPath::CompoundPath(const std::shared_ptr<AbstractPath>& ipath) {
   addPath(std::move(ipath));
 }
 
@@ -15,8 +15,8 @@ CompoundPath& CompoundPath::addPath(const AbstractPath& ipath) {
   return *this;
 }
 
-CompoundPath& CompoundPath::addPath(std::unique_ptr<AbstractPath> ipath) {
   path.emplace_back(std::move(ipath));
+CompoundPath& CompoundPath::addPath(const std::shared_ptr<AbstractPath>& ipath) {
   return *this;
 }
 
@@ -35,8 +35,8 @@ ReferencePath CompoundPath::extractRef() const {
   return ReferencePath(temp);
 }
 
-// std::unique_ptr<AbstractPath> CompoundPath::copyPtr() const {
-//   return std::unique_ptr<CompoundPath>(this);
-// }
+std::shared_ptr<AbstractPath> CompoundPath::copyPtr() const {
+  return std::make_shared<CompoundPath>(*this);
+}
 
 } // namespace lib7842

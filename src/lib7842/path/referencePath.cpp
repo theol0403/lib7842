@@ -16,8 +16,8 @@ ReferencePath ReferencePath::extractRef() const {
   return *this;
 }
 
-std::unique_ptr<AbstractPath> ReferencePath::copyPtr() const {
-  return std::make_unique<ReferencePath>(*this);
+std::shared_ptr<AbstractPath> ReferencePath::copyPtr() const {
+  return std::make_shared<ReferencePath>(*this);
 }
 
 } // namespace lib7842

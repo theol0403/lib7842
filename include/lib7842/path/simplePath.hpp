@@ -33,7 +33,7 @@ class SimplePath : public AbstractPath {
    */
   virtual SimplePath extract() const override;
   virtual ReferencePath extractRef() const override;
-  virtual std::unique_ptr<AbstractPath> copyPtr() const override;
+  virtual std::shared_ptr<AbstractPath> copyPtr() const override;
 
  protected:
   std::vector<QPoint> path {};

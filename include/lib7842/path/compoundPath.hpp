@@ -23,23 +23,23 @@ class CompoundPath : public AbstractPath {
    * Explicit Constructors
    */
   explicit CompoundPath(const AbstractPath& ipath);
-  explicit CompoundPath(std::unique_ptr<AbstractPath> ipath);
+  explicit CompoundPath(const std::shared_ptr<AbstractPath>& ipath);
 
   /**
    * Explicit Functions
    */
   CompoundPath& addPath(const AbstractPath& ipath);
-  CompoundPath& addPath(std::unique_ptr<AbstractPath> ipath);
+  CompoundPath& addPath(const std::shared_ptr<AbstractPath>& ipath);
 
   /**
    * Extractors
    */
   virtual SimplePath extract() const override;
   virtual ReferencePath extractRef() const override;
-  virtual std::unique_ptr<AbstractPath> copyPtr() const override;
+  virtual std::shared_ptr<AbstractPath> copyPtr() const override;
 
- protected:
-  std::vector<std::unique_ptr<AbstractPath>> path {};
+  // protected:
+  std::vector<std::shared_ptr<AbstractPath>> paths {};
 }; // namespace lib7842
 
 } // namespace lib7842
