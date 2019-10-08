@@ -10,7 +10,7 @@ std::vector<QPoint>& SimplePath::get() {
 }
 
 SimplePath SimplePath::extract() const {
-  return SimplePath(path);
+  return *this;
 }
 
 ReferencePath SimplePath::extractRef() const {

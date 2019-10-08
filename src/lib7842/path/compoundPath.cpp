@@ -15,8 +15,8 @@ CompoundPath& CompoundPath::addPath(const AbstractPath& ipath) {
   return *this;
 }
 
-  path.emplace_back(std::move(ipath));
 CompoundPath& CompoundPath::addPath(const std::shared_ptr<AbstractPath>& ipath) {
+  paths.emplace_back(std::move(ipath));
   return *this;
 }
 
@@ -27,9 +27,9 @@ SimplePath CompoundPath::extract() const {
 
 ReferencePath CompoundPath::extractRef() const {
   std::vector<ReferencePath::PointRef> temp;
-  for (auto&& segment : path) {
-    for (auto&& ipoint : segment->extractRef().get()) {
-      temp.emplace_back(ipoint);
+  for (auto&& path : paths) {
+    for (auto&& point : path->extractRef().get()) {
+      temp.emplace_back(point);
     }
   }
   return ReferencePath(temp);
