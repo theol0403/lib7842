@@ -1,49 +1,49 @@
-// #pragma once
-// #include "main.h"
-// #include "pathPoint.hpp"
-// #include "pathSegment.hpp"
-// #include "lib7842/other/utility.hpp"
+#pragma once
+#include "main.h"
+#include "pathPoint.hpp"
+#include "pathSegment.hpp"
+#include "lib7842/other/utility.hpp"
 
-// namespace lib7842 {
+namespace lib7842 {
 
-// class PathGenerator {
+class PathGenerator {
 
-//   struct smoothGains {
-//     const double& weight;
-//     const QLength& tolerance;
-//   };
+  struct smoothGains {
+    const double& weight;
+    const QLength& tolerance;
+  };
 
-//   struct velGains {
-//     const QSpeed& min;
-//     const QSpeed& max;
-//     const QAcceleration& accel;
-//   };
+  struct velGains {
+    const QSpeed& min;
+    const QSpeed& max;
+    const QAcceleration& accel;
+  };
 
-//   using Path = std::vector<PathPoint>;
+  using Path = std::vector<PathPoint>;
 
-//  public:
-//   explicit PathGenerator(const PathSegment& isegment);
+ public:
+  explicit PathGenerator(const PathSegment& isegment);
 
-//   Path generate(
-//     const QLength& iresolution, const smoothGains& ismoothGains, const velGains& ivelGains);
+  Path generate(
+    const QLength& iresolution, const smoothGains& ismoothGains, const velGains& ivelGains);
 
-//   PathGenerator& insertPoints(const QLength& iresolution);
-//   PathGenerator& smoothen(const smoothGains& ismoothGains);
+  PathGenerator& insertPoints(const QLength& iresolution);
+  PathGenerator& smoothen(const smoothGains& ismoothGains);
 
-//   PathGenerator& computeDistances();
-//   PathGenerator& computeCurvatures();
+  PathGenerator& computeDistances();
+  PathGenerator& computeCurvatures();
 
-//   PathGenerator& computeVelocity(const velGains& ivelGains);
-//   PathGenerator& limitVelocity(const velGains& ivelGains);
+  PathGenerator& computeVelocity(const velGains& ivelGains);
+  PathGenerator& limitVelocity(const velGains& ivelGains);
 
-//   Path get() const;
-//   Path& getRef();
+  Path get() const;
+  Path& getRef();
 
-//   static QCurvature
-//     computeSingleCurvature(const QPoint& prevPoint, const QPoint& point, const QPoint& nextPoint);
+  static QCurvature
+    computeSingleCurvature(const QPoint& prevPoint, const QPoint& point, const QPoint& nextPoint);
 
-//  protected:
-//   Path path {};
-// };
+ protected:
+  Path path {};
+};
 
-// } // namespace lib7842
+} // namespace lib7842
