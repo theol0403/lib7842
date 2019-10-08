@@ -18,14 +18,6 @@ QPoint QPoint::operator-(const QPoint& rhs) const {
   return {x - rhs.x, y - rhs.y};
 }
 
-QPoint QPoint::operator*(const double scalar) const {
-  return {x * scalar, y * scalar};
-}
-
-QPoint QPoint::operator/(const double scalar) const {
-  return {x / scalar, y / scalar};
-}
-
 /**
  * QPoint Equality Operators
  */
@@ -54,6 +46,14 @@ QLength& QPoint::operator[](const size_t& iindex) {
 /**
  * QPoint Vector Functoins
  */
+QPoint QPoint::operator*(const double scalar) const {
+  return {x * scalar, y * scalar};
+}
+
+QPoint QPoint::operator/(const double scalar) const {
+  return {x / scalar, y / scalar};
+}
+
 QPoint QPoint::normalize(const QPoint& lhs) {
   return lhs / mag(lhs).convert(meter);
 }
