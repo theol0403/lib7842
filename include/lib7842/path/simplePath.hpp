@@ -27,7 +27,7 @@ class SimplePath : public AbstractPath {
    * Explicit Functions
    */
   std::vector<QPoint>& get();
-  operator std::vector<QPoint>&();
+  std::vector<QPoint>& operator()();
 
   /**
    * Extractors

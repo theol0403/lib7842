@@ -26,7 +26,7 @@ class ReferencePath : public AbstractPath {
    * Explicit Functions
    */
   std::vector<PointReference>& get();
-  operator std::vector<PointReference>&();
+  std::vector<PointReference>& operator()();
 
   /**
    * Extractors

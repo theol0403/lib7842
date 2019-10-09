@@ -26,7 +26,7 @@ class PackedPath : public AbstractPath {
    * Explicit Functions
    */
   std::vector<PackedPoint>& get();
-  operator std::vector<PackedPoint>&();
+  std::vector<PackedPoint>& operator()();
 
   /**
    * Extractors
