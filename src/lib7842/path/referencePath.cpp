@@ -2,9 +2,9 @@
 
 namespace lib7842 {
 
-ReferencePath::ReferencePath(const std::vector<PointRef>& ipath) : path(ipath) {}
+ReferencePath::ReferencePath(const std::vector<PointReference>& ipath) : path(ipath) {}
 
-std::vector<ReferencePath::PointRef>& ReferencePath::get() {
+std::vector<PointReference>& ReferencePath::get() {
   return path;
 }
 

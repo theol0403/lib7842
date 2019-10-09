@@ -11,11 +11,6 @@ class ReferencePath : public AbstractPath {
 
  public:
   /**
-   * Custom Types
-   */
-  using PointRef = std::reference_wrapper<const QPoint>;
-
-  /**
    * Default Constructors
    */
   ReferencePath() = default;
@@ -25,12 +20,12 @@ class ReferencePath : public AbstractPath {
   /**
    * Explicit Constructors
    */
-  explicit ReferencePath(const std::vector<PointRef>& ipath);
+  explicit ReferencePath(const std::vector<PointReference>& ipath);
 
   /**
    * Explicit Functions
    */
-  std::vector<PointRef>& get();
+  std::vector<PointReference>& get();
   operator std::vector<PointReference>&();
 
   /**
@@ -42,7 +37,7 @@ class ReferencePath : public AbstractPath {
   virtual std::shared_ptr<AbstractPath> movePtr() const override;
 
  protected:
-  std::vector<PointRef> path {};
+  std::vector<PointReference> path {};
 };
 
 } // namespace lib7842

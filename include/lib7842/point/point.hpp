@@ -31,4 +31,6 @@ class QPoint {
   static QLength dist(const QPoint& lhs, const QPoint& rhs);
 };
 
+using PointReference = std::reference_wrapper<const QPoint>;
+
 } // namespace lib7842
