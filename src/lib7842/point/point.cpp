@@ -30,17 +30,25 @@ bool QPoint::operator!=(const QPoint& rhs) const {
 }
 
 /**
- * QPoint Accessor Operator
+ * QPoint Accessors
  */
-QLength& QPoint::operator[](const size_t& iindex) {
+QLength& QPoint::at(const size_t& iindex) {
   switch (iindex) {
     case 0: return x; break;
     case 1: return y; break;
     default:
       throw std::runtime_error(
-        "QPoint::operator[]:: \"" + std::to_string(iindex) + "\" is invalid index");
+        "QPoint::at():: \"" + std::to_string(iindex) + "\" is invalid index");
       break;
   }
+}
+
+QLength& QPoint::operator[](const size_t& iindex) {
+  return at(iindex);
+}
+
+const QLength& QPoint::get(const size_t& iindex) const {
+  return const_cast<QPoint*>(this)->at(iindex);
 }
 
 /**
