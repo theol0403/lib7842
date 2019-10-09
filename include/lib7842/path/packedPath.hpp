@@ -6,7 +6,7 @@
 
 namespace lib7842 {
 
-class PackedPath : public SimplePath {
+class PackedPath : public AbstractPath {
 
  public:
   /**
