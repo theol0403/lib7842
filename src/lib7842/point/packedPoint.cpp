@@ -2,11 +2,11 @@
 
 namespace lib7842 {
 
-void PackedPoint::setData(const std::string& iid, const pathData_t& idata) {
+void PackedPoint::setData(const std::string& iid, const std::any& idata) {
   pathData[iid] = idata;
 }
 
-const PackedPoint::pathData_t& PackedPoint::getID(const std::string& iid) const {
+const std::any& PackedPoint::getID(const std::string& iid) const {
   try {
     return pathData.at(iid);
   } catch (const std::out_of_range& e) {

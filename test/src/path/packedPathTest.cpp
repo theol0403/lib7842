@@ -53,7 +53,7 @@ TEST_F(PackedPathTest, ExtractData) {
     EXPECT_EQ(point.getData<QCurvature>("curvature"), 5_curv);
     EXPECT_EQ(point.getData<QLength>("distance"), 5_m);
     EXPECT_EQ(point.getData<QSpeed>("velocity"), 5_mps);
-    EXPECT_EQ(point.getData<double>("segmentIndex"), 5);
+    EXPECT_EQ(point.getData<int>("segmentIndex"), 5);
   }
 }
 
@@ -68,6 +68,6 @@ TEST_F(PackedPathTest, ExtractReferenceData) {
     EXPECT_EQ(iptr->getData<QCurvature>("curvature"), 5_curv);
     EXPECT_EQ(iptr->getData<QLength>("distance"), 5_m);
     EXPECT_EQ(iptr->getData<QSpeed>("velocity"), 5_mps);
-    EXPECT_EQ(iptr->getData<double>("segmentIndex"), 5);
+    EXPECT_EQ(iptr->getData<int>("segmentIndex"), 5);
   }
 }
