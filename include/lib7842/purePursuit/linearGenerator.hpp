@@ -1,6 +1,9 @@
 #pragma once
 #include "main.h"
-#include "lib7842/purePursuit/abstractGenerator.hpp"
+
+#include "lib7842/path/simplePath.hpp"
+#include "lib7842/path/packedPath.hpp"
+#include "lib7842/other/utility.hpp"
 
 namespace lib7842 {
 
