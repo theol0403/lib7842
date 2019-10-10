@@ -1,15 +1,15 @@
-#include "simpleGenerator.hpp"
+#include "linearGenerator.hpp"
 
 namespace lib7842 {
 
-SimpleGenerator::SimpleGenerator(const AbstractPath& ipath, const smoothParams_t& ismoothParams) :
+LinearGenerator::LinearGenerator(const AbstractPath& ipath, const smoothParams_t& ismoothParams) :
   path(ipath), smoothParams(ismoothParams) {}
 
-SimplePath SimpleGenerator::generate(const QLength& ispacing) const {
+SimplePath LinearGenerator::generate(const QLength& ispacing) const {
   return smoothen(insert(path, ispacing), smoothParams);
 }
 
-SimplePath SimpleGenerator::insert(const AbstractPath& ipath, const QLength& ispacing) {
+SimplePath LinearGenerator::insert(const AbstractPath& ipath, const QLength& ispacing) {
   ReferencePath srcPath = ipath.extractRef();
   SimplePath destPath;
 
@@ -36,7 +36,7 @@ SimplePath SimpleGenerator::insert(const AbstractPath& ipath, const QLength& isp
 }
 
 SimplePath
-  SimpleGenerator::smoothen(const AbstractPath& ipath, const smoothParams_t& ismoothParams) {
+  LinearGenerator::smoothen(const AbstractPath& ipath, const smoothParams_t& ismoothParams) {
   ReferencePath srcPath = ipath.extractRef();
   SimplePath destPath = ipath.extract();
 

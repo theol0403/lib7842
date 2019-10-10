@@ -4,7 +4,7 @@
 
 namespace lib7842 {
 
-class SimpleGenerator : public AbstractGenerator {
+class LinearGenerator : public AbstractGenerator {
 
  public:
   /**
@@ -18,9 +18,9 @@ class SimpleGenerator : public AbstractGenerator {
   /**
    * Constructors
    */
-  SimpleGenerator(const AbstractPath& ipath, const smoothParams_t& ismoothParams);
-  SimpleGenerator(const SimpleGenerator& igenerator) = default;
-  virtual ~SimpleGenerator() = default;
+  LinearGenerator(const AbstractPath& ipath, const smoothParams_t& ismoothParams);
+  LinearGenerator(const LinearGenerator& igenerator) = default;
+  virtual ~LinearGenerator() = default;
 
   /**
    * Extractors
