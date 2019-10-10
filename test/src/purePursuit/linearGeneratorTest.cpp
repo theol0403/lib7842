@@ -27,9 +27,8 @@ TEST_F(LinearGeneratorTest, SmoothPointsDontPassWayPoints) {
 }
 
 TEST_F(LinearGeneratorTest, SmoothPointsFunction) {
-  LinearGenerator generator(SimplePath({{1_in, 1_in}, {5_in, 4_in}, {9_in, 1_in}}), smoothGains);
-
-  SimplePath path = generator.generate(0.5_in);
+  SimplePath path = LinearGenerator::generate(
+    SimplePath({{1_in, 1_in}, {5_in, 4_in}, {9_in, 1_in}}), 0.5_in, smoothGains);
 
   ASSERT_NEAR(path()[10].x.convert(inch), 5, 0.1);
   ASSERT_NEAR(path()[10].y.convert(inch), 3.5, 0.3);

@@ -2,11 +2,9 @@
 
 namespace lib7842 {
 
-LinearGenerator::LinearGenerator(const AbstractPath& ipath, const smoothParams_t& ismoothParams) :
-  path(ipath), smoothParams(ismoothParams) {}
-
-SimplePath LinearGenerator::generate(const QLength& ispacing) const {
-  return smoothen(insert(path, ispacing), smoothParams);
+SimplePath LinearGenerator::generate(
+  const AbstractPath& ipath, const QLength& ispacing, const smoothParams_t& ismoothParams) {
+  return smoothen(insert(ipath, ispacing), ismoothParams);
 }
 
 SimplePath LinearGenerator::insert(const AbstractPath& ipath, const QLength& ispacing) {

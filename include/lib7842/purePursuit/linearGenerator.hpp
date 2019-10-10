@@ -4,38 +4,19 @@
 
 namespace lib7842 {
 
-class LinearGenerator : public AbstractGenerator {
+class LinearGenerator {
 
  public:
-  /**
-   * Custom Types
-   */
   struct smoothParams_t {
     const double weight;
     const QLength tolerance;
   };
 
-  /**
-   * Constructors
-   */
-  LinearGenerator(const AbstractPath& ipath, const smoothParams_t& ismoothParams);
-  LinearGenerator(const LinearGenerator& igenerator) = default;
-  virtual ~LinearGenerator() = default;
+  static SimplePath generate(
+    const AbstractPath& ipath, const QLength& ispacing, const smoothParams_t& ismoothParams);
 
-  /**
-   * Extractors
-   */
-  virtual SimplePath generate(const QLength& ispacing) const override;
-
-  /**
-   * Custom Members
-   */
   static SimplePath insert(const AbstractPath& ipath, const QLength& ispacing);
   static SimplePath smoothen(const AbstractPath& ipath, const smoothParams_t& ismoothParams);
-
- protected:
-  const AbstractPath& path;
-  const smoothParams_t smoothParams;
 };
 
 } // namespace lib7842
