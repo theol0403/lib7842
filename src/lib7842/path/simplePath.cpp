@@ -9,6 +9,10 @@ std::vector<QPoint>& SimplePath::get() {
   return path;
 }
 
+std::vector<QPoint>& SimplePath::operator()() {
+  return path;
+}
+
 SimplePath SimplePath::extract() const {
   return *this;
 }

@@ -8,6 +8,10 @@ std::vector<PointReference>& ReferencePath::get() {
   return path;
 }
 
+std::vector<PointReference>& ReferencePath::operator()() {
+  return path;
+}
+
 SimplePath ReferencePath::extract() const {
   return SimplePath({path.begin(), path.end()});
 }

@@ -9,6 +9,10 @@ std::vector<PackedPoint>& PackedPath::get() {
   return path;
 }
 
+std::vector<PackedPoint>& PackedPath::operator()() {
+  return path;
+}
+
 SimplePath PackedPath::extract() const {
   return SimplePath({path.begin(), path.end()});
 }
