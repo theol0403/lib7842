@@ -47,11 +47,11 @@ SimplePath
     for (size_t i = 1; i < srcPath().size() - 1; i++) {
       for (size_t j = 0; j < 2; j++) {
         QLength& destPoint = destPath()[i].at(j);
-        QLength dataFac = ismoothParams.weight * (srcPath()[i].get().get(j) - destPoint);
+        QLength dataFac = ismoothParams.weight * (srcPath()[i].get().read(j) - destPoint);
         QLength smoothFac =
-          weight * (destPath()[i - 1].get(j) + srcPath()[i + 1].get().get(j) - (2.0 * destPoint));
+          weight * (destPath()[i - 1].read(j) + srcPath()[i + 1].get().read(j) - (2.0 * destPoint));
         destPoint += (dataFac + smoothFac);
-        change = (destPoint - destPath()[i].get(j)).abs();
+        change = (destPoint - destPath()[i].read(j)).abs();
       }
     }
   }

@@ -47,7 +47,7 @@ QLength& QPoint::operator[](const size_t& iindex) {
   return at(iindex);
 }
 
-const QLength& QPoint::get(const size_t& iindex) const {
+const QLength& QPoint::read(const size_t& iindex) const {
   return const_cast<QPoint*>(this)->at(iindex);
 }
 

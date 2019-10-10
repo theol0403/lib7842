@@ -22,7 +22,7 @@ class QPoint {
   QLength& at(const size_t& iindex);
   QLength& operator[](const size_t& iindex);
 
-  const QLength& get(const size_t& iindex) const;
+  const QLength& read(const size_t& iindex) const;
 
   QPoint operator*(const double scalar) const;
   QPoint operator/(const double scalar) const;
