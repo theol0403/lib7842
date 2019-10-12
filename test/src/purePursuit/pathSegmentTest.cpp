@@ -2,7 +2,7 @@
 #include "lib7842/purePursuit/pathSegment.hpp"
 
 class PathSegmentTest : public ::testing::Test {
- protected:
+protected:
   PathSegment segment;
   PathPoint point1 {5_in, 3_in};
 };

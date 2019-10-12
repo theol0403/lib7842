@@ -7,7 +7,7 @@ namespace lib7842 {
 
 class PathSegment {
 
- public:
+public:
   PathSegment() = default;
   PathSegment(const PathSegment& isegment) = default;
 
@@ -22,7 +22,7 @@ class PathSegment {
   using PointRefList = std::vector<std::reference_wrapper<PathPoint>>;
   PointRefList extractRef();
 
- protected:
+protected:
   std::list<std::variant<PathPoint, PathSegment>> segments {};
 };
 

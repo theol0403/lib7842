@@ -2,7 +2,7 @@
 #include "lib7842/purePursuit/pathPoint.hpp"
 
 class PathPointTest : public ::testing::Test {
- protected:
+protected:
   PathPoint point {5_in, 2_in};
 };
 
