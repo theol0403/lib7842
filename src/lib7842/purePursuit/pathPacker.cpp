@@ -38,19 +38,16 @@ void PathPacker::packVelocity(PackedPath& ipath, const limits& ilimits) {
     PackedPoint& start = ipath()[i];
     PackedPoint& end = ipath()[i - 1];
 
-    QSpeed wantedVel =
-      mps * std::min(
-              ilimits.max.convert(mps),
-              (ilimits.curvatureK / ipath()[i].getData<QCurvature>("curvature")).convert(number));
+    double wantedVel = std::min(
+      ilimits.max,
+      ilimits.curvatureK / ipath()[i].getData<QCurvature>("curvature").convert(curvature));
 
-    QSpeed newVel =
-      mps * std::min(
-              wantedVel.convert(mps),
-              std::sqrt(
-                std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) +
-                (2 * ilimits.accel * Vector::dist(start, end)).convert(mps2 * meter)));
+    double newVel = std::min(
+      wantedVel, std::sqrt(
+                   std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) +
+                   (2 * ilimits.accel * Vector::dist(start, end).convert(meter))));
 
-    ipath()[i - 1].setData("velocity", newVel);
+    ipath()[i - 1].setData("velocity", newVel * mps);
   }
 }
 

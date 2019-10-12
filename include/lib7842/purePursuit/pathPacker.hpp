@@ -14,24 +14,26 @@ public:
     /**
   	 * Minumum velocity for all points
   	 */
-    const QSpeed min;
+    const double min;
 
     /**
   	 * Maximum velocity for all points
   	 */
-    const QSpeed max;
+    const double max;
 
     /**
   	 * Maximum Acceleration between points
   	 */
-    const QAcceleration accel;
+    const double accel;
 
     /**
      * How much to slow down around turns.
      * This value is usually best around 0.5-2, 0.5 tends to slow down around almost any curvature in the
      * path, and 2 tends to slow down around only a very sharp curvature.
      */
-    const QCurvature curvatureK;
+    const double curvatureK;
+
+    limits(QSpeed imin, QSpeed imax, QAcceleration iaccel, QCurvature icurvatureK);
   };
 
   static PackedPath generate(const AbstractPath& ipath, const limits& ilimits);
