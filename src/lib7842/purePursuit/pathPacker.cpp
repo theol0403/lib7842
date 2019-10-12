@@ -5,33 +5,35 @@ namespace lib7842 {
 PackedPath PathPacker::generate(const AbstractPath& ipath, const velGains& ivelGains) {
   ReferencePath refPath = ipath.extractRef();
   PackedPath path({refPath().begin(), refPath().end()});
-  //   .computeDistances()
-  //   .computeCurvatures()
-  //   .computeVelocity(ivelGains)
-  //   .limitVelocity(ivelGains)
-  //   .get();
+
+  packDistances(path);
+  packCurvatures(path);
+  packVelocity(path, ivelGains);
+  packLimitVelocity(path, ivelGains);
+
+  return path;
 }
 
-// PathPacker& PathPacker::computeDistances() {
-//   path[0].setData("distance", 0_in);
-//   for (size_t i = 0; i < path.size() - 1; i++) {
-//     QLength distance = path[i].getValue<QLength>("distance") + path[i].dist(path[i + 1]);
-//     path[i + 1].setData("distance", std::move(distance));
-//   }
-//   return *this;
-// }
+void PathPacker::packDistances(PackedPath& ipath) {
+  ipath().front().setData("distance", 0_in);
+  for (size_t i = 0; i < ipath().size() - 1; i++) {
+    QLength distance =
+      ipath()[i].getData<QLength>("distance") + QPoint::dist(ipath()[i], ipath()[i + 1]);
+    ipath()[i + 1].setData("distance", distance);
+  }
+}
 
-// PathPacker& PathPacker::computeCurvatures() {
+// void PathPacker::packCurvatures(PackedPath& ipath) {
 //   path[0].setData("curvature", 0_curv);
 //   for (size_t i = 1; i < path.size() - 1; i++) {
 //     QCurvature curv = computeSingleCurvature(path[i - 1], path[i], path[i + 1]);
 //     path[i].setData("curvature", curv);
 //   }
 //   path.back().setData("curvature", 0_curv);
-//   return *this;
+//
 // }
 
-// // PathPacker& PathPacker::computeVelocity(const velGains& ivelGains) {
+// // void PathPacker::packVelocity(PackedPath& ipath), const velGains& ivelGains) {
 // //   path[path.size() - 1].setData("velocity", 0_mps);
 // //   for (size_t i = path.size() - 1; i > 0; i--) {
 // //     QPoint& start = path[i];
@@ -45,7 +47,7 @@ PackedPath PathPacker::generate(const AbstractPath& ipath, const velGains& ivelG
 // //   return path;
 // // }
 
-// // PathPacker& PathPacker::limitVelocity(path, minVel, maxRate) {
+// // void PathPacker::packLimitVelocity(PackedPath& ipath), path, minVel, maxRate) {
 // //   path[0].setData("velocity", minVel);
 // //   for (let i = 0; i < path.size() - 1; i++) {
 // //     let start = path[i];
