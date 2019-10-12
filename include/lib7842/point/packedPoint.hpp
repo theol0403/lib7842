@@ -24,8 +24,8 @@ public:
       return std::any_cast<T>(data);
     } catch (const std::bad_any_cast& e) {
       throw std::runtime_error(
-        "PackedPoint::getData:: \"" + iid + "\" contains wrong type \"" + data.type().name()
-        + "\"");
+        "PackedPoint::getData:: \"" + iid + "\" contains wrong type \"" + data.type().name() +
+        "\"");
     }
   }
 

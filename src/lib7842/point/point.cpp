@@ -79,8 +79,8 @@ QLength Vector::mag(const Vector& lhs) {
 }
 
 QLength Vector::dist(const Vector& lhs, const Vector& rhs) {
-  return meter
-         * std::sqrt(
+  return meter *
+         std::sqrt(
            ((lhs.x - rhs.x) * (lhs.x - rhs.x) + (lhs.y - rhs.y) * (lhs.y - rhs.y)).convert(meter2));
 }
 
