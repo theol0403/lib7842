@@ -23,45 +23,44 @@ void PathPacker::packDistances(PackedPath& ipath) {
   }
 }
 
-// void PathPacker::packCurvatures(PackedPath& ipath) {
-//   path[0].setData("curvature", 0_curv);
-//   for (size_t i = 1; i < path.size() - 1; i++) {
-//     QCurvature curv = computeSingleCurvature(path[i - 1], path[i], path[i + 1]);
-//     path[i].setData("curvature", curv);
-//   }
-//   path.back().setData("curvature", 0_curv);
-//
-// }
+void PathPacker::packCurvatures(PackedPath& ipath) {
+  ipath().front().setData("curvature", 0_curv);
+  for (size_t i = 1; i < ipath().size() - 1; i++) {
+    QCurvature curv = getCurvature(ipath()[i - 1], ipath()[i], ipath()[i + 1]);
+    ipath()[i].setData("curvature", curv);
+  }
+  ipath().back().setData("curvature", 0_curv);
+}
 
-// // void PathPacker::packVelocity(PackedPath& ipath), const velGains& ivelGains) {
-// //   path[path.size() - 1].setData("velocity", 0_mps);
-// //   for (size_t i = path.size() - 1; i > 0; i--) {
-// //     Vector& start = path[i];
-// //     Vector& end = path[i - 1];
-// //     QSpeed wantedVel = std::min(maxVel, (k / path[i].curvature));
-// //     let distance = distPathPoint(start, end);
-// //     let newVel =
-// //       std::min(wantedVel, std::sqrt(std::pow(start.velocity, 2) + (2 * maxRate * distance)));
-// //     path[i - 1].setData("velocity", newVel);
-// //   }
-// //   return path;
-// // }
+void PathPacker::packVelocity(PackedPath& ipath, const velGains& ivelGains) {
+  ipath().front().setData("velocity", 0_mps);
+  for (size_t i = ipath().size() - 1; i > 0; i--) {
+    Vector& start = ipath()[i];
+    Vector& end = ipath()[i - 1];
+    // QSpeed wantedVel = std::min(maxVel, (k / ipath()[i].curvature));
+    // let distance = distPathPoint(start, end);
+    // let newVel =
+    //   std::min(wantedVel, std::sqrt(std::pow(start.velocity, 2) + (2 * maxRate * distance)));
+    // ipath()[i - 1].setData("velocity", newVel);
+  }
+  // return path;
+}
 
-// // void PathPacker::packLimitVelocity(PackedPath& ipath), path, minVel, maxRate) {
-// //   path[0].setData("velocity", minVel);
-// //   for (let i = 0; i < path.size() - 1; i++) {
+// // void PathPacker::packLimitVelocity(PackedPath& ipath, ipath(), minVel, maxRate) {
+// //   ipath()[0].setData("velocity", minVel);
+// //   for (let i = 0; i < ipath().size() - 1; i++) {
 // //     let start = path[i];
-// //     let end = path[i + 1];
+// //     let end = ipath()[i + 1];
 // //     let distance = distPathPoint(start, end);
 // //     let wantedVel =
 // //       std::min(end.velocity, std::sqrt(std::pow(start.velocity, 2) + (2 * maxRate * distance)));
 // //     let newVel = std::max(wantedVel, minVel);
-// //     path[i + 1].setData("velocity", newVel);
+// //     ipath()[i + 1].setData("velocity", newVel);
 // //   }
 // //   return path;
 // // }
 
-// QCurvature PathPacker::computeSingleCurvature(
+// QCurvature PathPacker::getCurvature(
 //   const Vector& prevPoint, const Vector& point, const Vector& nextPoint) {
 //   double distOne = point.dist(prevPoint).convert(meter);
 //   double distTwo = point.dist(nextPoint).convert(meter);
