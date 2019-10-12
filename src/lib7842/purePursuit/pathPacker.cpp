@@ -81,24 +81,23 @@ void PathPacker::setMinVelocity(PackedPath& ipath, const limits& ilimits) {
   }
 }
 
-// QCurvature PathPacker::getCurvature(
-//   const Vector& prevPoint, const Vector& point, const Vector& nextPoint) {
-//   double distOne = point.dist(prevPoint).convert(meter);
-//   double distTwo = point.dist(nextPoint).convert(meter);
-//   double distThree = nextPoint.dist(prevPoint).convert(meter);
+QCurvature PathPacker::getCurvature(const Vector& prev, const Vector& point, const Vector& next) {
+  double distOne = Vector::dist(point, prev).convert(meter);
+  double distTwo = Vector::dist(point, next).convert(meter);
+  double distThree = Vector::dist(next, prev).convert(meter);
 
-//   double productOfSides = distOne * distTwo * distThree;
-//   double semiPerimeter = (distOne + distTwo + distThree) / 2;
+  double productOfSides = distOne * distTwo * distThree;
+  double semiPerimeter = (distOne + distTwo + distThree) / 2;
 
-//   double triangleArea = std::sqrt(
-//     semiPerimeter * //
-//     (semiPerimeter - distOne) * //
-//     (semiPerimeter - distTwo) * //
-//     (semiPerimeter - distThree));
+  double triangleArea = std::sqrt(
+    semiPerimeter * //
+    (semiPerimeter - distOne) * //
+    (semiPerimeter - distTwo) * //
+    (semiPerimeter - distThree));
 
-//   double r = (productOfSides) / (4 * triangleArea);
-//   double curv = std::isnormal(1 / r) ? 1 / r : 0;
-//   return curv * curvature;
-// }
+  double r = (productOfSides) / (4 * triangleArea);
+  double curv = std::isnormal(1 / r) ? 1 / r : 0;
+  return curv * curvature;
+}
 
 } // namespace lib7842
