@@ -2,6 +2,8 @@
 
 namespace lib7842 {
 
+PackedPoint::PackedPoint(const QPoint& ipoint) : QPoint(ipoint) {};
+
 void PackedPoint::setData(const std::string& iid, const std::any& idata) {
   pathData[iid] = idata;
 }

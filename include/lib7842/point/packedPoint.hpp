@@ -14,6 +14,8 @@ class PackedPoint : public QPoint {
   PackedPoint(const PackedPoint& istate) = default;
   virtual ~PackedPoint() = default;
 
+  explicit PackedPoint(const QPoint& ipoint);
+
   void setData(const std::string& iid, const std::any& idata);
 
   template <typename T> T getData(const std::string& iid) const {
