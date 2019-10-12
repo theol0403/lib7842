@@ -4,21 +4,21 @@
 
 namespace lib7842 {
 
-class QState : public Vector {
+class State : public Vector {
 public:
   QAngle theta {0_rad};
 
   using Vector::Vector;
-  QState(const QState& istate) = default;
-  virtual ~QState() = default;
+  State(const State& istate) = default;
+  virtual ~State() = default;
 
-  QState(const QLength& ix, const QLength& iy, const QAngle& itheta);
-  explicit QState(const Vector& ipoint);
+  State(const QLength& ix, const QLength& iy, const QAngle& itheta);
+  explicit State(const Vector& ipoint);
 
-  QState operator+(const QState& rhs) const;
-  QState operator-(const QState& rhs) const;
-  bool operator==(const QState& rhs) const;
-  bool operator!=(const QState& rhs) const;
+  State operator+(const State& rhs) const;
+  State operator-(const State& rhs) const;
+  bool operator==(const State& rhs) const;
+  bool operator!=(const State& rhs) const;
 };
 
 } // namespace lib7842

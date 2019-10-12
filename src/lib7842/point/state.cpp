@@ -3,36 +3,36 @@
 namespace lib7842 {
 
 /**
- * QState Constructor
+ * State Constructor
  */
-QState::QState(const QLength& ix, const QLength& iy, const QAngle& itheta) :
+State::State(const QLength& ix, const QLength& iy, const QAngle& itheta) :
   Vector(ix, iy), theta(itheta) {}
 
 /**
- * QState Constructor 
+ * State Constructor 
  * Upcast Vector 
  */
-QState::QState(const Vector& ipoint) : Vector(ipoint) {};
+State::State(const Vector& ipoint) : Vector(ipoint) {};
 
 /**
- * QState Math Operators
+ * State Math Operators
  */
-QState QState::operator+(const QState& rhs) const {
+State State::operator+(const State& rhs) const {
   return {x + rhs.x, y + rhs.y, theta + rhs.theta};
 }
 
-QState QState::operator-(const QState& rhs) const {
+State State::operator-(const State& rhs) const {
   return {x - rhs.x, y - rhs.y, theta - rhs.theta};
 }
 
 /**
- * QState Equality Operators
+ * State Equality Operators
  */
-bool QState::operator==(const QState& rhs) const {
+bool State::operator==(const State& rhs) const {
   return x == rhs.x && y == rhs.y && theta == rhs.theta;
 }
 
-bool QState::operator!=(const QState& rhs) const {
+bool State::operator!=(const State& rhs) const {
   return !(rhs == *this);
 }
 
