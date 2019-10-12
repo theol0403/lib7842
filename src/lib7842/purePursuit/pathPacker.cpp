@@ -49,7 +49,7 @@ void PathPacker::packVelocity(PackedPath& ipath, const limits& ilimits) {
     // maximum velocity given distance respecting acceleration
     // vf = sqrt(vi2 + 2ad)
     double maxIncrement = std::sqrt(
-      std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) + 2 * ilimits.accel * distance);
+      std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) + (2 * ilimits.accel * distance));
 
     // limiting to maximum accelerated velocity
     double newVel = std::min(wantedVel, maxIncrement);
@@ -58,19 +58,28 @@ void PathPacker::packVelocity(PackedPath& ipath, const limits& ilimits) {
   }
 }
 
-// // void PathPacker::packLimitVelocity(PackedPath& ipath, ipath(), minVel, maxRate) {
-// //   ipath()[0].setData("velocity", minVel);
-// //   for (let i = 0; i < ipath().size() - 1; i++) {
-// //     let start = path[i];
-// //     let end = ipath()[i + 1];
-// //     let distance = distPathPoint(start, end);
-// //     let wantedVel =
-// //       std::min(end.velocity, std::sqrt(std::pow(start.velocity, 2) + (2 * maxRate * distance)));
-// //     let newVel = std::max(wantedVel, minVel);
-// //     ipath()[i + 1].setData("velocity", newVel);
-// //   }
-// //   return path;
-// // }
+void PathPacker::setMinVelocity(PackedPath& ipath, const limits& ilimits) {
+  ipath().front().setData("velocity", ilimits.min * mps);
+  for (size_t i = 0; i < ipath().size() - 1; i++) {
+    PackedPoint& start = ipath()[i];
+    PackedPoint& end = ipath()[i + 1];
+
+    // distance to next point
+    double distance = Vector::dist(start, end).convert(meter);
+
+    // maximum velocity given distance respecting acceleration
+    // vf = sqrt(vi2 + 2ad)
+    double maxIncrement = std::sqrt(
+      std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) + (2 * ilimits.accel * distance));
+
+    // limiting to maximum accelerated velocity
+    double wantedVel = std::min(end.getData<QSpeed>("velocity").convert(mps), maxIncrement);
+
+    // limiting to minimum vel
+    double newVel = std::max(wantedVel, ilimits.min);
+    ipath()[i + 1].setData("velocity", newVel * mps);
+  }
+}
 
 // QCurvature PathPacker::getCurvature(
 //   const Vector& prevPoint, const Vector& point, const Vector& nextPoint) {
