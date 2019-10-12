@@ -1,5 +1,5 @@
 BasedOnStyle: LLVM
-AccessModifierOffset: '-1'
+AccessModifierOffset: '-2'
 AlignAfterOpenBracket: AlwaysBreak
 AlignConsecutiveDeclarations: 'false'
 AlignOperands: 'true'

@@ -2,7 +2,7 @@
 #include "lib7842/point/state.hpp"
 
 class QStateTest : public ::testing::Test {
- protected:
+protected:
   QState state {5_in, 2_in, 3_rad};
   Vector point {5_in, 2_in};
 };
