@@ -2,7 +2,7 @@
 #include "lib7842/path/referencePath.hpp"
 
 class ReferencePathTest : public ::testing::Test {
- protected:
+protected:
   Vector point1 {5_in, 3_in};
 };
 

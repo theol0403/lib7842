@@ -4,7 +4,7 @@
 namespace lib7842 {
 
 class Vector {
- public:
+public:
   QLength x {0_in};
   QLength y {0_in};
 

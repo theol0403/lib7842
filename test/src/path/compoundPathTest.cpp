@@ -2,7 +2,7 @@
 #include "lib7842/path/compoundPath.hpp"
 
 class CompoundPathTest : public ::testing::Test {
- protected:
+protected:
   CompoundPath path;
   Vector point1 {5_in, 3_in};
 };

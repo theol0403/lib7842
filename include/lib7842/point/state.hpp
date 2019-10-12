@@ -5,7 +5,7 @@
 namespace lib7842 {
 
 class QState : public Vector {
- public:
+public:
   QAngle theta {0_rad};
 
   using Vector::Vector;

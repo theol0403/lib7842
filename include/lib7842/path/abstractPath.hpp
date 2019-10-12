@@ -12,7 +12,7 @@ class ReferencePath;
  */
 class AbstractPath {
 
- public:
+public:
   /**
    * Default Constructors
    */

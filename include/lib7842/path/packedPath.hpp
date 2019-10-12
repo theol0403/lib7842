@@ -8,7 +8,7 @@ namespace lib7842 {
 
 class PackedPath : public AbstractPath {
 
- public:
+public:
   /**
    * Default Constructors
    */
@@ -36,7 +36,7 @@ class PackedPath : public AbstractPath {
   virtual std::shared_ptr<AbstractPath> copyPtr() const override;
   virtual std::shared_ptr<AbstractPath> movePtr() const override;
 
- protected:
+protected:
   std::vector<PackedPoint> path {};
 };
 

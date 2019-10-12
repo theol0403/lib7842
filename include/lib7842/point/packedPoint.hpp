@@ -9,7 +9,7 @@ namespace lib7842 {
 
 class PackedPoint : public Vector {
 
- public:
+public:
   using Vector::Vector;
   PackedPoint(const PackedPoint& istate) = default;
   virtual ~PackedPoint() = default;
@@ -29,10 +29,10 @@ class PackedPoint : public Vector {
     }
   }
 
- protected:
+protected:
   std::map<std::string, std::any> pathData {};
 
- private:
+private:
   const std::any& getID(const std::string& iid) const;
 };
 

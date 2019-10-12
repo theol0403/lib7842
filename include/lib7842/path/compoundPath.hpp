@@ -11,7 +11,7 @@ namespace lib7842 {
 
 class CompoundPath : public AbstractPath {
 
- public:
+public:
   /**
    * Default Constructors
    */
@@ -40,7 +40,7 @@ class CompoundPath : public AbstractPath {
   virtual std::shared_ptr<AbstractPath> copyPtr() const override;
   virtual std::shared_ptr<AbstractPath> movePtr() const override;
 
- protected:
+protected:
   std::vector<std::shared_ptr<AbstractPath>> paths {};
 }; // namespace lib7842
 

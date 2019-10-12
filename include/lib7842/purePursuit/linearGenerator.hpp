@@ -9,7 +9,7 @@ namespace lib7842 {
 
 class LinearGenerator {
 
- public:
+public:
   struct smoothParams_t {
     const double weight;
     const QLength tolerance;

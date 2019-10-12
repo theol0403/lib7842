@@ -2,7 +2,7 @@
 #include "lib7842/point/packedPoint.hpp"
 
 class PackedPointTest : public ::testing::Test {
- protected:
+protected:
   PackedPoint point {5_in, 2_in};
 };
 

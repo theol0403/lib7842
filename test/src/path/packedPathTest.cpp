@@ -2,7 +2,7 @@
 #include "lib7842/path/packedPath.hpp"
 
 class PackedPathTest : public ::testing::Test {
- protected:
+protected:
   PackedPoint point1 {5_in, 3_in};
   void SetUp() override {
     point1.setData("curvature", 5_curv);

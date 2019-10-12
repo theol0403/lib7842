@@ -2,7 +2,7 @@
 #include "lib7842/point/point.hpp"
 
 class VectorTest : public ::testing::Test {
- protected:
+protected:
   Vector point {5_in, 2_in};
   Vector emptyPoint;
 };

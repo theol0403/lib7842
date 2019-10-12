@@ -9,7 +9,7 @@ namespace lib7842 {
 
 class PathPacker {
 
- public:
+public:
   struct velGains {
     /**
   	 * Minumum velocity for all points

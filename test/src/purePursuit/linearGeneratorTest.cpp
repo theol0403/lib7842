@@ -2,7 +2,7 @@
 #include "lib7842/purePursuit/linearGenerator.hpp"
 
 class LinearGeneratorTest : public ::testing::Test {
- protected:
+protected:
   LinearGenerator::smoothParams_t smoothGains {0.25, 0.0001_in};
 };
 
