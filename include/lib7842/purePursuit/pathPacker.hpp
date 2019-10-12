@@ -10,7 +10,7 @@ namespace lib7842 {
 class PathPacker {
 
 public:
-  struct velGains {
+  struct limits {
     /**
   	 * Minumum velocity for all points
   	 */
@@ -31,16 +31,16 @@ public:
      * This value is usually best around 0.5-2, 0.5 tends to slow down around almost any curvature in the
      * path, and 2 tends to slow down around only a very sharp curvature.
      */
-    const double curvatureK;
+    const QCurvature curvatureK;
   };
 
-  static PackedPath generate(const AbstractPath& ipath, const velGains& ivelGains);
+  static PackedPath generate(const AbstractPath& ipath, const limits& ilimits);
 
   static void packDistances(PackedPath& ipath);
   static void packCurvatures(PackedPath& ipath);
 
-  static void packVelocity(PackedPath& ipath, const velGains& ivelGains);
-  static void packLimitVelocity(PackedPath& ipath, const velGains& ivelGains);
+  static void packVelocity(PackedPath& ipath, const limits& ilimits);
+  static void packLimitVelocity(PackedPath& ipath, const limits& ilimits);
 
   static QCurvature getCurvature(const Vector& prev, const Vector& point, const Vector& next);
 };
