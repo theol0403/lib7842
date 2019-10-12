@@ -6,15 +6,15 @@ PackedPath PathPacker::generate(const AbstractPath& ipath, const limits& ilimits
   ReferencePath refPath = ipath.extractRef();
   PackedPath path({refPath().begin(), refPath().end()});
 
-  packDistances(path);
-  packCurvatures(path);
-  packVelocity(path, ilimits);
-  packLimitVelocity(path, ilimits);
+  setDistances(path);
+  setCurvatures(path);
+  setMaxVelocity(path, ilimits);
+  setMinVelocity(path, ilimits);
 
   return path;
 }
 
-void PathPacker::packDistances(PackedPath& ipath) {
+void PathPacker::setDistances(PackedPath& ipath) {
   ipath().front().setData("distance", 0_in);
   for (size_t i = 0; i < ipath().size() - 1; i++) {
     QLength distance =
@@ -23,7 +23,7 @@ void PathPacker::packDistances(PackedPath& ipath) {
   }
 }
 
-void PathPacker::packCurvatures(PackedPath& ipath) {
+void PathPacker::setCurvatures(PackedPath& ipath) {
   ipath().front().setData("curvature", 0_curv);
   for (size_t i = 1; i < ipath().size() - 1; i++) {
     QCurvature curv = getCurvature(ipath()[i - 1], ipath()[i], ipath()[i + 1]);
@@ -32,7 +32,7 @@ void PathPacker::packCurvatures(PackedPath& ipath) {
   ipath().back().setData("curvature", 0_curv);
 }
 
-void PathPacker::packVelocity(PackedPath& ipath, const limits& ilimits) {
+void PathPacker::setMaxVelocity(PackedPath& ipath, const limits& ilimits) {
   ipath().back().setData("velocity", 0_mps);
   for (size_t i = ipath().size() - 1; i > 0; i--) {
     PackedPoint& start = ipath()[i];

@@ -38,11 +38,11 @@ public:
 
   static PackedPath generate(const AbstractPath& ipath, const limits& ilimits);
 
-  static void packDistances(PackedPath& ipath);
-  static void packCurvatures(PackedPath& ipath);
+  static void setDistances(PackedPath& ipath);
+  static void setCurvatures(PackedPath& ipath);
 
-  static void packVelocity(PackedPath& ipath, const limits& ilimits);
-  static void packLimitVelocity(PackedPath& ipath, const limits& ilimits);
+  static void setMaxVelocity(PackedPath& ipath, const limits& ilimits);
+  static void setMinVelocity(PackedPath& ipath, const limits& ilimits);
 
   static QCurvature getCurvature(const Vector& prev, const Vector& point, const Vector& next);
 };
