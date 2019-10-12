@@ -20,14 +20,14 @@ class SimplePath : public AbstractPath {
   /**
    * Explicit Constructors
    */
-  explicit SimplePath(const std::initializer_list<QPoint>& ipath);
-  explicit SimplePath(const std::vector<QPoint>& ipath);
+  explicit SimplePath(const std::initializer_list<Vector>& ipath);
+  explicit SimplePath(const std::vector<Vector>& ipath);
 
   /**
    * Explicit Functions
    */
-  std::vector<QPoint>& get();
-  std::vector<QPoint>& operator()();
+  std::vector<Vector>& get();
+  std::vector<Vector>& operator()();
 
   /**
    * Extractors
@@ -38,7 +38,7 @@ class SimplePath : public AbstractPath {
   virtual std::shared_ptr<AbstractPath> movePtr() const override;
 
  protected:
-  std::vector<QPoint> path {};
+  std::vector<Vector> path {};
 };
 
 } // namespace lib7842

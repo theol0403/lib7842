@@ -7,14 +7,14 @@
 
 namespace lib7842 {
 
-class PackedPoint : public QPoint {
+class PackedPoint : public Vector {
 
  public:
-  using QPoint::QPoint;
+  using Vector::Vector;
   PackedPoint(const PackedPoint& istate) = default;
   virtual ~PackedPoint() = default;
 
-  explicit PackedPoint(const QPoint& ipoint);
+  explicit PackedPoint(const Vector& ipoint);
 
   void setData(const std::string& iid, const std::any& idata);
 

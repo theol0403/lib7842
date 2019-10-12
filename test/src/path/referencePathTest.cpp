@@ -3,7 +3,7 @@
 
 class ReferencePathTest : public ::testing::Test {
  protected:
-  QPoint point1 {5_in, 3_in};
+  Vector point1 {5_in, 3_in};
 };
 
 TEST_F(ReferencePathTest, Constructors) {

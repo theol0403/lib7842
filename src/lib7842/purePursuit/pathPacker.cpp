@@ -18,7 +18,7 @@ void PathPacker::packDistances(PackedPath& ipath) {
   ipath().front().setData("distance", 0_in);
   for (size_t i = 0; i < ipath().size() - 1; i++) {
     QLength distance =
-      ipath()[i].getData<QLength>("distance") + QPoint::dist(ipath()[i], ipath()[i + 1]);
+      ipath()[i].getData<QLength>("distance") + Vector::dist(ipath()[i], ipath()[i + 1]);
     ipath()[i + 1].setData("distance", distance);
   }
 }
@@ -36,8 +36,8 @@ void PathPacker::packDistances(PackedPath& ipath) {
 // // void PathPacker::packVelocity(PackedPath& ipath), const velGains& ivelGains) {
 // //   path[path.size() - 1].setData("velocity", 0_mps);
 // //   for (size_t i = path.size() - 1; i > 0; i--) {
-// //     QPoint& start = path[i];
-// //     QPoint& end = path[i - 1];
+// //     Vector& start = path[i];
+// //     Vector& end = path[i - 1];
 // //     QSpeed wantedVel = std::min(maxVel, (k / path[i].curvature));
 // //     let distance = distPathPoint(start, end);
 // //     let newVel =
@@ -62,7 +62,7 @@ void PathPacker::packDistances(PackedPath& ipath) {
 // // }
 
 // QCurvature PathPacker::computeSingleCurvature(
-//   const QPoint& prevPoint, const QPoint& point, const QPoint& nextPoint) {
+//   const Vector& prevPoint, const Vector& point, const Vector& nextPoint) {
 //   double distOne = point.dist(prevPoint).convert(meter);
 //   double distTwo = point.dist(nextPoint).convert(meter);
 //   double distThree = nextPoint.dist(prevPoint).convert(meter);

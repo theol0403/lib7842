@@ -3,14 +3,14 @@
 
 class SimplePathTest : public ::testing::Test {
  protected:
-  QPoint point1 {5_in, 3_in};
+  Vector point1 {5_in, 3_in};
 };
 
 TEST_F(SimplePathTest, Constructors) {
   SimplePath();
   SimplePath({point1});
   SimplePath({point1, point1});
-  SimplePath(std::vector<QPoint>({point1, point1}));
+  SimplePath(std::vector<Vector>({point1, point1}));
 }
 
 TEST_F(SimplePathTest, ExtractReference) {

@@ -4,7 +4,7 @@
 class CompoundPathTest : public ::testing::Test {
  protected:
   CompoundPath path;
-  QPoint point1 {5_in, 3_in};
+  Vector point1 {5_in, 3_in};
 };
 
 TEST_F(CompoundPathTest, Constructors) {
@@ -55,8 +55,8 @@ TEST_F(CompoundPathTest, StressTest) {
   path.importPath(SimplePath({{1_in, 2_in}}));
   path.importPath(SimplePath({{2_in, 3_in}, {3_in, 4_in}}));
 
-  QPoint refPoint1 {4_in, 5_in};
-  QPoint refPoint2 {5_in, 6_in};
+  Vector refPoint1 {4_in, 5_in};
+  Vector refPoint2 {5_in, 6_in};
   CompoundPath segment1 {CompoundPath().importPath(ReferencePath({refPoint1, refPoint2}))};
   CompoundPath segment2 {CompoundPath().importPath(SimplePath({{6_in, 7_in}}))};
   CompoundPath segment3 {CompoundPath().importPath(SimplePath({{7_in, 8_in}}))};
@@ -75,7 +75,7 @@ TEST_F(CompoundPathTest, StressTest) {
   // test point values
   ASSERT_EQ(ipath.get().size(), 8);
   for (size_t i = 0; i < ipath.get().size(); ++i) {
-    ASSERT_EQ(ipath.get()[i], (QPoint {(i + 1) * inch, (i + 2) * inch}));
+    ASSERT_EQ(ipath.get()[i], (Vector {(i + 1) * inch, (i + 2) * inch}));
   }
 
   // test refpath addresses

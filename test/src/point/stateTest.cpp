@@ -4,7 +4,7 @@
 class QStateTest : public ::testing::Test {
  protected:
   QState state {5_in, 2_in, 3_rad};
-  QPoint point {5_in, 2_in};
+  Vector point {5_in, 2_in};
 };
 
 TEST_F(QStateTest, Constructors) {
@@ -58,18 +58,18 @@ TEST_F(QStateTest, AccessorOperator) {
 }
 
 TEST_F(QStateTest, Conversions) {
-  EXPECT_EQ(QPoint(QState(point)), point);
-  EXPECT_EQ(point, QPoint(state));
+  EXPECT_EQ(Vector(QState(point)), point);
+  EXPECT_EQ(point, Vector(state));
 
-  [&](const QPoint& ipoint) {
-    EXPECT_EQ(ipoint, QPoint(state));
+  [&](const Vector& ipoint) {
+    EXPECT_EQ(ipoint, Vector(state));
   }(state);
 
   [&](const QState& istate) {
-    EXPECT_EQ(QState(QPoint(istate)), QState(QPoint(state)));
+    EXPECT_EQ(QState(Vector(istate)), QState(Vector(state)));
   }(state);
 
   [&](const QState& istate) {
-    EXPECT_EQ(QState(QPoint(istate)), QState(point));
+    EXPECT_EQ(QState(Vector(istate)), QState(point));
   }(QState(point));
 }

@@ -1,40 +1,40 @@
 #include "test.hpp"
 #include "lib7842/point/point.hpp"
 
-class QPointTest : public ::testing::Test {
+class VectorTest : public ::testing::Test {
  protected:
-  QPoint point {5_in, 2_in};
-  QPoint emptyPoint;
+  Vector point {5_in, 2_in};
+  Vector emptyPoint;
 };
 
-TEST_F(QPointTest, Constructor) {
+TEST_F(VectorTest, Constructor) {
   EXPECT_EQ(point.x.convert(inch), 5);
   EXPECT_EQ(point.y.convert(inch), 2);
 }
 
-TEST_F(QPointTest, CopyConstructor) {
-  EXPECT_EQ(QPoint(point), point);
+TEST_F(VectorTest, CopyConstructor) {
+  EXPECT_EQ(Vector(point), point);
 }
 
-TEST_F(QPointTest, DefaultInitialization) {
-  EXPECT_EQ(emptyPoint, (QPoint {0_in, 0_in}));
+TEST_F(VectorTest, DefaultInitialization) {
+  EXPECT_EQ(emptyPoint, (Vector {0_in, 0_in}));
 }
 
-TEST_F(QPointTest, MathOperators) {
+TEST_F(VectorTest, MathOperators) {
   EXPECT_EQ((point + point).x, point.x * 2);
   EXPECT_EQ((point + point).y, point.y * 2);
 
   EXPECT_EQ((point - point), emptyPoint);
 }
 
-TEST_F(QPointTest, EqualityOperators) {
+TEST_F(VectorTest, EqualityOperators) {
   EXPECT_EQ(point, point);
-  EXPECT_EQ(point + (QPoint {1_in, 2_in}), point + (QPoint {1_in, 2_in}));
+  EXPECT_EQ(point + (Vector {1_in, 2_in}), point + (Vector {1_in, 2_in}));
 
   ASSERT_NE(point, point + point);
 }
 
-TEST_F(QPointTest, AccessorOperator) {
+TEST_F(VectorTest, AccessorOperator) {
   EXPECT_EQ(point[0], point.x);
   EXPECT_EQ(point[1], point.y);
   ASSERT_THROW(point[2], std::runtime_error);

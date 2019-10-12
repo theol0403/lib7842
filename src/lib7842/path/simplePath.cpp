@@ -2,14 +2,14 @@
 
 namespace lib7842 {
 
-SimplePath::SimplePath(const std::initializer_list<QPoint>& ipath) : path(ipath) {}
-SimplePath::SimplePath(const std::vector<QPoint>& ipath) : path(ipath) {}
+SimplePath::SimplePath(const std::initializer_list<Vector>& ipath) : path(ipath) {}
+SimplePath::SimplePath(const std::vector<Vector>& ipath) : path(ipath) {}
 
-std::vector<QPoint>& SimplePath::get() {
+std::vector<Vector>& SimplePath::get() {
   return path;
 }
 
-std::vector<QPoint>& SimplePath::operator()() {
+std::vector<Vector>& SimplePath::operator()() {
   return path;
 }
 

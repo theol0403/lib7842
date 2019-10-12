@@ -6,13 +6,13 @@ namespace lib7842 {
  * QState Constructor
  */
 QState::QState(const QLength& ix, const QLength& iy, const QAngle& itheta) :
-  QPoint(ix, iy), theta(itheta) {}
+  Vector(ix, iy), theta(itheta) {}
 
 /**
  * QState Constructor 
- * Upcast QPoint 
+ * Upcast Vector 
  */
-QState::QState(const QPoint& ipoint) : QPoint(ipoint) {};
+QState::QState(const Vector& ipoint) : Vector(ipoint) {};
 
 /**
  * QState Math Operators

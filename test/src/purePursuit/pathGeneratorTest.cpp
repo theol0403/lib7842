@@ -29,7 +29,7 @@
 // }
 
 // TEST_F(PathGeneratorTest, SmoothPointsDontPassMiddlePoints) {
-//   std::vector<QPoint> path =
+//   std::vector<Vector> path =
 //     PathSegment()
 //       .addPoints({{0_in, 0_in}, {5_in, 4_in}, {5_in, 0_in}, {3_in, 5_in}, {0_in, 10_in}})
 //       .extract();

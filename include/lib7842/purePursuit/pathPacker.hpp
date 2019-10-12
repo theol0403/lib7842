@@ -42,7 +42,7 @@ class PathPacker {
   static void packVelocity(PackedPath& ipath, const velGains& ivelGains);
   static void packLimitVelocity(PackedPath& ipath, const velGains& ivelGains);
 
-  static QCurvature getCurvature(const QPoint& prev, const QPoint& point, const QPoint& next);
+  static QCurvature getCurvature(const Vector& prev, const Vector& point, const Vector& next);
 };
 
 } // namespace lib7842

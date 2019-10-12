@@ -12,16 +12,16 @@ SimplePath LinearGenerator::insert(const AbstractPath& ipath, const QLength& isp
   SimplePath destPath;
 
   for (size_t i = 0; i < srcPath().size() - 1; i++) {
-    const QPoint& start = srcPath()[i].get();
-    const QPoint& end = srcPath()[i + 1].get();
-    QPoint diff = end - start;
+    const Vector& start = srcPath()[i].get();
+    const Vector& end = srcPath()[i + 1].get();
+    Vector diff = end - start;
 
     // number of points needed
-    size_t numInsert = std::ceil((QPoint::mag(diff) / ispacing).convert(number));
+    size_t numInsert = std::ceil((Vector::mag(diff) / ispacing).convert(number));
     // reserve vector capacity
     destPath().reserve(destPath().capacity() + numInsert);
     // how much to increment each point
-    QPoint step = diff / numInsert;
+    Vector step = diff / numInsert;
 
     for (size_t j = 0; j < numInsert; j++) {
       destPath().emplace_back(start + (step * j));

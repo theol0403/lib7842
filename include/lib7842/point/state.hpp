@@ -4,16 +4,16 @@
 
 namespace lib7842 {
 
-class QState : public QPoint {
+class QState : public Vector {
  public:
   QAngle theta {0_rad};
 
-  using QPoint::QPoint;
+  using Vector::Vector;
   QState(const QState& istate) = default;
   virtual ~QState() = default;
 
   QState(const QLength& ix, const QLength& iy, const QAngle& itheta);
-  explicit QState(const QPoint& ipoint);
+  explicit QState(const Vector& ipoint);
 
   QState operator+(const QState& rhs) const;
   QState operator-(const QState& rhs) const;
