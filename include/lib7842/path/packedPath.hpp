@@ -21,6 +21,7 @@ public:
    */
   explicit PackedPath(const std::initializer_list<PackedPoint>& ipath);
   explicit PackedPath(const std::vector<PackedPoint>& ipath);
+  explicit PackedPath(const AbstractPath& ipath);
 
   /**
    * Explicit Functions
@@ -35,6 +36,10 @@ public:
   virtual ReferencePath extractRef() const override;
   virtual std::shared_ptr<AbstractPath> copyPtr() const override;
   virtual std::shared_ptr<AbstractPath> movePtr() const override;
+
+private:
+  // delegating constructor
+  explicit PackedPath(const std::vector<PointReference>& ipath);
 
 protected:
   std::vector<PackedPoint> path {};

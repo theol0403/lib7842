@@ -3,8 +3,7 @@
 namespace lib7842 {
 
 PackedPath PathPacker::generate(const AbstractPath& ipath, const limits& ilimits) {
-  ReferencePath refPath = ipath.extractRef();
-  PackedPath path({refPath().begin(), refPath().end()});
+  PackedPath path(ipath);
 
   setDistances(path);
   setCurvatures(path);
