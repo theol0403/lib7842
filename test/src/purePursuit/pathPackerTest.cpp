@@ -6,6 +6,24 @@ class PathPackerTest : public ::testing::Test {
 protected:
 };
 
+TEST_F(PathPackerTest, SetDistancesSimple) {
+  PackedPath path(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}));
+  PathPacker::setDistances(path);
+
+  ASSERT_EQ(path()[0].getData<QLength>("distance"), 0_in);
+  ASSERT_EQ(path()[1].getData<QLength>("distance"), 5_in);
+  ASSERT_EQ(path()[2].getData<QLength>("distance"), 10_in);
+}
+
+TEST_F(PathPackerTest, SetDistancesComplex) {
+  PackedPath path(LinearGenerator::insert(SimplePath({{0_in, 0_in}, {0_in, 20_in}}), 1_in));
+  PathPacker::setDistances(path);
+
+  for (size_t i = 0; i < path().size(); i++) {
+    ASSERT_NEAR(path()[i].getData<QLength>("distance").convert(inch), i, 1e-8);
+  }
+}
+
 TEST_F(PathPackerTest, ComputeSingleCurvature) {
   QCurvature straight = PathPacker::getCurvature({0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in});
   ASSERT_EQ(straight, 0_curv);
@@ -17,7 +35,7 @@ TEST_F(PathPackerTest, ComputeSingleCurvature) {
   ASSERT_EQ(turn, 0_curv);
 }
 
-TEST_F(PathPackerTest, ComputeCurvatures) {
+TEST_F(PathPackerTest, SetCurvatures) {
   PackedPath pathStraight(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}));
   PathPacker::setCurvatures(pathStraight);
 
@@ -39,22 +57,4 @@ TEST_F(PathPackerTest, ComputeCurvatures) {
 
   ASSERT_EQ(pathTurn()[0].getData<QCurvature>("curvature"), 0_curv);
   ASSERT_EQ(pathTurn()[2].getData<QCurvature>("curvature"), 0_curv);
-}
-
-TEST_F(PathPackerTest, SetDistancesSimple) {
-  PackedPath path(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}));
-  PathPacker::setDistances(path);
-
-  ASSERT_EQ(path()[0].getData<QLength>("distance"), 0_in);
-  ASSERT_EQ(path()[1].getData<QLength>("distance"), 5_in);
-  ASSERT_EQ(path()[2].getData<QLength>("distance"), 10_in);
-}
-
-TEST_F(PathPackerTest, SetDistancesComplex) {
-  PackedPath path(LinearGenerator::insert(SimplePath({{0_in, 0_in}, {0_in, 20_in}}), 1_in));
-  PathPacker::setDistances(path);
-
-  for (size_t i = 0; i < path().size(); i++) {
-    ASSERT_NEAR(path()[i].getData<QLength>("distance").convert(inch), i, 1e-8);
-  }
 }
