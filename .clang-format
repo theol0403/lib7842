@@ -17,7 +17,7 @@ AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: 'false'
 BinPackArguments: 'true'
 BinPackParameters: 'false'
-BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBinaryOperators: None
 BreakBeforeBraces: Attach
 BreakBeforeTernaryOperators: 'true'
 BreakConstructorInitializers: AfterColon
@@ -33,11 +33,11 @@ FixNamespaceComments: 'true'
 IndentCaseLabels: 'true'
 IndentPPDirectives: BeforeHash
 IndentWidth: '2'
-IndentWrappedFunctionNames: 'false'
+IndentWrappedFunctionNames: 'true'
 KeepEmptyLinesAtTheStartOfBlocks: 'true'
 Language: Cpp
 MaxEmptyLinesToKeep: '1'
-NamespaceIndentation: Inner
+NamespaceIndentation: None
 PointerAlignment: Left
 ReflowComments: 'false'
 SortIncludes: 'false'
