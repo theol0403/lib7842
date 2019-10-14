@@ -2,7 +2,6 @@
 #include "main.h"
 #include "abstractPath.hpp"
 #include "simplePath.hpp"
-#include "referencePath.hpp"
 
 #include "lib7842/point/point.hpp"
 #include <variant>
@@ -33,12 +32,30 @@ public:
   CompoundPath& importPath(const AbstractPath& ipath);
 
   /**
-   * Extractors
+   * Extract path of pointers to the points
    */
   virtual SimplePath extract() const override;
-  virtual ReferencePath extractRef() const override;
+
+  /**
+   * Extract path of pointers to copies of the points
+   */
+  virtual SimplePath extractCopy() const override;
+
+  /**
+   * @return shared pointer to copy of path
+   */
   virtual std::shared_ptr<AbstractPath> copyPtr() const override;
+
+  /**
+   * Move the path into a shared pointer and return pointer
+   */
   virtual std::shared_ptr<AbstractPath> movePtr() const override;
+
+  /**
+   * Sample the path and return a path with higher resolution
+   * @param  isteps the number of points to generate for each segment
+   */
+  virtual SimplePath generate(const size_t isteps) const override;
 
 protected:
   std::vector<std::shared_ptr<AbstractPath>> paths {};
