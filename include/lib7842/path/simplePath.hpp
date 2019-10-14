@@ -1,7 +1,7 @@
 #pragma once
 #include "main.h"
 #include "abstractPath.hpp"
-#include "simplePath.hpp"
+#include "referencePath.hpp"
 
 #include "lib7842/point/point.hpp"
 
@@ -21,7 +21,7 @@ public:
    * Explicit Constructors
    */
   explicit SimplePath(const std::initializer_list<Vector>& ipath);
-  explicit SimplePath(const std::vector<Vector>& ipath);
+  explicit SimplePath(const std::vector<VectorRef>& ipath);
   explicit SimplePath(const std::vector<std::shared_ptr<Vector>>& ipath);
 
   /**
