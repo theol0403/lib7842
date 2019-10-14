@@ -1,4 +1,5 @@
 #include "simplePath.hpp"
+#include "compoundPath.hpp"
 
 namespace lib7842 {
 
@@ -26,11 +27,12 @@ SimplePath SimplePath::extract() const {
 }
 
 SimplePath SimplePath::extractCopy() const {
-  std::vector<std::shared_ptr<Vector>> ipath;
+  SimplePath temp;
+  temp().reserve(path.size());
   for (auto&& point : path) {
-    ipath.emplace_back(std::make_shared<Vector>(*point));
+    temp().emplace_back(std::make_shared<Vector>(*point));
   }
-  return SimplePath(ipath);
+  return temp;
 }
 
 std::shared_ptr<AbstractPath> SimplePath::copyPtr() const {
@@ -42,17 +44,16 @@ std::shared_ptr<AbstractPath> SimplePath::movePtr() const {
 }
 
 SimplePath SimplePath::generate(const size_t isteps) const {
-  SimplePath destPath;
-
+  CompoundPath collector;
   for (size_t i = 0; i < path.size() - 1; i++) {
-    SimplePath segment = generateSegment(*path[i], *path[i + 1], isteps);
-    destPath().reserve(destPath().size() + segment().size());
-    destPath().insert(destPath().end(), segment().begin(), segment().end());
+    collector.importPath(generateSegment(*path[i], *path[i + 1], isteps));
   }
 
+  SimplePath temp = collector.extract();
+
   // push the last point
-  if (path.size() > 0) destPath().emplace_back(path.back());
-  return destPath;
+  if (path.size() > 0) temp().emplace_back(path.back());
+  return temp;
 }
 
 SimplePath
