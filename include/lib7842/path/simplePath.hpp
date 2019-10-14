@@ -1,7 +1,7 @@
 #pragma once
 #include "main.h"
 #include "abstractPath.hpp"
-#include "referencePath.hpp"
+#include "simplePath.hpp"
 
 #include "lib7842/point/point.hpp"
 
@@ -22,23 +22,42 @@ public:
    */
   explicit SimplePath(const std::initializer_list<Vector>& ipath);
   explicit SimplePath(const std::vector<Vector>& ipath);
+  explicit SimplePath(const std::vector<std::shared_ptr<Vector>>& ipath);
 
   /**
    * Explicit Functions
    */
-  std::vector<Vector>& get();
-  std::vector<Vector>& operator()();
+  std::vector<std::shared_ptr<Vector>>& get();
+  std::vector<std::shared_ptr<Vector>>& operator()();
 
   /**
-   * Extractors
+   * Extract path of pointers to the points
    */
   virtual SimplePath extract() const override;
-  virtual ReferencePath extractRef() const override;
+
+  /**
+   * Extract path of pointers to copies of the points
+   */
+  virtual SimplePath extractCopy() const override;
+
+  /**
+   * Sample the path and return a path with higher resolution
+   * @param  isteps the number of points to generate in the path
+   */
+  virtual SimplePath generate(const size_t isteps) const override;
+
+  /**
+   * @return shared pointer to copy of path
+   */
   virtual std::shared_ptr<AbstractPath> copyPtr() const override;
+
+  /**
+   * Move the path into a shared pointer and return pointer
+   */
   virtual std::shared_ptr<AbstractPath> movePtr() const override;
 
 protected:
-  std::vector<Vector> path {};
+  std::vector<std::shared_ptr<Vector>> path {};
 };
 
 } // namespace lib7842

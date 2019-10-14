@@ -1,10 +1,15 @@
-// #include "test.hpp"
-// #include "lib7842/path/simplePath.hpp"
+#include "test.hpp"
+#include "lib7842/path/simplePath.hpp"
 
-// class SimplePathTest : public ::testing::Test {
-// protected:
-//   Vector point1 {5_in, 3_in};
-// };
+class SimplePathTest : public ::testing::Test {
+protected:
+  Vector point1 {5_in, 3_in};
+};
+
+TEST_F(SimplePathTest, Constructors) {
+  SimplePath path({point1});
+  SimplePath path2 = path.extractCopy();
+}
 
 // TEST_F(SimplePathTest, Constructors) {
 //   SimplePath();
