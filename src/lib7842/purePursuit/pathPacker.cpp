@@ -58,8 +58,7 @@ void PathPacker::setMaxVelocity(PackedPath& ipath, const limits& ilimits) {
 
     // limiting to maximum accelerated velocity
     double newVel = std::min(wantedVel, maxIncrement);
-
-    ipath()[i - 1].setData("velocity", newVel * mps);
+    end.setData("velocity", newVel * mps);
   }
 }
 
@@ -82,7 +81,7 @@ void PathPacker::setMinVelocity(PackedPath& ipath, const limits& ilimits) {
 
     // limiting to minimum vel
     double newVel = std::max(wantedVel, ilimits.min);
-    ipath()[i + 1].setData("velocity", newVel * mps);
+    end.setData("velocity", newVel * mps);
   }
 }
 
