@@ -41,12 +41,6 @@ public:
   virtual SimplePath extractCopy() const override;
 
   /**
-   * Sample the path and return a path with higher resolution
-   * @param  isteps the number of points to generate in the path
-   */
-  virtual SimplePath generate(const size_t isteps) const override;
-
-  /**
    * @return shared pointer to copy of path
    */
   virtual std::shared_ptr<AbstractPath> copyPtr() const override;
@@ -56,7 +50,19 @@ public:
    */
   virtual std::shared_ptr<AbstractPath> movePtr() const override;
 
+  /**
+   * Sample the path and return a path with higher resolution
+   * @param  isteps the number of points to generate for each segment
+   */
+  virtual SimplePath generate(const size_t isteps) const override;
+
 protected:
+  /**
+   * Sample the segment
+   * @param  isteps the number of points to generate in the segment
+   */
+  static SimplePath generateSegment(const Vector& start, const Vector& end, const size_t isteps);
+
   std::vector<std::shared_ptr<Vector>> path {};
 };
 

@@ -30,12 +30,6 @@ public:
   virtual SimplePath extractCopy() const = 0;
 
   /**
-   * Sample the path and return a path with higher resolution
-   * @param  isteps the number of points to generate in the path
-   */
-  virtual SimplePath generate(const size_t isteps) const = 0;
-
-  /**
    * @return shared pointer to copy of path
    */
   virtual std::shared_ptr<AbstractPath> copyPtr() const = 0;
@@ -44,6 +38,12 @@ public:
    * Move the path into a shared pointer and return pointer
    */
   virtual std::shared_ptr<AbstractPath> movePtr() const = 0;
+
+  /**
+   * Sample the path and return a path with higher resolution
+   * @param  isteps the number of points to generate for each segment
+   */
+  virtual SimplePath generate(const size_t isteps) const = 0;
 };
 
 } // namespace lib7842

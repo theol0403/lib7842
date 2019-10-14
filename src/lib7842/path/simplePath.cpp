@@ -33,40 +33,42 @@ SimplePath SimplePath::extractCopy() const {
   return SimplePath(ipath);
 }
 
-SimplePath SimplePath::generate(const size_t isteps) const {}
-
-// SimplePath LinearGenerator::insert(const AbstractPath& ipath, const QLength& ispacing) {
-//   ReferencePath srcPath = ipath.extractRef();
-//   SimplePath destPath;
-
-//   for (size_t i = 0; i < srcPath().size() - 1; i++) {
-//     const Vector& start = srcPath()[i].get();
-//     const Vector& end = srcPath()[i + 1].get();
-//     Vector diff = end - start;
-
-//     // number of points needed
-//     size_t numInsert = std::ceil((Vector::mag(diff) / ispacing).convert(number));
-//     // reserve vector capacity
-//     destPath().reserve(destPath().capacity() + numInsert);
-//     // how much to increment each point
-//     Vector step = diff / numInsert;
-
-//     for (size_t j = 0; j < numInsert; j++) {
-//       destPath().emplace_back(start + (step * j));
-//     }
-//   }
-
-//   // push the last point
-//   if (srcPath().size() > 0) destPath().emplace_back(srcPath().back());
-//   return destPath;
-// }
-
 std::shared_ptr<AbstractPath> SimplePath::copyPtr() const {
   return std::make_shared<SimplePath>(*this);
 }
 
 std::shared_ptr<AbstractPath> SimplePath::movePtr() const {
   return std::make_shared<SimplePath>(std::move(*this));
+}
+
+SimplePath SimplePath::generate(const size_t isteps) const {
+  SimplePath destPath;
+
+  for (size_t i = 0; i < path.size() - 1; i++) {
+    SimplePath segment = generateSegment(*path[i], *path[i + 1], isteps);
+    destPath().reserve(destPath().size() + segment().size());
+    destPath().insert(destPath().end(), segment().begin(), segment().end());
+  }
+
+  // push the last point
+  if (path.size() > 0) destPath().emplace_back(path.back());
+  return destPath;
+}
+
+SimplePath
+  SimplePath::generateSegment(const Vector& start, const Vector& end, const size_t isteps) {
+  SimplePath segment;
+  Vector diff = end - start;
+
+  // reserve vector capacity
+  segment().reserve(segment().capacity() + isteps);
+  // how much to increment each point
+  Vector step = diff / isteps;
+
+  for (size_t j = 0; j < isteps; j++) {
+    segment().emplace_back(std::make_shared<Vector>(start + (step * j)));
+  }
+  return segment;
 }
 
 } // namespace lib7842
