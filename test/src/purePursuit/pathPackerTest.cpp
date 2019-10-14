@@ -4,6 +4,7 @@
 
 class PathPackerTest : public ::testing::Test {
 protected:
+  PathPacker::limits limits {0_ips, 8_ips, 8_ips2, 1_curv};
 };
 
 TEST_F(PathPackerTest, SetDistancesSimple) {
@@ -62,20 +63,20 @@ TEST_F(PathPackerTest, SetCurvatures) {
 TEST_F(PathPackerTest, SetMaxVelocity) {
   PackedPath path(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}));
   PathPacker::setCurvatures(path);
-  PathPacker::setMaxVelocity(path, {0_mps, 0.3_mps, 1_mps2, 100_curv});
+  PathPacker::setMaxVelocity(path, limits);
 
-  ASSERT_EQ(path()[0].getData<QSpeed>("velocity").convert(mps), 0.3);
-  ASSERT_EQ(path()[1].getData<QSpeed>("velocity").convert(mps), 0.3);
-  ASSERT_EQ(path()[2].getData<QSpeed>("velocity").convert(mps), 0);
+  ASSERT_EQ(path()[0].getData<QSpeed>("velocity").convert(ips), 8);
+  ASSERT_EQ(path()[1].getData<QSpeed>("velocity").convert(ips), 8);
+  ASSERT_EQ(path()[2].getData<QSpeed>("velocity").convert(ips), 0);
 }
 
 TEST_F(PathPackerTest, SetMaxVelocityTurn) {
-  PackedPath path(SimplePath({{0_m, 0_m}, {3_m, 4_m}, {6_m, 10_m}, {3_m, 15_m}}));
+  PackedPath path(SimplePath({{0_in, 0_in}, {3_in, 4_in}, {6_in, 10_in}, {5_in, 12_in}}));
   PathPacker::setCurvatures(path);
-  PathPacker::setMaxVelocity(path, {0_mps, 8_mps, 5_mps2, 20_curv});
+  PathPacker::setMaxVelocity(path, limits);
 
-  ASSERT_EQ(path()[0].getData<QSpeed>("velocity").convert(mps), 8);
-  ASSERT_EQ(path()[1].getData<QSpeed>("velocity").convert(mps), 8);
-  ASSERT_LT(path()[2].getData<QSpeed>("velocity").convert(mps), 8);
-  ASSERT_EQ(path()[3].getData<QSpeed>("velocity").convert(mps), 0);
+  ASSERT_EQ(path()[0].getData<QSpeed>("velocity").convert(ips), 8);
+  ASSERT_LT(path()[1].getData<QSpeed>("velocity").convert(ips), 8);
+  ASSERT_LT(path()[2].getData<QSpeed>("velocity").convert(ips), 8);
+  ASSERT_EQ(path()[3].getData<QSpeed>("velocity").convert(ips), 0);
 }
