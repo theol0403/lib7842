@@ -2,6 +2,12 @@
 
 namespace lib7842 {
 
+PathPacker::limits::limits(QSpeed imin, QSpeed imax, QAcceleration iaccel, QCurvature icurvatureK) :
+  min(imin.convert(mps)),
+  max(imax.convert(mps)),
+  accel(iaccel.convert(mps2)),
+  curvatureK(icurvatureK.convert(curvature)) {}
+
 PackedPath PathPacker::generate(const AbstractPath& ipath, const limits& ilimits) {
   PackedPath path(ipath);
 
