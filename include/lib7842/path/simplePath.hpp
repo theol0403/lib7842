@@ -41,6 +41,11 @@ public:
   virtual SimplePath extractCopy() const override;
 
   /**
+   * Extract path of references to points
+   */
+  virtual ReferencePath extractRef() const override;
+
+  /**
    * @return shared pointer to copy of path
    */
   virtual std::shared_ptr<AbstractPath> copyPtr() const override;

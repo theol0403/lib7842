@@ -34,6 +34,6 @@ public:
   static QLength dist(const Vector& lhs, const Vector& rhs);
 };
 
-using PointReference = std::reference_wrapper<const Vector>;
+using VectorRef = std::reference_wrapper<const Vector>;
 
 } // namespace lib7842

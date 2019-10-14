@@ -5,6 +5,7 @@ namespace lib7842 {
 
 // Forward Declare
 class SimplePath;
+class ReferencePath;
 
 /**
  * Interface Path Class
@@ -28,6 +29,11 @@ public:
    * Extract path of pointers to copies of the points
    */
   virtual SimplePath extractCopy() const = 0;
+
+  /**
+   * Extract path of references to points
+   */
+  virtual ReferencePath extractRef() const = 0;
 
   /**
    * @return shared pointer to copy of path
