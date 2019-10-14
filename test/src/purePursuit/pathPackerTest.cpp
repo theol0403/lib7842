@@ -4,7 +4,7 @@
 
 class PathPackerTest : public ::testing::Test {
 protected:
-  PathPacker::limits limits {0_ips, 8_ips, 8_ips2, 1_curv};
+  PathPacker::limits limits {2_ips, 8_ips, 8_ips2, 1_curv};
 };
 
 TEST_F(PathPackerTest, SetDistancesSimple) {
@@ -79,4 +79,16 @@ TEST_F(PathPackerTest, SetMaxVelocityTurn) {
   ASSERT_LT(path()[1].getData<QSpeed>("velocity").convert(ips), 8);
   ASSERT_LT(path()[2].getData<QSpeed>("velocity").convert(ips), 8);
   ASSERT_EQ(path()[3].getData<QSpeed>("velocity").convert(ips), 0);
+}
+
+TEST_F(PathPackerTest, SetMinVelocity) {
+  PackedPath path(
+    LinearGenerator::insert(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}), 1_in));
+  PathPacker::setCurvatures(path);
+  PathPacker::setMaxVelocity(path, limits);
+  PathPacker::setMinVelocity(path, limits);
+
+  for (auto&& point : path()) {
+    ASSERT_GE(point.getData<QSpeed>("velocity").convert(ips), 2);
+  }
 }
