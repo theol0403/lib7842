@@ -61,14 +61,16 @@ SimplePath
   SimplePath segment;
   Vector diff = end - start;
 
-  // reserve vector capacity
-  segment().reserve(segment().capacity() + isteps);
   // how much to increment each point
   Vector step = diff / isteps;
+
+  // reserve vector capacity
+  segment().reserve(segment().capacity() + isteps);
 
   for (size_t j = 0; j < isteps; j++) {
     segment().emplace_back(std::make_shared<Vector>(start + (step * j)));
   }
+
   return segment;
 }
 
