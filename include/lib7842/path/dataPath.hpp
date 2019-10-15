@@ -2,32 +2,32 @@
 #include "main.h"
 #include "simplePath.hpp"
 
-#include "lib7842/point/packedPoint.hpp"
+#include "lib7842/point/dataPoint.hpp"
 
 namespace lib7842 {
 
-class PackedPath : public AbstractPath {
+class DataPath : public AbstractPath {
 
 public:
   /**
    * Default Constructors
    */
-  PackedPath() = default;
-  PackedPath(const PackedPath& ipath) = default;
-  virtual ~PackedPath() = default;
+  DataPath() = default;
+  DataPath(const DataPath& ipath) = default;
+  virtual ~DataPath() = default;
 
   /**
    * Explicit Constructors
    */
-  explicit PackedPath(const std::initializer_list<PackedPoint>& ipath);
-  explicit PackedPath(const std::vector<PackedPoint>& ipath);
-  explicit PackedPath(const AbstractPath& ipath);
+  explicit DataPath(const std::initializer_list<DataPoint>& ipath);
+  explicit DataPath(const std::vector<DataPoint>& ipath);
+  explicit DataPath(const AbstractPath& ipath);
 
   /**
    * Explicit Functions
    */
-  std::vector<PackedPoint>& get();
-  std::vector<PackedPoint>& operator()();
+  std::vector<DataPoint>& get();
+  std::vector<DataPoint>& operator()();
 
   /**
    * Extractors
@@ -38,7 +38,7 @@ public:
   virtual std::shared_ptr<AbstractPath> movePtr() const override;
 
 protected:
-  std::vector<PackedPoint> path {};
+  std::vector<DataPoint> path {};
 };
 
 } // namespace lib7842

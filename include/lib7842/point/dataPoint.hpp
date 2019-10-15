@@ -7,14 +7,14 @@
 
 namespace lib7842 {
 
-class PackedPoint : public Vector {
+class DataPoint : public Vector {
 
 public:
   using Vector::Vector;
-  PackedPoint(const PackedPoint& istate) = default;
-  virtual ~PackedPoint() = default;
+  DataPoint(const DataPoint& istate) = default;
+  virtual ~DataPoint() = default;
 
-  explicit PackedPoint(const Vector& ipoint);
+  explicit DataPoint(const Vector& ipoint);
 
   void setData(const std::string& iid, const std::any& idata);
 
@@ -24,8 +24,7 @@ public:
       return std::any_cast<T>(data);
     } catch (const std::bad_any_cast& e) {
       throw std::runtime_error(
-        "PackedPoint::getData:: \"" + iid + "\" contains wrong type \"" + data.type().name() +
-        "\"");
+        "DataPoint::getData:: \"" + iid + "\" contains wrong type \"" + data.type().name() + "\"");
     }
   }
 

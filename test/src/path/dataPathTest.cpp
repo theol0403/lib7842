@@ -1,9 +1,9 @@
 // #include "test.hpp"
-// #include "lib7842/path/packedPath.hpp"
+// #include "lib7842/path/dataPath.hpp"
 
-// class PackedPathTest : public ::testing::Test {
+// class DataPathTest : public ::testing::Test {
 // protected:
-//   PackedPoint point1 {5_in, 3_in};
+//   DataPoint point1 {5_in, 3_in};
 //   void SetUp() override {
 //     point1.setData("curvature", 5_curv);
 //     point1.setData("distance", 5_m);
@@ -12,14 +12,14 @@
 //   }
 // };
 
-// TEST_F(PackedPathTest, Constructors) {
-//   PackedPath();
-//   PackedPath({point1});
-//   PackedPath({point1, point1});
-//   PackedPath(std::vector<PackedPoint>({point1, point1}));
+// TEST_F(DataPathTest, Constructors) {
+//   DataPath();
+//   DataPath({point1});
+//   DataPath({point1, point1});
+//   DataPath(std::vector<DataPoint>({point1, point1}));
 // }
 
-// TEST_F(PackedPathTest, ExtractReference) {
+// TEST_F(DataPathTest, ExtractReference) {
 //   SimplePath path({point1, point1});
 
 //   ReferencePath ipath = path.extractRef();
@@ -35,8 +35,8 @@
 //   }
 // }
 
-// TEST_F(PackedPathTest, ExtractPath) {
-//   PackedPath path({point1, point1, point1});
+// TEST_F(DataPathTest, ExtractPath) {
+//   DataPath path({point1, point1, point1});
 
 //   SimplePath ipath = path.extract();
 //   ASSERT_EQ(ipath.get().size(), 3);
@@ -45,8 +45,8 @@
 //   }
 // }
 
-// TEST_F(PackedPathTest, ExtractData) {
-//   PackedPath path({point1, point1, point1});
+// TEST_F(DataPathTest, ExtractData) {
+//   DataPath path({point1, point1, point1});
 
 //   ASSERT_EQ(path.get().size(), 3);
 //   for (auto&& point : path.get()) {
@@ -57,14 +57,14 @@
 //   }
 // }
 
-// TEST_F(PackedPathTest, ExtractReferenceData) {
-//   PackedPath path({point1, point1, point1});
+// TEST_F(DataPathTest, ExtractReferenceData) {
+//   DataPath path({point1, point1, point1});
 
 //   ReferencePath ipath = path.extractRef();
 
 //   ASSERT_EQ(ipath.get().size(), 3);
 //   for (auto&& point : ipath.get()) {
-//     const PackedPoint* iptr = dynamic_cast<const PackedPoint*>(&point.get());
+//     const DataPoint* iptr = dynamic_cast<const DataPoint*>(&point.get());
 //     EXPECT_EQ(iptr->getData<QCurvature>("curvature"), 5_curv);
 //     EXPECT_EQ(iptr->getData<QLength>("distance"), 5_m);
 //     EXPECT_EQ(iptr->getData<QSpeed>("velocity"), 5_mps);

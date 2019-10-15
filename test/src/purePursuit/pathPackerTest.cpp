@@ -8,7 +8,7 @@
 // };
 
 // TEST_F(PathPackerTest, SetDistancesSimple) {
-//   PackedPath path(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}));
+//   DataPath path(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}));
 //   PathPacker::setDistances(path);
 
 //   ASSERT_EQ(path()[0].getData<QLength>("distance"), 0_in);
@@ -17,7 +17,7 @@
 // }
 
 // TEST_F(PathPackerTest, SetDistancesComplex) {
-//   PackedPath path(LinearGenerator::insert(SimplePath({{0_in, 0_in}, {0_in, 20_in}}), 1_in));
+//   DataPath path(LinearGenerator::insert(SimplePath({{0_in, 0_in}, {0_in, 20_in}}), 1_in));
 //   PathPacker::setDistances(path);
 
 //   for (size_t i = 0; i < path().size(); i++) {
@@ -37,7 +37,7 @@
 // }
 
 // TEST_F(PathPackerTest, SetCurvatures) {
-//   PackedPath pathStraight(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}));
+//   DataPath pathStraight(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}));
 //   PathPacker::setCurvatures(pathStraight);
 
 //   ASSERT_EQ(pathStraight()[1].getData<QCurvature>("curvature").convert(curvature), 0);
@@ -45,14 +45,14 @@
 //   ASSERT_EQ(pathStraight()[0].getData<QCurvature>("curvature").convert(curvature), 0);
 //   ASSERT_EQ(pathStraight()[2].getData<QCurvature>("curvature").convert(curvature), 0);
 
-//   PackedPath pathCurv(SimplePath({{0_in, 0_in}, {3_in, 5_in}, {0_in, 10_in}}));
+//   DataPath pathCurv(SimplePath({{0_in, 0_in}, {3_in, 5_in}, {0_in, 10_in}}));
 //   PathPacker::setCurvatures(pathCurv);
 //   ASSERT_NE(pathCurv()[1].getData<QCurvature>("curvature").convert(curvature), 0);
 
 //   ASSERT_EQ(pathCurv()[0].getData<QCurvature>("curvature").convert(curvature), 0);
 //   ASSERT_EQ(pathCurv()[2].getData<QCurvature>("curvature").convert(curvature), 0);
 
-//   PackedPath pathTurn(SimplePath({{0_in, 0_in}, {3_in, 5_in}, {0_in, 0_in}}));
+//   DataPath pathTurn(SimplePath({{0_in, 0_in}, {3_in, 5_in}, {0_in, 0_in}}));
 //   PathPacker::setCurvatures(pathTurn);
 //   ASSERT_EQ(pathTurn()[1].getData<QCurvature>("curvature").convert(curvature), 0);
 
@@ -61,7 +61,7 @@
 // }
 
 // TEST_F(PathPackerTest, SetMaxVelocity) {
-//   PackedPath path(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}));
+//   DataPath path(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}));
 //   PathPacker::setCurvatures(path);
 //   PathPacker::setMaxVelocity(path, limits);
 
@@ -71,7 +71,7 @@
 // }
 
 // TEST_F(PathPackerTest, SetMaxVelocityTurn) {
-//   PackedPath path(SimplePath({{0_in, 0_in}, {3_in, 4_in}, {6_in, 10_in}, {5_in, 12_in}}));
+//   DataPath path(SimplePath({{0_in, 0_in}, {3_in, 4_in}, {6_in, 10_in}, {5_in, 12_in}}));
 //   PathPacker::setCurvatures(path);
 //   PathPacker::setMaxVelocity(path, limits);
 
@@ -82,7 +82,7 @@
 // }
 
 // TEST_F(PathPackerTest, SetMinVelocity) {
-//   PackedPath path(
+//   DataPath path(
 //     LinearGenerator::insert(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}), 1_in));
 //   PathPacker::setCurvatures(path);
 //   PathPacker::setMaxVelocity(path, limits);

@@ -2,7 +2,7 @@
 #include "main.h"
 
 #include "lib7842/path/simplePath.hpp"
-#include "lib7842/path/packedPath.hpp"
+#include "lib7842/path/dataPath.hpp"
 #include "lib7842/other/utility.hpp"
 
 namespace lib7842 {
@@ -36,13 +36,13 @@ public:
     limits(QSpeed imin, QSpeed imax, QAcceleration iaccel, QCurvature icurvatureK);
   };
 
-  static PackedPath generate(const AbstractPath& ipath, const limits& ilimits);
+  static DataPath generate(const AbstractPath& ipath, const limits& ilimits);
 
-  static void setDistances(PackedPath& ipath);
-  static void setCurvatures(PackedPath& ipath);
+  static void setDistances(DataPath& ipath);
+  static void setCurvatures(DataPath& ipath);
 
-  static void setMaxVelocity(PackedPath& ipath, const limits& ilimits);
-  static void setMinVelocity(PackedPath& ipath, const limits& ilimits);
+  static void setMaxVelocity(DataPath& ipath, const limits& ilimits);
+  static void setMinVelocity(DataPath& ipath, const limits& ilimits);
 
   static QCurvature getCurvature(const Vector& prev, const Vector& point, const Vector& next);
 };

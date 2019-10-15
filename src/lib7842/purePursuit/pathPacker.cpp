@@ -8,8 +8,8 @@
 //   accel(iaccel.convert(mps2)),
 //   curvatureK(icurvatureK.convert(curvature)) {}
 
-// PackedPath PathPacker::generate(const AbstractPath& ipath, const limits& ilimits) {
-//   PackedPath path(ipath);
+// DataPath PathPacker::generate(const AbstractPath& ipath, const limits& ilimits) {
+//   DataPath path(ipath);
 
 //   setDistances(path);
 //   setCurvatures(path);
@@ -19,7 +19,7 @@
 //   return path;
 // }
 
-// void PathPacker::setDistances(PackedPath& ipath) {
+// void PathPacker::setDistances(DataPath& ipath) {
 //   ipath().front().setData("distance", 0_in);
 //   for (size_t i = 0; i < ipath().size() - 1; i++) {
 //     QLength distance =
@@ -28,7 +28,7 @@
 //   }
 // }
 
-// void PathPacker::setCurvatures(PackedPath& ipath) {
+// void PathPacker::setCurvatures(DataPath& ipath) {
 //   ipath().front().setData("curvature", 0_curv);
 //   for (size_t i = 1; i < ipath().size() - 1; i++) {
 //     QCurvature curv = getCurvature(ipath()[i - 1], ipath()[i], ipath()[i + 1]);
@@ -37,11 +37,11 @@
 //   ipath().back().setData("curvature", 0_curv);
 // }
 
-// void PathPacker::setMaxVelocity(PackedPath& ipath, const limits& ilimits) {
+// void PathPacker::setMaxVelocity(DataPath& ipath, const limits& ilimits) {
 //   ipath().back().setData("velocity", 0_mps);
 //   for (size_t i = ipath().size() - 1; i > 0; i--) {
-//     PackedPoint& start = ipath()[i];
-//     PackedPoint& end = ipath()[i - 1];
+//     DataPoint& start = ipath()[i];
+//     DataPoint& end = ipath()[i - 1];
 
 //     // k / curvature, limited to max
 //     double wantedVel = std::min(
@@ -62,11 +62,11 @@
 //   }
 // }
 
-// void PathPacker::setMinVelocity(PackedPath& ipath, const limits& ilimits) {
+// void PathPacker::setMinVelocity(DataPath& ipath, const limits& ilimits) {
 //   ipath().front().setData("velocity", ilimits.min * mps);
 //   for (size_t i = 0; i < ipath().size() - 1; i++) {
-//     PackedPoint& start = ipath()[i];
-//     PackedPoint& end = ipath()[i + 1];
+//     DataPoint& start = ipath()[i];
+//     DataPoint& end = ipath()[i + 1];
 
 //     // distance to next point
 //     double distance = Vector::dist(start, end).convert(meter);
