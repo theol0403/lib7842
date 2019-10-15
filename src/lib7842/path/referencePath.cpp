@@ -13,7 +13,7 @@ std::vector<VectorRef>& ReferencePath::operator()() {
 }
 
 SimplePath ReferencePath::extract() const {
-  return SimplePath(path);
+  return SimplePath(std::vector<Vector> {path.begin(), path.end()});
 }
 
 std::shared_ptr<AbstractPath> ReferencePath::copyPtr() const {

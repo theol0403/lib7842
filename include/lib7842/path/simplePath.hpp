@@ -18,7 +18,7 @@ public:
   virtual ~SimplePath() = default;
 
   explicit SimplePath(const std::initializer_list<Vector>& ipath);
-  explicit SimplePath(const std::vector<VectorRef>& ipath);
+  explicit SimplePath(const std::vector<Vector>& ipath);
   explicit SimplePath(const std::vector<std::shared_ptr<Vector>>& ipath);
 
   std::vector<std::shared_ptr<Vector>>& get();
