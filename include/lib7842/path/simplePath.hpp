@@ -27,12 +27,17 @@ public:
   /**
    * Extract path containing copies of points
    */
-  virtual SimplePath copy() const;
+  SimplePath copy() const;
 
   /**
    * Extract path of references to points
    */
-  virtual ReferencePath ref() const;
+  ReferencePath ref() const;
+
+  /**
+   * Smoothen path
+   */
+  void smooth(const double& iweight, const QLength& itolerance);
 
   /**
    * Extract path of shared pointers
@@ -61,6 +66,12 @@ protected:
    * @param  isteps the number of points to generate in the segment
    */
   static SimplePath generateSegment(const Vector& start, const Vector& end, const size_t isteps);
+
+  /**
+   * Generate smooth path
+   */
+  static SimplePath
+    generateSmoothPath(const SimplePath& ipath, const double& iweight, const QLength& itolerance);
 
   std::vector<std::shared_ptr<Vector>> path {};
 };

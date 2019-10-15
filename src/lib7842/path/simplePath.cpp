@@ -40,6 +40,28 @@ ReferencePath SimplePath::ref() const {
   return temp;
 }
 
+void SimplePath::smooth(const double& iweight, const QLength& itolerance) {
+  // path = std::move(generateSmoothPath(*this, iweight, itolerance).path);
+  SimplePath destPath = this->copy();
+
+  double weight = 1.0 - iweight;
+  QLength change = itolerance;
+  while (change >= itolerance) {
+    change = 0.0_in;
+    for (size_t i = 1; i < path.size() - 1; i++) {
+      for (size_t j = 0; j < 2; j++) {
+        QLength& destPoint = destPath()[i]->at(j);
+        QLength dataFac = iweight * (path[i]->read(j) - destPoint);
+        QLength smoothFac =
+          weight * (destPath()[i - 1]->read(j) + path[i + 1]->read(j) - (2.0 * destPoint));
+        destPoint += (dataFac + smoothFac);
+        change = (destPoint - destPath()[i]->read(j)).abs();
+      }
+    }
+  }
+  path = std::move(destPath.path);
+}
+
 SimplePath SimplePath::extract() const {
   return *this;
 }
@@ -55,7 +77,13 @@ std::shared_ptr<AbstractPath> SimplePath::movePtr() const {
 SimplePath SimplePath::generate(const size_t isteps) const {
   CompoundPath collector;
   for (size_t i = 0; i < path.size() - 1; i++) {
-    collector.importPath(generateSegment(*path[i], *path[i + 1], isteps));
+    // number of steps in segment
+    size_t segmentSteps = isteps / (path.size() - 1.0);
+    // if on last segment, leave room for last point
+    bool lastSegment = i == path.size() - 2;
+    if (lastSegment) segmentSteps--;
+    // generate segment
+    collector.importPath(generateSegment(*path[i], *path[i + 1], segmentSteps));
   }
 
   SimplePath temp = collector.extract();
