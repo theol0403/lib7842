@@ -22,11 +22,7 @@ std::vector<std::shared_ptr<Vector>>& SimplePath::operator()() {
   return path;
 }
 
-SimplePath SimplePath::extract() const {
-  return *this;
-}
-
-SimplePath SimplePath::extractCopy() const {
+SimplePath SimplePath::copy() const {
   SimplePath temp;
   temp().reserve(path.size());
   for (auto&& point : path) {
@@ -35,13 +31,17 @@ SimplePath SimplePath::extractCopy() const {
   return temp;
 }
 
-ReferencePath SimplePath::extractRef() const {
+ReferencePath SimplePath::ref() const {
   ReferencePath temp;
   temp().reserve(path.size());
   for (auto&& point : path) {
     temp().emplace_back(*point);
   }
   return temp;
+}
+
+SimplePath SimplePath::extract() const {
+  return *this;
 }
 
 std::shared_ptr<AbstractPath> SimplePath::copyPtr() const {

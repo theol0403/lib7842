@@ -4,7 +4,6 @@
 #include "simplePath.hpp"
 
 #include "lib7842/point/point.hpp"
-#include <variant>
 
 namespace lib7842 {
 
@@ -18,36 +17,20 @@ public:
   CompoundPath(const CompoundPath& ipath) = default;
   virtual ~CompoundPath() = default;
 
-  /**
-   * Explicit Constructors
-   */
   explicit CompoundPath(const std::shared_ptr<AbstractPath>& ipath);
 
-  /**
-   * Explicit Functions
-   */
   CompoundPath& addPath(const std::shared_ptr<AbstractPath>& ipath);
 
   CompoundPath& copyPath(const AbstractPath& ipath);
   CompoundPath& importPath(const AbstractPath& ipath);
 
   /**
-   * Extract path of pointers to the points
+   * Extract path of shared pointers
    */
   virtual SimplePath extract() const override;
 
   /**
-   * Extract path of pointers to copies of the points
-   */
-  virtual SimplePath extractCopy() const override;
-
-  /**
-   * Extract path of references to points
-   */
-  virtual ReferencePath extractRef() const override;
-
-  /**
-   * @return shared pointer to copy of path
+   * Return shared pointer to copy of path
    */
   virtual std::shared_ptr<AbstractPath> copyPtr() const override;
 

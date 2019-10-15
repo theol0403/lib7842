@@ -33,30 +33,6 @@ SimplePath CompoundPath::extract() const {
   return temp;
 }
 
-SimplePath CompoundPath::extractCopy() const {
-  SimplePath temp;
-  for (auto&& path : paths) {
-    SimplePath ipath = path->extract();
-    temp().reserve(temp().size() + ipath().size());
-    for (auto&& point : ipath()) {
-      temp().emplace_back(std::make_shared<Vector>(*point));
-    }
-  }
-  return temp;
-}
-
-ReferencePath CompoundPath::extractRef() const {
-  ReferencePath temp;
-  for (auto&& path : paths) {
-    ReferencePath ipath = path->extractRef();
-    temp().reserve(temp().size() + ipath().size());
-    for (auto&& point : ipath()) {
-      temp().emplace_back(point);
-    }
-  }
-  return temp;
-}
-
 std::shared_ptr<AbstractPath> CompoundPath::copyPtr() const {
   return std::make_shared<CompoundPath>(*this);
 }

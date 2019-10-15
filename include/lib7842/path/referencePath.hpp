@@ -17,34 +17,18 @@ public:
   ReferencePath(const ReferencePath& ipath) = default;
   virtual ~ReferencePath() = default;
 
-  /**
-   * Explicit Constructors
-   */
   explicit ReferencePath(const std::vector<VectorRef>& ipath);
 
-  /**
-   * Explicit Functions
-   */
   std::vector<VectorRef>& get();
   std::vector<VectorRef>& operator()();
 
   /**
-   * Extract path of pointers to the points
+   * Extract path of shared pointers
    */
   virtual SimplePath extract() const override;
 
   /**
-   * Extract path of pointers to copies of the points
-   */
-  virtual SimplePath extractCopy() const override;
-
-  /**
-   * Extract path of references to points
-   */
-  virtual ReferencePath extractRef() const override;
-
-  /**
-   * @return shared pointer to copy of path
+   * Return shared pointer to copy of path
    */
   virtual std::shared_ptr<AbstractPath> copyPtr() const override;
 

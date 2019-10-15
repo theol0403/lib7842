@@ -15,13 +15,13 @@ TEST_F(ReferencePathTest, Constructors) {
 TEST_F(ReferencePathTest, ExtractReference) {
   ReferencePath path({point1, point1});
 
-  ReferencePath ipath = path.extractRef();
+  ReferencePath ipath = path;
   ASSERT_EQ(ipath.get().size(), 2);
   for (auto&& point : ipath.get()) {
     ASSERT_EQ(point.get(), point1);
   }
 
-  ReferencePath ipath2 = path.extractRef();
+  ReferencePath ipath2 = path;
   for (size_t i = 0; i < ipath2.get().size(); i++) {
     ASSERT_EQ(&ipath.get()[i].get(), &ipath2.get()[i].get());
     ASSERT_EQ(&ipath.get()[i].get(), &point1);
