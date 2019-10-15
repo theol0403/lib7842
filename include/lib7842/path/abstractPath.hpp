@@ -21,22 +21,12 @@ public:
   virtual ~AbstractPath() = default;
 
   /**
-   * Extract path of pointers to the points
+   * Extract path of shared pointers
    */
   virtual SimplePath extract() const = 0;
 
   /**
-   * Extract path of pointers to copies of the points
-   */
-  virtual SimplePath extractCopy() const = 0;
-
-  /**
-   * Extract path of references to points
-   */
-  virtual ReferencePath extractRef() const = 0;
-
-  /**
-   * @return shared pointer to copy of path
+   * Return shared pointer to copy of path
    */
   virtual std::shared_ptr<AbstractPath> copyPtr() const = 0;
 
