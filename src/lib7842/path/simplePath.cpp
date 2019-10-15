@@ -40,12 +40,12 @@ ReferencePath SimplePath::ref() const {
   return temp;
 }
 
-void SimplePath::smooth(const double& iweight, const QLength& itolerance) {
-  // path = std::move(generateSmoothPath(*this, iweight, itolerance).path);
+void SimplePath::smooth(const double iweight, const QLength& itolerance) {
   SimplePath destPath = this->copy();
 
   double weight = 1.0 - iweight;
   QLength change = itolerance;
+
   while (change >= itolerance) {
     change = 0.0_in;
     for (size_t i = 1; i < path.size() - 1; i++) {
@@ -75,7 +75,7 @@ std::shared_ptr<AbstractPath> SimplePath::movePtr() const {
 }
 
 SimplePath SimplePath::generate(const size_t isteps) const {
-  CompoundPath collector;
+  SimplePath temp;
   for (size_t i = 0; i < path.size() - 1; i++) {
     // number of steps in segment
     size_t segmentSteps = isteps / (path.size() - 1.0);
@@ -83,11 +83,10 @@ SimplePath SimplePath::generate(const size_t isteps) const {
     bool lastSegment = i == path.size() - 2;
     if (lastSegment) segmentSteps--;
     // generate segment
-    collector.importPath(generateSegment(*path[i], *path[i + 1], segmentSteps));
+    SimplePath segment = generateSegment(*path[i], *path[i + 1], segmentSteps);
+    // move segment into path
+    std::move(segment().begin(), segment().end(), std::back_inserter(temp()));
   }
-
-  SimplePath temp = collector.extract();
-
   // push the last point
   if (path.size() > 0) temp().emplace_back(path.back());
   return temp;
@@ -100,12 +99,11 @@ SimplePath
 
   // how much to increment each point
   Vector step = diff / isteps;
-
   // reserve vector capacity
   segment().reserve(segment().capacity() + isteps);
 
-  for (size_t j = 0; j < isteps; j++) {
-    segment().emplace_back(std::make_shared<Vector>(start + (step * j)));
+  for (size_t i = 0; i < isteps; i++) {
+    segment().emplace_back(std::make_shared<Vector>(start + (step * i)));
   }
 
   return segment;

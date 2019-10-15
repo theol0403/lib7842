@@ -37,7 +37,7 @@ public:
   /**
    * Smoothen path
    */
-  void smooth(const double& iweight, const QLength& itolerance);
+  void smooth(const double iweight, const QLength& itolerance);
 
   /**
    * Extract path of shared pointers

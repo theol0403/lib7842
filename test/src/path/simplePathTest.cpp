@@ -48,24 +48,25 @@ TEST_F(SimplePathTest, GenerateInsertPoints) {
   ASSERT_EQ(path().size(), 20);
 }
 
-// TEST_F(SimplePathTest, GenerateSmoothPointsDontCopy) {
-//   SimplePath path =
-//     LinearGenerator::smoothen(SimplePath({{0_in, 0_in}, {5_in, 4_in}, {5_in, 0_in}}), 0.25, 0.0001_in);
-//   ASSERT_NE(std::round(path()[1].x.convert(inch) * 10) / 10, 2.5);
-// }
+TEST_F(SimplePathTest, GenerateSmoothPointsDontCopy) {
+  SimplePath path({{0_in, 0_in}, {5_in, 4_in}, {5_in, 0_in}});
+  path.smooth(0.25, 0.0001_in);
+  ASSERT_NE(std::round(path()[1]->x.convert(inch) * 10) / 10, 2.5);
+}
 
-// TEST_F(SimplePathTest, GenerateSmoothPointsDontPassWayPoints) {
-//   SimplePath ipath({{0_in, 0_in}, {5_in, 4_in}, {5_in, 0_in}, {3_in, 5_in}, {0_in, 10_in}});
-//   SimplePath path = LinearGenerator::smoothen(ipath, 0.25, 0.0001_in);
-//   for (size_t i = 1; i < path().size() - 1; ++i) {
-//     ASSERT_NE(path()[i], ipath()[i]);
-//   }
-// }
+TEST_F(SimplePathTest, GenerateSmoothPointsDontPassWayPoints) {
+  SimplePath ipath({{0_in, 0_in}, {5_in, 4_in}, {5_in, 0_in}, {3_in, 5_in}, {0_in, 10_in}});
+  SimplePath path = ipath.copy();
+  path.smooth(0.25, 0.0001_in);
+  for (size_t i = 1; i < path().size() - 1; i++) {
+    ASSERT_NE(*path()[i], *ipath()[i]);
+  }
+}
 
-// TEST_F(SimplePathTest, GenerateSmoothPointsFunction) {
-//   SimplePath path = LinearGenerator::generate(
-//     SimplePath({{1_in, 1_in}, {5_in, 4_in}, {9_in, 1_in}}), 0.5_in, 0.25, 0.0001_in);
+TEST_F(SimplePathTest, GenerateSmoothPointsFunction) {
+  SimplePath path = SimplePath({{1_in, 1_in}, {5_in, 4_in}, {9_in, 1_in}}).generate(20);
+  path.smooth(0.25, 0.0001_in);
 
-//   ASSERT_NEAR(path()[10].x.convert(inch), 5, 0.1);
-//   ASSERT_NEAR(path()[10].y.convert(inch), 3.5, 0.3);
-// }
+  ASSERT_NEAR(path()[10]->x.convert(inch), 5, 0.1);
+  ASSERT_NEAR(path()[10]->y.convert(inch), 3.5, 0.3);
+}
