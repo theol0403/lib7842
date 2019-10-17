@@ -32,7 +32,7 @@ TEST_F(ReferencePathTest, ExtractReference) {
 TEST_F(ReferencePathTest, ExtractPath) {
   ReferencePath path({point1, point1, point1});
 
-  SimplePath ipath = path.extract();
+  SimplePath ipath = path.generate();
   ASSERT_EQ(ipath.get().size(), 3);
   for (auto&& point : ipath.get()) {
     ASSERT_EQ(*point, point1);

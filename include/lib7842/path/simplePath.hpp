@@ -37,12 +37,13 @@ public:
   /**
    * Smoothen path
    */
-  void smooth(const double iweight, const QLength& itolerance);
+  void smoothen(const double iweight, const QLength& itolerance);
 
   /**
-   * Extract path of shared pointers
+   * Sample the path and return a path with higher resolution
+   * @param  isteps the number of points to generate for each segment
    */
-  virtual SimplePath extract() const override;
+  virtual SimplePath generate(const size_t isteps = 1) const override;
 
   /**
    * Return shared pointer to copy of path
@@ -54,24 +55,12 @@ public:
    */
   virtual std::shared_ptr<AbstractPath> movePtr() const override;
 
-  /**
-   * Sample the path and return a path with higher resolution
-   * @param  isteps the number of points to generate for each segment
-   */
-  virtual SimplePath generate(const size_t isteps) const override;
-
 protected:
   /**
    * Sample the segment
    * @param  isteps the number of points to generate in the segment
    */
   static SimplePath generateSegment(const Vector& start, const Vector& end, const size_t isteps);
-
-  /**
-   * Generate smooth path
-   */
-  static SimplePath
-    generateSmoothPath(const SimplePath& ipath, const double& iweight, const QLength& itolerance);
 
   std::vector<std::shared_ptr<Vector>> path {};
 };

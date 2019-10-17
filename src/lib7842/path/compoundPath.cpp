@@ -21,10 +21,12 @@ CompoundPath& CompoundPath::importPath(const AbstractPath& ipath) {
   return *this;
 }
 
-SimplePath CompoundPath::extract() const {
+SimplePath CompoundPath::generate(const size_t isteps) const {
   SimplePath temp;
+  std::cout << paths.size() << std::endl;
   for (auto&& path : paths) {
-    SimplePath ipath = path->extract();
+    SimplePath ipath = path->generate(isteps);
+    std::cout << ipath().size() << std::endl;
     temp().reserve(temp().size() + ipath().size());
     for (auto&& point : ipath()) {
       temp().emplace_back(point);
@@ -39,18 +41,6 @@ std::shared_ptr<AbstractPath> CompoundPath::copyPtr() const {
 
 std::shared_ptr<AbstractPath> CompoundPath::movePtr() const {
   return std::make_shared<CompoundPath>(std::move(*this));
-}
-
-SimplePath CompoundPath::generate(const size_t isteps) const {
-  SimplePath temp;
-  for (auto&& path : paths) {
-    SimplePath ipath = path->generate(isteps);
-    temp().reserve(temp().size() + ipath().size());
-    for (auto&& point : ipath()) {
-      temp().emplace_back(point);
-    }
-  }
-  return temp;
 }
 
 } // namespace lib7842

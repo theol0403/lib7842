@@ -12,8 +12,8 @@ std::vector<VectorRef>& ReferencePath::operator()() {
   return path;
 }
 
-SimplePath ReferencePath::extract() const {
-  return SimplePath(std::vector<Vector> {path.begin(), path.end()});
+SimplePath ReferencePath::generate(const size_t isteps) const {
+  return SimplePath(std::vector<Vector> {path.begin(), path.end()}).generate(isteps);
 }
 
 std::shared_ptr<AbstractPath> ReferencePath::copyPtr() const {
@@ -22,10 +22,6 @@ std::shared_ptr<AbstractPath> ReferencePath::copyPtr() const {
 
 std::shared_ptr<AbstractPath> ReferencePath::movePtr() const {
   return std::make_shared<ReferencePath>(std::move(*this));
-}
-
-SimplePath ReferencePath::generate(const size_t isteps) const {
-  return extract().generate(isteps);
 }
 
 } // namespace lib7842

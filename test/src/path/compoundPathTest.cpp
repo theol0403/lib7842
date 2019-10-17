@@ -25,13 +25,13 @@ TEST_F(CompoundPathTest, ExtractSegments) {
   path.importPath(SimplePath({point1, point1}));
   path.addPath(std::make_shared<SimplePath>(SimplePath({point1})));
 
-  SimplePath ipath = path.extract();
+  SimplePath ipath = path.generate();
   ASSERT_EQ(ipath().size(), 4);
   for (auto&& point : ipath()) {
     ASSERT_EQ(*point, point1);
   }
 
-  ReferencePath iref = path.extract().ref();
+  ReferencePath iref = path.generate().ref();
   for (auto&& point : iref()) {
     ASSERT_EQ(point.get(), point1);
   }
@@ -43,8 +43,8 @@ TEST_F(CompoundPathTest, ExtractSegmentsRef) {
   path.addPath(std::make_shared<SimplePath>());
   path.importPath(SimplePath({{5_in, 3_in}}));
 
-  ReferencePath ipath = path.extract().ref();
-  ReferencePath ipath2 = path.extract().ref();
+  ReferencePath ipath = path.generate().ref();
+  ReferencePath ipath2 = path.generate().ref();
 
   for (size_t i = 0; i < ipath().size(); i++) {
     ASSERT_EQ(&ipath()[i].get(), &ipath2.get()[i].get());
@@ -70,7 +70,7 @@ TEST_F(CompoundPathTest, StressTest) {
     .addPath(std::make_shared<CompoundPath>(std::move(segment4))) // move the local into shared
     .addPath(std::make_shared<CompoundPath>(segment5)); // make copy
 
-  SimplePath ipath = path.extract();
+  SimplePath ipath = path.generate();
 
   // test point values
   ASSERT_EQ(ipath().size(), 8);
@@ -79,7 +79,7 @@ TEST_F(CompoundPathTest, StressTest) {
   }
 
   // // test refpath addresses
-  // ReferencePath iref = path.extract().ref();
+  // ReferencePath iref = path.generate().ref();
   // ASSERT_EQ(iref().size(), 8);
   // ASSERT_EQ(&refPoint1, &iref()[3].get());
   // ASSERT_EQ(&refPoint2, &iref()[4].get());

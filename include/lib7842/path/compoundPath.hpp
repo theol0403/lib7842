@@ -25,9 +25,10 @@ public:
   CompoundPath& importPath(const AbstractPath& ipath);
 
   /**
-   * Extract path of shared pointers
+   * Sample the path and return a path with higher resolution
+   * @param  isteps the number of points to generate for each segment
    */
-  virtual SimplePath extract() const override;
+  virtual SimplePath generate(const size_t isteps = 1) const override;
 
   /**
    * Return shared pointer to copy of path
@@ -38,12 +39,6 @@ public:
    * Move the path into a shared pointer and return pointer
    */
   virtual std::shared_ptr<AbstractPath> movePtr() const override;
-
-  /**
-   * Sample the path and return a path with higher resolution
-   * @param  isteps the number of points to generate for each segment
-   */
-  virtual SimplePath generate(const size_t isteps) const override;
 
 protected:
   std::vector<std::shared_ptr<AbstractPath>> paths {};

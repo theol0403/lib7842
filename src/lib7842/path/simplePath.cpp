@@ -40,7 +40,7 @@ ReferencePath SimplePath::ref() const {
   return temp;
 }
 
-void SimplePath::smooth(const double iweight, const QLength& itolerance) {
+void SimplePath::smoothen(const double iweight, const QLength& itolerance) {
   SimplePath destPath = this->copy();
 
   double weight = 1.0 - iweight;
@@ -62,18 +62,6 @@ void SimplePath::smooth(const double iweight, const QLength& itolerance) {
   path = std::move(destPath.path);
 }
 
-SimplePath SimplePath::extract() const {
-  return *this;
-}
-
-std::shared_ptr<AbstractPath> SimplePath::copyPtr() const {
-  return std::make_shared<SimplePath>(*this);
-}
-
-std::shared_ptr<AbstractPath> SimplePath::movePtr() const {
-  return std::make_shared<SimplePath>(std::move(*this));
-}
-
 SimplePath SimplePath::generate(const size_t isteps) const {
   SimplePath temp;
   for (size_t i = 0; i < path.size() - 1; i++) {
@@ -90,6 +78,14 @@ SimplePath SimplePath::generate(const size_t isteps) const {
   // push the last point
   if (path.size() > 0) temp().emplace_back(path.back());
   return temp;
+}
+
+std::shared_ptr<AbstractPath> SimplePath::copyPtr() const {
+  return std::make_shared<SimplePath>(*this);
+}
+
+std::shared_ptr<AbstractPath> SimplePath::movePtr() const {
+  return std::make_shared<SimplePath>(std::move(*this));
 }
 
 SimplePath
