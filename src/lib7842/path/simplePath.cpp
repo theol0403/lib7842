@@ -22,6 +22,10 @@ std::vector<std::shared_ptr<Vector>>& SimplePath::operator()() {
   return path;
 }
 
+VectorRef SimplePath::operator[](const size_t iindex) {
+  return *path.at(iindex);
+}
+
 SimplePath SimplePath::copy() const {
   SimplePath temp;
   temp().reserve(path.size());
