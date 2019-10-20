@@ -62,7 +62,7 @@ protected:
    * Sample the segment
    * @param  isteps the number of points to generate in the segment
    */
-  static SimplePath generateSegment(const Vector& start, const Vector& end, const size_t isteps);
+  static SimplePath generateSegment(const Vector& start, const Vector& end, const int isteps);
 
   std::vector<std::shared_ptr<Vector>> path {};
 };

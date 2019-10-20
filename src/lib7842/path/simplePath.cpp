@@ -66,18 +66,29 @@ void SimplePath::smoothen(const double iweight, const QLength& itolerance) {
   path = std::move(destPath.path);
 }
 
-SimplePath SimplePath::generate(const size_t isteps) const {
+SimplePath SimplePath::generate(const int isteps) const {
+  if (isteps < 1) throw std::runtime_error("SimplePath::generate: isteps is less than 1");
+
   SimplePath temp;
-  for (size_t i = 0; i < path.size() - 1; i++) {
-    // number of steps in segment
-    size_t segmentSteps = isteps / (path.size() - 1.0);
-    // if on last segment, leave room for last point
-    bool lastSegment = i == path.size() - 2;
-    if (lastSegment) segmentSteps--;
-    // generate segment
-    SimplePath segment = generateSegment(*path[i], *path[i + 1], segmentSteps);
-    // move segment into path
-    std::move(segment().begin(), segment().end(), std::back_inserter(temp()));
+
+  // if there is a segment to interpolate
+  if (path.size() > 1) {
+    // for each pair of points
+    for (size_t i = 0; i < path.size() - 1; i++) {
+      // if interpolation needed
+      if (isteps > 1) {
+        // if we are on last segment, skip last point
+        bool lastSegment = i == path.size() - 2;
+        // generate segment
+        SimplePath segment =
+          generateSegment(*path[i], *path[i + 1], lastSegment ? isteps - 1 : isteps);
+        // move segment into path
+        std::move(segment().begin(), segment().end(), std::back_inserter(temp()));
+      } else {
+        // push back point
+        temp().emplace_back(std::make_shared<Vector>(*path[i]));
+      }
+    }
   }
   // push the last point
   if (path.size() > 0) temp().emplace_back(path.back());
@@ -92,15 +103,15 @@ std::shared_ptr<AbstractPath> SimplePath::movePtr() const {
   return std::make_shared<SimplePath>(std::move(*this));
 }
 
-SimplePath
-  SimplePath::generateSegment(const Vector& start, const Vector& end, const size_t isteps) {
+SimplePath SimplePath::generateSegment(const Vector& start, const Vector& end, const int isteps) {
+  if (isteps < 1) throw std::runtime_error("SimplePath::generateSegment: isteps is less than 1");
   SimplePath segment;
   Vector diff = end - start;
 
   // how much to increment each point
   Vector step = diff / isteps;
   // reserve vector capacity
-  segment().reserve(segment().capacity() + isteps);
+  segment().reserve(isteps);
 
   for (size_t i = 0; i < isteps; i++) {
     segment().emplace_back(std::make_shared<Vector>(start + (step * i)));
