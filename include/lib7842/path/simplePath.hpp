@@ -43,7 +43,7 @@ public:
    * Sample the path and return a path with higher resolution
    * @param  isteps the number of points to generate for each segment
    */
-  virtual SimplePath generate(const size_t isteps = 1) const override;
+  virtual SimplePath generate(const int isteps = 1) const override;
 
   /**
    * Return shared pointer to copy of path

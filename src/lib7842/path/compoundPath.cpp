@@ -21,7 +21,7 @@ CompoundPath& CompoundPath::importPath(const AbstractPath& ipath) {
   return *this;
 }
 
-SimplePath CompoundPath::generate(const size_t isteps) const {
+SimplePath CompoundPath::generate(const int isteps) const {
   SimplePath temp;
   std::cout << paths.size() << std::endl;
   for (auto&& path : paths) {
