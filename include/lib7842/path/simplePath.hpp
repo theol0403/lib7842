@@ -29,10 +29,10 @@ public:
    */
   SimplePath copy() const;
 
-  /**
-   * Extract path of references to points
-   */
-  ReferencePath ref() const;
+  // *
+  //  * Extract path of references to points
+
+  // ReferencePath ref() const;
 
   /**
    * Smoothen path

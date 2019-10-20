@@ -1,45 +1,45 @@
-#pragma once
-#include "main.h"
-#include "abstractPath.hpp"
-#include "simplePath.hpp"
+// #pragma once
+// #include "main.h"
+// #include "abstractPath.hpp"
+// #include "simplePath.hpp"
 
-#include "lib7842/point/point.hpp"
+// #include "lib7842/point/point.hpp"
 
-namespace lib7842 {
+// namespace lib7842 {
 
-class ReferencePath : public AbstractPath {
+// class ReferencePath : public AbstractPath {
 
-public:
-  /**
-   * Default Constructors
-   */
-  ReferencePath() = default;
-  ReferencePath(const ReferencePath& ipath) = default;
-  virtual ~ReferencePath() = default;
+// public:
+//   /**
+//    * Default Constructors
+//    */
+//   ReferencePath() = default;
+//   ReferencePath(const ReferencePath& ipath) = default;
+//   virtual ~ReferencePath() = default;
 
-  explicit ReferencePath(const std::vector<VectorRef>& ipath);
+//   explicit ReferencePath(const std::vector<VectorRef>& ipath);
 
-  std::vector<VectorRef>& get();
-  std::vector<VectorRef>& operator()();
+//   std::vector<VectorRef>& get();
+//   std::vector<VectorRef>& operator()();
 
-  /**
-   * Sample the path and return a path with higher resolution
-   * @param  isteps the number of points to generate for each segment
-   */
-  virtual SimplePath generate(const size_t isteps = 1) const override;
+//   *
+//    * Sample the path and return a path with higher resolution
+//    * @param  isteps the number of points to generate for each segment
 
-  /**
-   * Return shared pointer to copy of path
-   */
-  virtual std::shared_ptr<AbstractPath> copyPtr() const override;
+//   virtual SimplePath generate(const int isteps = 1) const override;
 
-  /**
-   * Move the path into a shared pointer and return pointer
-   */
-  virtual std::shared_ptr<AbstractPath> movePtr() const override;
+//   /**
+//    * Return shared pointer to copy of path
+//    */
+//   virtual std::shared_ptr<AbstractPath> copyPtr() const override;
 
-protected:
-  std::vector<VectorRef> path {};
-};
+//   /**
+//    * Move the path into a shared pointer and return pointer
+//    */
+//   virtual std::shared_ptr<AbstractPath> movePtr() const override;
 
-} // namespace lib7842
+// protected:
+//   std::vector<VectorRef> path {};
+// };
+
+// } // namespace lib7842

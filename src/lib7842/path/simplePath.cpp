@@ -31,14 +31,14 @@ SimplePath SimplePath::copy() const {
   return temp;
 }
 
-ReferencePath SimplePath::ref() const {
-  ReferencePath temp;
-  temp().reserve(path.size());
-  for (auto&& point : path) {
-    temp().emplace_back(*point);
-  }
-  return temp;
-}
+// ReferencePath SimplePath::ref() const {
+//   ReferencePath temp;
+//   temp().reserve(path.size());
+//   for (auto&& point : path) {
+//     temp().emplace_back(*point);
+//   }
+//   return temp;
+// }
 
 void SimplePath::smoothen(const double iweight, const QLength& itolerance) {
   SimplePath destPath = this->copy();
