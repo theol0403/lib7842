@@ -1,36 +1,37 @@
-// #include "dataPath.hpp"
+#include "dataPath.hpp"
 
-// namespace lib7842 {
+namespace lib7842 {
 
-// DataPath::DataPath(const std::initializer_list<DataPoint>& ipath) : path(ipath) {}
-// DataPath::DataPath(const std::vector<DataPoint>& ipath) : path(ipath) {}
-// DataPath::DataPath(const AbstractPath& ipath) : DataPath() {
-//   ReferencePath ref = ipath.extractRef();
-//   path = {ref().begin(), ref().end()};
-// }
+DataPath::DataPath(const std::initializer_list<DataPoint>& ipath) :
+  DataPath(std::vector<DataPoint>(ipath)) {}
 
-// std::vector<DataPoint>& DataPath::get() {
-//   return path;
-// }
+DataPath::DataPath(const std::vector<DataPoint>& ipath) {
+  for (auto&& ipoint : ipath) {
+    path.emplace_back(std::make_shared<DataPoint>(ipoint));
+  }
+}
 
-// std::vector<DataPoint>& DataPath::operator()() {
-//   return path;
-// }
+DataPath::DataPath(const std::vector<std::shared_ptr<DataPoint>>& ipath) : path(ipath) {}
 
-// SimplePath DataPath::extract() const {
-//   return SimplePath({path.begin(), path.end()});
-// }
+std::vector<std::shared_ptr<DataPoint>>& DataPath::get() {
+  return path;
+}
 
-// ReferencePath DataPath::extractRef() const {
-//   return ReferencePath({path.begin(), path.end()});
-// }
+std::vector<std::shared_ptr<DataPoint>>& DataPath::operator()() {
+  return path;
+}
 
-// std::shared_ptr<AbstractPath> DataPath::copyPtr() const {
-//   return std::make_shared<DataPath>(*this);
-// }
+SimplePath DataPath::generate(const int isteps) const {
+  return SimplePath(std::vector<std::shared_ptr<Vector>>({path.begin(), path.end()}))
+    .generate(isteps);
+}
 
-// std::shared_ptr<AbstractPath> DataPath::movePtr() const {
-//   return std::make_shared<DataPath>(std::move(*this));
-// }
+std::shared_ptr<AbstractPath> DataPath::copyPtr() const {
+  return std::make_shared<DataPath>(*this);
+}
 
-// } // namespace lib7842
+std::shared_ptr<AbstractPath> DataPath::movePtr() const {
+  return std::make_shared<DataPath>(std::move(*this));
+}
+
+} // namespace lib7842
