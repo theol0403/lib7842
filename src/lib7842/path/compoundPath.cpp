@@ -29,10 +29,8 @@ CompoundPath& CompoundPath::importPath(const AbstractPath& ipath) {
  */
 SimplePath CompoundPath::generate(const int isteps) const {
   SimplePath temp;
-  std::cout << paths.size() << std::endl;
   for (auto&& path : paths) {
     SimplePath ipath = path->generate(isteps);
-    std::cout << ipath().size() << std::endl;
     temp().reserve(temp().size() + ipath().size());
     for (auto&& point : ipath()) {
       temp().emplace_back(point);
