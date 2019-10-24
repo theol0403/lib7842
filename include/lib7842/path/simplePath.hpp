@@ -23,8 +23,6 @@ public:
   std::vector<std::shared_ptr<Vector>>& get();
   std::vector<std::shared_ptr<Vector>>& operator()();
 
-  VectorRef operator[](const size_t iindex);
-
   /**
    * Extract path containing copies of points
    */
