@@ -6,28 +6,27 @@ protected:
   Vector point1 {5_in, 3_in};
 };
 
-TEST_F(SimplePathTest, SimpleTest) {
-  SimplePath path({point1});
-  SimplePath path2 = path.copy();
-}
-
 TEST_F(SimplePathTest, Constructors) {
   SimplePath();
+  SimplePath {point1};
   SimplePath({point1});
   SimplePath({point1, point1});
+  SimplePath(std::vector<Vector>({point1, point1}));
 }
 
 TEST_F(SimplePathTest, ExtractPointer) {
   SimplePath path({point1, point1});
 
+  // measure values
   SimplePath ipath = path;
   ASSERT_EQ(ipath().size(), 2);
   for (auto&& point : ipath()) {
     ASSERT_EQ(*point, point1);
   }
 
+  // make sure pointers are equal
   SimplePath ipath2 = path;
-  for (size_t i = 0; i < ipath2().size(); i++) {
+  for (size_t i = 0; i < ipath().size(); i++) {
     ASSERT_EQ(ipath()[i], ipath2()[i]);
     ASSERT_EQ(ipath()[i], path()[i]);
   }
@@ -40,14 +39,17 @@ TEST_F(SimplePathTest, ExtractCopy) {
   ASSERT_EQ(ipath().size(), 2);
 
   for (size_t i = 0; i < path().size(); i++) {
+    // pointers should not be equal
     ASSERT_NE(path()[i], ipath()[i]);
+    // values should be equal
     ASSERT_EQ(*path()[i], point1);
   }
 }
 
-TEST_F(SimplePathTest, GeneratePath) {
+TEST_F(SimplePathTest, GenerateExtractPath) {
   SimplePath path({point1, point1, point1});
 
+  // generate with no interpolation
   SimplePath ipath = path.generate();
   ASSERT_EQ(ipath().size(), 3);
   for (auto&& point : ipath()) {
@@ -55,31 +57,49 @@ TEST_F(SimplePathTest, GeneratePath) {
   }
 }
 
+TEST_F(SimplePathTest, GenerateInvalid) {
+  SimplePath path({point1, point1, point1});
+
+  EXPECT_THROW(path.generate(0), std::runtime_error);
+  EXPECT_THROW(path.generate(0.1), std::runtime_error);
+}
+
 TEST_F(SimplePathTest, GenerateEmptyPath) {
   SimplePath path;
 
-  SimplePath ipath = path.generate();
-  ASSERT_EQ(ipath().size(), 0);
-
+  // extract empty path
+  ASSERT_EQ(path.generate(1)().size(), 0);
+  ASSERT_EQ(path.generate(5)().size(), 0);
   EXPECT_THROW(path.generate(0), std::runtime_error);
+}
 
-  SimplePath path2({point1, point1, point1});
-  EXPECT_THROW(path2.generate(0), std::runtime_error);
+TEST_F(SimplePathTest, GenerateSinglePointPath) {
+  SimplePath path({point1});
+  SimplePath ipath = path.generate();
+  ASSERT_EQ(ipath().size(), 1);
+  ASSERT_EQ(*ipath()[0], point1);
 }
 
 TEST_F(SimplePathTest, GenerateCorrectAmount) {
   SimplePath path({point1, point1, point1});
 
   SimplePath ipath2 = path.generate(2);
-  ASSERT_EQ(ipath2().size(), 4);
+  ASSERT_EQ(ipath2().size(), 5);
   for (auto&& point : ipath2()) {
+    ASSERT_EQ(*point, point1);
+  }
+
+  SimplePath ipath3 = path.generate(5);
+  ASSERT_EQ(ipath3().size(), 11);
+  for (auto&& point : ipath3()) {
     ASSERT_EQ(*point, point1);
   }
 }
 
 TEST_F(SimplePathTest, GenerateInsertPoints) {
-  SimplePath path = SimplePath({{1_in, 1_in}, {5_in, 4_in}, {9_in, 2_in}}).generate(10);
-  ASSERT_EQ(path().size(), 20);
+  SimplePath path =
+    SimplePath({{1_in, 1_in}, {5_in, 4_in}, {9_in, 2_in}, {10_in, 3_in}}).generate(10);
+  ASSERT_EQ(path().size(), 31);
 }
 
 TEST_F(SimplePathTest, GenerateSmoothPointsDontCopy) {
@@ -98,7 +118,8 @@ TEST_F(SimplePathTest, GenerateSmoothPointsDontPassWayPoints) {
 }
 
 TEST_F(SimplePathTest, GenerateSmoothPointsFunction) {
-  SimplePath path = SimplePath({{1_in, 1_in}, {5_in, 4_in}, {9_in, 1_in}}).generate(15);
+  SimplePath path = SimplePath({{1_in, 1_in}, {5_in, 4_in}, {9_in, 1_in}}).generate(10);
+  ASSERT_EQ(path().size(), 21);
   path.smoothen(0.25, 0.0001_in);
 
   ASSERT_NEAR(path()[10]->x.convert(inch), 5, 0.1);
