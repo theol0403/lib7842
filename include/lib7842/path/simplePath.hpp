@@ -56,7 +56,7 @@ public:
 protected:
   /**
    * Sample the segment
-   * @param  isteps the number of points to generate in the segment
+   * @param  isteps the number of points to generate in the segment excluding the end
    */
   static SimplePath generateSegment(const Vector& start, const Vector& end, const int isteps);
 

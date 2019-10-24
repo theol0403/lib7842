@@ -21,6 +21,12 @@ CompoundPath& CompoundPath::importPath(const AbstractPath& ipath) {
   return *this;
 }
 
+/**
+ * Interpolate the path
+ *
+ * @param isteps how many points to interpolate per segment, from start (inclusive) to end (exclusive) of segment
+ * @return generated path
+ */
 SimplePath CompoundPath::generate(const int isteps) const {
   SimplePath temp;
   std::cout << paths.size() << std::endl;
@@ -35,10 +41,16 @@ SimplePath CompoundPath::generate(const int isteps) const {
   return temp;
 }
 
+/**
+ * Return shared pointer to copy of path
+ */
 std::shared_ptr<AbstractPath> CompoundPath::copyPtr() const {
   return std::make_shared<CompoundPath>(*this);
 }
 
+/**
+ * Move the path into a shared pointer and return pointer
+ */
 std::shared_ptr<AbstractPath> CompoundPath::movePtr() const {
   return std::make_shared<CompoundPath>(std::move(*this));
 }
