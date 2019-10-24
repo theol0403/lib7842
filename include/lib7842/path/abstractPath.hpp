@@ -5,7 +5,6 @@ namespace lib7842 {
 
 // Forward Declare
 class SimplePath;
-class ReferencePath;
 
 /**
  * Interface Path Class

@@ -1,7 +1,6 @@
 #pragma once
 #include "main.h"
 #include "abstractPath.hpp"
-#include "referencePath.hpp"
 
 #include "lib7842/point/point.hpp"
 
@@ -30,11 +29,6 @@ public:
    * Extract path containing copies of points
    */
   SimplePath copy() const;
-
-  // *
-  //  * Extract path of references to points
-
-  // ReferencePath ref() const;
 
   /**
    * Smoothen path
