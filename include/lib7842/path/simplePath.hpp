@@ -36,8 +36,10 @@ public:
   void smoothen(const double iweight, const QLength& itolerance);
 
   /**
-   * Sample the path and return a path with higher resolution
-   * @param  isteps the number of points to generate for each segment
+   * Interpolate the path
+   *
+   * @param isteps how many points to interpolate per segment, from start (inclusive) to end (exclusive) of segment
+   * @return generated path
    */
   virtual SimplePath generate(const int isteps = 1) const override;
 
