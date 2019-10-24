@@ -62,26 +62,24 @@ SimplePath SimplePath::generate(const int isteps) const {
 
   SimplePath temp;
 
-  // if there is a segment to interpolate
+  // if path is more than 2 points - interpolation needed
   if (path.size() > 1) {
-    // for each pair of points
+    // for each segment
     for (size_t i = 0; i < path.size() - 1; i++) {
       // if interpolation needed
       if (isteps > 1) {
-        // if we are on last segment, skip last point
-        bool lastSegment = i == path.size() - 2;
         // generate segment
-        SimplePath segment =
-          generateSegment(*path[i], *path[i + 1], lastSegment ? isteps - 1 : isteps);
+        SimplePath segment = generateSegment(*path[i], *path[i + 1], isteps);
         // move segment into path
         std::move(segment().begin(), segment().end(), std::back_inserter(temp()));
       } else {
-        // push back point
+        // interpolation not needed
         temp().emplace_back(std::make_shared<Vector>(*path[i]));
       }
     }
   }
-  // push the last point
+
+  // if path is more than 1 point - return last point
   if (path.size() > 0) temp().emplace_back(path.back());
   return temp;
 }
@@ -97,9 +95,8 @@ std::shared_ptr<AbstractPath> SimplePath::movePtr() const {
 SimplePath SimplePath::generateSegment(const Vector& start, const Vector& end, const int isteps) {
   if (isteps < 1) throw std::runtime_error("SimplePath::generateSegment: isteps is less than 1");
   SimplePath segment;
-  Vector diff = end - start;
 
-  // how much to increment each point
+  Vector diff = end - start;
   Vector step = diff / isteps;
   // reserve vector capacity
   segment().reserve(isteps);
