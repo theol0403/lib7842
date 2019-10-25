@@ -1,6 +1,6 @@
 #pragma once
 #include "main.h"
-#include "point.hpp"
+#include "vector.hpp"
 
 namespace lib7842 {
 

@@ -1,5 +1,5 @@
 #include "test.hpp"
-#include "lib7842/positioning/point/point.hpp"
+#include "lib7842/positioning/point/vector.hpp"
 
 class VectorTest : public ::testing::Test {
 protected:

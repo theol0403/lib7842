@@ -3,7 +3,7 @@
 #include "abstractPath.hpp"
 #include "simplePath.hpp"
 
-#include "lib7842/positioning/point/point.hpp"
+#include "lib7842/positioning/point/vector.hpp"
 
 namespace lib7842 {
 
