@@ -22,6 +22,7 @@ public:
 
   std::vector<std::shared_ptr<Vector>>& get();
   std::vector<std::shared_ptr<Vector>>& operator()();
+  const std::vector<std::shared_ptr<Vector>>& read() const;
 
   /**
    * Extract path containing copies of points

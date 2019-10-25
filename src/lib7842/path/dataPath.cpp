@@ -21,6 +21,10 @@ std::vector<std::shared_ptr<DataPoint>>& DataPath::operator()() {
   return path;
 }
 
+const std::vector<std::shared_ptr<DataPoint>>& DataPath::read() const {
+  return path;
+}
+
 SimplePath DataPath::generate(const int isteps) const {
   return SimplePath(std::vector<std::shared_ptr<Vector>>({path.begin(), path.end()}))
     .generate(isteps);

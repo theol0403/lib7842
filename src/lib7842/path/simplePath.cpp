@@ -22,6 +22,10 @@ std::vector<std::shared_ptr<Vector>>& SimplePath::operator()() {
   return path;
 }
 
+const std::vector<std::shared_ptr<Vector>>& SimplePath::read() const {
+  return path;
+}
+
 /**
  * Extract path containing copies of points
  */

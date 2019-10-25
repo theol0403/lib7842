@@ -22,6 +22,7 @@ public:
 
   std::vector<std::shared_ptr<DataPoint>>& get();
   std::vector<std::shared_ptr<DataPoint>>& operator()();
+  const std::vector<std::shared_ptr<DataPoint>>& read() const;
 
   /**
    * Interpolate the path
