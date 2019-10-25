@@ -1,28 +1,29 @@
 #pragma once
 #include "main.h"
-#include "abstractPath.hpp"
 #include "simplePath.hpp"
 
-#include "lib7842/point/point.hpp"
+#include "lib7842/point/dataPoint.hpp"
 
 namespace lib7842 {
 
-class CompoundPath : public AbstractPath {
+class DataPath : public AbstractPath {
 
 public:
   /**
    * Default Constructors
    */
-  CompoundPath() = default;
-  CompoundPath(const CompoundPath& ipath) = default;
-  virtual ~CompoundPath() = default;
+  DataPath() = default;
+  DataPath(const DataPath& ipath) = default;
+  virtual ~DataPath() = default;
 
-  explicit CompoundPath(const std::shared_ptr<AbstractPath>& ipath);
+  explicit DataPath(const std::initializer_list<DataPoint>& ipath);
+  explicit DataPath(const std::vector<DataPoint>& ipath);
+  explicit DataPath(const std::vector<std::shared_ptr<DataPoint>>& ipath);
+  explicit DataPath(const SimplePath& ipath);
 
-  CompoundPath& addPath(const std::shared_ptr<AbstractPath>& ipath);
-
-  CompoundPath& copyPath(const AbstractPath& ipath);
-  CompoundPath& importPath(const AbstractPath& ipath);
+  std::vector<std::shared_ptr<DataPoint>>& get();
+  std::vector<std::shared_ptr<DataPoint>>& operator()();
+  const std::vector<std::shared_ptr<DataPoint>>& read() const;
 
   /**
    * Interpolate the path
@@ -43,7 +44,7 @@ public:
   virtual std::shared_ptr<AbstractPath> movePtr() const override;
 
 protected:
-  std::vector<std::shared_ptr<AbstractPath>> paths {};
-}; // namespace lib7842
+  std::vector<std::shared_ptr<DataPoint>> path {};
+};
 
 } // namespace lib7842

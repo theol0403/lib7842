@@ -11,7 +11,7 @@ INCDIR=$(PROJECTROOT)/include
 TESTDIR=$(ROOT)/src
 OUTBIN:=$(BINDIR)/main.exe
 
-WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function -Wnull-dereference
+WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function -Wnull-dereference -Wno-sign-compare
 EXTRA_CXXFLAGS= -std=gnu++17 -g -pthread -D THREADS_STD 
 EXTRA_CXXFLAGS+= -fsanitize=undefined -fsanitize=vptr -fsanitize=integer-divide-by-zero -fsanitize=null
 # EXTRA_CXXFLAGS+= -fsanitize=address 

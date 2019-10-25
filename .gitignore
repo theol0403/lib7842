@@ -9,6 +9,7 @@
 # PROS
 bin/
 .vscode/
+.ccls-cache/
 compile_commands.json
 temp.log
 temp.errors
@@ -19,3 +20,5 @@ temp.errors
 test/bin/
 test/temp.log
 test/temp.errors
+
+*.sublime-workspace
