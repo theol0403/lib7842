@@ -1,14 +1,15 @@
-#include "pathPacker.hpp"
+#include "pathGenerator.hpp"
 
 namespace lib7842 {
 
-PathPacker::limits::limits(QSpeed imin, QSpeed imax, QAcceleration iaccel, QCurvature icurvatureK) :
+PathGenerator::limits::limits(
+  QSpeed imin, QSpeed imax, QAcceleration iaccel, QCurvature icurvatureK) :
   min(imin.convert(mps)),
   max(imax.convert(mps)),
   accel(iaccel.convert(mps2)),
   curvatureK(icurvatureK.convert(curvature)) {}
 
-DataPath PathPacker::generate(const SimplePath& ipath, const limits& ilimits) {
+DataPath PathGenerator::generate(const SimplePath& ipath, const limits& ilimits) {
   DataPath path(ipath);
 
   setDistances(path);
@@ -19,7 +20,7 @@ DataPath PathPacker::generate(const SimplePath& ipath, const limits& ilimits) {
   return path;
 }
 
-void PathPacker::setDistances(DataPath& ipath) {
+void PathGenerator::setDistances(DataPath& ipath) {
   ipath().at(0)->setData("distance", 0_in);
   for (size_t i = 0; i < ipath().size() - 1; i++) {
     QLength distance =
@@ -28,7 +29,7 @@ void PathPacker::setDistances(DataPath& ipath) {
   }
 }
 
-void PathPacker::setCurvatures(DataPath& ipath) {
+void PathGenerator::setCurvatures(DataPath& ipath) {
   ipath().at(0)->setData("curvature", 0_curv);
   for (size_t i = 1; i < ipath().size() - 1; i++) {
     QCurvature curv = getCurvature(*ipath()[i - 1], *ipath()[i], *ipath()[i + 1]);
@@ -37,7 +38,7 @@ void PathPacker::setCurvatures(DataPath& ipath) {
   ipath().back()->setData("curvature", 0_curv);
 }
 
-void PathPacker::setMaxVelocity(DataPath& ipath, const limits& ilimits) {
+void PathGenerator::setMaxVelocity(DataPath& ipath, const limits& ilimits) {
   ipath().back()->setData("velocity", 0_mps);
   for (size_t i = ipath().size() - 1; i > 0; i--) {
     DataPoint& start = *ipath()[i];
@@ -62,7 +63,7 @@ void PathPacker::setMaxVelocity(DataPath& ipath, const limits& ilimits) {
   }
 }
 
-void PathPacker::setMinVelocity(DataPath& ipath, const limits& ilimits) {
+void PathGenerator::setMinVelocity(DataPath& ipath, const limits& ilimits) {
   ipath().at(0)->setData("velocity", ilimits.min * mps);
   for (size_t i = 0; i < ipath().size() - 1; i++) {
     DataPoint& start = *ipath()[i];
@@ -85,7 +86,8 @@ void PathPacker::setMinVelocity(DataPath& ipath, const limits& ilimits) {
   }
 }
 
-QCurvature PathPacker::getCurvature(const Vector& prev, const Vector& point, const Vector& next) {
+QCurvature
+  PathGenerator::getCurvature(const Vector& prev, const Vector& point, const Vector& next) {
   double distOne = Vector::dist(point, prev).convert(meter);
   double distTwo = Vector::dist(point, next).convert(meter);
   double distThree = Vector::dist(next, prev).convert(meter);

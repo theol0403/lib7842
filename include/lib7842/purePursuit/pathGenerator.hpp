@@ -7,7 +7,7 @@
 
 namespace lib7842 {
 
-class PathPacker {
+class PathGenerator {
 
 public:
   struct limits {
