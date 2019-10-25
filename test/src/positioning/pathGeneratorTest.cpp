@@ -1,5 +1,5 @@
 #include "test.hpp"
-#include "lib7842/purePursuit/pathGenerator.hpp"
+#include "lib7842/positioning/pathGenerator.hpp"
 
 class PathGeneratorTest : public ::testing::Test {
 protected:

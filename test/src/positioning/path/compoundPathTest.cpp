@@ -1,5 +1,5 @@
 #include "test.hpp"
-#include "lib7842/path/compoundPath.hpp"
+#include "lib7842/positioning/path/compoundPath.hpp"
 
 class CompoundPathTest : public ::testing::Test {
 protected:

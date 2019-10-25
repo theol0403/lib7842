@@ -1,5 +1,5 @@
 #include "test.hpp"
-#include "lib7842/point/dataPoint.hpp"
+#include "lib7842/positioning/point/dataPoint.hpp"
 
 class DataPointTest : public ::testing::Test {
 protected:

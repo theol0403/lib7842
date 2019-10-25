@@ -1,8 +1,8 @@
 #pragma once
 #include "main.h"
 
-#include "lib7842/path/simplePath.hpp"
-#include "lib7842/path/dataPath.hpp"
+#include "lib7842/positioning/path/simplePath.hpp"
+#include "lib7842/positioning/path/dataPath.hpp"
 #include "lib7842/other/utility.hpp"
 
 namespace lib7842 {

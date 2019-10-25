@@ -2,7 +2,7 @@
 #include "main.h"
 #include "simplePath.hpp"
 
-#include "lib7842/point/dataPoint.hpp"
+#include "lib7842/positioning/point/dataPoint.hpp"
 
 namespace lib7842 {
 

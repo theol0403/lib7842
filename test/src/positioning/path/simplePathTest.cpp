@@ -1,5 +1,5 @@
 #include "test.hpp"
-#include "lib7842/path/simplePath.hpp"
+#include "lib7842/positioning/path/simplePath.hpp"
 
 class SimplePathTest : public ::testing::Test {
 protected:

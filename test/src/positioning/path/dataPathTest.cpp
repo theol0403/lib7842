@@ -1,5 +1,5 @@
 #include "test.hpp"
-#include "lib7842/path/dataPath.hpp"
+#include "lib7842/positioning/path/dataPath.hpp"
 
 class DataPathTest : public ::testing::Test {
 protected:

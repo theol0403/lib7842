@@ -1,5 +1,5 @@
 #include "test.hpp"
-#include "lib7842/point/state.hpp"
+#include "lib7842/positioning/point/state.hpp"
 
 class StateTest : public ::testing::Test {
 protected:
