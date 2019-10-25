@@ -36,7 +36,7 @@ public:
     limits(QSpeed imin, QSpeed imax, QAcceleration iaccel, QCurvature icurvatureK);
   };
 
-  static DataPath generate(const AbstractPath& ipath, const limits& ilimits);
+  static DataPath generate(const SimplePath& ipath, const limits& ilimits);
 
   static void setDistances(DataPath& ipath);
   static void setCurvatures(DataPath& ipath);
