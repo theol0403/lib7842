@@ -6,7 +6,7 @@
 
 namespace lib7842 {
 
-class DataPath : public SimplePath {
+class DataPath : public AbstractPath {
 
 public:
   /**
@@ -19,6 +19,7 @@ public:
   explicit DataPath(const std::initializer_list<DataPoint>& ipath);
   explicit DataPath(const std::vector<DataPoint>& ipath);
   explicit DataPath(const std::vector<std::shared_ptr<DataPoint>>& ipath);
+  explicit DataPath(const SimplePath& ipath);
 
   std::vector<std::shared_ptr<DataPoint>>& get();
   std::vector<std::shared_ptr<DataPoint>>& operator()();
