@@ -7,6 +7,7 @@ SimplePath::SimplePath(const std::initializer_list<Vector>& ipath) :
   SimplePath(std::vector<Vector>(ipath)) {}
 
 SimplePath::SimplePath(const std::vector<Vector>& ipath) {
+  path.reserve(ipath.size());
   for (auto&& ipoint : ipath) {
     path.emplace_back(std::make_shared<Vector>(ipoint));
   }
@@ -73,6 +74,7 @@ SimplePath SimplePath::generate(const int isteps) const {
   if (isteps < 1) throw std::runtime_error("SimplePath::generate: isteps is less than 1");
 
   SimplePath temp;
+  if (path.size() > 0) temp().reserve((isteps * (path.size() - 1)) + 1);
 
   // if path is more than 2 points - interpolation needed
   if (path.size() > 1) {
