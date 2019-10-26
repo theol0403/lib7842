@@ -12,6 +12,6 @@ public:
 
 TEST(TaskWrapperTest, Functionality) {
   MockTask task;
-  usleep(1);
+  usleep(100);
   ASSERT_TRUE(task.taskRan);
 }
