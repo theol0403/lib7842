@@ -5,7 +5,6 @@ namespace lib7842 {
 class TaskWrapper {
 protected:
   TaskWrapper() = default;
-  TaskWrapper(const TaskWrapper& ipath) = delete;
   virtual ~TaskWrapper() = default;
 
   /**
@@ -30,6 +29,6 @@ protected:
 
 private:
   static void trampoline(void* iparam);
-  std::shared_ptr<CrossplatformThread> task {nullptr};
+  std::unique_ptr<CrossplatformThread> task {nullptr};
 };
 } // namespace lib7842

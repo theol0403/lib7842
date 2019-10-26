@@ -3,8 +3,8 @@
 namespace lib7842 {
 
 void TaskWrapper::startTask(const std::string& iname) {
-  if (!task) std::cerr << "Warning: restarting task: " << iname << std::endl;
-  task = std::make_shared<CrossplatformThread>(trampoline, this, iname.c_str());
+  if (task) std::cerr << "Warning: restarting task: " << iname << std::endl;
+  task = std::make_unique<CrossplatformThread>(trampoline, this, iname.c_str());
 }
 
 void TaskWrapper::killTask() {
