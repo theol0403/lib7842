@@ -4,8 +4,11 @@
 
 class MockTask : public TaskWrapper {
 public:
+  MockTask() {
+    startTask();
+  }
   bool taskRan = false;
-  virtual void loop() {
+  virtual void loop() override {
     taskRan = true;
   }
 };

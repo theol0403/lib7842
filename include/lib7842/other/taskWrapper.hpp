@@ -4,14 +4,24 @@
 namespace lib7842 {
 class TaskWrapper {
 protected:
-  TaskWrapper(const std::string& iname = "TaskWrapper");
+  TaskWrapper() = default;
   TaskWrapper(const TaskWrapper& ipath) = delete;
   virtual ~TaskWrapper() = default;
 
   /**
-   * Extend this function to implement custom task
+   * Extend this function to implement custom task.
    */
   virtual void loop() = 0;
+
+  /**
+   * Starts the task.
+   */
+  void startTask(const std::string& iname = "TaskWrapper");
+
+  /**
+   * Kills the task.
+   */
+  void killTask();
 
   /**
    * Gets the task name.
