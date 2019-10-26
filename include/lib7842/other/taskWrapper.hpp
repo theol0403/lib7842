@@ -37,7 +37,7 @@ public:
   /**
    * Automatically starts the task
    */
-  EndlessTaskWrapper(const std::string& iname = "TaskWrapper");
+  explicit EndlessTaskWrapper(const std::string& iname = "TaskWrapper");
 
 private:
   using TaskWrapper::startTask;
