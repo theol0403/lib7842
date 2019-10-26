@@ -15,8 +15,8 @@ public:
     const std::shared_ptr<ContinuousRotarySensor>& ileftEnc,
     const std::shared_ptr<ContinuousRotarySensor>& irightEnc,
     const std::shared_ptr<ContinuousRotarySensor>& imiddleEnc,
-    double imaxVelocity,
-    double imaxVoltage);
+    double imaxVelocity = 200,
+    double imaxVoltage = 12000);
 
   std::valarray<std::int32_t> getSensorVals() const override;
 
