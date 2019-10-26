@@ -8,13 +8,13 @@ namespace lib7842 {
 class ThreeEncXDriveModel : public XDriveModel {
 public:
   ThreeEncXDriveModel(
-    std::shared_ptr<AbstractMotor> itopLeftMotor,
-    std::shared_ptr<AbstractMotor> itopRightMotor,
-    std::shared_ptr<AbstractMotor> ibottomRightMotor,
-    std::shared_ptr<AbstractMotor> ibottomLeftMotor,
-    std::shared_ptr<ContinuousRotarySensor> ileftEnc,
-    std::shared_ptr<ContinuousRotarySensor> irightEnc,
-    std::shared_ptr<ContinuousRotarySensor> imiddleEnc,
+    const std::shared_ptr<AbstractMotor>& itopLeftMotor,
+    const std::shared_ptr<AbstractMotor>& itopRightMotor,
+    const std::shared_ptr<AbstractMotor>& ibottomRightMotor,
+    const std::shared_ptr<AbstractMotor>& ibottomLeftMotor,
+    const std::shared_ptr<ContinuousRotarySensor>& ileftEnc,
+    const std::shared_ptr<ContinuousRotarySensor>& irightEnc,
+    const std::shared_ptr<ContinuousRotarySensor>& imiddleEnc,
     double imaxVelocity,
     double imaxVoltage);
 
