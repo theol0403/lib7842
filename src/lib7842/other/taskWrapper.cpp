@@ -20,4 +20,8 @@ void TaskWrapper::trampoline(void* iparam) {
   static_cast<TaskWrapper*>(iparam)->loop();
 }
 
+EndlessTaskWrapper::EndlessTaskWrapper(const std::string& iname) {
+  startTask(iname);
+}
+
 } // namespace lib7842
