@@ -10,7 +10,7 @@ protected:
   /**
    * Extend this function to implement custom task.
    */
-  virtual void loop() = 0;
+  virtual void loop();
 
   /**
    * Starts the task.
