@@ -15,20 +15,34 @@ protected:
   /**
    * Starts the task.
    */
-  void startTask(const std::string& iname = "TaskWrapper");
+  virtual void startTask(const std::string& iname = "TaskWrapper");
 
   /**
    * Kills the task.
    */
-  void killTask();
+  virtual void killTask();
 
   /**
    * Gets the task name.
    */
-  std::string getName();
+  virtual std::string getName();
 
 private:
   static void trampoline(void* iparam);
   std::unique_ptr<CrossplatformThread> task {nullptr};
+};
+
+class EndlessTaskWrapper : public TaskWrapper {
+public:
+  /**
+   * Automatically starts the task
+   */
+  EndlessTaskWrapper(const std::string& iname = "TaskWrapper") {
+    startTask(iname);
+  }
+
+private:
+  using TaskWrapper::startTask;
+  using TaskWrapper::killTask;
 };
 } // namespace lib7842
