@@ -12,6 +12,7 @@ protected:
    */
   virtual void loop();
 
+public:
   /**
    * Starts the task.
    */
