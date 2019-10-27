@@ -10,52 +10,51 @@ CustomOdometry::CustomOdometry(
   middleDistance(chassisScales.middleWheelDistance.convert(meter)) {}
 
 /**
- * Odometry algorithm provided courtecy of Michael from team 4911A, and was inspired by team 5225A
+ * Odometry algorithm provided courtesy of the pilons from team 5225A
  */
 void CustomOdometry::step() {
   auto newTicks = model->getSensorVals();
 
-  double dLeftMeter = (newTicks[0] - lastTicks[0]) /
-                      chassisScales.straight; // The amount the left side of the robot moved
-  double dRightMeter = (newTicks[1] - lastTicks[1]) /
-                       chassisScales.straight; // The amount the right side of the robot moved
-  double dBackMeter = (newTicks[2] - lastTicks[2]) /
-                      chassisScales.middle; // The amount the back side of the robot moved
+  double L = (newTicks[0] - lastTicks[0]) /
+             chassisScales.straight; // The amount the left side of the robot moved
+  double R = (newTicks[1] - lastTicks[1]) /
+             chassisScales.straight; // The amount the right side of the robot moved
+  double S = (newTicks[2] - lastTicks[2]) /
+             chassisScales.middle; // The amount the back side of the robot moved
 
   // Update the last values
   lastTicks = newTicks;
 
-  double chassisWidth = chassisScales.wheelTrack.convert(meter);
-  double middleDistance = chassisScales.middleWheelDistance.convert(meter);
+  // The hypotenuse of the triangle formed by the middle of the robot on the starting position and ending position and the middle of the circle it travels around
+  double h;
+  double i; // Half on the angle that I've traveled
+  double h2; // The same as h but using the back instead of the side wheels
+  double a = (L - R) / chassisWidth; // The angle that I've traveled
+  if (a) {
+    // The radius of the circle the robot travel's around with the right side of the robot
+    double r = R / a;
+    i = a / 2.0;
+    double sinI = std::sin(i);
+    h = ((r + (chassisWidth / 2)) * sinI) * 2.0;
 
-  //change in angle orientation
-  double dTheta = (dLeftMeter - dRightMeter) / chassisWidth;
-
-  //arc radii
-  double centerXArcRadius = (dBackMeter / dTheta) + middleDistance;
-  double centerYArcRadius = (dRightMeter / dTheta) + chassisWidth / 2;
-
-  //local coordinates
-  double dX;
-  double dY;
-  if (dTheta == 0) {
-    dX = dBackMeter;
-    dY = dRightMeter;
+    // The radius of the circle the robot travel's around with the back of the robot
+    double r2 = S / a;
+    h2 = ((r2 + middleDistance) * sinI) * 2.0;
   } else {
-    //math
-    //http://thepilons.ca/wp-content/uploads/2018/10/Tracking.pdf
-    dX = 2 * std::sin(dTheta / 2) * centerXArcRadius;
-    dY = 2 * std::sin(dTheta / 2) * centerYArcRadius;
+    h = R;
+    i = 0;
+
+    h2 = S;
   }
+  double p = i + state.theta.convert(radian); // The global ending angle of the robot
+  double cosP = std::cos(p);
+  double sinP = std::sin(p);
 
-  state.x = (dX * std::cos(state.theta.convert(radian)) +
-             dY * std::sin(state.theta.convert(radian)) + state.x.convert(meter)) *
-            meter;
-  state.y = (dY * std::cos(state.theta.convert(radian)) -
-             dX * std::sin(state.theta.convert(radian)) + state.y.convert(meter)) *
-            meter;
+  // Update the global position
+  state.y += ((h * cosP) + (h2 * -sinP)) * meter;
+  state.x += ((h * sinP) + (h2 * cosP)) * meter;
 
-  state.theta += dTheta * radian;
+  state.theta += a * radian;
 }
 
 const State& CustomOdometry::getState() const {
