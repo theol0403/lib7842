@@ -15,7 +15,7 @@ public:
 
 TEST(TaskWrapperTest, Task) {
   MockTask task;
-  usleep(1000);
+  usleep(100000);
   ASSERT_TRUE(task.taskRan);
 }
 
@@ -30,6 +30,6 @@ public:
 
 TEST(TaskWrapperTest, EndlessTask) {
   MockEndlessTask task;
-  usleep(1000);
+  usleep(100000);
   ASSERT_TRUE(task.taskRan);
 }
