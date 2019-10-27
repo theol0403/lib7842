@@ -15,7 +15,7 @@ public:
    * @param imodel         The 3EncX chassis model for reading sensors.
    * @param ichassisScales The chassis dimensions.
    */
-  CustomOdometry(std::shared_ptr<ChassisModel> imodel, const ChassisScales& ichassisScales);
+  CustomOdometry(const std::shared_ptr<ChassisModel>& imodel, const ChassisScales& ichassisScales);
 
   virtual ~CustomOdometry() = default;
 
@@ -51,7 +51,9 @@ public:
 
 protected:
   std::shared_ptr<ChassisModel> model {nullptr};
-  ChassisScales chassisScales;
+  const ChassisScales chassisScales;
+  const double chassisWidth;
+  const double middleDistance;
 
   State state;
   std::valarray<std::int32_t> lastTicks {0, 0, 0};

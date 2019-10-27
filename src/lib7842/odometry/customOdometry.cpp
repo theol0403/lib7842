@@ -3,8 +3,11 @@
 namespace lib7842 {
 
 CustomOdometry::CustomOdometry(
-  std::shared_ptr<ChassisModel> imodel, const ChassisScales& ichassisScales) :
-  model(imodel), chassisScales(ichassisScales) {}
+  const std::shared_ptr<ChassisModel>& imodel, const ChassisScales& ichassisScales) :
+  model(imodel),
+  chassisScales(ichassisScales),
+  chassisWidth(chassisScales.wheelTrack.convert(meter)),
+  middleDistance(chassisScales.middleWheelDistance.convert(meter)) {}
 
 /**
  * Odometry algorithm provided courtecy of Michael from team 4911A, and was inspired by team 5225A
