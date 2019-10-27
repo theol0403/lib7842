@@ -1,0 +1,6 @@
+[submodule "test/include/lv_drivers"]
+	path = test/include/lv_drivers
+	url = https://github.com/littlevgl/lv_drivers.git
+[submodule "test/include/lvgl"]
+	path = test/include/lvgl
+	url = https://github.com/littlevgl/lvgl
