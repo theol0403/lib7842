@@ -82,21 +82,4 @@ void CustomOdometry::loop() {
   }
 }
 
-OdomState CustomOdometry::getState(const StateMode& imode) const {
-  const State& istate = getState();
-  if (imode == StateMode::CARTESIAN) {
-    return {istate.x, istate.y, istate.theta};
-  } else {
-    return {istate.y, istate.x, istate.theta};
-  }
-}
-
-void CustomOdometry::setState(const OdomState& istate, const StateMode& imode) {
-  if (imode == StateMode::CARTESIAN) {
-    state = {istate.x, istate.y, istate.theta};
-  } else {
-    state = {istate.y, istate.x, istate.theta};
-  }
-}
-
 } // namespace lib7842

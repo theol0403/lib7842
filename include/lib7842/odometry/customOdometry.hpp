@@ -6,7 +6,7 @@
 #include "threeEncXDriveModel.hpp"
 
 namespace lib7842 {
-class CustomOdometry : public TaskWrapper, public Odometry {
+class CustomOdometry : public TaskWrapper {
 public:
   /**
    * CustomOdometry.
@@ -20,49 +20,40 @@ public:
   virtual ~CustomOdometry() = default;
 
   /**
-   * Sets the drive and turn scales.
-   */
-  virtual void setScales(const ChassisScales& ichassisScales) override;
-
-  /**
    * Do one odometry step.
    */
-  virtual void step() override;
+  void step();
 
   /**
    * Returns the current state.
    */
-  virtual const State& getState() const;
+  const State& getState() const;
 
   /**
    * Sets a new state to be the current state.
    */
-  virtual void setState(const State& istate);
+  void setState(const State& istate);
 
   /**
    * Resets state to {0, 0, 0}
    */
-  virtual void resetState();
+  void resetState();
 
   /**
    * Resets sensors and state
    */
-  virtual void reset();
+  void reset();
 
   /**
    * Odometry calculation loop
    */
   virtual void loop() override;
 
-private:
-  virtual OdomState getState(const StateMode& imode) const override;
-  virtual void setState(const OdomState& istate, const StateMode& imode) override;
-
 protected:
   std::shared_ptr<ChassisModel> model {nullptr};
-  ChassisScales chassisScales;
-  double chassisWidth;
-  double middleDistance;
+  const ChassisScales chassisScales;
+  const double chassisWidth;
+  const double middleDistance;
 
   State state;
   std::valarray<std::int32_t> lastTicks {0, 0, 0};
