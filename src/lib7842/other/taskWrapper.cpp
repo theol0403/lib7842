@@ -24,6 +24,7 @@ std::string TaskWrapper::getName() {
 };
 
 void TaskWrapper::trampoline(void* iparam) {
+  pros::delay(20);
   static_cast<TaskWrapper*>(iparam)->loop();
 }
 
