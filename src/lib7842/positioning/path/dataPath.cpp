@@ -40,13 +40,4 @@ SimplePath DataPath::generate(const int isteps) const {
   return SimplePath(std::vector<std::shared_ptr<Vector>>({path.begin(), path.end()}))
     .generate(isteps);
 }
-
-std::shared_ptr<AbstractPath> DataPath::copyPtr() const {
-  return std::make_shared<DataPath>(*this);
-}
-
-std::shared_ptr<AbstractPath> DataPath::movePtr() const {
-  return std::make_shared<DataPath>(std::move(*this));
-}
-
 } // namespace lib7842

@@ -21,9 +21,6 @@ public:
 
   CompoundPath& addPath(const std::shared_ptr<AbstractPath>& ipath);
 
-  CompoundPath& copyPath(const AbstractPath& ipath);
-  CompoundPath& importPath(const AbstractPath& ipath);
-
   /**
    * Interpolate the path
    *
@@ -31,16 +28,6 @@ public:
    * @return generated path
    */
   SimplePath generate(const int isteps = 1) const override;
-
-  /**
-   * Return shared pointer to copy of path
-   */
-  std::shared_ptr<AbstractPath> copyPtr() const override;
-
-  /**
-   * Move the path into a shared pointer and return pointer
-   */
-  std::shared_ptr<AbstractPath> movePtr() const override;
 
 protected:
   std::vector<std::shared_ptr<AbstractPath>> paths {};

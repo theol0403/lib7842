@@ -99,20 +99,6 @@ SimplePath SimplePath::generate(const int isteps) const {
 }
 
 /**
- * Return shared pointer to copy of path
- */
-std::shared_ptr<AbstractPath> SimplePath::copyPtr() const {
-  return std::make_shared<SimplePath>(*this);
-}
-
-/**
- * Move the path into a shared pointer and return pointer
- */
-std::shared_ptr<AbstractPath> SimplePath::movePtr() const {
-  return std::make_shared<SimplePath>(std::move(*this));
-}
-
-/**
  * Sample the segment
  * @param  isteps the number of points to generate in the segment excluding the end
  */

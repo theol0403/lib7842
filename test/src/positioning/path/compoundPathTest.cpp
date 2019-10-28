@@ -16,14 +16,14 @@ TEST_F(CompoundPathTest, Constructors) {
 TEST_F(CompoundPathTest, AddPaths) {
   path.addPath(std::make_shared<SimplePath>());
   path.addPath(std::make_shared<CompoundPath>());
-  path.importPath(SimplePath({point1}));
-  path.importPath(SimplePath({point1, point1}));
+  path.addPath(std::make_shared<SimplePath>({point1}));
+  path.addPath(std::make_shared<SimplePath>({point1, point1}));
 }
 
 TEST_F(CompoundPathTest, ExtractSegments) {
-  path.importPath(SimplePath({point1}));
-  path.importPath(SimplePath({point1, point1}));
-  path.addPath(std::make_shared<SimplePath>(SimplePath({point1})));
+  path.addPath(std::make_shared<SimplePath>({point1}));
+  path.addPath(std::make_shared<SimplePath>({point1, point1}));
+  path.addPath(std::make_shared<SimplePath>({point1}));
 
   SimplePath ipath = path.generate();
   ASSERT_EQ(ipath().size(), 4);
@@ -33,17 +33,17 @@ TEST_F(CompoundPathTest, ExtractSegments) {
 }
 
 TEST_F(CompoundPathTest, StressTest) {
-  path.importPath(SimplePath({{1_in, 2_in}}));
-  path.importPath(SimplePath({{2_in, 3_in}, {3_in, 4_in}}));
+  path.addPath(std::make_shared<SimplePath>({{1_in, 2_in}}));
+  path.addPath(std::make_shared<SimplePath>({{2_in, 3_in}, {3_in, 4_in}}));
 
-  CompoundPath segment1 {
-    CompoundPath().importPath(CompoundPath().importPath(SimplePath({{4_in, 5_in}, {5_in, 6_in}})))};
-  CompoundPath segment2 {CompoundPath().importPath(SimplePath({{6_in, 7_in}}))};
-  CompoundPath segment3 {CompoundPath().importPath(SimplePath({{7_in, 8_in}}))};
-  CompoundPath segment3b {CompoundPath().importPath(segment3)};
+  CompoundPath segment1 {CompoundPath().addPath(
+    CompoundPath().addPath(std::make_shared<SimplePath>({{4_in, 5_in}, {5_in, 6_in}})))};
+  CompoundPath segment2 {CompoundPath().addPath(std::make_shared<SimplePath>({{6_in, 7_in}}))};
+  CompoundPath segment3 {CompoundPath().addPath(std::make_shared<SimplePath>({{7_in, 8_in}}))};
+  CompoundPath segment3b {CompoundPath().addPath(segment3)};
 
-  CompoundPath segment4 {CompoundPath().copyPath(segment2).copyPath(segment3b)};
-  CompoundPath segment5 {CompoundPath().importPath(SimplePath({{8_in, 9_in}}))};
+  CompoundPath segment4 {CompoundPath().addPath(segment2).addPath(segment3b)};
+  CompoundPath segment5 {CompoundPath().addPath(std::make_shared<SimplePath>({{8_in, 9_in}}))};
 
   path
     .addPath(std::shared_ptr<CompoundPath>(&segment1, [](AbstractPath*) {})) // empty deleter

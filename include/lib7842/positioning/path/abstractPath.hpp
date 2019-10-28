@@ -26,16 +26,6 @@ public:
    * @return generated path
    */
   virtual SimplePath generate(const int isteps = 1) const = 0;
-
-  /**
-   * Return shared pointer to copy of path
-   */
-  virtual std::shared_ptr<AbstractPath> copyPtr() const = 0;
-
-  /**
-   * Move the path into a shared pointer and return pointer
-   */
-  virtual std::shared_ptr<AbstractPath> movePtr() const = 0;
 };
 
 } // namespace lib7842
