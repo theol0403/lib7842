@@ -18,8 +18,11 @@ public:
   virtual void destroy() = 0;
 
 protected:
-  lv_obj_t* parent {nullptr};
-  const lv_color_t color;
+  lv_obj_t* container;
+  const lv_color_t themeColor;
+
+private:
+  lv_style_t style;
 };
 
 } // namespace lib7842
