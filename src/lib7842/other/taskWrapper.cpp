@@ -2,12 +2,16 @@
 
 namespace lib7842 {
 
+TaskWrapper::TaskWrapper(std::shared_ptr<Logger> ilogger) : logger(ilogger) {}
+
 void TaskWrapper::loop() {
-  throw std::runtime_error("TaskWrapper::loop: loop is not overridden");
+  std::string msg("TaskWrapper::loop: loop is not overridden");
+  LOG_ERROR(msg);
+  throw std::runtime_error(msg);
 }
 
 void TaskWrapper::startTask(const std::string& iname) {
-  if (task) std::cerr << "Warning: restarting task: " << iname << std::endl;
+  if (task) LOG_INFO("TaskWrapper::startTask: restarting task: " + iname);
   task = std::make_unique<CrossplatformThread>(trampoline, this, iname.c_str());
 }
 
@@ -20,11 +24,11 @@ std::string TaskWrapper::getName() {
 };
 
 void TaskWrapper::trampoline(void* iparam) {
-  if (!iparam) throw std::runtime_error("TaskWrapper::trampoline: iparam is null");
   static_cast<TaskWrapper*>(iparam)->loop();
 }
 
-EndlessTaskWrapper::EndlessTaskWrapper(const std::string& iname) {
+EndlessTaskWrapper::EndlessTaskWrapper(const std::string& iname, std::shared_ptr<Logger> ilogger) :
+  TaskWrapper(ilogger) {
   startTask(iname);
 }
 
