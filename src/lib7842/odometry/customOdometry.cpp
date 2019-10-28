@@ -3,17 +3,51 @@
 namespace lib7842 {
 
 CustomOdometry::CustomOdometry(
-  const std::shared_ptr<ChassisModel>& imodel, const ChassisScales& ichassisScales) :
+  const std::shared_ptr<ChassisModel>& imodel,
+  const ChassisScales& ichassisScales,
+  std::shared_ptr<Logger> ilogger) :
   model(imodel),
   chassisScales(ichassisScales),
   chassisWidth(chassisScales.wheelTrack.convert(meter)),
-  middleDistance(chassisScales.middleWheelDistance.convert(meter)) {}
+  middleDistance(chassisScales.middleWheelDistance.convert(meter)),
+  logger(ilogger) {}
+
+const State& CustomOdometry::getState() const {
+  return state;
+}
+
+void CustomOdometry::setState(const State& istate) {
+  state = istate;
+}
+
+void CustomOdometry::resetState() {
+  state = {0_in, 0_in, 0_deg};
+}
+
+void CustomOdometry::reset() {
+  model->resetSensors();
+  lastTicks = {0, 0, 0};
+  resetState();
+}
+
+void CustomOdometry::setScales(const ChassisScales& ichassisScales) {
+  chassisScales = ichassisScales;
+  chassisWidth = chassisScales.wheelTrack.convert(meter);
+  middleDistance = chassisScales.middleWheelDistance.convert(meter);
+}
 
 /**
  * Odometry algorithm provided courtesy of the pilons from team 5225A
  */
 void CustomOdometry::step() {
+
   auto newTicks = model->getSensorVals();
+
+  if (newTicks.size() < 3) {
+    std::string msg("CustomOdometry::step: The model does not contain three encoders");
+    LOG_ERROR(msg);
+    throw std::runtime_error(msg);
+  }
 
   double L = (newTicks[0] - lastTicks[0]) /
              chassisScales.straight; // The amount the left side of the robot moved
@@ -57,22 +91,8 @@ void CustomOdometry::step() {
   state.theta += a * radian;
 }
 
-const State& CustomOdometry::getState() const {
-  return state;
-}
-
-void CustomOdometry::setState(const State& istate) {
-  state = istate;
-}
-
-void CustomOdometry::resetState() {
-  state = {0_in, 0_in, 0_deg};
-}
-
-void CustomOdometry::reset() {
-  model->resetSensors();
-  lastTicks = {0, 0, 0};
-  resetState();
+std::shared_ptr<ReadOnlyChassisModel> CustomOdometry::getModel() {
+  return model;
 }
 
 void CustomOdometry::loop() {
