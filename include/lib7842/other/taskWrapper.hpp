@@ -4,7 +4,7 @@
 namespace lib7842 {
 class TaskWrapper {
 protected:
-  TaskWrapper() = default;
+  TaskWrapper(std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
   virtual ~TaskWrapper() = default;
 
   /**
@@ -28,6 +28,9 @@ public:
    */
   virtual std::string getName();
 
+protected:
+  std::shared_ptr<Logger> logger {nullptr};
+
 private:
   static void trampoline(void* iparam);
   std::unique_ptr<CrossplatformThread> task {nullptr};
@@ -38,7 +41,9 @@ public:
   /**
    * Automatically starts the task
    */
-  explicit EndlessTaskWrapper(const std::string& iname = "TaskWrapper");
+  explicit EndlessTaskWrapper(
+    const std::string& iname = "TaskWrapper",
+    std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
 
 private:
   using TaskWrapper::startTask;
