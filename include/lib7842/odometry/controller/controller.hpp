@@ -44,8 +44,8 @@ public:
 
   void driveDistance(const QLength& distance, const settleFunc_t& settleFunc = driveSettle);
 
-  // void driveToPoint(const Vector&, double = 1, const settleFunc_t& = driveSettle);
-  // void driveToPoint2(const Vector&, double = 1, const settleFunc_t& = driveSettle);
+  void driveToPoint(const Vector&, double = 1, const settleFunc_t& = driveSettle);
+  void driveToPoint2(const Vector&, double = 1, const settleFunc_t& = driveSettle);
 
   static settleFunc_t makeSettle(const QAngle&);
   static settleFunc_t makeSettle(const QLength&);
