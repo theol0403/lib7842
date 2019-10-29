@@ -2,6 +2,8 @@
 
 namespace lib7842 {
 
+using namespace lib7842::OdomMath;
+
 /**
   * Odom Controller
   */
@@ -62,29 +64,29 @@ QLength OdomController::distanceToPoint(const Vector& point) {
 /**
   * Settle Functions
   */
-Settler OdomController::makeSettle(const QAngle& threshold) {
-  return [=](OdomController* that) {
-    return that->angleErr.abs() < threshold;
+Settler OdomController::makeSettler(const QAngle& angle) {
+  return [=](OdomController* instance) {
+    return that->angleErr.abs() < angle;
   };
 }
 
-Settler OdomController::makeSettle(const QLength& threshold) {
-  return [=](OdomController* that) {
-    return that->distanceErr.abs() < threshold;
+Settler OdomController::makeSettler(const QLength& distance) {
+  return [=](OdomController* instance) {
+    return that->distanceErr.abs() < distance;
   };
 }
 
-Settler OdomController::makeSettle(const QLength& distanceThreshold, const QAngle& angleThreshold) {
-  return [=](OdomController* that) {
-    return that->distanceErr.abs() < distanceThreshold && that->angleErr.abs() < angleThreshold;
+Settler OdomController::makeSettler(const QLength& distance, const QAngle& angle) {
+  return [=](OdomController* instance) {
+    return that->distanceErr.abs() < distance && that->angleErr.abs() < angle;
   };
 }
 
-bool OdomController::turnSettle(OdomController* that) {
+bool OdomController::defaultTurnSettler(OdomController* instance) {
   return that->turnController->isSettled();
 }
 
-bool OdomController::driveSettle(OdomController* that) {
+bool OdomController::defaultDriveSettler(OdomController* instance) {
   return that->distanceController->isSettled() /*&& that->angleController->isSettled()*/;
 }
 

@@ -2,11 +2,13 @@
 
 namespace lib7842 {
 
-void OdomController::driveDistanceAtAngle(
+using namespace lib7842::OdomMath;
+
+void OdomController::moveDistanceAtAngle(
   const QLength& distance,
-  const AngleCalculator& turnCalc,
+  const AngleCalculator& angleCalculator,
   double turnScale,
-  const Settler& settleFunc) {
+  const Settler& settler) {
 
   resetPid();
   auto lastTicks = model->getSensorVals();
@@ -17,20 +19,20 @@ void OdomController::driveDistanceAtAngle(
     QLength rightDistance = ((newTicks[1] - lastTicks[1]) / odometry->getScales().straight) * meter;
 
     distanceErr = distance - ((leftDistance + rightDistance) / 2);
-    angleErr = turnCalc(this);
+    angleErr = angleCalculator(this);
 
     double distanceVel = distanceController->step(-distanceErr.convert(millimeter));
     double angleVel = angleController->step(-angleErr.convert(degree));
 
     driveVector(distanceVel, angleVel * turnScale);
     pros::delay(10);
-  } while (!settleFunc(this));
+  } while (!settler(this));
 
   driveVector(0, 0);
 }
 
-void OdomController::driveDistance(const QLength& distance, const Settler& settleFunc) {
-  driveDistanceAtAngle(distance, angleCalc(odometry->getState().theta), 1, settleFunc);
+void OdomController::moveDistance(const QLength& distance, const Settler& settler) {
+  moveDistanceAtAngle(distance, makeAngleCalculator(odometry->getState().theta), 1, settler);
 }
 
 } // namespace lib7842

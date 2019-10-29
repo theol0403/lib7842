@@ -2,62 +2,63 @@
 
 namespace lib7842 {
 
-void OdomController::pointTurn(OdomController* that, double turnVel) {
+using namespace lib7842::OdomMath;
+
+void OdomController::pointTurn(OdomController* instance, double turnVel) {
   that->model->rotate(turnVel);
 }
 
-void OdomController::leftPivot(OdomController* that, double turnVel) {
+void OdomController::leftPivot(OdomController* instance, double turnVel) {
   that->model->left(turnVel * 2);
 }
 
-void OdomController::rightPivot(OdomController* that, double turnVel) {
+void OdomController::rightPivot(OdomController* instance, double turnVel) {
   that->model->right(-turnVel * 2);
 }
 
-AngleCalculator OdomController::angleCalc(const QAngle& angle) {
+AngleCalculator OdomController::makeAngleCalculator(const QAngle& angle) {
   QAngle iangle = rollAngle180(angle);
-  return [=](OdomController* that) {
+  return [=](OdomController* instance) {
     return rollAngle180(iangle - that->odometry->getState().theta);
   };
 }
 
-AngleCalculator OdomController::angleCalc(const Vector& point) {
-  return [=](OdomController* that) {
+AngleCalculator OdomController::makeAngleCalculator(const Vector& point) {
+  return [=](OdomController* instance) {
     return that->angleToPoint(point);
   };
 }
 
-AngleCalculator OdomController::angleCalc() {
+AngleCalculator OdomController::makeAngleCalculator() {
   return [=](OdomController*) {
     return 0_deg;
   };
 }
 
 void OdomController::turn(
-  const AngleCalculator& turnCalc, const Turner& turnFunc, const Settler& settleFunc) {
+  const AngleCalculator& angleCalculator, const Turner& turner, const Settler& settler) {
   resetPid();
   do {
-    angleErr = turnCalc(this);
+    angleErr = angleCalculator(this);
     double turnVel = turnController->step(-angleErr.convert(degree));
-    turnFunc(this, turnVel);
+    turner(this, turnVel);
     pros::delay(10);
-  } while (!settleFunc(this));
-  turnFunc(this, 0);
+  } while (!settler(this));
+  turner(this, 0);
 }
 
 void OdomController::turnToAngle(
-  const QAngle& angle, const Turner& turnFunc, const Settler& settleFunc) {
-  turn(angleCalc(angle), turnFunc, settleFunc);
+  const QAngle& angle, const Turner& turner, const Settler& settler) {
+  turn(makeAngleCalculator(angle), turner, settler);
 }
 
-void OdomController::turnAngle(
-  const QAngle& angle, const Turner& turnFunc, const Settler& settleFunc) {
-  turn(angleCalc(angle + odometry->getState().theta), turnFunc, settleFunc);
+void OdomController::turnAngle(const QAngle& angle, const Turner& turner, const Settler& settler) {
+  turn(makeAngleCalculator(angle + odometry->getState().theta), turner, settler);
 }
 
 void OdomController::turnToPoint(
-  const Vector& point, const Turner& turnFunc, const Settler& settleFunc) {
-  turn(angleCalc(point), turnFunc, settleFunc);
+  const Vector& point, const Turner& turner, const Settler& settler) {
+  turn(makeAngleCalculator(point), turner, settler);
 }
 
 } // namespace lib7842
