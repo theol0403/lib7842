@@ -5,8 +5,8 @@ namespace lib7842 {
 namespace lib7842::OdomMath {
 
 Vector closest(const Vector& current, const QAngle& head, const Vector& target) {
-  Vector n =
-    Vector::normalize({sin(head.convert(radian)) * meter, cos(head.convert(radian)) * meter});
+  double headRad = head.convert(radian);
+  Vector n = Vector::normalize({sin(headRad) * meter, cos(headRad) * meter});
   Vector v = target - current;
   QArea d = Vector::dot(v, n);
   return current + (n * d.convert(meter2));
