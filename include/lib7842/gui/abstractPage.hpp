@@ -11,7 +11,7 @@ public:
   explicit AbstractPage(lv_obj_t* iparent, lv_color_t icolor);
 
   AbstractPage(const AbstractPage& ipath) = delete;
-  virtual ~AbstractPage() = default;
+  virtual ~AbstractPage();
 
   virtual void initialize() = 0;
   virtual void render() = 0;
@@ -19,10 +19,8 @@ public:
 
 protected:
   lv_obj_t* container;
+  lv_style_t cStyle;
   const lv_color_t themeColor;
-
-private:
-  lv_style_t style;
 };
 
 } // namespace lib7842

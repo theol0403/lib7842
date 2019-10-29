@@ -10,10 +10,14 @@ AbstractPage::AbstractPage(lv_obj_t* iparent, lv_color_t icolor) :
   lv_obj_set_size(container, lv_obj_get_width(iparent), lv_obj_get_height(iparent));
   lv_obj_align(container, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
 
-  lv_style_copy(&style, &lv_style_plain_color);
-  style.body.main_color = themeColor;
-  style.body.grad_color = themeColor;
-  lv_obj_set_style(container, &style);
+  lv_style_copy(&cStyle, &lv_style_plain_color);
+  cStyle.body.main_color = themeColor;
+  cStyle.body.grad_color = themeColor;
+  lv_obj_set_style(container, &cStyle);
+}
+
+AbstractPage::~AbstractPage() {
+  lv_obj_del(container);
 }
 
 } // namespace lib7842
