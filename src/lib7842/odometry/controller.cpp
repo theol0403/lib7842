@@ -9,13 +9,14 @@ OdomController::OdomController(
   std::shared_ptr<CustomOdometry> iodometry,
   std::unique_ptr<IterativePosPIDController> idistanceController,
   std::unique_ptr<IterativePosPIDController> iturnController,
-  std::unique_ptr<IterativePosPIDController> iangleController) :
+  std::unique_ptr<IterativePosPIDController> iangleController,
+  const QLength& isettleRadius) :
   model(std::move(imodel)),
   odometry(std::move(iodometry)),
   distanceController(std::move(idistanceController)),
   angleController(std::move(iangleController)),
   turnController(std::move(iturnController)),
-  pointRadius(1_ft) {};
+  settleRadius(isettleRadius) {};
 
 /**
  * Turning API
@@ -100,7 +101,7 @@ void OdomController::driveToPoint(
 
     QLength distanceToTarget = distanceToPoint(targetPoint);
 
-    if (distanceToTarget.abs() < pointRadius) {
+    if (distanceToTarget.abs() < settleRadius) {
       angleErr = 0_deg;
       distanceErr = distanceToClose;
     } else {
@@ -124,7 +125,7 @@ void OdomController::driveToPoint(
 void OdomController::driveToPoint2(
   const Vector& targetPoint, double turnScale, const Settler& settler) {
   resetPid();
-  Settler exitFunc = makeSettler(pointRadius);
+  Settler exitFunc = makeSettler(settleRadius);
   do {
     angleErr = angleToPoint(targetPoint);
     distanceErr = distanceToPoint(targetPoint);

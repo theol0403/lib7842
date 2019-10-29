@@ -36,13 +36,15 @@ public:
    * @param idistanceController The distance pid controller
    * @param iturnController     The turning pid controller
    * @param iangleController    The angle pid controller, used to keep distance driving straight
+   * @param isettleRadius        The radius from the target point to give up angle correction
    */
   OdomController(
     std::shared_ptr<ChassisModel> imodel,
     std::shared_ptr<CustomOdometry> iodometry,
     std::unique_ptr<IterativePosPIDController> idistanceController,
     std::unique_ptr<IterativePosPIDController> iturnController,
-    std::unique_ptr<IterativePosPIDController> iangleController);
+    std::unique_ptr<IterativePosPIDController> iangleController,
+    const QLength& isettleRadius = 6_in);
 
   virtual ~OdomController() = default;
 
@@ -53,7 +55,7 @@ public:
    * @param turner          The turner
    * @param settler         The settler
    */
-  void turn(
+  virtual void turn(
     const AngleCalculator& angleCalculator,
     const Turner& turner = pointTurn,
     const Settler& settler = defaultTurnSettler);
@@ -65,7 +67,7 @@ public:
    * @param turner  The turner
    * @param settler The settler
    */
-  void turnToAngle(
+  virtual void turnToAngle(
     const QAngle& angle,
     const Turner& turner = pointTurn,
     const Settler& settler = defaultTurnSettler);
@@ -77,7 +79,7 @@ public:
    * @param turner  The turner
    * @param settler The settler
    */
-  void turnAngle(
+  virtual void turnAngle(
     const QAngle& angle,
     const Turner& turner = pointTurn,
     const Settler& settler = defaultTurnSettler);
@@ -89,7 +91,7 @@ public:
    * @param turner  The turner
    * @param settler The settler
    */
-  void turnToPoint(
+  virtual void turnToPoint(
     const Vector& point,
     const Turner& turner = pointTurn,
     const Settler& settler = defaultTurnSettler);
@@ -102,7 +104,7 @@ public:
    * @param turnScale       The turn scale
    * @param settler         The settler
    */
-  void moveDistanceAtAngle(
+  virtual void moveDistanceAtAngle(
     const QLength& distance,
     const AngleCalculator& angleCalculator,
     double turnScale,
@@ -114,7 +116,7 @@ public:
    * @param distance The distance
    * @param settler  The settler
    */
-  void moveDistance(const QLength& distance, const Settler& settler = defaultDriveSettler);
+  virtual void moveDistance(const QLength& distance, const Settler& settler = defaultDriveSettler);
 
   /**
    * Drive to a point using custom point seeking
@@ -124,7 +126,7 @@ public:
    *                    the robot turn to face the point sooner
    * @param settler     The settler
    */
-  void driveToPoint(
+  virtual void driveToPoint(
     const Vector& targetPoint, double turnScale = 1, const Settler& settler = defaultDriveSettler);
 
   /**
@@ -135,7 +137,7 @@ public:
    *                    the robot turn to face the point sooner
    * @param settler     The settler
    */
-  void driveToPoint2(
+  virtual void driveToPoint2(
     const Vector& targetPoint, double turnScale = 1, const Settler& settler = defaultDriveSettler);
 
   /**
@@ -231,8 +233,7 @@ protected:
   std::unique_ptr<IterativePosPIDController> distanceController {nullptr};
   std::unique_ptr<IterativePosPIDController> angleController {nullptr};
   std::unique_ptr<IterativePosPIDController> turnController {nullptr};
-
-  const QLength pointRadius; //radius to point before slowing down and ignoring angle
+  const QLength settleRadius;
 
   QAngle angleErr = 0_deg;
   QLength distanceErr = 0_in;
