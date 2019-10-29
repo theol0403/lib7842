@@ -11,19 +11,19 @@ class OdomController;
  * Function that returns true to end chassis movement
  * Used to implement different settling methods
  */
-using Settler = std::function<bool(OdomController* instance)>;
+using Settler = std::function<bool(const OdomController& odom)>;
 
 /**
  * Function that accepts a turning velocity and controls excecution to the chassis
  * Used to implement a point or pivot turn
  */
-using Turner = std::function<void(OdomController* instance, double vel)>;
+using Turner = std::function<void(ChassisModel& model, double vel)>;
 
 /**
  * Function that returns an angle for the chassis to seek
  * Examples can be an AngleCalculator that returns the angle to a point, or an angle to an absolute angle
  */
-using AngleCalculator = std::function<QAngle(OdomController* instance)>;
+using AngleCalculator = std::function<QAngle(const OdomController& odom)>;
 
 class OdomController {
 
@@ -139,6 +139,31 @@ public:
     const Vector& targetPoint, double turnScale = 1, const Settler& settler = defaultDriveSettler);
 
   /**
+   * A Settler that is used for turning which uses the turning pid's isSettled() method
+   */
+  static bool defaultTurnSettler(const OdomController& odom);
+
+  /**
+   * A Settler that is used for driving which uses the distance pid's isSettled() method
+   */
+  static bool defaultDriveSettler(const OdomController& odom);
+
+  /**
+   * A Turner that excecutes a point turn which turns in place. Used as default for turn functions
+   */
+  static void pointTurn(ChassisModel& model, double vel);
+
+  /**
+   * A Turner that excecutes a left pivot, meaning it only moves the left motors.
+   */
+  static void leftPivot(ChassisModel& model, double vel);
+
+  /**
+   * A Turner that excecutes a right pivot, meaning it only moves the right motors.
+   */
+  static void rightPivot(ChassisModel& model, double vel);
+
+  /**
    * Make a Settler that exits when angle error is within given range
    * @param angle The angle error theshold
    */
@@ -156,31 +181,6 @@ public:
    * @param distance The distance error theshold
    */
   static Settler makeSettler(const QLength& angle, const QAngle& distance);
-
-  /**
-   * A Settler that is used for turning which uses the turning pid's isSettled() method
-   */
-  static bool defaultTurnSettler(OdomController* instance);
-
-  /**
-   * A Settler that is used for driving which uses the distance pid's isSettled() method
-   */
-  static bool defaultDriveSettler(OdomController* instance);
-
-  /**
-   * A Turner that excecutes a point turn which turns in place. Used as the default for turning
-   */
-  static void pointTurn(OdomController* instance, double vel);
-
-  /**
-   * A Turner that excecutes a left pivot, meaning it only moves the left motors.
-   */
-  static void leftPivot(OdomController* instance, double vel);
-
-  /**
-   * A Turner that excecutes a right pivot, meaning it only moves the right motors.
-   */
-  static void rightPivot(OdomController* instance, double vel);
 
   /**
    * Generates an AngleCalculator that seeks a given absolute angle
@@ -219,12 +219,12 @@ protected:
   /**
    * Calculates angle from the chassis to the point
    */
-  QAngle angleToPoint(const Vector& point);
+  QAngle angleToPoint(const Vector& point) const;
 
   /**
    * Calculates distance from the chassis to the point
    */
-  QLength distanceToPoint(const Vector& point);
+  QLength distanceToPoint(const Vector& point) const;
 
   std::shared_ptr<ChassisModel> model {nullptr};
   std::shared_ptr<CustomOdometry> odometry {nullptr};
