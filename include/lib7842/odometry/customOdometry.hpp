@@ -58,6 +58,11 @@ public:
   std::shared_ptr<ReadOnlyChassisModel> getModel() override;
 
   /**
+   * @return The internal ChassisScales.
+   */
+  virtual const ChassisScales& getScales();
+
+  /**
    * Odometry calculation loop
    */
   virtual void loop() override;
