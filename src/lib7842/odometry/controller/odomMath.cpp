@@ -26,12 +26,12 @@ QAngle rollAngle180(const QAngle& angle) {
 }
 
 QAngle rollAngle90(const QAngle& angle) {
-  angle = rollAngle180(angle);
-  if (angle.abs() > 90_deg) {
-    angle += 180_deg;
-    angle = rollAngle180(angle);
+  QAngle iangle = rollAngle180(angle);
+  if (iangle.abs() > 90_deg) {
+    iangle += 180_deg;
+    iangle = rollAngle180(angle);
   }
-  return angle;
+  return iangle;
 }
 
 } // namespace lib7842::OdomMath

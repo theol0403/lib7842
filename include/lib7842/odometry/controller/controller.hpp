@@ -31,10 +31,10 @@ public:
   QAngle angleToPoint(const Vector& point);
   QLength distanceToPoint(const Vector& point);
 
-  void turn(angleCalc_t, turnFunc_t = pointTurn, settleFunc_t = turnSettle);
-  void turnToAngle(QAngle, turnFunc_t = pointTurn, settleFunc_t = turnSettle);
-  void turnAngle(QAngle, turnFunc_t = pointTurn, settleFunc_t = turnSettle);
-  void turnToPoint(Vector, turnFunc_t = pointTurn, settleFunc_t = turnSettle);
+  void turn(const angleCalc_t&, const turnFunc_t& = pointTurn, const settleFunc_t& = turnSettle);
+  void turnToAngle(const QAngle&, const turnFunc_t& = pointTurn, const settleFunc_t& = turnSettle);
+  void turnAngle(const QAngle&, const turnFunc_t& = pointTurn, const settleFunc_t& = turnSettle);
+  void turnToPoint(const Vector&, const turnFunc_t& = pointTurn, const settleFunc_t& = turnSettle);
 
   void driveDistanceAtAngle(
     const QLength& distance,
@@ -42,14 +42,14 @@ public:
     double turnScale,
     const settleFunc_t& settleFunc = driveSettle);
 
-  void driveDistance(QLength distance, settleFunc_t settleFunc = driveSettle);
+  void driveDistance(const QLength& distance, const settleFunc_t& settleFunc = driveSettle);
 
-  void driveToPoint(Vector, double = 1, settleFunc_t = driveSettle);
-  void driveToPoint2(Vector, double = 1, settleFunc_t = driveSettle);
+  void driveToPoint(const Vector&, double = 1, const settleFunc_t& = driveSettle);
+  void driveToPoint2(const Vector&, double = 1, const settleFunc_t& = driveSettle);
 
-  static settleFunc_t makeSettle(QAngle);
-  static settleFunc_t makeSettle(QLength);
-  static settleFunc_t makeSettle(QLength, QAngle);
+  static settleFunc_t makeSettle(const QAngle&);
+  static settleFunc_t makeSettle(const QLength&);
+  static settleFunc_t makeSettle(const QLength&, const QAngle&);
   static bool turnSettle(OdomController*);
   static bool driveSettle(OdomController*);
 
@@ -57,8 +57,8 @@ public:
   static void leftPivot(OdomController*, double);
   static void rightPivot(OdomController*, double);
 
-  static angleCalc_t angleCalc(QAngle);
-  static angleCalc_t angleCalc(Vector);
+  static angleCalc_t angleCalc(const QAngle&);
+  static angleCalc_t angleCalc(const Vector&);
   static angleCalc_t angleCalc();
 
 protected:
