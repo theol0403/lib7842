@@ -3,6 +3,28 @@
 namespace lib7842 {
 
 void OdomDebug::initialize() {
+  initializeField();
+  initializeButton();
+  initializeText();
+}
+
+void OdomDebug::render() {
+  if (!odom) {
+    std::cerr << "OdomDebug::render: odom not attached" << std::endl;
+    return;
+  }
+  updateOdom();
+}
+
+void OdomDebug::attachOdom(const std::shared_ptr<Odometry>& iodom) {
+  odom = iodom;
+}
+
+void OdomDebug::attachResetter(const std::function<void()>& iresetter) {
+  resetter = iresetter;
+}
+
+void OdomDebug::initializeField() {
 
   /**
   * Field
@@ -97,65 +119,64 @@ void OdomDebug::initialize() {
   lineStyle.line.opa = LV_OPA_100;
   lineStyle.line.color = themeColor;
   lv_obj_set_style(line, &lineStyle);
+}
 
-  /**
-   * Status Label
-   */
+void OdomDebug::initializeText() {
   statusLabel = lv_label_create(container, NULL);
+
   lv_style_copy(&textStyle, &lv_style_plain);
   textStyle.text.color = LV_COLOR_WHITE;
   textStyle.text.opa = LV_OPA_100;
   lv_obj_set_style(statusLabel, &textStyle);
-  lv_label_set_text(statusLabel, "No Odom Data Provided");
+
+  lv_label_set_text(statusLabel, "No Odom Provided");
+
   lv_obj_align(
     statusLabel, container, LV_ALIGN_CENTER,
     -lv_obj_get_width(container) / 2 + (lv_obj_get_width(container) - fieldDim) / 2, 0);
-
-  /**
-  * Reset Button
-  */
-  {
-    lv_obj_t* btn = lv_btn_create(container, NULL);
-    lv_obj_set_size(btn, 100, 40);
-    lv_obj_align(
-      btn, NULL, LV_ALIGN_IN_TOP_MID,
-      -lv_obj_get_width(container) / 2 + (lv_obj_get_width(container) - fieldDim) / 2, 0);
-    lv_obj_set_free_ptr(btn, this);
-    lv_btn_set_action(btn, LV_BTN_ACTION_PR, resetAction);
-
-    /**
-     * Button Style
-     */
-    lv_style_copy(&resetRel, &lv_style_btn_tgl_rel);
-    resetRel.body.main_color = themeColor;
-    resetRel.body.grad_color = themeColor;
-    resetRel.body.border.color = LV_COLOR_WHITE;
-    resetRel.body.border.width = 2;
-    resetRel.body.border.opa = LV_OPA_100;
-    resetRel.body.radius = 2;
-    resetRel.text.color = LV_COLOR_WHITE;
-
-    lv_style_copy(&resetPr, &resetRel);
-    resetPr.body.main_color = LV_COLOR_WHITE;
-    resetPr.body.grad_color = LV_COLOR_WHITE;
-    resetPr.text.color = themeColor;
-
-    lv_btn_set_style(btn, LV_BTN_STYLE_REL, &resetRel);
-    lv_btn_set_style(btn, LV_BTN_STYLE_PR, &resetPr);
-
-    /**
-    * Reset Button Label
-    */
-    lv_obj_t* label = lv_label_create(btn, NULL);
-    lv_obj_set_style(label, &textStyle);
-    lv_label_set_text(label, "Reset");
-  }
 }
 
-void OdomDebug::render() {
+void OdomDebug::initializeButton() {
+  /**
+  * Button
+  */
+  lv_obj_t* btn = lv_btn_create(container, NULL);
+  lv_obj_set_size(btn, 100, 40);
+  lv_obj_align(
+    btn, NULL, LV_ALIGN_IN_TOP_MID,
+    -lv_obj_get_width(container) / 2 + (lv_obj_get_width(container) - fieldDim) / 2, 0);
+  lv_obj_set_free_ptr(btn, this);
+  lv_btn_set_action(btn, LV_BTN_ACTION_PR, resetAction);
 
-  if (!odom) { std::cerr << "OdomDebug::render: odom not attached" << std::endl; }
+  /**
+   * Style
+   */
+  lv_style_copy(&resetRel, &lv_style_btn_tgl_rel);
+  resetRel.body.main_color = themeColor;
+  resetRel.body.grad_color = themeColor;
+  resetRel.body.border.color = LV_COLOR_WHITE;
+  resetRel.body.border.width = 2;
+  resetRel.body.border.opa = LV_OPA_100;
+  resetRel.body.radius = 2;
+  resetRel.text.color = LV_COLOR_WHITE;
 
+  lv_style_copy(&resetPr, &resetRel);
+  resetPr.body.main_color = LV_COLOR_WHITE;
+  resetPr.body.grad_color = LV_COLOR_WHITE;
+  resetPr.text.color = themeColor;
+
+  lv_btn_set_style(btn, LV_BTN_STYLE_REL, &resetRel);
+  lv_btn_set_style(btn, LV_BTN_STYLE_PR, &resetPr);
+
+  /**
+   * Reset Button Label
+   */
+  lv_obj_t* label = lv_label_create(btn, NULL);
+  lv_obj_set_style(label, &textStyle);
+  lv_label_set_text(label, "Reset");
+}
+
+void OdomDebug::updateOdom() {
   OdomState state = odom->getState(StateMode::CARTESIAN);
 
   // position in court units
@@ -192,14 +213,6 @@ void OdomDebug::render() {
     -lv_obj_get_width(container) / 2 + (lv_obj_get_width(container) - fieldDim) / 2, 0);
 }
 
-void OdomDebug::attachOdom(const std::shared_ptr<Odometry>& iodom) {
-  odom = iodom;
-}
-
-void OdomDebug::useResetter(const std::function<void()>& iresetter) {
-  resetter = iresetter;
-}
-
 /**
  * Sets odom state when tile is pressed
  * Decodes tile ID to find position
@@ -222,10 +235,11 @@ lv_res_t OdomDebug::tileAction(lv_obj_t* tileObj) {
  */
 lv_res_t OdomDebug::resetAction(lv_obj_t* btn) {
   OdomDebug* that = static_cast<OdomDebug*>(lv_obj_get_free_ptr(btn));
-  if (that->resetter)
+  if (that->resetter) {
     that->resetter();
-  else
+  } else {
     that->odom->setState({0_in, 0_in, 0_deg});
+  }
   return LV_RES_OK;
 }
 

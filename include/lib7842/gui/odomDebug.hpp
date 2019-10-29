@@ -12,7 +12,6 @@ public:
 
   void initialize() override;
   void render() override;
-  void destroy() override;
 
   /**
    * Attach the odom for reading
@@ -26,13 +25,19 @@ public:
    * The default resetter is only able to reset the state, not the sensors
    * @param callback a function that resets the odometry and sensors
    */
-  void useResetter(const std::function<void()>& iresetter);
+  void attachResetter(const std::function<void()>& iresetter);
 
 protected:
   std::shared_ptr<Odometry> odom {nullptr};
   std::function<void()> resetter {nullptr};
 
 private:
+  void initializeField();
+  void initializeText();
+  void initializeButton();
+
+  void updateOdom();
+
   // field
   lv_style_t fStyle;
   double fieldDim = 0; // width and height of field container
