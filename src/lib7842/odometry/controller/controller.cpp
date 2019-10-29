@@ -66,28 +66,28 @@ QLength OdomController::distanceToPoint(const Vector& point) {
   */
 Settler OdomController::makeSettler(const QAngle& angle) {
   return [=](OdomController* instance) {
-    return that->angleErr.abs() < angle;
+    return instance->angleErr.abs() < angle;
   };
 }
 
 Settler OdomController::makeSettler(const QLength& distance) {
   return [=](OdomController* instance) {
-    return that->distanceErr.abs() < distance;
+    return instance->distanceErr.abs() < distance;
   };
 }
 
 Settler OdomController::makeSettler(const QLength& distance, const QAngle& angle) {
   return [=](OdomController* instance) {
-    return that->distanceErr.abs() < distance && that->angleErr.abs() < angle;
+    return instance->distanceErr.abs() < distance && instance->angleErr.abs() < angle;
   };
 }
 
 bool OdomController::defaultTurnSettler(OdomController* instance) {
-  return that->turnController->isSettled();
+  return instance->turnController->isSettled();
 }
 
 bool OdomController::defaultDriveSettler(OdomController* instance) {
-  return that->distanceController->isSettled() /*&& that->angleController->isSettled()*/;
+  return instance->distanceController->isSettled() /*&& instance->angleController->isSettled()*/;
 }
 
 } // namespace lib7842

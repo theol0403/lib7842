@@ -5,27 +5,27 @@ namespace lib7842 {
 using namespace lib7842::OdomMath;
 
 void OdomController::pointTurn(OdomController* instance, double turnVel) {
-  that->model->rotate(turnVel);
+  instance->model->rotate(turnVel);
 }
 
 void OdomController::leftPivot(OdomController* instance, double turnVel) {
-  that->model->left(turnVel * 2);
+  instance->model->left(turnVel * 2);
 }
 
 void OdomController::rightPivot(OdomController* instance, double turnVel) {
-  that->model->right(-turnVel * 2);
+  instance->model->right(-turnVel * 2);
 }
 
 AngleCalculator OdomController::makeAngleCalculator(const QAngle& angle) {
   QAngle iangle = rollAngle180(angle);
   return [=](OdomController* instance) {
-    return rollAngle180(iangle - that->odometry->getState().theta);
+    return rollAngle180(iangle - instance->odometry->getState().theta);
   };
 }
 
 AngleCalculator OdomController::makeAngleCalculator(const Vector& point) {
   return [=](OdomController* instance) {
-    return that->angleToPoint(point);
+    return instance->angleToPoint(point);
   };
 }
 
