@@ -4,8 +4,8 @@ namespace lib7842 {
 
 void OdomDebug::initialize() {
   initializeField();
-  initializeButton();
   initializeText();
+  initializeButton();
 }
 
 void OdomDebug::render() {
@@ -222,11 +222,12 @@ lv_res_t OdomDebug::tileAction(lv_obj_t* tileObj) {
   int num = lv_obj_get_free_num(tileObj);
   int y = num / 6;
   int x = num - y * 6;
-  if (that->odom)
+  if (that->odom) {
     that->odom->setState(
       {x * tile + 0.5_tl, 1_crt - y * tile - 0.5_tl, 0_deg}, StateMode::CARTESIAN);
-  else
-    std::cout << "OdomDebug: No tile action callback provided";
+  } else {
+    std::cout << "OdomDebug: No odom provided for setState" << std::endl;
+  }
   return LV_RES_OK;
 }
 
@@ -238,7 +239,12 @@ lv_res_t OdomDebug::resetAction(lv_obj_t* btn) {
   if (that->resetter) {
     that->resetter();
   } else {
-    that->odom->setState({0_in, 0_in, 0_deg});
+    if (that->odom) {
+      std::cout << "OdomDebug: Using default resetter, can't reset sensors" << std::endl;
+      that->odom->setState({0_in, 0_in, 0_deg});
+    } else {
+      std::cout << "OdomDebug: No odom provided for reset" << std::endl;
+    }
   }
   return LV_RES_OK;
 }
