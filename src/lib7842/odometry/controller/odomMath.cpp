@@ -4,18 +4,17 @@ namespace lib7842 {
 
 namespace lib7842::OdomMath {
 
-// dPoint closest(const dPoint& current, const dPoint& head, const dPoint& target) {
-//   dPoint n = normalize(head);
-//   dPoint v = sub(target, current);
-//   double d = dot(v.x, v.y, n.x, n.y);
-//   return add(current, multScalar(n, d));
-// }
+Vector closest(const Vector& current, const QAngle& head, const Vector& target) {
+  Vector n =
+    Vector::normalize({sin(head.convert(radian)) * meter, cos(head.convert(radian)) * meter});
+  Vector v = target - current;
+  QArea d = Vector::dot(v, n);
+  return current + (n * d.convert(meter2));
+}
 
-// Vector closest(const Vector& current, const Vector& target) {
-//   return closest(
-//     current, dPoint {sin(current.theta.convert(radian)), cos(current.theta.convert(radian))},
-//     target);
-// }
+Vector closest(const State& state, const Vector& target) {
+  return closest(state, state.theta, target);
+}
 
 QAngle rollAngle360(const QAngle& angle) {
   return angle - 360.0_deg * std::floor(angle.convert(degree) * (1.0 / 360.0));

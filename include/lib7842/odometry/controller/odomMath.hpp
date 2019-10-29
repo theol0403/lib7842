@@ -1,13 +1,14 @@
 #pragma once
 #include "main.h"
 #include "lib7842/positioning/point/vector.hpp"
+#include "lib7842/positioning/point/state.hpp"
 
 namespace lib7842 {
 
 namespace lib7842::OdomMath {
 
-// dPoint closest(const dPoint&, const dPoint&, const dPoint&);
-// Vector closest(const Vector&, const Vector&);
+Vector closest(const Vector&, const Vector&, const Vector&);
+Vector closest(const State&, const Vector&);
 
 QAngle rollAngle360(const QAngle&);
 QAngle rollAngle180(const QAngle&);
