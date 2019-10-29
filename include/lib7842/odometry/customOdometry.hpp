@@ -60,7 +60,7 @@ public:
   /**
    * @return The internal ChassisScales.
    */
-  virtual const ChassisScales& getScales();
+  virtual const ChassisScales& getScales() const;
 
   /**
    * Odometry calculation loop
