@@ -4,9 +4,9 @@ namespace lib7842 {
 
 void OdomController::driveDistanceAtAngle(
   const QLength& distance,
-  const angleCalc_t& turnCalc,
+  const AngleCalculator& turnCalc,
   double turnScale,
-  const settleFunc_t& settleFunc) {
+  const Settler& settleFunc) {
 
   resetPid();
   auto lastTicks = model->getSensorVals();
@@ -29,7 +29,7 @@ void OdomController::driveDistanceAtAngle(
   driveVector(0, 0);
 }
 
-void OdomController::driveDistance(const QLength& distance, const settleFunc_t& settleFunc) {
+void OdomController::driveDistance(const QLength& distance, const Settler& settleFunc) {
   driveDistanceAtAngle(distance, angleCalc(odometry->getState().theta), 1, settleFunc);
 }
 

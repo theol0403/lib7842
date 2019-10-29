@@ -62,20 +62,19 @@ QLength OdomController::distanceToPoint(const Vector& point) {
 /**
   * Settle Functions
   */
-settleFunc_t OdomController::makeSettle(const QAngle& threshold) {
+Settler OdomController::makeSettle(const QAngle& threshold) {
   return [=](OdomController* that) {
     return that->angleErr.abs() < threshold;
   };
 }
 
-settleFunc_t OdomController::makeSettle(const QLength& threshold) {
+Settler OdomController::makeSettle(const QLength& threshold) {
   return [=](OdomController* that) {
     return that->distanceErr.abs() < threshold;
   };
 }
 
-settleFunc_t
-  OdomController::makeSettle(const QLength& distanceThreshold, const QAngle& angleThreshold) {
+Settler OdomController::makeSettle(const QLength& distanceThreshold, const QAngle& angleThreshold) {
   return [=](OdomController* that) {
     return that->distanceErr.abs() < distanceThreshold && that->angleErr.abs() < angleThreshold;
   };

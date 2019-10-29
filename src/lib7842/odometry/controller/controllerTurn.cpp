@@ -14,27 +14,27 @@ void OdomController::rightPivot(OdomController* that, double turnVel) {
   that->model->right(-turnVel * 2);
 }
 
-angleCalc_t OdomController::angleCalc(const QAngle& angle) {
+AngleCalculator OdomController::angleCalc(const QAngle& angle) {
   QAngle iangle = rollAngle180(angle);
   return [=](OdomController* that) {
     return rollAngle180(iangle - that->odometry->getState().theta);
   };
 }
 
-angleCalc_t OdomController::angleCalc(const Vector& point) {
+AngleCalculator OdomController::angleCalc(const Vector& point) {
   return [=](OdomController* that) {
     return that->angleToPoint(point);
   };
 }
 
-angleCalc_t OdomController::angleCalc() {
+AngleCalculator OdomController::angleCalc() {
   return [=](OdomController*) {
     return 0_deg;
   };
 }
 
 void OdomController::turn(
-  const angleCalc_t& turnCalc, const turnFunc_t& turnFunc, const settleFunc_t& settleFunc) {
+  const AngleCalculator& turnCalc, const Turner& turnFunc, const Settler& settleFunc) {
   resetPid();
   do {
     angleErr = turnCalc(this);
@@ -46,17 +46,17 @@ void OdomController::turn(
 }
 
 void OdomController::turnToAngle(
-  const QAngle& angle, const turnFunc_t& turnFunc, const settleFunc_t& settleFunc) {
+  const QAngle& angle, const Turner& turnFunc, const Settler& settleFunc) {
   turn(angleCalc(angle), turnFunc, settleFunc);
 }
 
 void OdomController::turnAngle(
-  const QAngle& angle, const turnFunc_t& turnFunc, const settleFunc_t& settleFunc) {
+  const QAngle& angle, const Turner& turnFunc, const Settler& settleFunc) {
   turn(angleCalc(angle + odometry->getState().theta), turnFunc, settleFunc);
 }
 
 void OdomController::turnToPoint(
-  const Vector& point, const turnFunc_t& turnFunc, const settleFunc_t& settleFunc) {
+  const Vector& point, const Turner& turnFunc, const Settler& settleFunc) {
   turn(angleCalc(point), turnFunc, settleFunc);
 }
 

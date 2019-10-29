@@ -7,9 +7,9 @@ namespace lib7842 {
 
 class OdomController;
 
-using settleFunc_t = std::function<bool(OdomController* instance)>;
-using turnFunc_t = std::function<void(OdomController* instance, double vel)>;
-using angleCalc_t = std::function<QAngle(OdomController* instance)>;
+using Settler = std::function<bool(OdomController* instance)>;
+using Turner = std::function<void(OdomController* instance, double vel)>;
+using AngleCalculator = std::function<QAngle(OdomController* instance)>;
 
 using namespace lib7842::OdomMath;
 
@@ -31,25 +31,25 @@ public:
   QAngle angleToPoint(const Vector& point);
   QLength distanceToPoint(const Vector& point);
 
-  void turn(const angleCalc_t&, const turnFunc_t& = pointTurn, const settleFunc_t& = turnSettle);
-  void turnToAngle(const QAngle&, const turnFunc_t& = pointTurn, const settleFunc_t& = turnSettle);
-  void turnAngle(const QAngle&, const turnFunc_t& = pointTurn, const settleFunc_t& = turnSettle);
-  void turnToPoint(const Vector&, const turnFunc_t& = pointTurn, const settleFunc_t& = turnSettle);
+  void turn(const AngleCalculator&, const Turner& = pointTurn, const Settler& = turnSettle);
+  void turnToAngle(const QAngle&, const Turner& = pointTurn, const Settler& = turnSettle);
+  void turnAngle(const QAngle&, const Turner& = pointTurn, const Settler& = turnSettle);
+  void turnToPoint(const Vector&, const Turner& = pointTurn, const Settler& = turnSettle);
 
   void driveDistanceAtAngle(
     const QLength& distance,
-    const angleCalc_t& turnCalc,
+    const AngleCalculator& turnCalc,
     double turnScale,
-    const settleFunc_t& settleFunc = driveSettle);
+    const Settler& settleFunc = driveSettle);
 
-  void driveDistance(const QLength& distance, const settleFunc_t& settleFunc = driveSettle);
+  void driveDistance(const QLength& distance, const Settler& settleFunc = driveSettle);
 
-  void driveToPoint(const Vector&, double = 1, const settleFunc_t& = driveSettle);
-  void driveToPoint2(const Vector&, double = 1, const settleFunc_t& = driveSettle);
+  void driveToPoint(const Vector&, double = 1, const Settler& = driveSettle);
+  void driveToPoint2(const Vector&, double = 1, const Settler& = driveSettle);
 
-  static settleFunc_t makeSettle(const QAngle&);
-  static settleFunc_t makeSettle(const QLength&);
-  static settleFunc_t makeSettle(const QLength&, const QAngle&);
+  static Settler makeSettle(const QAngle&);
+  static Settler makeSettle(const QLength&);
+  static Settler makeSettle(const QLength&, const QAngle&);
   static bool turnSettle(OdomController*);
   static bool driveSettle(OdomController*);
 
@@ -57,9 +57,9 @@ public:
   static void leftPivot(OdomController*, double);
   static void rightPivot(OdomController*, double);
 
-  static angleCalc_t angleCalc(const QAngle&);
-  static angleCalc_t angleCalc(const Vector&);
-  static angleCalc_t angleCalc();
+  static AngleCalculator angleCalc(const QAngle&);
+  static AngleCalculator angleCalc(const Vector&);
+  static AngleCalculator angleCalc();
 
 protected:
   std::shared_ptr<ChassisModel> model {nullptr};

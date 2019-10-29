@@ -3,7 +3,7 @@
 namespace lib7842 {
 
 void OdomController::driveToPoint(
-  const Vector& targetPoint, double turnScale, const settleFunc_t& settleFunc) {
+  const Vector& targetPoint, double turnScale, const Settler& settleFunc) {
   resetPid();
   QAngle lastTarget = odometry->getState().theta;
   do {
@@ -41,9 +41,9 @@ void OdomController::driveToPoint(
 }
 
 void OdomController::driveToPoint2(
-  const Vector& targetPoint, double turnScale, const settleFunc_t& settleFunc) {
+  const Vector& targetPoint, double turnScale, const Settler& settleFunc) {
   resetPid();
-  settleFunc_t exitFunc = makeSettle(pointRadius);
+  Settler exitFunc = makeSettle(pointRadius);
   do {
     angleErr = angleToPoint(targetPoint);
     distanceErr = distanceToPoint(targetPoint);
