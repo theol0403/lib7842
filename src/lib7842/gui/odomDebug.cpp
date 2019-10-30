@@ -9,11 +9,11 @@ void OdomDebug::initialize() {
 }
 
 void OdomDebug::render() {
-  if (!odom) {
+  if (odom) {
+    updateOdom();
+  } else {
     std::cerr << "OdomDebug::render: odom not attached" << std::endl;
-    return;
   }
-  updateOdom();
 }
 
 void OdomDebug::attachOdom(const std::shared_ptr<Odometry>& iodom) {
@@ -93,7 +93,7 @@ void OdomDebug::initializeField() {
    */
   led = lv_led_create(field, NULL);
   lv_led_on(led);
-  lv_obj_set_size(led, fieldDim / 15, fieldDim / 15);
+  lv_obj_set_size(led, fieldDim / 15.0, fieldDim / 15.0);
 
   lv_style_copy(&ledStyle, &lv_style_plain);
   ledStyle.body.radius = LV_RADIUS_CIRCLE;
@@ -111,7 +111,6 @@ void OdomDebug::initializeField() {
   lv_line_set_points(line, linePoints.data(), linePoints.size());
   lv_obj_set_pos(line, 0, 0);
 
-  lineWidth = 3;
   lineLength = fieldDim / 6;
 
   lv_style_copy(&lineStyle, &lv_style_plain);
@@ -133,7 +132,7 @@ void OdomDebug::initializeText() {
 
   lv_obj_align(
     statusLabel, container, LV_ALIGN_CENTER,
-    -lv_obj_get_width(container) / 2 + (lv_obj_get_width(container) - fieldDim) / 2, 0);
+    -lv_obj_get_width(container) / 2.0 + (lv_obj_get_width(container) - fieldDim) / 2.0, 0);
 }
 
 void OdomDebug::initializeButton() {
@@ -144,7 +143,7 @@ void OdomDebug::initializeButton() {
   lv_obj_set_size(btn, 100, 40);
   lv_obj_align(
     btn, NULL, LV_ALIGN_IN_TOP_MID,
-    -lv_obj_get_width(container) / 2 + (lv_obj_get_width(container) - fieldDim) / 2, 0);
+    -lv_obj_get_width(container) / 2.0 + (lv_obj_get_width(container) - fieldDim) / 2.0, 0);
   lv_obj_set_free_ptr(btn, this);
   lv_btn_set_action(btn, LV_BTN_ACTION_PR, resetAction);
 
@@ -186,14 +185,14 @@ void OdomDebug::updateOdom() {
 
   // place point on field
   lv_obj_set_pos(
-    led, (c_x * fieldDim) - lv_obj_get_width(led) / 2,
-    (c_y * fieldDim) - lv_obj_get_height(led) / 2 - 1);
+    led, (c_x * fieldDim) - lv_obj_get_width(led) / 2.0,
+    (c_y * fieldDim) - lv_obj_get_height(led) / 2.0 - 1.0);
 
   // move start and end of line
-  linePoints[0] = {(int16_t)((c_x * fieldDim)), (int16_t)((c_y * fieldDim) - (lineWidth / 2))};
+  linePoints.at(0) = {(int16_t)((c_x * fieldDim)), (int16_t)((c_y * fieldDim) - (3.0 / 2.0))};
   double newY = lineLength * cos(c_theta);
   double newX = lineLength * sin(c_theta);
-  linePoints[1] = {(int16_t)(newX + linePoints[0].x), (int16_t)(-newY + linePoints[0].y)};
+  linePoints.at(1) = {(int16_t)(newX + linePoints.at(0).x), (int16_t)(-newY + linePoints.at(0).y)};
 
   lv_line_set_points(line, linePoints.data(), linePoints.size());
   lv_obj_invalidate(line);
@@ -205,12 +204,14 @@ void OdomDebug::updateOdom() {
                      "Theta_deg: " + std::to_string(state.theta.convert(degree)) + "\n" +
                      "Left: " + std::to_string(sensors[0]) + "\n" +
                      "Right: " + std::to_string(sensors[1]);
-  if (sensors.size() > 2) { text = text + "\n" + "Middle: " + std::to_string(sensors[2]); }
+
+  if (sensors.size() > 2) text = text + "\n" + "Middle: " + std::to_string(sensors[2]);
 
   lv_label_set_text(statusLabel, text.c_str());
+
   lv_obj_align(
     statusLabel, container, LV_ALIGN_CENTER,
-    -lv_obj_get_width(container) / 2 + (lv_obj_get_width(container) - fieldDim) / 2, 0);
+    -lv_obj_get_width(container) / 2.0 + (lv_obj_get_width(container) - fieldDim) / 2.0, 0);
 }
 
 /**

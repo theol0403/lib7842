@@ -39,8 +39,8 @@ private:
   void updateOdom();
 
   // field
-  lv_style_t fStyle;
   double fieldDim = 0; // width and height of field container
+  lv_style_t fStyle;
 
   // tile styles
   lv_style_t gry;
@@ -53,10 +53,9 @@ private:
 
   // robot line
   lv_obj_t* line {nullptr};
-  lv_style_t lineStyle;
-  std::vector<lv_point_t> linePoints {{0, 0}, {0, 0}}; // line positions
-  int lineWidth = 0;
+  std::vector<lv_point_t> linePoints {lv_point_t {0, 0}, lv_point_t {0, 0}}; // line positions
   int lineLength = 0;
+  lv_style_t lineStyle;
 
   // status label
   lv_obj_t* statusLabel {nullptr};
