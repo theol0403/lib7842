@@ -1,6 +1,5 @@
 #pragma once
 #include "main.h"
-#include "lib7842/other/taskWrapper.hpp"
 
 namespace lib7842 {
 
@@ -13,7 +12,7 @@ public:
     lv_color_t icolor,
     std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
 
-  Page(const Page& ipath) = delete;
+  Page(const Page& ipage) = delete;
   virtual ~Page();
 
   virtual void initialize() = 0;
