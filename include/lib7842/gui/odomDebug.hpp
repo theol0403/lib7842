@@ -1,14 +1,14 @@
 #pragma once
 #include "main.h"
-#include "lib7842/gui/abstractPage.hpp"
+#include "lib7842/gui/page.hpp"
 #include "lib7842/other/utility.hpp"
 
 namespace lib7842 {
 
-class OdomDebug : public AbstractPage {
+class OdomDebug : public Page {
 
 public:
-  using AbstractPage::AbstractPage;
+  using Page::Page;
 
   void initialize() override;
   void render() override;

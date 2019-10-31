@@ -4,18 +4,17 @@
 
 namespace lib7842 {
 
-class AbstractPage {
+class Page {
 
 public:
-  explicit AbstractPage(
-    lv_obj_t* iparent, std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
-  explicit AbstractPage(
+  explicit Page(lv_obj_t* iparent, std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
+  explicit Page(
     lv_obj_t* iparent,
     lv_color_t icolor,
     std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
 
-  AbstractPage(const AbstractPage& ipath) = delete;
-  virtual ~AbstractPage();
+  Page(const Page& ipath) = delete;
+  virtual ~Page();
 
   virtual void initialize() = 0;
   virtual void render() = 0;
