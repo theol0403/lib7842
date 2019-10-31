@@ -1,6 +1,7 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <mutex>
 #include <SDL2/SDL.h>
 #include "lvgl/lvgl.h"
 
@@ -22,9 +23,10 @@ int lvglMain() {
 
   /*Initialize the HAL (display, input devices, tick) for LittlevGL*/
   hal_init();
-  SDL_CreateThread(lvgl_thread, "lvgl", NULL);
 
   lvglTest();
+
+  usleep(1000 * 100);
 
   return 0;
 }
@@ -56,7 +58,10 @@ static void hal_init(void) {
    * You have to call 'lv_tick_inc()' in periodically to inform LittelvGL about how much time were elapsed
    * Create an SDL thread to do this*/
   SDL_CreateThread(tick_thread, "tick", NULL);
+  SDL_CreateThread(lvgl_thread, "lvgl", NULL);
 }
+
+std::mutex lvgl_mutex;
 
 /**
  * A task to measure the elapsed time for LittlevGL
@@ -67,8 +72,10 @@ static int tick_thread(void* data) {
   (void)data;
 
   while (1) {
-    SDL_Delay(1); /*Sleep for 33 millisecond*/
-    lv_tick_inc(1); /*Tell LittelvGL that 3 milliseconds were elapsed*/
+    SDL_Delay(10); /*Sleep for 33 millisecond*/
+    lvgl_mutex.lock();
+    lv_tick_inc(10); /*Tell LittelvGL that 3 milliseconds were elapsed*/
+    lvgl_mutex.unlock();
   }
 
   return 0;
@@ -80,8 +87,11 @@ static int lvgl_thread(void* data) {
   while (1) {
     /* Periodically call the lv_task handler.
      * It could be done in a timer interrupt or an OS task too.*/
+
+    lvgl_mutex.lock();
     lv_task_handler();
-    usleep(10 * 1000);
+    lvgl_mutex.unlock();
+    usleep(1000 * 100);
   }
 
   return 0;
