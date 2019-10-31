@@ -12,7 +12,10 @@ void OdomDebug::render() {
   if (odom) {
     updateOdom();
   } else {
-    std::cerr << "OdomDebug::render: odom not attached" << std::endl;
+    if (!hasWarnedRender) {
+      hasWarnedRender = true;
+      LOG_INFO_S("OdomDebug::render: odom not attached");
+    }
   }
 }
 
@@ -227,7 +230,7 @@ lv_res_t OdomDebug::tileAction(lv_obj_t* tileObj) {
     that->odom->setState(
       {x * tile + 0.5_tl, 1_crt - y * tile - 0.5_tl, 0_deg}, StateMode::CARTESIAN);
   } else {
-    std::cout << "OdomDebug: No odom provided for setState" << std::endl;
+    that->LOG_WARN_S("OdomDebug::tileAction: odom not attached");
   }
   return LV_RES_OK;
 }
@@ -241,10 +244,10 @@ lv_res_t OdomDebug::resetAction(lv_obj_t* btn) {
     that->resetter();
   } else {
     if (that->odom) {
-      std::cout << "OdomDebug: Using default resetter, can't reset sensors" << std::endl;
+      that->LOG_INFO_S("OdomDebug::resetAction: using default resetter");
       that->odom->setState({0_in, 0_in, 0_deg});
     } else {
-      std::cout << "OdomDebug: No odom provided for reset" << std::endl;
+      that->LOG_WARN_S("OdomDebug::resetAction: odom not attached");
     }
   }
   return LV_RES_OK;

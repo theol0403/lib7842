@@ -67,6 +67,8 @@ private:
 
   static lv_res_t tileAction(lv_obj_t*); // action when tile is pressed
   static lv_res_t resetAction(lv_obj_t*); // action when reset button is pressed
+
+  bool hasWarnedRender = false;
 };
 
 } // namespace lib7842
