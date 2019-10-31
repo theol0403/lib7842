@@ -7,8 +7,12 @@ namespace lib7842 {
 class AbstractPage {
 
 public:
-  explicit AbstractPage(lv_obj_t* iparent);
-  explicit AbstractPage(lv_obj_t* iparent, lv_color_t icolor);
+  explicit AbstractPage(
+    lv_obj_t* iparent, std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
+  explicit AbstractPage(
+    lv_obj_t* iparent,
+    lv_color_t icolor,
+    std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
 
   AbstractPage(const AbstractPage& ipath) = delete;
   virtual ~AbstractPage();
@@ -20,6 +24,8 @@ protected:
   lv_obj_t* container;
   lv_style_t cStyle;
   const lv_color_t themeColor;
+
+  std::shared_ptr<Logger> logger {nullptr};
 };
 
 } // namespace lib7842
