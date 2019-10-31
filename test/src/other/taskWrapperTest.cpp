@@ -18,18 +18,3 @@ TEST(TaskWrapperTest, Task) {
   usleep(100000);
   ASSERT_TRUE(task.taskRan);
 }
-
-class MockEndlessTask : public EndlessTaskWrapper {
-public:
-  MockEndlessTask() {}
-  bool taskRan = false;
-  virtual void loop() override {
-    taskRan = true;
-  }
-};
-
-TEST(TaskWrapperTest, EndlessTask) {
-  MockEndlessTask task;
-  usleep(100000);
-  ASSERT_TRUE(task.taskRan);
-}

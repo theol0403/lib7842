@@ -27,9 +27,4 @@ void TaskWrapper::trampoline(void* iparam) {
   static_cast<TaskWrapper*>(iparam)->loop();
 }
 
-EndlessTaskWrapper::EndlessTaskWrapper(const std::string& iname, std::shared_ptr<Logger> ilogger) :
-  TaskWrapper(ilogger) {
-  startTask(iname);
-}
-
 } // namespace lib7842

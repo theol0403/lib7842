@@ -35,18 +35,4 @@ private:
   static void trampoline(void* iparam);
   std::unique_ptr<CrossplatformThread> task {nullptr};
 };
-
-class EndlessTaskWrapper : public TaskWrapper {
-public:
-  /**
-   * Automatically starts the task
-   */
-  explicit EndlessTaskWrapper(
-    const std::string& iname = "TaskWrapper",
-    std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
-
-private:
-  using TaskWrapper::startTask;
-  using TaskWrapper::killTask;
-};
 } // namespace lib7842
