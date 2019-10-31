@@ -13,19 +13,21 @@ public:
   void initialize() override;
   void render() override;
 
+  static std::string getName();
+
   /**
    * Attach the odom for reading
    *
    * @param iodom The odometry
    */
-  void attachOdom(const std::shared_ptr<Odometry>& iodom);
+  OdomDebug& attachOdom(const std::shared_ptr<Odometry>& iodom);
 
   /**
    * Sets the function to be called when the reset button is pressed
    * The default resetter is only able to reset the state, not the sensors
    * @param callback a function that resets the odometry and sensors
    */
-  void attachResetter(const std::function<void()>& iresetter);
+  OdomDebug& attachResetter(const std::function<void()>& iresetter);
 
 protected:
   std::shared_ptr<Odometry> odom {nullptr};

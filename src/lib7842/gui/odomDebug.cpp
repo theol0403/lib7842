@@ -14,17 +14,23 @@ void OdomDebug::render() {
   } else {
     if (!hasWarnedRender) {
       hasWarnedRender = true;
-      LOG_INFO_S("OdomDebug::render: odom not attached");
+      LOG_WARN_S("OdomDebug::render: odom not attached");
     }
   }
 }
 
-void OdomDebug::attachOdom(const std::shared_ptr<Odometry>& iodom) {
-  odom = iodom;
+std::string OdomDebug::getName() {
+  return "Odom";
 }
 
-void OdomDebug::attachResetter(const std::function<void()>& iresetter) {
+OdomDebug& OdomDebug::attachOdom(const std::shared_ptr<Odometry>& iodom) {
+  odom = iodom;
+  return *this;
+}
+
+OdomDebug& OdomDebug::attachResetter(const std::function<void()>& iresetter) {
   resetter = iresetter;
+  return *this;
 }
 
 void OdomDebug::initializeField() {
