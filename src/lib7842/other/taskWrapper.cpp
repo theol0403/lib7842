@@ -2,7 +2,7 @@
 
 namespace lib7842 {
 
-TaskWrapper::TaskWrapper(std::shared_ptr<Logger> ilogger) : logger(ilogger) {}
+TaskWrapper::TaskWrapper(const std::shared_ptr<Logger>& ilogger) : logger(ilogger) {}
 
 void TaskWrapper::loop() {
   std::string msg("TaskWrapper::loop: loop is not overridden");
@@ -26,11 +26,6 @@ std::string TaskWrapper::getName() {
 void TaskWrapper::trampoline(void* iparam) {
   pros::delay(20);
   static_cast<TaskWrapper*>(iparam)->loop();
-}
-
-EndlessTaskWrapper::EndlessTaskWrapper(const std::string& iname, std::shared_ptr<Logger> ilogger) :
-  TaskWrapper(ilogger) {
-  startTask(iname);
 }
 
 } // namespace lib7842

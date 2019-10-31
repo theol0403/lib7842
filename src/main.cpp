@@ -1,4 +1,8 @@
 #include "main.h"
+#include "lib7842/gui/screen.hpp"
+#include "lib7842/gui/odomDebug.hpp"
+
+using namespace lib7842;
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -52,4 +56,13 @@ void autonomous() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-void opcontrol() {}
+void opcontrol() {
+  Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
+  scr.startTask("Screen");
+
+  scr.makePage<OdomDebug>();
+
+  while (true) {
+    pros::delay(100);
+  }
+}

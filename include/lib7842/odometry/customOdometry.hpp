@@ -18,7 +18,7 @@ public:
   CustomOdometry(
     const std::shared_ptr<ChassisModel>& imodel,
     const ChassisScales& ichassisScales,
-    std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
+    const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   virtual ~CustomOdometry() = default;
 
@@ -60,7 +60,7 @@ public:
   /**
    * Odometry calculation loop
    */
-  virtual void loop() override;
+  void loop() override;
 
 private:
   OdomState getState(const StateMode& imode) const override;

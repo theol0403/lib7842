@@ -6,12 +6,12 @@ ROOT=.
 PROJECTROOT=..
 
 BINDIR=$(ROOT)/bin
-SRCDIR=$(PROJECTROOT)/src
+SRCDIR=$(PROJECTROOT)/src/lib7842
 INCDIR=$(PROJECTROOT)/include
 TESTDIR=$(ROOT)/src
 OUTBIN:=$(BINDIR)/main.exe
 
-WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function -Wnull-dereference -Wno-sign-compare
+WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function -Wnull-dereference -Wno-sign-compare -Wno-narrowing
 EXTRA_CXXFLAGS= -std=gnu++17 -g -pthread -D THREADS_STD 
 EXTRA_CXXFLAGS+= -fsanitize=undefined -fsanitize=vptr -fsanitize=integer-divide-by-zero -fsanitize=null
 # EXTRA_CXXFLAGS+= -fsanitize=address 
@@ -76,7 +76,7 @@ define cxx_rule
 $(BINDIR)/%.$1.o: $(SRCDIR)/%.$1
 	$(VV)mkdir -p $$(dir $$@)
 	@echo -n "Compiling $$< "
-	$$(call test_output,$D$(CXX) -c $(INCLUDE) -iquote$(INCDIR)/$$(dir $$*) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o $$@ $$<,$(OK_STRING))
+	$$(call test_output,$D$(CXX) -c $(INCLUDE) -iquote$(INCDIR)/lib7842/$$(dir $$*) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o $$@ $$<,$(OK_STRING))
 endef
 $(eval $(call cxx_rule,cpp))
 
