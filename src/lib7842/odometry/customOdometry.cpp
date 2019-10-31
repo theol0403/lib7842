@@ -5,7 +5,7 @@ namespace lib7842 {
 CustomOdometry::CustomOdometry(
   const std::shared_ptr<ChassisModel>& imodel,
   const ChassisScales& ichassisScales,
-  std::shared_ptr<Logger> ilogger) :
+  const std::shared_ptr<Logger>& ilogger) :
   model(imodel),
   chassisScales(ichassisScales),
   chassisWidth(chassisScales.wheelTrack.convert(meter)),

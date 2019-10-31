@@ -62,4 +62,27 @@ constexpr QAcceleration operator"" _ips2(unsigned long long int x) {
   return static_cast<double>(x) * ips2;
 }
 
+///////////////////
+// Units - Field //
+///////////////////
+
+/**
+ * Units that represent a tile (2ft) and a court(12ft)
+ * Literals are `_tl` and `_crt`, respectivly
+ */
+constexpr QLength tile = 2 * foot;
+constexpr QLength court = 12 * foot;
+constexpr QLength operator"" _tl(long double x) {
+  return static_cast<double>(x) * tile;
+}
+constexpr QLength operator"" _crt(long double x) {
+  return static_cast<double>(x) * court;
+}
+constexpr QLength operator"" _tl(unsigned long long int x) {
+  return static_cast<double>(x) * tile;
+}
+constexpr QLength operator"" _crt(unsigned long long int x) {
+  return static_cast<double>(x) * court;
+}
+
 } // namespace lib7842

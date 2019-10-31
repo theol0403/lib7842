@@ -49,7 +49,7 @@
 
 #include "pros/adi.h"
 #include "pros/colors.h"
-#include "pros/llemu.h"
+// #include "pros/llemu.h"
 #include "pros/misc.h"
 #include "pros/motors.h"
 #include "pros/rtos.h"
@@ -57,11 +57,17 @@
 
 #ifdef __cplusplus
 #include "pros/adi.hpp"
-#include "pros/llemu.hpp"
+// #include "pros/llemu.hpp"
 #include "pros/misc.hpp"
 #include "pros/motors.hpp"
 #include "pros/rtos.hpp"
 #include "pros/vision.hpp"
+#endif
+
+#ifndef THREADS_STD
+#include "display/lvgl.h"
+#else
+#include "lvgl/lvgl.h"
 #endif
 
 #endif  // _PROS_API_H_

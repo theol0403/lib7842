@@ -1,12 +1,18 @@
 #include "test.hpp"
-#include "lvgl/lvgl.h"
 #include "main.h"
+
+#include "lib7842/gui/screen.hpp"
+#include "lib7842/gui/odomDebug.hpp"
 
 void lvglTest() {
 
-  lv_obj_t* button = lv_btn_create(lv_scr_act(), NULL);
+  Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
+
+  scr.makePage<OdomDebug>().attachOdom(nullptr).attachResetter(nullptr);
+
+  scr.startTask("Screen");
 
   while (true) {
-    pros::delay(20);
+    pros::delay(100);
   }
 }
