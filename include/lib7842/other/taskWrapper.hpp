@@ -4,7 +4,7 @@
 namespace lib7842 {
 class TaskWrapper {
 protected:
-  TaskWrapper(std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
+  explicit TaskWrapper(const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
   virtual ~TaskWrapper() = default;
 
   /**

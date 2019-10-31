@@ -2,7 +2,7 @@
 
 namespace lib7842 {
 
-TaskWrapper::TaskWrapper(std::shared_ptr<Logger> ilogger) : logger(ilogger) {}
+TaskWrapper::TaskWrapper(const std::shared_ptr<Logger>& ilogger) : logger(ilogger) {}
 
 void TaskWrapper::loop() {
   std::string msg("TaskWrapper::loop: loop is not overridden");

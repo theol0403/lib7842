@@ -8,11 +8,12 @@ namespace lib7842 {
 class Screen : public TaskWrapper {
 
 public:
-  explicit Screen(lv_obj_t* iparent, std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
+  explicit Screen(
+    lv_obj_t* iparent, const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
   explicit Screen(
     lv_obj_t* iparent,
     lv_color_t icolor,
-    std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
+    const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   Screen(const Screen& ipage) = delete;
   virtual ~Screen();

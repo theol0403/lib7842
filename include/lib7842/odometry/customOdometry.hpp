@@ -18,7 +18,7 @@ public:
   CustomOdometry(
     const std::shared_ptr<ChassisModel>& imodel,
     const ChassisScales& ichassisScales,
-    std::shared_ptr<Logger> ilogger = Logger::getDefaultLogger());
+    const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   virtual ~CustomOdometry() = default;
 
