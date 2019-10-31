@@ -60,7 +60,7 @@ public:
   /**
    * Odometry calculation loop
    */
-  virtual void loop() override;
+  void loop() override;
 
 private:
   OdomState getState(const StateMode& imode) const override;
