@@ -233,8 +233,7 @@ lv_res_t OdomDebug::tileAction(lv_obj_t* tileObj) {
   int y = num / 6;
   int x = num - y * 6;
   if (that->odom) {
-    that->odom->setState(
-      {x * tile + 0.5_tl, 1_crt - y * tile - 0.5_tl, 0_deg}, StateMode::CARTESIAN);
+    that->odom->setState({x * tile + 0.5_tl, 1_crt - y * tile - 0.5_tl, 0_deg}, StateMode::CARTESIAN);
   } else {
     that->LOG_WARN_S("OdomDebug::tileAction: odom not attached");
   }
