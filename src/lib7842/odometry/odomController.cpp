@@ -87,29 +87,29 @@ void OdomController::moveDistance(const QLength& distance, const Settler& settle
 void OdomController::driveToPoint(
   const Vector& targetPoint, double turnScale, const Settler& settler) {
   resetPid();
-  QAngle lastTarget = odometry->getState().theta;
   do {
     Vector closestPoint = closest(odometry->getState(), targetPoint);
 
     QAngle angleToClose = angleToPoint(closestPoint);
-    if (std::isnan(angleToClose.convert(degree))) angleToClose = 0_deg;
+    QAngle angleToTarget = angleToPoint(targetPoint);
 
     QLength distanceToClose = distanceToPoint(closestPoint);
-    if (angleToClose.abs() >= 90_deg) distanceToClose = -distanceToClose;
-
-    angleErr = angleToPoint(targetPoint);
-
     QLength distanceToTarget = distanceToPoint(targetPoint);
+
+    // go backwards
+    if (angleToClose.abs() >= 90_deg) distanceToClose = -distanceToClose;
 
     if (distanceToTarget.abs() < settleRadius) {
       angleErr = 0_deg;
+      // used for settling
       distanceErr = distanceToClose;
     } else {
-      angleErr = angleToPoint(targetPoint);
-      lastTarget = angleErr + odometry->getState().theta;
+      angleErr = angleToTarget;
+      // used for settling
       distanceErr = distanceToTarget;
     }
 
+    // rotate angle to be +- 90
     angleErr = rollAngle90(angleErr);
 
     double angleVel = angleController->step(-angleErr.convert(degree));
