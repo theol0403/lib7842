@@ -1,6 +1,7 @@
 #include "main.h"
 #include "lib7842/gui/screen.hpp"
 #include "lib7842/gui/odomDebug.hpp"
+#include "lib7842/odometry/customOdometry.hpp"
 
 using namespace lib7842;
 
@@ -10,7 +11,9 @@ using namespace lib7842;
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {}
+void initialize() {
+  pros::delay(200);
+}
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -57,12 +60,35 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+  Controller controller(ControllerId::master);
+
+  auto model = std::make_shared<ThreeEncXDriveModel>(
+    // motors
+    std::make_shared<Motor>(1), //
+    std::make_shared<Motor>(-2), //
+    std::make_shared<Motor>(-3), //
+    std::make_shared<Motor>(4), //
+    // sensors
+    std::make_shared<ADIEncoder>(3, 4, true), //
+    std::make_shared<ADIEncoder>(5, 6), //
+    std::make_shared<ADIEncoder>(1, 2, true), //
+    // limits
+    200, 12000);
+
+  auto odom =
+    std::make_shared<CustomOdometry>(model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360));
+  odom->startTask("Odometry");
+
   Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
   scr.startTask("Screen");
 
-  scr.makePage<OdomDebug>();
+  scr.makePage<OdomDebug>().attachOdom(odom);
 
   while (true) {
-    pros::delay(100);
+    model->xArcade(
+      controller.getAnalog(ControllerAnalog::rightX),
+      controller.getAnalog(ControllerAnalog::rightY),
+      controller.getAnalog(ControllerAnalog::leftX));
+    pros::delay(10);
   }
 }
