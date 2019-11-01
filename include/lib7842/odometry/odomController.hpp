@@ -1,7 +1,7 @@
 #pragma once
 #include "main.h"
 #include "odomMath.hpp"
-#include "lib7842/odometry/customOdometry.hpp"
+#include "customOdometry.hpp"
 
 namespace lib7842 {
 

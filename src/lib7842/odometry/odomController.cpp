@@ -219,6 +219,7 @@ AngleCalculator OdomController::makeAngleCalculator() {
  * OdomController utilities
  */
 void OdomController::driveVector(double forwardSpeed, double yaw) {
+  forwardSpeed = std::clamp(forwardSpeed, -1.0, 1.0);
   double leftOutput = forwardSpeed + yaw;
   double rightOutput = forwardSpeed - yaw;
   double maxInputMag = std::max(std::abs(leftOutput), std::abs(rightOutput));
