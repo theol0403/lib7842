@@ -2,6 +2,7 @@
 #include "lib7842/gui/screen.hpp"
 #include "lib7842/gui/odomDebug.hpp"
 #include "lib7842/odometry/customOdometry.hpp"
+#include "lib7842/odometry/odomController.hpp"
 
 using namespace lib7842;
 
@@ -80,15 +81,32 @@ void opcontrol() {
   odom->startTask("Odometry");
 
   Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
+  scr.makePage<OdomDebug>().attachOdom(odom);
   scr.startTask("Screen");
 
-  scr.makePage<OdomDebug>().attachOdom(odom);
+  auto odomController = std::make_shared<OdomController>(
+    model, odom,
+    //Distance PID - To mm
+    std::make_unique<IterativePosPIDController>(
+      0.007, 0.0002, 0.0002, 0, TimeUtilFactory::withSettledUtilParams(20, 10, 50_ms)),
+    //Turn PID - To Degree
+    std::make_unique<IterativePosPIDController>(
+      0.02, 0.00, 0.0003, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
+    //Angle PID - To Degree
+    std::make_unique<IterativePosPIDController>(
+      0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(50, 10, 100_ms)),
+    5_in);
 
   while (true) {
     model->xArcade(
       controller.getAnalog(ControllerAnalog::rightX),
       controller.getAnalog(ControllerAnalog::rightY),
       controller.getAnalog(ControllerAnalog::leftX));
+
+    if (controller.getDigital(ControllerDigital::A)) {
+      odomController->driveToPoint({0_ft, 0_ft}, 2);
+    }
+
     pros::delay(10);
   }
 }
