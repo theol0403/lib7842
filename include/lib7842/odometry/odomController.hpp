@@ -68,9 +68,7 @@ public:
    * @param settler The settler
    */
   virtual void turnToAngle(
-    const QAngle& angle,
-    const Turner& turner = pointTurn,
-    const Settler& settler = defaultTurnSettler);
+    const QAngle& angle, const Turner& turner = pointTurn, const Settler& settler = defaultTurnSettler);
 
   /**
    * Turn the chassis to face a relative angle
@@ -80,9 +78,7 @@ public:
    * @param settler The settler
    */
   virtual void turnAngle(
-    const QAngle& angle,
-    const Turner& turner = pointTurn,
-    const Settler& settler = defaultTurnSettler);
+    const QAngle& angle, const Turner& turner = pointTurn, const Settler& settler = defaultTurnSettler);
 
   /**
    * Turn the chassis to face a point
@@ -92,9 +88,7 @@ public:
    * @param settler The settler
    */
   virtual void turnToPoint(
-    const Vector& point,
-    const Turner& turner = pointTurn,
-    const Settler& settler = defaultTurnSettler);
+    const Vector& point, const Turner& turner = pointTurn, const Settler& settler = defaultTurnSettler);
 
   /**
    * Drive a distance while correcting angle using an AngleCalculator 

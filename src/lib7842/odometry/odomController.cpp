@@ -33,8 +33,7 @@ void OdomController::turn(
   turner(*model, 0);
 }
 
-void OdomController::turnToAngle(
-  const QAngle& angle, const Turner& turner, const Settler& settler) {
+void OdomController::turnToAngle(const QAngle& angle, const Turner& turner, const Settler& settler) {
   turn(makeAngleCalculator(angle), turner, settler);
 }
 
@@ -42,8 +41,7 @@ void OdomController::turnAngle(const QAngle& angle, const Turner& turner, const 
   turn(makeAngleCalculator(angle + odometry->getState().theta), turner, settler);
 }
 
-void OdomController::turnToPoint(
-  const Vector& point, const Turner& turner, const Settler& settler) {
+void OdomController::turnToPoint(const Vector& point, const Turner& turner, const Settler& settler) {
   turn(makeAngleCalculator(point), turner, settler);
 }
 
@@ -84,8 +82,7 @@ void OdomController::moveDistance(const QLength& distance, const Settler& settle
 /**
  * Point API
  */
-void OdomController::driveToPoint(
-  const Vector& targetPoint, double turnScale, const Settler& settler) {
+void OdomController::driveToPoint(const Vector& targetPoint, double turnScale, const Settler& settler) {
   resetPid();
   do {
     Vector closestPoint = closest(odometry->getState(), targetPoint);
@@ -122,8 +119,7 @@ void OdomController::driveToPoint(
   driveVector(0, 0);
 }
 
-void OdomController::driveToPoint2(
-  const Vector& targetPoint, double turnScale, const Settler& settler) {
+void OdomController::driveToPoint2(const Vector& targetPoint, double turnScale, const Settler& settler) {
   resetPid();
   Settler exitFunc = makeSettler(settleRadius);
   do {
@@ -141,8 +137,7 @@ void OdomController::driveToPoint2(
   } while (!(exitFunc(*this) || settler(*this)));
 
   moveDistanceAtAngle(
-    distanceToPoint(targetPoint), makeAngleCalculator(angleToPoint(targetPoint)), turnScale,
-    settler);
+    distanceToPoint(targetPoint), makeAngleCalculator(angleToPoint(targetPoint)), turnScale, settler);
   driveVector(0, 0);
 }
 
