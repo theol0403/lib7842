@@ -49,12 +49,12 @@ void CustomOdometry::step() {
     throw std::runtime_error(msg);
   }
 
-  double L =
-    (newTicks[0] - lastTicks[0]) / chassisScales.straight; // The amount the left side of the robot moved
-  double R = (newTicks[1] - lastTicks[1]) /
-             chassisScales.straight; // The amount the right side of the robot moved
-  double S =
-    (newTicks[2] - lastTicks[2]) / chassisScales.middle; // The amount the back side of the robot moved
+  // The amount the left side of the robot moved
+  double L = (newTicks[0] - lastTicks[0]) / chassisScales.straight;
+  // The amount the right side of the robot moved
+  double R = (newTicks[1] - lastTicks[1]) / chassisScales.straight;
+  // The amount the back side of the robot moved
+  double S = (newTicks[2] - lastTicks[2]) / chassisScales.middle;
 
   // Update the last values
   lastTicks = newTicks;
