@@ -94,37 +94,29 @@ void OdomController::driveToPoint(
     QAngle angleToClose = angleToPoint(closestPoint);
     if (std::isnan(angleToClose.convert(degree))) angleToClose = 0_deg;
 
-    std::cout << "a_close: " << angleToClose.convert(degree) << ", ";
-
     QLength distanceToClose = distanceToPoint(closestPoint);
-    QLength distanceToTarget = distanceToPoint(targetPoint);
+    if (angleToClose.abs() >= 90_deg) distanceToClose = -distanceToClose;
 
     angleErr = angleToPoint(targetPoint);
 
-    std::cout << "a_target: " << angleErr.convert(degree) << ", ";
+    QLength distanceToTarget = distanceToPoint(targetPoint);
 
     if (distanceToTarget.abs() < settleRadius) {
       angleErr = 0_deg;
       distanceErr = distanceToClose;
     } else {
+      angleErr = angleToPoint(targetPoint);
       lastTarget = angleErr + odometry->getState().theta;
       distanceErr = distanceToTarget;
     }
 
-    std::cout << "d_before: " << distanceErr.convert(inch) << ", ";
-
-    if (angleToClose.abs() >= 90_deg) distanceErr = -distanceErr;
     angleErr = rollAngle90(angleErr);
 
-    std::cout << "d_after: " << distanceErr.convert(inch) << ", ";
-
-    std::cout << "a_err: " << angleErr.convert(degree) << std::endl;
-
     double angleVel = angleController->step(-angleErr.convert(degree));
-    double distanceVel = distanceController->step(-distanceErr.convert(millimeter));
+    double distanceVel = distanceController->step(-distanceToClose.convert(millimeter));
 
     driveVector(distanceVel, angleVel * turnScale);
-    pros::delay(100);
+    pros::delay(10);
   } while (!settler(*this));
 
   driveVector(0, 0);
