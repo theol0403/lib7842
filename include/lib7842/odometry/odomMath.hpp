@@ -7,7 +7,7 @@ namespace lib7842 {
 
 namespace lib7842::OdomMath {
 
-Vector closest(const Vector&, const Vector&, const Vector&);
+Vector closest(const Vector&, const QAngle&, const Vector&);
 Vector closest(const State&, const Vector&);
 
 QAngle rollAngle360(const QAngle&);

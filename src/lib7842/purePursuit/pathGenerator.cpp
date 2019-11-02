@@ -2,8 +2,7 @@
 
 namespace lib7842 {
 
-PathGenerator::limits::limits(
-  QSpeed imin, QSpeed imax, QAcceleration iaccel, QCurvature icurvatureK) :
+PathGenerator::limits::limits(QSpeed imin, QSpeed imax, QAcceleration iaccel, QCurvature icurvatureK) :
   min(imin.convert(mps)),
   max(imax.convert(mps)),
   accel(iaccel.convert(mps2)),
@@ -46,8 +45,7 @@ void PathGenerator::setMaxVelocity(DataPath& ipath, const limits& ilimits) {
 
     // k / curvature, limited to max
     double wantedVel = std::min(
-      ilimits.max,
-      ilimits.curvatureK / ipath()[i]->getData<QCurvature>("curvature").convert(curvature));
+      ilimits.max, ilimits.curvatureK / ipath()[i]->getData<QCurvature>("curvature").convert(curvature));
 
     // distance from last point
     double distance = Vector::dist(start, end).convert(meter);
@@ -86,8 +84,7 @@ void PathGenerator::setMinVelocity(DataPath& ipath, const limits& ilimits) {
   }
 }
 
-QCurvature
-  PathGenerator::getCurvature(const Vector& prev, const Vector& point, const Vector& next) {
+QCurvature PathGenerator::getCurvature(const Vector& prev, const Vector& point, const Vector& next) {
   double distOne = Vector::dist(point, prev).convert(meter);
   double distTwo = Vector::dist(point, next).convert(meter);
   double distThree = Vector::dist(next, prev).convert(meter);

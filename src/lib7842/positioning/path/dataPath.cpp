@@ -37,7 +37,6 @@ const std::vector<std::shared_ptr<DataPoint>>& DataPath::read() const {
 }
 
 SimplePath DataPath::generate(const int isteps) const {
-  return SimplePath(std::vector<std::shared_ptr<Vector>>({path.begin(), path.end()}))
-    .generate(isteps);
+  return SimplePath(std::vector<std::shared_ptr<Vector>>({path.begin(), path.end()})).generate(isteps);
 }
 } // namespace lib7842

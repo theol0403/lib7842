@@ -1,7 +1,7 @@
 #pragma once
 #include "main.h"
 #include "odomMath.hpp"
-#include "lib7842/odometry/customOdometry.hpp"
+#include "customOdometry.hpp"
 
 namespace lib7842 {
 
@@ -36,7 +36,7 @@ public:
    * @param idistanceController The distance pid controller
    * @param iturnController     The turning pid controller
    * @param iangleController    The angle pid controller, used to keep distance driving straight
-   * @param isettleRadius        The radius from the target point to give up angle correction
+   * @param isettleRadius       The radius from the target point to give up angle correction
    */
   OdomController(
     std::shared_ptr<ChassisModel> imodel,
@@ -44,7 +44,7 @@ public:
     std::unique_ptr<IterativePosPIDController> idistanceController,
     std::unique_ptr<IterativePosPIDController> iturnController,
     std::unique_ptr<IterativePosPIDController> iangleController,
-    const QLength& isettleRadius = 6_in);
+    const QLength& isettleRadius);
 
   virtual ~OdomController() = default;
 
@@ -68,9 +68,7 @@ public:
    * @param settler The settler
    */
   virtual void turnToAngle(
-    const QAngle& angle,
-    const Turner& turner = pointTurn,
-    const Settler& settler = defaultTurnSettler);
+    const QAngle& angle, const Turner& turner = pointTurn, const Settler& settler = defaultTurnSettler);
 
   /**
    * Turn the chassis to face a relative angle
@@ -80,9 +78,7 @@ public:
    * @param settler The settler
    */
   virtual void turnAngle(
-    const QAngle& angle,
-    const Turner& turner = pointTurn,
-    const Settler& settler = defaultTurnSettler);
+    const QAngle& angle, const Turner& turner = pointTurn, const Settler& settler = defaultTurnSettler);
 
   /**
    * Turn the chassis to face a point
@@ -92,9 +88,7 @@ public:
    * @param settler The settler
    */
   virtual void turnToPoint(
-    const Vector& point,
-    const Turner& turner = pointTurn,
-    const Settler& settler = defaultTurnSettler);
+    const Vector& point, const Turner& turner = pointTurn, const Settler& settler = defaultTurnSettler);
 
   /**
    * Drive a distance while correcting angle using an AngleCalculator 
