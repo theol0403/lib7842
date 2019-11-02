@@ -102,8 +102,9 @@ void OdomXController::driveToPoint(const Vector& targetPoint, double turnScale, 
   driveXVector(0, 0, 0);
 }
 
-bool OdomController::defaultStrafeSettler(const OdomController& odom) {
-  return odom.distanceController->isSettled() && odom.strafeController->isSettled();
+bool OdomXController::defaultStrafeSettler(const OdomController& odom) {
+  const OdomXController& xodom = dynamic_cast<const OdomXController&>(odom);
+  return xodom.distanceController->isSettled() && xodom.strafeController->isSettled();
 }
 
 /**
