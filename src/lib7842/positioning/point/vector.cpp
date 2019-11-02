@@ -37,8 +37,7 @@ QLength& Vector::at(const size_t& iindex) {
     case 0: return x; break;
     case 1: return y; break;
     default:
-      throw std::runtime_error(
-        "Vector::at():: \"" + std::to_string(iindex) + "\" is invalid index");
+      throw std::runtime_error("Vector::at():: \"" + std::to_string(iindex) + "\" is invalid index");
       break;
   }
 }

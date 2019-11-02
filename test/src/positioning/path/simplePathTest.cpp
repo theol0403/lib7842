@@ -97,8 +97,7 @@ TEST_F(SimplePathTest, GenerateCorrectAmount) {
 }
 
 TEST_F(SimplePathTest, GenerateInsertPoints) {
-  SimplePath path =
-    SimplePath({{1_in, 1_in}, {5_in, 4_in}, {9_in, 2_in}, {10_in, 3_in}}).generate(10);
+  SimplePath path = SimplePath({{1_in, 1_in}, {5_in, 4_in}, {9_in, 2_in}, {10_in, 3_in}}).generate(10);
   ASSERT_EQ(path().size(), 31);
 }
 
