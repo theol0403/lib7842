@@ -68,7 +68,7 @@ void OdomXController::driveToPoint(const Vector& targetPoint, double turnScale, 
 
     QAngle angleToClose = angleToPoint(closestPoint);
     QAngle angleToTarget = angleToPoint(targetPoint);
-    QAngle angleToStrafe = angleToPoint(closestStrafe);
+    QAngle angleToStrafe = rollAngle180(angleToPoint(closestStrafe) - 90_deg); // rotate angle
 
     QLength distanceToClose = distanceToPoint(closestPoint);
     QLength distanceToTarget = distanceToPoint(targetPoint);
@@ -76,7 +76,7 @@ void OdomXController::driveToPoint(const Vector& targetPoint, double turnScale, 
 
     // go backwards
     if (angleToClose.abs() >= 90_deg) distanceToClose = -distanceToClose;
-    if (rollAngle180(angleToStrafe - 90_deg).abs() >= 90_deg) distanceToStrafe = -distanceToStrafe;
+    if (angleToStrafe.abs() >= 90_deg) distanceToStrafe = -distanceToStrafe;
 
     if (distanceToTarget.abs() < settleRadius) {
       angleErr = 0_deg;
@@ -95,36 +95,16 @@ void OdomXController::driveToPoint(const Vector& targetPoint, double turnScale, 
     double distanceVel = distanceController->step(-distanceToClose.convert(millimeter));
     double strafeVel = strafeController->step(-distanceToStrafe.convert(millimeter));
 
-    driveXVector(distanceVel, 1, strafeVel);
+    driveXVector(distanceVel, angleVel * turnScale, strafeVel);
     pros::delay(10);
   } while (!settler(*this));
 
   driveXVector(0, 0, 0);
 }
 
-// void OdomXController::driveToPoint2(
-//   const Vector& targetPoint, double turnScale, const Settler& settler) {
-//   resetPid();
-//   Settler exitFunc = makeSettler(settleRadius);
-//   do {
-//     angleErr = angleToPoint(targetPoint);
-//     distanceErr = distanceToPoint(targetPoint);
-
-//     if (angleErr.abs() > 90_deg) distanceErr = -distanceErr;
-//     angleErr = rollAngle90(angleErr);
-
-//     double angleVel = angleController->step(-angleErr.convert(degree));
-//     double distanceVel = distanceController->step(-distanceErr.convert(millimeter));
-
-//     driveVector(distanceVel, angleVel * turnScale);
-//     pros::delay(10);
-//   } while (!(exitFunc(*this) || settler(*this)));
-
-//   moveDistanceAtAngle(
-//     distanceToPoint(targetPoint), makeAngleCalculator(angleToPoint(targetPoint)), turnScale,
-//     settler);
-//   driveVector(0, 0);
-// }
+bool OdomController::defaultStrafeSettler(const OdomController& odom) {
+  return odom.distanceController->isSettled() && odom.strafeController->isSettled();
+}
 
 /**
  * OdomXController utilities

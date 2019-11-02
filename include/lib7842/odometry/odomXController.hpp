@@ -9,7 +9,7 @@ class OdomXController : public OdomController {
 
 public:
   /**
-   * OdomXController. Implements chassis movement algorithms
+   * OdomXController. Implements chassis movement algorithms for the X drive.
    *
    * @param imodel              The chassis model
    * @param iodometry           The chassis odometry
@@ -42,7 +42,7 @@ public:
   //   const QLength& distance,
   //   const AngleCalculator& angleCalculator,
   //   double turnScale,
-  //   const Settler& settler = defaultDriveSettler);
+  //   const Settler& settler = defaultStrafeSettler);
 
   // /**
   //  * Drive a distance while maintaining starting angle
@@ -50,7 +50,7 @@ public:
   //  * @param distance The distance
   //  * @param settler  The settler
   //  */
-  // virtual void moveDistance(const QLength& distance, const Settler& settler = defaultDriveSettler);
+  // virtual void moveDistance(const QLength& distance, const Settler& settler = defaultStrafeSettler);
 
   /**
    * Drive to a point using custom point seeking
@@ -63,18 +63,12 @@ public:
   void driveToPoint(
     const Vector& targetPoint,
     double turnScale = 1,
-    const Settler& settler = defaultDriveSettler) override;
+    const Settler& settler = defaultStrafeSettler) override;
 
-  ///**
-  //  * Drive to a point using simple point seeking
-  //  *
-  //  * @param targetPoint The target point
-  //  * @param turnScale   The turn scale used to control the priority of turning over driving. A higher value will make
-  //  *                    the robot turn to face the point sooner
-  //  * @param settler     The settler
-  //  */
-  // virtual void driveToPoint2(
-  //   const Vector& targetPoint, double turnScale = 1, const Settler& settler = defaultDriveSettler);
+  /**
+   * A Settler that is used for driving/strafing which uses the distance and strafe pid's isSettled() method
+   */
+  static bool defaultStrafeSettler(const OdomController& odom);
 
 protected:
   /**
