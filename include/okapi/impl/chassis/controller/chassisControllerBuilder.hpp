@@ -10,6 +10,7 @@
 #include "okapi/api/chassis/controller/chassisControllerIntegrated.hpp"
 #include "okapi/api/chassis/controller/chassisControllerPid.hpp"
 #include "okapi/api/chassis/controller/defaultOdomChassisController.hpp"
+#include "okapi/api/chassis/model/hDriveModel.hpp"
 #include "okapi/api/chassis/model/skidSteerModel.hpp"
 #include "okapi/api/chassis/model/xDriveModel.hpp"
 #include "okapi/api/util/logging.hpp"
@@ -100,6 +101,51 @@ class ChassisControllerBuilder {
                                        const std::shared_ptr<AbstractMotor> &itopRight,
                                        const std::shared_ptr<AbstractMotor> &ibottomRight,
                                        const std::shared_ptr<AbstractMotor> &ibottomLeft);
+
+  /**
+   * Sets the motors using an h-drive layout.
+   *
+   * @param ileft The left motor.
+   * @param iright The right motor.
+   * @param imiddle The middle motor.
+   * @return An ongoing builder.
+   */
+  ChassisControllerBuilder &
+  withMotors(const Motor &ileft, const Motor &iright, const Motor &imiddle);
+
+  /**
+   * Sets the motors using an h-drive layout.
+   *
+   * @param ileft The left motor.
+   * @param iright The right motor.
+   * @param imiddle The middle motor.
+   * @return An ongoing builder.
+   */
+  ChassisControllerBuilder &
+  withMotors(const MotorGroup &ileft, const MotorGroup &iright, const MotorGroup &imiddle);
+
+  /**
+   * Sets the motors using an h-drive layout.
+   *
+   * @param ileft The left motor.
+   * @param iright The right motor.
+   * @param imiddle The middle motor.
+   * @return An ongoing builder.
+   */
+  ChassisControllerBuilder &
+  withMotors(const MotorGroup &ileft, const MotorGroup &iright, const Motor &imiddle);
+
+  /**
+   * Sets the motors using an h-drive layout.
+   *
+   * @param ileft The left motor.
+   * @param iright The right motor.
+   * @param imiddle The middle motor.
+   * @return An ongoing builder.
+   */
+  ChassisControllerBuilder &withMotors(const std::shared_ptr<AbstractMotor> &ileft,
+                                       const std::shared_ptr<AbstractMotor> &iright,
+                                       const std::shared_ptr<AbstractMotor> &imiddle);
 
   /**
    * Sets the sensors. The default sensors are the motor's integrated encoders.
@@ -195,14 +241,27 @@ class ChassisControllerBuilder {
    * state.
    * @param imoveThreshold The minimum length movement.
    * @param iturnThreshold The minimum angle turn.
-   * @param iwheelVelDelta The maximum delta between wheel velocities to consider the robot as
-   * driving straight.
    * @return An ongoing builder.
    */
   ChassisControllerBuilder &withOdometry(const StateMode &imode = StateMode::FRAME_TRANSFORMATION,
                                          const QLength &imoveThreshold = 0_mm,
-                                         const QAngle &iturnThreshold = 0_deg,
-                                         const QSpeed &iwheelVelDelta = 0.0001_mps);
+                                         const QAngle &iturnThreshold = 0_deg);
+
+  /**
+   * Sets the odometry information, causing the builder to generate an Odometry variant.
+   *
+   * @param iodomScales The ChassisScales used just for odometry (if they are different than those
+   * for the drive).
+   * @param imode The new default StateMode used to interpret target points and query the Odometry
+   * state.
+   * @param imoveThreshold The minimum length movement.
+   * @param iturnThreshold The minimum angle turn.
+   * @return An ongoing builder.
+   */
+  ChassisControllerBuilder &withOdometry(const ChassisScales &iodomScales,
+                                         const StateMode &imode = StateMode::FRAME_TRANSFORMATION,
+                                         const QLength &imoveThreshold = 0_mm,
+                                         const QAngle &iturnThreshold = 0_deg);
 
   /**
    * Sets the odometry information, causing the builder to generate an Odometry variant.
@@ -233,20 +292,24 @@ class ChassisControllerBuilder {
     std::unique_ptr<Filter> iangleFilter = std::make_unique<PassthroughFilter>());
 
   /**
-   * Sets the gearset. The default gearset is derived from the motor's.
-   *
-   * @param igearset The gearset.
-   * @return An ongoing builder.
-   */
-  ChassisControllerBuilder &withGearset(const AbstractMotor::GearsetRatioPair &igearset);
-
-  /**
    * Sets the chassis dimensions.
    *
-   * @param iscales The dimensions.
+   * @param igearset The gearset in the drive motors.
+   * @param idimensions The dimensions in the same order as in ChassisScales.
    * @return An ongoing builder.
    */
-  ChassisControllerBuilder &withDimensions(const ChassisScales &iscales);
+  ChassisControllerBuilder &withDimensions(const AbstractMotor::GearsetRatioPair &igearset,
+                                           const std::initializer_list<QLength> &idimensions);
+
+  /**
+   * Sets the chassis dimensions by setting the raw scales.
+   *
+   * @param igearset The gearset in the drive motors.
+   * @param iscales The raw scales in the same order as in ChassisScales.
+   * @return An ongoing builder.
+   */
+  ChassisControllerBuilder &withDimensions(const AbstractMotor::GearsetRatioPair &igearset,
+                                           const std::initializer_list<double> &iscales);
 
   /**
    * Sets the max velocity. Overrides the max velocity of the gearset.
@@ -341,15 +404,16 @@ class ChassisControllerBuilder {
   ChassisControllerBuilder &notParentedToCurrentTask();
 
   /**
-   * Builds the ChassisController. Throws a std::runtime_exception if no motors were set.
+   * Builds the ChassisController. Throws a std::runtime_exception if no motors were set or if no
+   * dimensions were set.
    *
    * @return A fully built ChassisController.
    */
   std::shared_ptr<ChassisController> build();
 
   /**
-   * Builds the OdomChassisController. Throws a std::runtime_exception if no motors were set or if
-   * no odometry information was passed.
+   * Builds the OdomChassisController. Throws a std::runtime_exception if no motors were set, if no
+   * dimensions were set, or if no odometry information was passed.
    *
    * @return A fully built OdomChassisController.
    */
@@ -370,10 +434,19 @@ class ChassisControllerBuilder {
     std::shared_ptr<AbstractMotor> bottomLeft;
   };
 
-  bool hasMotors{false};  // Used to verify motors were passed
-  bool isSkidSteer{true}; // Whether to use SkidSteerMotors or XDriveMotors
+  struct HDriveMotors {
+    std::shared_ptr<AbstractMotor> left;
+    std::shared_ptr<AbstractMotor> right;
+    std::shared_ptr<AbstractMotor> middle;
+  };
+
+  enum class DriveMode { SkidSteer, XDrive, HDrive };
+
+  bool hasMotors{false}; // Used to verify motors were passed
+  DriveMode driveMode{DriveMode::SkidSteer};
   SkidSteerMotors skidSteerMotors;
   XDriveMotors xDriveMotors;
+  HDriveMotors hDriveMotors;
 
   bool sensorsSetByUser{false}; // Used so motors don't overwrite sensors set manually
   std::shared_ptr<ContinuousRotarySensor> leftSensor{nullptr};
@@ -391,14 +464,14 @@ class ChassisControllerBuilder {
   TimeUtilFactory closedLoopControllerTimeUtilFactory = TimeUtilFactory();
   TimeUtilFactory odometryTimeUtilFactory = TimeUtilFactory();
 
-  bool gearsetSetByUser{false}; // Used so motors don't overwrite gearset set manually
   AbstractMotor::GearsetRatioPair gearset{AbstractMotor::gearset::invalid};
-  ChassisScales scales{{1, 1}, imev5GreenTPR};
+  ChassisScales driveScales{{1, 1}, imev5GreenTPR};
+  bool differentOdomScales{false};
+  ChassisScales odomScales{{1, 1}, imev5GreenTPR};
   std::shared_ptr<Logger> controllerLogger = Logger::getDefaultLogger();
 
   bool hasOdom{false}; // Whether odometry was passed
   std::unique_ptr<Odometry> odometry;
-  QSpeed wheelVelDelta;
   StateMode stateMode;
   QLength moveThreshold;
   QAngle turnThreshold;
@@ -414,7 +487,10 @@ class ChassisControllerBuilder {
   std::shared_ptr<ChassisControllerIntegrated> buildCCI();
   std::shared_ptr<DefaultOdomChassisController>
   buildDOCC(std::shared_ptr<ChassisController> chassisController);
+
+  std::shared_ptr<ChassisModel> makeChassisModel();
   std::shared_ptr<SkidSteerModel> makeSkidSteerModel();
   std::shared_ptr<XDriveModel> makeXDriveModel();
+  std::shared_ptr<HDriveModel> makeHDriveModel();
 };
 } // namespace okapi
