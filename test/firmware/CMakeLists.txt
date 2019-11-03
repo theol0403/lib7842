@@ -53,9 +53,11 @@ add_library(OkapiLibV5 STATIC
         include/okapi/api/chassis/controller/odomChassisController.hpp
         include/okapi/api/chassis/controller/defaultOdomChassisController.hpp
         include/okapi/api/chassis/model/chassisModel.hpp
+        include/okapi/api/chassis/model/hDriveModel.hpp
         include/okapi/api/chassis/model/readOnlyChassisModel.hpp
         include/okapi/api/chassis/model/skidSteerModel.hpp
         include/okapi/api/chassis/model/threeEncoderSkidSteerModel.hpp
+        include/okapi/api/chassis/model/threeEncoderXDriveModel.hpp
         include/okapi/api/chassis/model/xDriveModel.hpp
         include/okapi/api/control/async/asyncController.hpp
         include/okapi/api/control/async/asyncLinearMotionProfileController.hpp
@@ -98,6 +100,7 @@ add_library(OkapiLibV5 STATIC
         include/okapi/api/filter/passthroughFilter.hpp
         include/okapi/api/filter/velMath.hpp
         include/okapi/api/odometry/odometry.hpp
+        include/okapi/api/odometry/twoEncoderOdometry.hpp
         include/okapi/api/odometry/odomMath.hpp
         include/okapi/api/odometry/threeEncoderOdometry.hpp
         include/okapi/api/units/QAcceleration.hpp
@@ -131,8 +134,10 @@ add_library(OkapiLibV5 STATIC
         src/api/chassis/controller/chassisScales.cpp
         src/api/chassis/controller/odomChassisController.cpp
         src/api/chassis/controller/defaultOdomChassisController.cpp
+        src/api/chassis/model/hDriveModel.cpp
         src/api/chassis/model/skidSteerModel.cpp
         src/api/chassis/model/threeEncoderSkidSteerModel.cpp
+        src/api/chassis/model/threeEncoderXDriveModel.cpp
         src/api/chassis/model/xDriveModel.cpp
         src/api/control/async/asyncLinearMotionProfileController.cpp
         src/api/control/async/asyncMotionProfileController.cpp
@@ -158,7 +163,7 @@ add_library(OkapiLibV5 STATIC
         src/api/filter/filter.cpp
         src/api/filter/passthroughFilter.cpp
         src/api/filter/velMath.cpp
-        src/api/odometry/odometry.cpp
+        src/api/odometry/twoEncoderOdometry.cpp
         src/api/odometry/odomMath.cpp
         src/api/odometry/threeEncoderOdometry.cpp
         src/api/util/abstractRate.cpp
@@ -179,8 +184,9 @@ add_library(OkapiLibV5 STATIC
         test/controllerTests.cpp
         test/controlTests.cpp
         test/filterTests.cpp
+        test/hDriveModelTests.cpp
         test/implMocks.cpp
-        test/odometryTests.cpp
+        test/twoEncoderOdometryTests.cpp
         test/utilTests.cpp
         test/unitTests.cpp
         test/loggerTests.cpp
@@ -206,4 +212,5 @@ add_library(OkapiLibV5 STATIC
         test/odomMathTests.cpp
         include/okapi/api/odometry/stateMode.hpp
         include/okapi/api/odometry/odomState.hpp
-        src/api/odometry/odomState.cpp)
+        src/api/odometry/odomState.cpp
+        test/threeEncoderXDriveModelTests.cpp)
