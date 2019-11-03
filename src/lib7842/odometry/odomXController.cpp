@@ -22,9 +22,34 @@ OdomXController::OdomXController(
   model(imodel),
   strafeController(std::move(istrafeController)) {};
 
-// /**
-//  * Driving API
-//  */
+/**
+ * Driving API
+ */
+void OdomXController::strafeDistance(
+  const QLength& distance,
+  const QAngle& direction,
+  const AngleCalculator& angleCalculator,
+  double turnScale,
+  const Settler& settler) {
+  const State& state = odometry->getState();
+  QAngle absoluteDirection = direction + state.theta;
+  QLength x = sin(absoluteDirection.convert(radian)) * distance;
+  QLength y = cos(absoluteDirection.convert(radian)) * distance;
+  Vector target = Vector(state) + Vector(x, y);
+  strafeToPoint(target, angleCalculator, turnScale, settler);
+}
+
+void OdomXController::strafeDistanceAtDirection(
+  const QLength& distance,
+  const QAngle& direction,
+  const AngleCalculator& angleCalculator,
+  double turnScale,
+  const Settler& settler) {
+  QLength x = sin(direction.convert(radian)) * distance;
+  QLength y = cos(direction.convert(radian)) * distance;
+  Vector target = Vector(odometry->getState()) + Vector(x, y);
+  strafeToPoint(target, angleCalculator, turnScale, settler);
+}
 
 /**
  * Point API

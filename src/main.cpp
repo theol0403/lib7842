@@ -108,7 +108,8 @@ void opcontrol() {
 
     if (controller.getDigital(ControllerDigital::A)) {
       // odomController->driveToPoint2({0_ft, 0_ft}, 2);
-      odomController->strafeToPoint({0_ft, 0_ft}, OdomController::makeAngleCalculator(360));
+      // odomController->strafeToPoint({0_ft, 0_ft}, OdomController::makeAngleCalculator({3_ft, 2_ft}), 2);
+      odomController->strafeDistance(1_ft, 90_deg);
     }
 
     pros::delay(10);

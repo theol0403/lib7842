@@ -31,20 +31,36 @@ public:
   virtual ~OdomXController() = default;
 
   /**
-   * Strafe a distance in a direction while correcting angle using an AngleCalculator
+   * Strafe a distance in a relative direction while correcting angle using an AngleCalculator
    *
    * @param distance        The distance
-   * @param direction       The direction of the strafing
+   * @param direction       The relative direction of the strafing
    * @param angleCalculator The angle calculator
    * @param turnScale       The turn scale
    * @param settler         The settler
    */
-  // virtual void strafeDistance(
-  //   const QLength& distance,
-  //   const QAngle& direction,
-  //   const AngleCalculator& angleCalculator = makeAngleCalculator(),
-  //   double turnScale = 1,
-  //   const Settler& settler = defaultDriveSettler);
+  virtual void strafeDistance(
+    const QLength& distance,
+    const QAngle& direction,
+    const AngleCalculator& angleCalculator = makeAngleCalculator(),
+    double turnScale = 1,
+    const Settler& settler = defaultDriveSettler);
+
+  /**
+   * Strafe a distance in an absolute direction while correcting angle using an AngleCalculator
+   *
+   * @param distance        The distance
+   * @param direction       The absolute direction of the strafing
+   * @param angleCalculator The angle calculator
+   * @param turnScale       The turn scale
+   * @param settler         The settler
+   */
+  virtual void strafeDistanceAtDirection(
+    const QLength& distance,
+    const QAngle& direction,
+    const AngleCalculator& angleCalculator = makeAngleCalculator(),
+    double turnScale = 1,
+    const Settler& settler = defaultDriveSettler);
 
   /**
    * Drive to a point using custom point seeking for strafing and an AngleCalculator
