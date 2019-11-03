@@ -81,10 +81,10 @@ public:
    * @param angleCalculator The angle calculator
    * @param settler         The settler
    */
-  // virtual void strafeToPoint(
-  //   const Vector& targetPoint,
-  //   const AngleCalculator& angleCalculator = makeAngleCalculator(),
-  //   const Settler& settler = defaultDriveSettler);
+  virtual void strafeToPoint(
+    const Vector& targetPoint,
+    const AngleCalculator& angleCalculator = makeAngleCalculator(),
+    const Settler& settler = defaultDriveSettler);
 
   /**
    * A Settler that is used for driving/strafing which uses the distance and strafe pid's isSettled() method

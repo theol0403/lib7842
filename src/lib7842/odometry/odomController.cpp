@@ -149,7 +149,7 @@ bool OdomController::defaultTurnSettler(const OdomController& odom) {
 }
 
 bool OdomController::defaultDriveSettler(const OdomController& odom) {
-  return odom.distanceController->isSettled() /*&& odom.angleController->isSettled()*/;
+  return odom.distanceController->isSettled();
 }
 
 /**

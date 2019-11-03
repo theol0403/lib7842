@@ -80,6 +80,25 @@ void OdomXController::driveToPoint(const Vector& targetPoint, double turnScale, 
   driveToPoint(targetPoint, makeAngleCalculator(targetPoint), turnScale, settler);
 }
 
+void OdomXController::strafeToPoint(
+  const Vector& targetPoint, const AngleCalculator& angleCalculator, const Settler& settler) {
+  resetPid();
+  do {
+    distanceErr = distanceToPoint(targetPoint);
+    angleErr = angleCalculator(*this);
+
+    QAngle angleToTarget = angleToPoint(targetPoint);
+
+    double distanceVel = distanceController->step(-distanceErr.convert(millimeter));
+    double angleVel = angleController->step(-angleErr.convert(degree));
+
+    strafeXVector(distanceVel, angleToTarget, angleVel);
+    pros::delay(10);
+  } while (!settler(*this));
+
+  driveXVector(0, 0, 0);
+}
+
 bool OdomXController::defaultStrafeSettler(const OdomController& odom) {
   const OdomXController& xodom = dynamic_cast<const OdomXController&>(odom);
   return xodom.distanceController->isSettled() && xodom.strafeController->isSettled();
@@ -126,13 +145,15 @@ void OdomXController::driveXVector(double forwardSpeed, double yaw, double straf
 void OdomXController::strafeXVector(double speed, const QAngle& direction, double yaw) {
   speed = std::clamp(speed, -1.0, 1.0);
 
-  double strafeTopLeft = speed * std::sin((direction + 45_deg).convert(radian));
-  double strafeTopRight = speed * std::cos((direction + 45_deg).convert(radian));
+  double scaleTopLeft =
+    remapRange(std::sin((direction + 45_deg).convert(radian)), -0.70710678118, 0.70710678118, -1.0, 1.0);
+  double scaleTopRight =
+    remapRange(std::cos((direction + 45_deg).convert(radian)), -0.70710678118, 0.70710678118, -1.0, 1.0);
 
-  double topLeft = strafeTopLeft + yaw;
-  double topRight = strafeTopRight - yaw;
-  double bottomLeft = strafeTopRight + yaw;
-  double bottomRight = strafeTopLeft - yaw;
+  double topLeft = speed * scaleTopLeft + yaw;
+  double topRight = speed * scaleTopRight - yaw;
+  double bottomLeft = speed * scaleTopRight + yaw;
+  double bottomRight = speed * scaleTopLeft - yaw;
 
   double maxInputMag =
     std::max({std::abs(topLeft), std::abs(topRight), std::abs(bottomLeft), std::abs(bottomRight)});
