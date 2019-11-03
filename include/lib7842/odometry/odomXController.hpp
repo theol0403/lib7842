@@ -106,6 +106,15 @@ protected:
    */
   void driveXVector(double forwardSpeed, double yaw, double strafe);
 
+  /**
+   * Controls the chassis movement. Strafes at the given speed at the given direction.
+   *
+   * @param speed     The speed
+   * @param direction The direction
+   * @param yaw       The yaw
+   */
+  void strafeXVector(double speed, const QAngle& direction, double yaw);
+
   std::shared_ptr<XDriveModel> model {nullptr};
   std::unique_ptr<IterativePosPIDController> strafeController {nullptr};
 };

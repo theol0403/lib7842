@@ -102,8 +102,8 @@ void OdomXController::driveXVector(double forwardSpeed, double yaw, double straf
   strafe = std::clamp(strafe, -1.0, 1.0);
   double leftOutput = forwardSpeed + yaw;
   double rightOutput = forwardSpeed - yaw;
-  double maxInputMag = std::max(std::max(std::abs(leftOutput), std::abs(rightOutput)), std::abs(strafe));
-  if (maxInputMag > 1) {
+  double maxInputMag = std::max({std::abs(leftOutput), std::abs(rightOutput), std::abs(strafe)});
+  if (maxInputMag > 1.0) {
     leftOutput /= maxInputMag;
     rightOutput /= maxInputMag;
     strafe /= maxInputMag;
@@ -121,6 +121,36 @@ void OdomXController::driveXVector(double forwardSpeed, double yaw, double straf
     static_cast<int16_t>(std::clamp(rightOutput + strafe, -1.0, 1.0) * model->getMaxVoltage()));
   model->getBottomLeftMotor()->moveVoltage(
     static_cast<int16_t>(std::clamp(leftOutput - strafe, -1.0, 1.0) * model->getMaxVoltage()));
+}
+
+void OdomXController::strafeXVector(double speed, const QAngle& direction, double yaw) {
+  speed = std::clamp(speed, -1.0, 1.0);
+
+  double strafeTopLeft = speed * std::sin((direction + 45_deg).convert(radian));
+  double strafeTopRight = speed * std::cos((direction + 45_deg).convert(radian));
+
+  double topLeft = strafeTopLeft + yaw;
+  double topRight = strafeTopRight - yaw;
+  double bottomLeft = strafeTopRight + yaw;
+  double bottomRight = strafeTopLeft - yaw;
+
+  double maxInputMag =
+    std::max({std::abs(topLeft), std::abs(topRight), std::abs(bottomLeft), std::abs(bottomRight)});
+  if (maxInputMag > 1.0) {
+    topLeft /= maxInputMag;
+    topRight /= maxInputMag;
+    bottomLeft /= maxInputMag;
+    bottomRight /= maxInputMag;
+  }
+
+  model->getTopLeftMotor()->moveVoltage(
+    static_cast<int16_t>(std::clamp(topLeft, -1.0, 1.0) * model->getMaxVoltage()));
+  model->getTopRightMotor()->moveVoltage(
+    static_cast<int16_t>(std::clamp(topRight, -1.0, 1.0) * model->getMaxVoltage()));
+  model->getBottomRightMotor()->moveVoltage(
+    static_cast<int16_t>(std::clamp(bottomRight, -1.0, 1.0) * model->getMaxVoltage()));
+  model->getBottomLeftMotor()->moveVoltage(
+    static_cast<int16_t>(std::clamp(bottomLeft, -1.0, 1.0) * model->getMaxVoltage()));
 }
 
 } // namespace lib7842
