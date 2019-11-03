@@ -145,6 +145,11 @@ public:
   static bool defaultDriveSettler(const OdomController& odom);
 
   /**
+   * A Settler that is used for driving which uses the distance and angle pid's isSettled() method
+   */
+  static bool defaultDriveAngleSettler(const OdomController& odom);
+
+  /**
    * A Turner that excecutes a point turn which turns in place. Used as default for turn functions
    */
   static void pointTurn(ChassisModel& model, double vel);
