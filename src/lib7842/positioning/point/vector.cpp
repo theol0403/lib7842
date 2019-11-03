@@ -62,7 +62,8 @@ Vector Vector::operator/(const double scalar) const {
 }
 
 Vector Vector::normalize(const Vector& lhs) {
-  return lhs / mag(lhs).convert(meter);
+  double imag = mag(lhs).convert(meter);
+  return imag ? lhs / imag : lhs;
 }
 
 Vector Vector::scalarMult(const Vector& lhs, const double scalar) {
