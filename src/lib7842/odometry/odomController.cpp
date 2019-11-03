@@ -213,6 +213,14 @@ AngleCalculator OdomController::makeAngleCalculator() {
 /**
  * OdomController utilities
  */
+void OdomController::resetPid() {
+  turnController->reset();
+  distanceController->reset();
+  angleController->reset();
+  angleErr = 0_deg;
+  distanceErr = 0_in;
+}
+
 void OdomController::driveVector(double forwardSpeed, double yaw) {
   forwardSpeed = std::clamp(forwardSpeed, -1.0, 1.0);
   double leftOutput = forwardSpeed + yaw;
@@ -224,14 +232,6 @@ void OdomController::driveVector(double forwardSpeed, double yaw) {
   }
 
   model->tank(leftOutput, rightOutput);
-}
-
-void OdomController::resetPid() {
-  turnController->reset();
-  distanceController->reset();
-  angleController->reset();
-  angleErr = 0_deg;
-  distanceErr = 0_in;
 }
 
 /**

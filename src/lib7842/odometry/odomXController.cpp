@@ -25,36 +25,6 @@ OdomXController::OdomXController(
 // /**
 //  * Driving API
 //  */
-// void OdomXController::moveDistanceAtAngle(
-//   const QLength& distance,
-//   const AngleCalculator& angleCalculator,
-//   double turnScale,
-//   const Settler& settler) {
-
-//   resetPid();
-//   auto lastTicks = model->getSensorVals();
-
-//   do {
-//     auto newTicks = model->getSensorVals();
-//     QLength leftDistance = ((newTicks[0] - lastTicks[0]) / odometry->getScales().straight) * meter;
-//     QLength rightDistance = ((newTicks[1] - lastTicks[1]) / odometry->getScales().straight) * meter;
-
-//     distanceErr = distance - ((leftDistance + rightDistance) / 2);
-//     angleErr = angleCalculator(*this);
-
-//     double distanceVel = distanceController->step(-distanceErr.convert(millimeter));
-//     double angleVel = angleController->step(-angleErr.convert(degree));
-
-//     driveVector(distanceVel, angleVel * turnScale);
-//     pros::delay(10);
-//   } while (!settler(*this));
-
-//   driveVector(0, 0);
-// }
-
-// void OdomXController::moveDistance(const QLength& distance, const Settler& settler) {
-//   moveDistanceAtAngle(distance, makeAngleCalculator(odometry->getState().theta), 1, settler);
-// }
 
 /**
  * Point API
@@ -110,6 +80,15 @@ bool OdomXController::defaultStrafeSettler(const OdomController& odom) {
 /**
  * OdomXController utilities
  */
+void OdomXController::resetPid() {
+  turnController->reset();
+  distanceController->reset();
+  angleController->reset();
+  strafeController->reset();
+  angleErr = 0_deg;
+  distanceErr = 0_in;
+}
+
 void OdomXController::driveXVector(double forwardSpeed, double yaw, double strafe) {
   forwardSpeed = std::clamp(forwardSpeed, -1.0, 1.0);
   strafe = std::clamp(strafe, -1.0, 1.0);
@@ -134,15 +113,6 @@ void OdomXController::driveXVector(double forwardSpeed, double yaw, double straf
     static_cast<int16_t>(std::clamp(rightOutput + strafe, -1.0, 1.0) * model->getMaxVoltage()));
   model->getBottomLeftMotor()->moveVoltage(
     static_cast<int16_t>(std::clamp(leftOutput - strafe, -1.0, 1.0) * model->getMaxVoltage()));
-}
-
-void OdomXController::resetPid() {
-  turnController->reset();
-  distanceController->reset();
-  angleController->reset();
-  strafeController->reset();
-  angleErr = 0_deg;
-  distanceErr = 0_in;
 }
 
 } // namespace lib7842

@@ -199,18 +199,18 @@ public:
 
 protected:
   /**
+   * Resets the pid controllers, used before every motion
+   */
+  virtual void resetPid();
+
+  /**
    * Controls the chassis movement
    * Applies magnitude control to prioritize turning
    *
    * @param forwardSpeed Forward speed
    * @param yaw          The yaw
    */
-  virtual void driveVector(double forwardSpeed, double yaw);
-
-  /**
-   * Resets the pid controllers, used before every motion
-   */
-  virtual void resetPid();
+  void driveVector(double forwardSpeed, double yaw);
 
   /**
    * Calculates angle from the chassis to the point

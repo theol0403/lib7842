@@ -30,27 +30,21 @@ public:
 
   virtual ~OdomXController() = default;
 
-  // /**
-  //  * Drive a distance while correcting angle using an AngleCalculator
-  //  *
-  //  * @param distance        The distance
-  //  * @param angleCalculator The angle calculator
-  //  * @param turnScale       The turn scale
-  //  * @param settler         The settler
-  //  */
-  // virtual void moveDistanceAtAngle(
+  /**
+   * Strafe a distance in a direction while correcting angle using an AngleCalculator
+   *
+   * @param distance        The distance
+   * @param direction       The direction of the strafing
+   * @param angleCalculator The angle calculator
+   * @param turnScale       The turn scale
+   * @param settler         The settler
+   */
+  // virtual void strafeDistance(
   //   const QLength& distance,
-  //   const AngleCalculator& angleCalculator,
-  //   double turnScale,
-  //   const Settler& settler = defaultStrafeSettler);
-
-  // /**
-  //  * Drive a distance while maintaining starting angle
-  //  *
-  //  * @param distance The distance
-  //  * @param settler  The settler
-  //  */
-  // virtual void moveDistance(const QLength& distance, const Settler& settler = defaultStrafeSettler);
+  //   const QAngle& direction,
+  //   const AngleCalculator& angleCalculator = makeAngleCalculator(),
+  //   double turnScale = 1,
+  //   const Settler& settler = defaultDriveSettler);
 
   /**
    * Drive to a point using custom point seeking
@@ -66,11 +60,43 @@ public:
     const Settler& settler = defaultStrafeSettler) override;
 
   /**
+   * Drive to a point using custom point seeking for strafing and an AngleCalculator
+   *
+   * @param targetPoint     The target point
+   * @param angleCalculator The angle calculator
+   * @param turnScale       The turn scale used to control the priority of turning over driving. A higher value will
+   *                        make the robot turn to face the point sooner
+   * @param settler         The settler
+   */
+  virtual void driveToPoint(
+    const Vector& targetPoint,
+    const AngleCalculator& angleCalculator = makeAngleCalculator(),
+    double turnScale = 1,
+    const Settler& settler = defaultStrafeSettler);
+
+  /**
+   * Drive to a point using custom point seeking for strafing and an AngleCalculator
+   *
+   * @param targetPoint     The target point
+   * @param angleCalculator The angle calculator
+   * @param settler         The settler
+   */
+  virtual void strafeToPoint(
+    const Vector& targetPoint,
+    const AngleCalculator& angleCalculator = makeAngleCalculator(),
+    const Settler& settler = defaultDriveSettler);
+
+  /**
    * A Settler that is used for driving/strafing which uses the distance and strafe pid's isSettled() method
    */
   static bool defaultStrafeSettler(const OdomController& odom);
 
 protected:
+  /**
+   * Resets the pid controllers, used before every motion
+   */
+  void resetPid() override;
+
   /**
    * Controls the chassis movement. Applies magnitude control to prioritize turning.
    *
@@ -79,11 +105,6 @@ protected:
    * @param strafe       The strafe speed
    */
   void driveXVector(double forwardSpeed, double yaw, double strafe);
-
-  /**
-   * Resets the pid controllers, used before every motion
-   */
-  void resetPid() override;
 
   std::shared_ptr<XDriveModel> model {nullptr};
   std::unique_ptr<IterativePosPIDController> strafeController {nullptr};
