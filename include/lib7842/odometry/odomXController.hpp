@@ -20,8 +20,8 @@ public:
    * @param isettleRadius       The radius from the target point to give up angle correction
    */
   OdomXController(
-    std::shared_ptr<XDriveModel> imodel,
-    std::shared_ptr<CustomOdometry> iodometry,
+    const std::shared_ptr<XDriveModel>& imodel,
+    const std::shared_ptr<CustomOdometry>& iodometry,
     std::unique_ptr<IterativePosPIDController> idistanceController,
     std::unique_ptr<IterativePosPIDController> iturnController,
     std::unique_ptr<IterativePosPIDController> iangleController,

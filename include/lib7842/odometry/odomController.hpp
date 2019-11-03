@@ -39,8 +39,8 @@ public:
    * @param isettleRadius       The radius from the target point to give up angle correction
    */
   OdomController(
-    std::shared_ptr<ChassisModel> imodel,
-    std::shared_ptr<CustomOdometry> iodometry,
+    const std::shared_ptr<ChassisModel>& imodel,
+    const std::shared_ptr<CustomOdometry>& iodometry,
     std::unique_ptr<IterativePosPIDController> idistanceController,
     std::unique_ptr<IterativePosPIDController> iturnController,
     std::unique_ptr<IterativePosPIDController> iangleController,
@@ -176,7 +176,7 @@ public:
    * @param angle The angle error theshold
    * @param distance The distance error theshold
    */
-  static Settler makeSettler(const QLength& angle, const QAngle& distance);
+  static Settler makeSettler(const QLength& distance, const QAngle& angle);
 
   /**
    * Generates an AngleCalculator that seeks a given absolute angle

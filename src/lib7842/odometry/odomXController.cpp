@@ -5,8 +5,8 @@ namespace lib7842 {
 using namespace lib7842::OdomMath;
 
 OdomXController::OdomXController(
-  std::shared_ptr<XDriveModel> imodel,
-  std::shared_ptr<CustomOdometry> iodometry,
+  const std::shared_ptr<XDriveModel>& imodel,
+  const std::shared_ptr<CustomOdometry>& iodometry,
   std::unique_ptr<IterativePosPIDController> idistanceController,
   std::unique_ptr<IterativePosPIDController> iturnController,
   std::unique_ptr<IterativePosPIDController> iangleController,
