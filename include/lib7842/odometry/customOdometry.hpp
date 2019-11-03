@@ -3,7 +3,6 @@
 
 #include "lib7842/positioning/point/state.hpp"
 #include "lib7842/other/taskWrapper.hpp"
-#include "threeEncXDriveModel.hpp"
 
 namespace lib7842 {
 class CustomOdometry : public Odometry, public TaskWrapper {

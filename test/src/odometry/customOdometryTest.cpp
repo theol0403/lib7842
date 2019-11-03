@@ -1,17 +1,19 @@
 #include "test.hpp"
 #include "lib7842/odometry/customOdometry.hpp"
 
-class MockThreeEncXDriveModel : public ThreeEncXDriveModel {
+class MockThreeEncoderXDriveModel : public ThreeEncoderXDriveModel {
 public:
-  MockThreeEncXDriveModel() :
-    ThreeEncXDriveModel(
+  MockThreeEncoderXDriveModel() :
+    ThreeEncoderXDriveModel(
       std::make_shared<MockMotor>(),
       std::make_shared<MockMotor>(),
       std::make_shared<MockMotor>(),
       std::make_shared<MockMotor>(),
       std::make_shared<MockContinuousRotarySensor>(),
       std::make_shared<MockContinuousRotarySensor>(),
-      std::make_shared<MockContinuousRotarySensor>()) {}
+      std::make_shared<MockContinuousRotarySensor>(),
+      200,
+      12000) {}
 
   std::valarray<std::int32_t> getSensorVals() const override {
     return std::valarray<std::int32_t> {leftEnc, rightEnc, middleEnc};
@@ -31,7 +33,7 @@ public:
 class CustomOdometryTest : public ::testing::Test {
 protected:
   void SetUp() override {
-    model = std::make_shared<MockThreeEncXDriveModel>();
+    model = std::make_shared<MockThreeEncoderXDriveModel>();
     odom = std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}));
   }
 
@@ -47,7 +49,7 @@ protected:
     EXPECT_NEAR(iodom->getState().theta.convert(degree), istate.theta.convert(degree), error);
   }
 
-  std::shared_ptr<MockThreeEncXDriveModel> model;
+  std::shared_ptr<MockThreeEncoderXDriveModel> model;
   std::shared_ptr<CustomOdometry> odom;
 };
 

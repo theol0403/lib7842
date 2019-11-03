@@ -64,7 +64,7 @@ void autonomous() {}
 void opcontrol() {
   Controller controller(ControllerId::master);
 
-  auto model = std::make_shared<ThreeEncXDriveModel>(
+  auto model = std::make_shared<ThreeEncoderXDriveModel>(
     // motors
     std::make_shared<Motor>(1), //
     std::make_shared<Motor>(-2), //
