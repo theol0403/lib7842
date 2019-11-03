@@ -193,6 +193,13 @@ public:
   static AngleCalculator makeAngleCalculator(const Vector& point);
 
   /**
+   * Generates an AngleCaclulator that returns a constant error.
+   *
+   * @param error The error
+   */
+  static AngleCalculator makeAngleCalculator(double error);
+
+  /**
    * Generates an AngleCalculator that does nothing
    */
   static AngleCalculator makeAngleCalculator();

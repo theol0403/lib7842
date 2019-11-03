@@ -204,6 +204,12 @@ AngleCalculator OdomController::makeAngleCalculator(const Vector& point) {
   };
 }
 
+AngleCalculator OdomController::makeAngleCalculator(double error) {
+  return [=](const OdomController&) {
+    return error * degree;
+  };
+}
+
 AngleCalculator OdomController::makeAngleCalculator() {
   return [=](const OdomController&) {
     return 0_deg;
