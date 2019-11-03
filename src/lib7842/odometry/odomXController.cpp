@@ -29,7 +29,11 @@ OdomXController::OdomXController(
 /**
  * Point API
  */
-void OdomXController::driveToPoint(const Vector& targetPoint, double turnScale, const Settler& settler) {
+void OdomXController::driveToPoint(
+  const Vector& targetPoint,
+  const AngleCalculator& angleCalculator,
+  double turnScale,
+  const Settler& settler) {
   resetPid();
   do {
     const State& state = odometry->getState();
@@ -37,7 +41,7 @@ void OdomXController::driveToPoint(const Vector& targetPoint, double turnScale, 
     Vector closestStrafe = closest(state, state.theta + 90_deg, targetPoint);
 
     QAngle angleToClose = angleToPoint(closestPoint);
-    QAngle angleToTarget = angleToPoint(targetPoint);
+    QAngle angleToTarget = angleCalculator(*this);
     QAngle angleToStrafe = rollAngle180(angleToPoint(closestStrafe) - 90_deg); // rotate angle
 
     QLength distanceToClose = distanceToPoint(closestPoint);
@@ -70,6 +74,10 @@ void OdomXController::driveToPoint(const Vector& targetPoint, double turnScale, 
   } while (!settler(*this));
 
   driveXVector(0, 0, 0);
+}
+
+void OdomXController::driveToPoint(const Vector& targetPoint, double turnScale, const Settler& settler) {
+  driveToPoint(targetPoint, makeAngleCalculator(targetPoint), turnScale, settler);
 }
 
 bool OdomXController::defaultStrafeSettler(const OdomController& odom) {

@@ -47,6 +47,21 @@ public:
   //   const Settler& settler = defaultDriveSettler);
 
   /**
+   * Drive to a point using custom point seeking for strafing and an AngleCalculator
+   *
+   * @param targetPoint     The target point
+   * @param angleCalculator The angle calculator
+   * @param turnScale       The turn scale used to control the priority of turning over driving. A higher value will
+   *                        make the robot turn to face the point sooner
+   * @param settler         The settler
+   */
+  virtual void driveToPoint(
+    const Vector& targetPoint,
+    const AngleCalculator& angleCalculator = makeAngleCalculator(),
+    double turnScale = 1,
+    const Settler& settler = defaultStrafeSettler);
+
+  /**
    * Drive to a point using custom point seeking
    *
    * @param targetPoint The target point
@@ -64,27 +79,12 @@ public:
    *
    * @param targetPoint     The target point
    * @param angleCalculator The angle calculator
-   * @param turnScale       The turn scale used to control the priority of turning over driving. A higher value will
-   *                        make the robot turn to face the point sooner
    * @param settler         The settler
    */
-  virtual void driveToPoint(
-    const Vector& targetPoint,
-    const AngleCalculator& angleCalculator = makeAngleCalculator(),
-    double turnScale = 1,
-    const Settler& settler = defaultStrafeSettler);
-
-  /**
-   * Drive to a point using custom point seeking for strafing and an AngleCalculator
-   *
-   * @param targetPoint     The target point
-   * @param angleCalculator The angle calculator
-   * @param settler         The settler
-   */
-  virtual void strafeToPoint(
-    const Vector& targetPoint,
-    const AngleCalculator& angleCalculator = makeAngleCalculator(),
-    const Settler& settler = defaultDriveSettler);
+  // virtual void strafeToPoint(
+  //   const Vector& targetPoint,
+  //   const AngleCalculator& angleCalculator = makeAngleCalculator(),
+  //   const Settler& settler = defaultDriveSettler);
 
   /**
    * A Settler that is used for driving/strafing which uses the distance and strafe pid's isSettled() method

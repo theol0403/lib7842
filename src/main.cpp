@@ -99,14 +99,16 @@ void opcontrol() {
     //Strafe PID - To mm
     std::make_unique<IterativePosPIDController>(
       0.015, 0.0002, 0.0002, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 100_ms)),
-    5_in);
+    2_in);
 
   while (true) {
     model->xArcade(
       controller.getAnalog(ControllerAnalog::rightX), controller.getAnalog(ControllerAnalog::rightY),
       controller.getAnalog(ControllerAnalog::leftX));
 
-    if (controller.getDigital(ControllerDigital::A)) { odomController->driveToPoint({0_ft, 0_ft}, 2); }
+    if (controller.getDigital(ControllerDigital::A)) {
+      odomController->driveToPoint({0_ft, 0_ft}, OdomController::makeAngleCalculator({4_ft, 3_ft}), 3);
+    }
 
     pros::delay(10);
   }
