@@ -81,7 +81,10 @@ void OdomXController::driveToPoint(const Vector& targetPoint, double turnScale, 
 }
 
 void OdomXController::strafeToPoint(
-  const Vector& targetPoint, const AngleCalculator& angleCalculator, const Settler& settler) {
+  const Vector& targetPoint,
+  const AngleCalculator& angleCalculator,
+  double turnScale,
+  const Settler& settler) {
   resetPid();
   do {
     distanceErr = distanceToPoint(targetPoint);
@@ -92,7 +95,7 @@ void OdomXController::strafeToPoint(
     double distanceVel = distanceController->step(-distanceErr.convert(millimeter));
     double angleVel = angleController->step(-angleErr.convert(degree));
 
-    strafeXVector(distanceVel, angleToTarget, angleVel);
+    strafeXVector(distanceVel, angleToTarget, angleVel * turnScale);
     pros::delay(10);
   } while (!settler(*this));
 

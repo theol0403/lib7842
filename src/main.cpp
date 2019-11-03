@@ -106,7 +106,10 @@ void opcontrol() {
       controller.getAnalog(ControllerAnalog::rightX), controller.getAnalog(ControllerAnalog::rightY),
       controller.getAnalog(ControllerAnalog::leftX));
 
-    if (controller.getDigital(ControllerDigital::A)) { odomController->strafeToPoint({0_ft, 0_ft}); }
+    if (controller.getDigital(ControllerDigital::A)) {
+      // odomController->strafeToPoint({0_ft, 0_ft});
+      odomController->strafeToPoint({0_ft, 0_ft}, OdomController::makeAngleCalculator({3_ft, 2_ft}), 2);
+    }
 
     pros::delay(10);
   }

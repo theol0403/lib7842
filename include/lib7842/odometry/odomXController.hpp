@@ -84,6 +84,7 @@ public:
   virtual void strafeToPoint(
     const Vector& targetPoint,
     const AngleCalculator& angleCalculator = makeAngleCalculator(),
+    double turnScale = 1,
     const Settler& settler = defaultDriveSettler);
 
   /**
