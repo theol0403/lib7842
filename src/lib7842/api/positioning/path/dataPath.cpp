@@ -1,5 +1,7 @@
 #include "dataPath.hpp"
 
+#include <algorithm>
+
 namespace lib7842 {
 
 DataPath::DataPath(const std::initializer_list<DataPoint>& ipath) :

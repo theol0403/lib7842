@@ -1,5 +1,4 @@
 #pragma once
-#include "main.h"
 
 namespace lib7842 {
 

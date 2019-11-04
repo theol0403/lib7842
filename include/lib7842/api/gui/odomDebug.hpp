@@ -1,7 +1,10 @@
 #pragma once
-#include "main.h"
-#include "page.hpp"
+
 #include "lib7842/api/other/utility.hpp"
+#include "okapi/api/odometry/odometry.hpp"
+#include "page.hpp"
+#include <functional>
+#include <string>
 
 namespace lib7842 {
 

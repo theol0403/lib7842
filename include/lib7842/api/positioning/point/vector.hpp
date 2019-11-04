@@ -1,7 +1,11 @@
 #pragma once
-#include "main.h"
+
+#include "okapi/api/units/QArea.hpp"
+#include "okapi/api/units/QLength.hpp"
 
 namespace lib7842 {
+
+using namespace okapi;
 
 class Vector {
 public:

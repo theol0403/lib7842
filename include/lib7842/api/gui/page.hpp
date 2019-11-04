@@ -1,7 +1,17 @@
 #pragma once
-#include "main.h"
+
+#include "okapi/api/util/logging.hpp"
+#include <memory>
+
+#ifndef THREADS_STD
+  #include "display/lvgl.h"
+#else
+  #include "lvgl/lvgl.h"
+#endif
 
 namespace lib7842 {
+
+using namespace okapi;
 
 class Page {
 

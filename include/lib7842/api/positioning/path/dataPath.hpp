@@ -1,5 +1,4 @@
 #pragma once
-#include "main.h"
 #include "simplePath.hpp"
 
 #include "lib7842/api/positioning/point/dataPoint.hpp"

@@ -1,8 +1,10 @@
 #pragma once
-#include "main.h"
 #include "abstractPath.hpp"
 
 #include "lib7842/api/positioning/point/vector.hpp"
+#include <initializer_list>
+#include <memory>
+#include <vector>
 
 namespace lib7842 {
 

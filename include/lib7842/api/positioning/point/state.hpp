@@ -1,6 +1,7 @@
 #pragma once
-#include "main.h"
 #include "vector.hpp"
+
+#include "okapi/api/units/QAngle.hpp"
 
 namespace lib7842 {
 

@@ -1,7 +1,10 @@
 #pragma once
-#include "main.h"
-#include "odomMath.hpp"
+
 #include "customOdometry.hpp"
+#include "odomMath.hpp"
+#include "okapi/api/chassis/model/chassisModel.hpp"
+#include "okapi/api/control/iterative/iterativePosPIDController.hpp"
+#include <functional>
 
 namespace lib7842 {
 

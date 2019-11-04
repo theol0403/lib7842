@@ -1,5 +1,8 @@
 #include "vector.hpp"
 
+#include <stdexcept>
+#include <string>
+
 namespace lib7842 {
 
 /**

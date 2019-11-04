@@ -1,7 +1,12 @@
 #pragma once
-#include "main.h"
+
+#include "okapi/api/units/QAcceleration.hpp"
+#include "okapi/api/units/QSpeed.hpp"
+#include "okapi/api/units/RQuantity.hpp"
 
 namespace lib7842 {
+
+using namespace okapi;
 
 /////////////////
 //    Units    //

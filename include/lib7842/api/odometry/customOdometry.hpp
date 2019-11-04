@@ -1,8 +1,10 @@
-#include "main.h"
 #pragma once
 
-#include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/other/taskWrapper.hpp"
+#include "lib7842/api/positioning/point/state.hpp"
+#include "okapi/api/chassis/model/chassisModel.hpp"
+#include "okapi/api/odometry/odometry.hpp"
+#include "okapi/api/util/logging.hpp"
 
 namespace lib7842 {
 class CustomOdometry : public Odometry, public TaskWrapper {

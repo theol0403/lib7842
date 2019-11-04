@@ -1,9 +1,12 @@
 #pragma once
-#include "main.h"
+
 #include "lib7842/api/other/taskWrapper.hpp"
 #include "page.hpp"
+#include <string>
 
 namespace lib7842 {
+
+using namespace okapi;
 
 class Screen : public TaskWrapper {
 

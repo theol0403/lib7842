@@ -1,7 +1,8 @@
 #pragma once
-#include "main.h"
-#include "lib7842/api/positioning/point/vector.hpp"
+
 #include "lib7842/api/positioning/point/state.hpp"
+#include "lib7842/api/positioning/point/vector.hpp"
+#include "okapi/api/units/QAngle.hpp"
 
 namespace lib7842 {
 

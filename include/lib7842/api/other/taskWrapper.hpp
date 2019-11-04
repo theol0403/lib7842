@@ -1,7 +1,14 @@
 #pragma once
-#include "main.h"
+
+#include "okapi/api/coreProsAPI.hpp"
+#include "okapi/api/util/logging.hpp"
+#include "pros/rtos.hpp"
+#include <memory>
 
 namespace lib7842 {
+
+using namespace okapi;
+
 class TaskWrapper {
 protected:
   explicit TaskWrapper(const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
@@ -35,4 +42,5 @@ private:
   static void trampoline(void* iparam);
   std::unique_ptr<CrossplatformThread> task {nullptr};
 };
+
 } // namespace lib7842

@@ -1,8 +1,9 @@
 #include "test.hpp"
-#include "main.h"
 
-#include "lib7842/api/gui/screen.hpp"
+#include "lvgl/lvgl.h"
+
 #include "lib7842/api/gui/odomDebug.hpp"
+#include "lib7842/api/gui/screen.hpp"
 
 void lvglTest() {
 

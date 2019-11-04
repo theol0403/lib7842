@@ -1,5 +1,5 @@
+#include "pros/rtos.hpp"
 #include "test.hpp"
-#include "main.h"
 
 #ifdef __cplusplus
 extern "C" {

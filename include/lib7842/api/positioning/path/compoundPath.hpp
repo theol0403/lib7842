@@ -1,9 +1,6 @@
 #pragma once
-#include "main.h"
 #include "abstractPath.hpp"
 #include "simplePath.hpp"
-
-#include "lib7842/api/positioning/point/vector.hpp"
 
 namespace lib7842 {
 

@@ -1,7 +1,8 @@
 #pragma once
-#include "main.h"
-#include "odomMath.hpp"
+
 #include "odomController.hpp"
+#include "odomMath.hpp"
+#include "okapi/api/chassis/model/xDriveModel.hpp"
 
 namespace lib7842 {
 
