@@ -1,14 +1,14 @@
-
-#include <stdlib.h>
-#include <unistd.h>
-#include <mutex>
-#include <SDL2/SDL.h>
 #include "lvgl/lvgl.h"
 
+#include <SDL2/SDL.h>
+#include <mutex>
+#include <stdlib.h>
+#include <unistd.h>
+
 #include "lv_drivers/display/monitor.h"
+#include "lv_drivers/indev/keyboard.h"
 #include "lv_drivers/indev/mouse.h"
 #include "lv_drivers/indev/mousewheel.h"
-#include "lv_drivers/indev/keyboard.h"
 
 static void hal_init(void);
 static int tick_thread(void* data);

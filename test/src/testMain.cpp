@@ -1,5 +1,5 @@
-#include "test.hpp"
 #include "okapi/api/util/logging.hpp"
+#include "test.hpp"
 
 int lvglMain();
 
