@@ -3,7 +3,7 @@
 #include "customOdometry.hpp"
 #include "odomMath.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
-#include "okapi/api/control/iterative/iterativePosPIDController.hpp"
+#include "okapi/api/control/iterative/iterativePosPidController.hpp"
 #include <functional>
 
 namespace lib7842 {
