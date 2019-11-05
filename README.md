@@ -1,2 +1,4 @@
 # lib7842
-VEX library with helper classes for PID, odometry, and vision
+
+This repository is under construction, and is not ready for any use whatsoever.
+It will be released in the future.
