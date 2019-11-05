@@ -24,6 +24,8 @@ int lvglMain() {
   /*Initialize the HAL (display, input devices, tick) for LittlevGL*/
   hal_init();
 
+  lv_theme_set_current(lv_theme_alien_init(40, NULL));
+
   lvglTest();
 
   usleep(1000 * 100);
