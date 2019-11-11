@@ -22,6 +22,8 @@ protected:
 public:
   /**
    * Starts the task.
+   *
+   * @param iname The task name
    */
   virtual void startTask(const std::string& iname = "TaskWrapper");
 
