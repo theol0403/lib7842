@@ -8,6 +8,7 @@ void ButtonMatrix::initialize() {
   lv_obj_set_size(btnm, lv_obj_get_width(container), lv_obj_get_height(container));
   lv_btnm_set_action(btnm, btnAction);
   lv_obj_set_free_ptr(btnm, this);
+  lv_btnm_set_map(btnm, matrix.data());
 
   /*Create a new style for the button matrix back ground*/
   lv_style_copy(&bgStyle, &lv_style_plain);
@@ -53,23 +54,13 @@ std::string ButtonMatrix::getName() {
 
 ButtonMatrix& ButtonMatrix::makeButton(const std::string& iname, const std::function<void()>& iaction) {
   buttons.push_back(std::make_pair(iname, iaction));
+  matrix.insert(matrix.end() - 1, iname.c_str());
+  lv_btnm_set_map(btnm, matrix.data());
   return *this;
 }
 
 ButtonMatrix& ButtonMatrix::makeBreak() {
-  buttons.push_back(std::make_pair("\n", nullptr));
-  return *this;
-}
-
-ButtonMatrix& ButtonMatrix::build() {
-  matrix.clear();
-  matrix.reserve(buttons.size() + 1);
-
-  std::transform(buttons.begin(), buttons.end(), std::back_inserter(matrix), [](auto& button) {
-    return button.first.c_str();
-  });
-
-  matrix.push_back("");
+  matrix.insert(matrix.end() - 1, "\n");
   lv_btnm_set_map(btnm, matrix.data());
   return *this;
 }

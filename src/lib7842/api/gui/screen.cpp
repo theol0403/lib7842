@@ -56,7 +56,6 @@ Screen::Screen(lv_obj_t* iparent, lv_color_t icolor, const std::shared_ptr<Logge
   lv_style_copy(&style_pr, &style_rel);
   style_pr.body.main_color = LV_COLOR_WHITE;
   style_pr.body.grad_color = LV_COLOR_WHITE;
-  style_pr.text.color = themeColor;
   style_pr.body.border.width = 0;
   style_pr.text.color = themeColor;
   lv_tabview_set_style(tabview, LV_TABVIEW_STYLE_BTN_PR, &style_pr);

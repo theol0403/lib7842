@@ -32,12 +32,9 @@ void lvglTest() {
       []() {
         std::cout << "Test" << std::endl;
       })
-    .makeButton(
-      "Test4",
-      []() {
-        std::cout << "Test" << std::endl;
-      })
-    .build();
+    .makeButton("Test4", []() {
+      std::cout << "Test" << std::endl;
+    });
 
   while (true) {
     pros::delay(100);
