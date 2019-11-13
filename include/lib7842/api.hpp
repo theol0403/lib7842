@@ -19,6 +19,7 @@
 #include "lib7842/api/odometry/odomMath.hpp"
 #include "lib7842/api/odometry/odomXController.hpp"
 
+#include "lib7842/api/gui/buttonMatrix.hpp"
 #include "lib7842/api/gui/graph.hpp"
 #include "lib7842/api/gui/odomDebug.hpp"
 #include "lib7842/api/gui/page.hpp"
