@@ -37,9 +37,9 @@ public:
    *
    * @return Pointer to the newly created page
    */
-  template <typename T> T& makePage() {
+  template <typename T> T& makePage(const std::string& iname = T::getName()) {
     static_assert(std::is_base_of<Page, T>::value, "T is not a Page");
-    auto ptr = std::make_shared<T>(newPage(T::getName()), themeColor);
+    auto ptr = std::make_shared<T>(newPage(iname), themeColor);
     ptr->initialize();
     pages.emplace_back(ptr);
     return *ptr;
