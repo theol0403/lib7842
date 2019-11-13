@@ -13,9 +13,8 @@ public:
   void initialize() override;
   static std::string getName();
 
-  ButtonMatrix& makeButton(const std::string& iname, const std::function<void()>& iaction);
-  ButtonMatrix& makeBreak();
-  ButtonMatrix& build();
+  ButtonMatrix& button(const std::string& iname, const std::function<void()>& iaction);
+  ButtonMatrix& newRow();
 
 protected:
   static lv_res_t btnAction(lv_obj_t* ibtnm, const char* itxt);

@@ -52,14 +52,14 @@ std::string ButtonMatrix::getName() {
   return "ButtonMatrix";
 }
 
-ButtonMatrix& ButtonMatrix::makeButton(const std::string& iname, const std::function<void()>& iaction) {
+ButtonMatrix& ButtonMatrix::button(const std::string& iname, const std::function<void()>& iaction) {
   buttons.push_back(std::make_pair(iname, iaction));
   matrix.insert(matrix.end() - 1, iname.c_str());
   lv_btnm_set_map(btnm, matrix.data());
   return *this;
 }
 
-ButtonMatrix& ButtonMatrix::makeBreak() {
+ButtonMatrix& ButtonMatrix::newRow() {
   matrix.insert(matrix.end() - 1, "\n");
   lv_btnm_set_map(btnm, matrix.data());
   return *this;

@@ -16,23 +16,23 @@ void lvglTest() {
   });
 
   scr.makePage<ButtonMatrix>("Buttons")
-    .makeButton(
+    .button(
       "Test",
       []() {
         std::cout << "Test" << std::endl;
       })
-    .makeButton(
+    .button(
       "Test2",
       []() {
         std::cout << "Test" << std::endl;
       })
-    .makeBreak()
-    .makeButton(
+    .newRow()
+    .button(
       "Test3",
       []() {
         std::cout << "Test" << std::endl;
       })
-    .makeButton("Test4", []() {
+    .button("Test4", []() {
       std::cout << "Test" << std::endl;
     });
 
