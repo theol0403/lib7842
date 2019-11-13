@@ -20,4 +20,8 @@ Page::~Page() {
   lv_obj_del(container);
 }
 
+lv_obj_t* Page::getPage() const {
+  return container;
+}
+
 } // namespace lib7842

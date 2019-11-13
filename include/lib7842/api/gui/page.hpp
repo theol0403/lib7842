@@ -2,6 +2,7 @@
 
 #include "okapi/api/util/logging.hpp"
 #include <memory>
+#include <string>
 
 #ifndef THREADS_STD
   #include "display/lvgl.h"
@@ -25,8 +26,10 @@ public:
   Page(const Page& ipage) = delete;
   virtual ~Page();
 
-  virtual void initialize() = 0;
-  virtual void render() = 0;
+  virtual void initialize() {};
+  virtual void render() {};
+
+  lv_obj_t* getPage() const;
 
 protected:
   lv_obj_t* container;
