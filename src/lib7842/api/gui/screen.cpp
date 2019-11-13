@@ -69,8 +69,7 @@ Screen::Screen(lv_obj_t* iparent, lv_color_t icolor, const std::shared_ptr<Logge
   pageStyle.body.main_color = themeColor;
   pageStyle.body.grad_color = themeColor;
   pageStyle.body.border.color = LV_COLOR_WHITE;
-  pageStyle.body.border.width = 3;
-  pageStyle.body.border.part = LV_BORDER_BOTTOM | LV_BORDER_LEFT | LV_BORDER_RIGHT;
+  pageStyle.body.border.width = 2;
   pageStyle.body.border.opa = LV_OPA_100;
   pageStyle.body.radius = 0;
 }
