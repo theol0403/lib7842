@@ -96,9 +96,13 @@ void opcontrol() {
 
   Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
   scr.startTask("Screen");
-  scr.makePage<ButtonMatrix>("Buttons").button("Claw", [&]() {
-    std::cout << "help" << std::endl;
-  });
+  scr.makePage<ButtonMatrix>("Buttons")
+    .button(
+      "Claw",
+      [&]() {
+        std::cout << "help" << std::endl;
+      })
+    .build();
 
   while (true) {
     model->xArcade(
