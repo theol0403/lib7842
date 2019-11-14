@@ -56,7 +56,7 @@ ButtonMatrix& ButtonMatrix::button(const std::string& iname, const std::function
   return *this;
 }
 
-ButtonMatrix& ButtonMatrix::makeBreak() {
+ButtonMatrix& ButtonMatrix::newRow() {
   buttons.push_back(std::make_pair("\n", nullptr));
   return *this;
 }

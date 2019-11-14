@@ -15,6 +15,7 @@ public:
 
   ButtonMatrix& button(const std::string& iname, const std::function<void()>& iaction);
   ButtonMatrix& newRow();
+  ButtonMatrix& build();
 
 protected:
   static lv_res_t btnAction(lv_obj_t* ibtnm, const char* itxt);

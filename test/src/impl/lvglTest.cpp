@@ -15,9 +15,13 @@ void lvglTest() {
     return 50;
   });
 
-  scr.makePage<ButtonMatrix>("Buttons").button("Claw", [&]() {
-    std::cout << "help" << std::endl;
-  });
+  scr.makePage<ButtonMatrix>("Buttons")
+    .button(
+      "Claw",
+      [&]() {
+        std::cout << "help" << std::endl;
+      })
+    .build();
 
   // .button(
   //   "Test",
