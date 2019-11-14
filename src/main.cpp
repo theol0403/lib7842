@@ -78,10 +78,6 @@ void opcontrol() {
     std::make_shared<CustomOdometry>(model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360));
   odom->startTask("Odometry");
 
-  Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
-  scr.makePage<OdomDebug>().attachOdom(odom);
-  scr.startTask("Screen");
-
   auto odomController = std::make_shared<OdomXController>(
     model, odom,
     //Distance PID - To mm
@@ -97,6 +93,12 @@ void opcontrol() {
     std::make_unique<IterativePosPIDController>(
       0.015, 0.0002, 0.0002, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 100_ms)),
     2_in);
+
+  Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
+  scr.startTask("Screen");
+  scr.makePage<ButtonMatrix>("Buttons").button("Claw", [&]() {
+    std::cout << "help" << std::endl;
+  });
 
   while (true) {
     model->xArcade(

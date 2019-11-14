@@ -15,26 +15,29 @@ void lvglTest() {
     return 50;
   });
 
-  scr.makePage<ButtonMatrix>("Buttons")
-    .button(
-      "Test",
-      []() {
-        std::cout << "Test" << std::endl;
-      })
-    .button(
-      "Test2",
-      []() {
-        std::cout << "Test" << std::endl;
-      })
-    .newRow()
-    .button(
-      "Test3",
-      []() {
-        std::cout << "Test" << std::endl;
-      })
-    .button("Test4", []() {
-      std::cout << "Test" << std::endl;
-    });
+  scr.makePage<ButtonMatrix>("Buttons").button("Claw", [&]() {
+    std::cout << "help" << std::endl;
+  });
+
+  // .button(
+  //   "Test",
+  //   []() {
+  //     std::cout << "Test" << std::endl;
+  //   })
+  // .button(
+  //   "Test2",
+  //   []() {
+  //     std::cout << "Test" << std::endl;
+  //   })
+  // .newRow()
+  // .button(
+  //   "Test3",
+  //   []() {
+  //     std::cout << "Test" << std::endl;
+  //   })
+  // .button("Test4", []() {
+  //   std::cout << "Test" << std::endl;
+  // });
 
   while (true) {
     pros::delay(100);

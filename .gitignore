@@ -9,7 +9,7 @@
 # PROS
 bin/
 .vscode/
-.ccls-cache/
+.*-cache/
 compile_commands.json
 temp.log
 temp.errors
