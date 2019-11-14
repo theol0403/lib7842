@@ -2,7 +2,7 @@
 
 namespace lib7842 {
 
-using namespace lib7842::OdomMath;
+using namespace OdomMath;
 
 OdomController::OdomController(
   const std::shared_ptr<ChassisModel>& imodel,
