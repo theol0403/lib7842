@@ -21,6 +21,29 @@ void lvglTest() {
       [&]() {
         std::cout << "help" << std::endl;
       })
+    .button(
+      "Claw2",
+      [&]() {
+        std::cout << "help" << std::endl;
+      })
+    .build();
+
+  scr.makePage<AutonSelector>("Auton")
+    .button(
+      "Claw",
+      [&]() {
+        std::cout << "c" << std::endl;
+      })
+    .button(
+      "Arm",
+      [&]() {
+        std::cout << "a" << std::endl;
+      })
+    .button(
+      "Yeet",
+      [&]() {
+        std::cout << "y" << std::endl;
+      })
     .build();
 
   // .button(

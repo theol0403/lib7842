@@ -9,7 +9,6 @@ void ButtonMatrix::initialize() {
   lv_btnm_set_action(btnm, btnAction);
   lv_obj_set_free_ptr(btnm, this);
 
-  /*Create a new style for the button matrix back ground*/
   lv_style_copy(&bgStyle, &lv_style_plain);
   bgStyle.body.main_color = themeColor;
   bgStyle.body.grad_color = themeColor;
@@ -39,10 +38,10 @@ void ButtonMatrix::initialize() {
   lv_style_copy(&inaStyle, &lv_style_btn_ina);
   inaStyle.body.empty = true;
   inaStyle.body.border.color = LV_COLOR_WHITE;
-  inaStyle.body.border.width = 3;
   inaStyle.body.border.opa = LV_OPA_100;
   inaStyle.body.radius = 0;
   inaStyle.text.color = LV_COLOR_WHITE;
+  inaStyle.body.border.width = 3;
   lv_btnm_set_style(btnm, LV_BTNM_STYLE_BTN_INA, &inaStyle);
   lv_btnm_set_style(btnm, LV_BTNM_STYLE_BTN_REL, &inaStyle);
 }
