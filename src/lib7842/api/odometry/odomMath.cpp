@@ -2,7 +2,7 @@
 
 namespace lib7842 {
 
-namespace lib7842::OdomMath {
+namespace OdomMath {
 
 Vector closest(const Vector& current, const QAngle& heading, const Vector& target) {
   double headRad = heading.convert(radian);
@@ -33,6 +33,6 @@ QAngle rollAngle90(const QAngle& angle) {
   return iangle;
 }
 
-} // namespace lib7842::OdomMath
+} // namespace OdomMath
 
 } // namespace lib7842

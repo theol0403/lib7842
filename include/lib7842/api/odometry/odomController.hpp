@@ -212,6 +212,16 @@ public:
    */
   static AngleCalculator makeAngleCalculator();
 
+  /**
+   * Calculates angle from the chassis to the point
+   */
+  QAngle angleToPoint(const Vector& point) const;
+
+  /**
+   * Calculates distance from the chassis to the point
+   */
+  QLength distanceToPoint(const Vector& point) const;
+
 protected:
   /**
    * Resets the pid controllers, used before every motion
@@ -226,16 +236,6 @@ protected:
    * @param yaw          The yaw
    */
   void driveVector(double forwardSpeed, double yaw);
-
-  /**
-   * Calculates angle from the chassis to the point
-   */
-  QAngle angleToPoint(const Vector& point) const;
-
-  /**
-   * Calculates distance from the chassis to the point
-   */
-  QLength distanceToPoint(const Vector& point) const;
 
   std::shared_ptr<ChassisModel> model {nullptr};
   std::shared_ptr<CustomOdometry> odometry {nullptr};

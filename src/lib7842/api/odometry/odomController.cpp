@@ -2,7 +2,7 @@
 
 namespace lib7842 {
 
-using namespace lib7842::OdomMath;
+using namespace OdomMath;
 
 OdomController::OdomController(
   const std::shared_ptr<ChassisModel>& imodel,
@@ -221,6 +221,20 @@ AngleCalculator OdomController::makeAngleCalculator() {
 }
 
 /**
+  * Position Calculations
+  */
+QAngle OdomController::angleToPoint(const Vector& point) const {
+  const State& state = odometry->getState();
+  Vector diff = point - state;
+  QAngle angle = (std::atan2(diff.x.convert(meter), diff.y.convert(meter)) * radian) - state.theta;
+  return rollAngle180(angle);
+}
+
+QLength OdomController::distanceToPoint(const Vector& point) const {
+  return Vector::dist(odometry->getState(), point);
+}
+
+/**
  * OdomController utilities
  */
 void OdomController::resetPid() {
@@ -242,20 +256,6 @@ void OdomController::driveVector(double forwardSpeed, double yaw) {
   }
 
   model->tank(leftOutput, rightOutput);
-}
-
-/**
-  * Position Calculations
-  */
-QAngle OdomController::angleToPoint(const Vector& point) const {
-  const State& state = odometry->getState();
-  Vector diff = point - state;
-  QAngle angle = (std::atan2(diff.x.convert(meter), diff.y.convert(meter)) * radian) - state.theta;
-  return rollAngle180(angle);
-}
-
-QLength OdomController::distanceToPoint(const Vector& point) const {
-  return Vector::dist(odometry->getState(), point);
 }
 
 } // namespace lib7842
