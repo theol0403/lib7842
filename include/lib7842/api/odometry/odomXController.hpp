@@ -68,8 +68,8 @@ public:
    *
    * @param targetPoint     The target point
    * @param angleCalculator The angle calculator
-   * @param turnScale       The turn scale used to control the priority of turning over driving. A higher value will
-   *                        make the robot turn to face the point sooner
+   * @param turnScale       The turn scale used to control the priority of turning over driving. A
+   *                        higher value will make the robot turn to face the point sooner
    * @param settler         The settler
    */
   virtual void driveToPoint(
@@ -82,8 +82,8 @@ public:
    * Drive to a point using custom point seeking
    *
    * @param targetPoint The target point
-   * @param turnScale   The turn scale used to control the priority of turning over driving. A higher value will make
-   *                    the robot turn to face the point sooner
+   * @param turnScale   The turn scale used to control the priority of turning over driving. A
+   *                    higher value will make the robot turn to face the point sooner
    * @param settler     The settler
    */
   void driveToPoint(
@@ -105,7 +105,10 @@ public:
     const Settler& settler = defaultDriveSettler);
 
   /**
-   * A Settler that is used for driving/strafing which uses the distance and strafe pid's isSettled() method
+   * A Settler that is used for driving/strafing which uses the distance and strafe pid's
+   * isSettled() method
+   *
+   * @return { description_of_the_return_value }
    */
   static bool defaultStrafeSettler(const OdomController& odom);
 

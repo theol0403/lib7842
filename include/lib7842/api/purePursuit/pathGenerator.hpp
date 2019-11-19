@@ -26,9 +26,9 @@ public:
     const double accel;
 
     /**
-     * How much to slow down around turns.
-     * This value is usually best around 0.5-2, 0.5 tends to slow down around almost any curvature in the
-     * path, and 2 tends to slow down around only a very sharp curvature.
+     * How much to slow down around turns. This value is usually best around 0.5-2, 0.5 tends to
+     * slow down around almost any curvature in the path, and 2 tends to slow down around only a
+     * very sharp curvature.
      */
     const double curvatureK;
 

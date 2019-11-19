@@ -39,7 +39,9 @@ public:
   /**
    * Interpolate the path
    *
-   * @param isteps how many points to interpolate per segment, from start (inclusive) to end (exclusive) of segment
+   * @param isteps how many points to interpolate per segment, from start (inclusive) to end
+   *               (exclusive) of segment
+   *
    * @return generated path
    */
   SimplePath generate(const int isteps = 1) const override;
@@ -47,7 +49,12 @@ public:
 protected:
   /**
    * Sample the segment
-   * @param  isteps the number of points to generate in the segment excluding the end
+   *
+   * @param start  The start point
+   * @param end    The end point
+   * @param isteps the number of points to generate in the segment excluding the end
+   *
+   * @return { description_of_the_return_value }
    */
   static SimplePath generateSegment(const Vector& start, const Vector& end, const int isteps);
 

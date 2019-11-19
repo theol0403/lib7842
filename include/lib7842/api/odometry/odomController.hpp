@@ -11,20 +11,19 @@ namespace lib7842 {
 class OdomController;
 
 /**
- * Function that returns true to end chassis movement
- * Used to implement different settling methods
+ * Function that returns true to end chassis movement. Used to implement different settling methods.
  */
 using Settler = std::function<bool(const OdomController& odom)>;
 
 /**
- * Function that accepts a turning velocity and controls excecution to the chassis
- * Used to implement a point or pivot turn
+ * Function that accepts a turning velocity and controls excecution to the chassis. Used to implement
+ * a point or pivot turn.
  */
 using Turner = std::function<void(ChassisModel& model, double vel)>;
 
 /**
- * Function that returns an angle for the chassis to seek
- * Examples can be an AngleCalculator that returns the angle to a point, or an angle to an absolute angle
+ * Function that returns an angle for the chassis to seek. Examples can be an AngleCalculator that
+ * returns the angle to a point, or an angle to an absolute angle.
  */
 using AngleCalculator = std::function<QAngle(const OdomController& odom)>;
 
@@ -119,8 +118,8 @@ public:
    * Drive to a point using custom point seeking
    *
    * @param targetPoint The target point
-   * @param turnScale   The turn scale used to control the priority of turning over driving. A higher value will make
-   *                    the robot turn to face the point sooner
+   * @param turnScale   The turn scale used to control the priority of turning over driving. A
+   *                    higher value will make the robot turn to face the point sooner
    * @param settler     The settler
    */
   virtual void driveToPoint(
@@ -130,8 +129,8 @@ public:
    * Drive to a point using simple point seeking
    *
    * @param targetPoint The target point
-   * @param turnScale   The turn scale used to control the priority of turning over driving. A higher value will make
-   *                    the robot turn to face the point sooner
+   * @param turnScale   The turn scale used to control the priority of turning over driving. A
+   *                    higher value will make the robot turn to face the point sooner
    * @param settler     The settler
    */
   virtual void driveToPoint2(

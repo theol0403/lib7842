@@ -26,9 +26,10 @@ public:
   OdomDebug& attachOdom(const std::shared_ptr<Odometry>& iodom);
 
   /**
-   * Sets the function to be called when the reset button is pressed
-   * The default resetter is only able to reset the state, not the sensors
-   * @param callback a function that resets the odometry and sensors
+   * Sets the function to be called when the reset button is pressed The default resetter is only
+   * able to reset the state, not the sensors.
+   *
+   * @param iresetter a function that resets the odometry and sensors
    */
   OdomDebug& attachResetter(const std::function<void()>& iresetter);
 
