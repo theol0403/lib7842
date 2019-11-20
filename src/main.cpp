@@ -88,21 +88,10 @@ void opcontrol() {
       0.03, 0.00, 0.0003, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
     //Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
-      0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)),
-    //Strafe PID - To mm
-    std::make_unique<IterativePosPIDController>(
-      0.015, 0.0002, 0.0002, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 100_ms)),
-    2_in);
+      0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)));
 
   Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
   scr.startTask("Screen");
-  scr.makePage<ButtonMatrix>("Buttons")
-    .button(
-      "Claw",
-      [&]() {
-        std::cout << "help" << std::endl;
-      })
-    .build();
 
   while (true) {
     model->xArcade(

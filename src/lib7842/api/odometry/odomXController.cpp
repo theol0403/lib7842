@@ -9,23 +9,17 @@ OdomXController::OdomXController(
   const std::shared_ptr<CustomOdometry>& iodometry,
   std::unique_ptr<IterativePosPIDController> idistanceController,
   std::unique_ptr<IterativePosPIDController> iturnController,
-  std::unique_ptr<IterativePosPIDController> iangleController,
-  std::unique_ptr<IterativePosPIDController> istrafeController,
-  const QLength& isettleRadius) :
+  std::unique_ptr<IterativePosPIDController> iangleController) :
   OdomController(
     imodel,
     iodometry,
     std::move(idistanceController),
     std::move(iturnController),
     std::move(iangleController),
-    isettleRadius),
-  model(imodel),
-  strafeController(std::move(istrafeController)) {};
+    0_in),
+  xModel(imodel) {};
 
-/**
- * Driving API
- */
-void OdomXController::strafeDistance(
+void OdomXController::strafeRelativeDirection(
   const QLength& distance,
   const QAngle& direction,
   const AngleCalculator& angleCalculator,
@@ -39,7 +33,7 @@ void OdomXController::strafeDistance(
   strafeToPoint(target, angleCalculator, turnScale, settler);
 }
 
-void OdomXController::strafeDistanceAtDirection(
+void OdomXController::strafeAbsoluteDirection(
   const QLength& distance,
   const QAngle& direction,
   const AngleCalculator& angleCalculator,
@@ -49,60 +43,6 @@ void OdomXController::strafeDistanceAtDirection(
   QLength y = cos(direction.convert(radian)) * distance;
   Vector target = Vector(odometry->getState()) + Vector(x, y);
   strafeToPoint(target, angleCalculator, turnScale, settler);
-}
-
-/**
- * Point API
- */
-void OdomXController::driveToPoint(
-  const Vector& targetPoint,
-  const AngleCalculator& angleCalculator,
-  double turnScale,
-  const Settler& settler) {
-  resetPid();
-  do {
-    const State& state = odometry->getState();
-    Vector closestPoint = closest(state, targetPoint);
-    Vector closestStrafe = closest(state, state.theta + 90_deg, targetPoint);
-
-    QAngle angleToClose = angleToPoint(closestPoint);
-    QAngle angleToTarget = angleCalculator(*this);
-    QAngle angleToStrafe = rollAngle180(angleToPoint(closestStrafe) - 90_deg); // rotate angle
-
-    QLength distanceToClose = distanceToPoint(closestPoint);
-    QLength distanceToTarget = distanceToPoint(targetPoint);
-    QLength distanceToStrafe = distanceToPoint(closestStrafe);
-
-    // go backwards
-    if (angleToClose.abs() >= 90_deg) distanceToClose = -distanceToClose;
-    if (angleToStrafe.abs() >= 90_deg) distanceToStrafe = -distanceToStrafe;
-
-    if (distanceToTarget.abs() < settleRadius) {
-      angleErr = 0_deg;
-      // used for settling
-      distanceErr = distanceToClose;
-    } else {
-      angleErr = angleToTarget;
-      // used for settling
-      distanceErr = distanceToTarget;
-    }
-
-    // rotate angle to be +- 90
-    angleErr = rollAngle90(angleErr);
-
-    double angleVel = angleController->step(-angleErr.convert(degree));
-    double distanceVel = distanceController->step(-distanceToClose.convert(millimeter));
-    double strafeVel = strafeController->step(-distanceToStrafe.convert(millimeter));
-
-    driveXVector(distanceVel, angleVel * turnScale, strafeVel);
-    pros::delay(10);
-  } while (!settler(*this));
-
-  driveXVector(0, 0, 0);
-}
-
-void OdomXController::driveToPoint(const Vector& targetPoint, double turnScale, const Settler& settler) {
-  driveToPoint(targetPoint, makeAngleCalculator(targetPoint), turnScale, settler);
 }
 
 void OdomXController::strafeToPoint(
@@ -127,28 +67,14 @@ void OdomXController::strafeToPoint(
   driveXVector(0, 0, 0);
 }
 
-bool OdomXController::defaultStrafeSettler(const OdomController& odom) {
-  const OdomXController& xodom = dynamic_cast<const OdomXController&>(odom);
-  return xodom.distanceController->isSettled() && xodom.strafeController->isSettled();
-}
-
 /**
  * OdomXController utilities
  */
-void OdomXController::resetPid() {
-  turnController->reset();
-  distanceController->reset();
-  angleController->reset();
-  strafeController->reset();
-  angleErr = 0_deg;
-  distanceErr = 0_in;
-}
-
-void OdomXController::driveXVector(double forwardSpeed, double yaw, double strafe) {
-  forwardSpeed = std::clamp(forwardSpeed, -1.0, 1.0);
+void OdomXController::driveXVector(double speed, double yaw, double strafe) {
+  speed = std::clamp(speed, -1.0, 1.0);
   strafe = std::clamp(strafe, -1.0, 1.0);
-  double leftOutput = forwardSpeed + yaw;
-  double rightOutput = forwardSpeed - yaw;
+  double leftOutput = speed + yaw;
+  double rightOutput = speed - yaw;
   double maxInputMag = std::max({std::abs(leftOutput), std::abs(rightOutput), std::abs(strafe)});
   if (maxInputMag > 1.0) {
     leftOutput /= maxInputMag;
@@ -160,13 +86,13 @@ void OdomXController::driveXVector(double forwardSpeed, double yaw, double straf
   rightOutput = std::clamp(rightOutput, -1.0, 1.0);
   strafe = std::clamp(strafe, -1.0, 1.0);
 
-  model->getTopLeftMotor()->moveVoltage(
+  xModel->getTopLeftMotor()->moveVoltage(
     static_cast<int16_t>(std::clamp(leftOutput + strafe, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getTopRightMotor()->moveVoltage(
+  xModel->getTopRightMotor()->moveVoltage(
     static_cast<int16_t>(std::clamp(rightOutput - strafe, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getBottomRightMotor()->moveVoltage(
+  xModel->getBottomRightMotor()->moveVoltage(
     static_cast<int16_t>(std::clamp(rightOutput + strafe, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getBottomLeftMotor()->moveVoltage(
+  xModel->getBottomLeftMotor()->moveVoltage(
     static_cast<int16_t>(std::clamp(leftOutput - strafe, -1.0, 1.0) * model->getMaxVoltage()));
 }
 
@@ -192,13 +118,13 @@ void OdomXController::strafeXVector(double speed, const QAngle& direction, doubl
     bottomRight /= maxInputMag;
   }
 
-  model->getTopLeftMotor()->moveVoltage(
+  xModel->getTopLeftMotor()->moveVoltage(
     static_cast<int16_t>(std::clamp(topLeft, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getTopRightMotor()->moveVoltage(
+  xModel->getTopRightMotor()->moveVoltage(
     static_cast<int16_t>(std::clamp(topRight, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getBottomRightMotor()->moveVoltage(
+  xModel->getBottomRightMotor()->moveVoltage(
     static_cast<int16_t>(std::clamp(bottomRight, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getBottomLeftMotor()->moveVoltage(
+  xModel->getBottomLeftMotor()->moveVoltage(
     static_cast<int16_t>(std::clamp(bottomLeft, -1.0, 1.0) * model->getMaxVoltage()));
 }
 
