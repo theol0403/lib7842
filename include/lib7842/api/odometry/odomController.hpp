@@ -92,7 +92,7 @@ public:
     const Vector& point, const Turner& turner = pointTurn, const Settler& settler = defaultTurnSettler);
 
   /**
-   * Drive a distance while correcting angle using an AngleCalculator 
+   * Drive a distance while correcting angle using an AngleCalculator
    *
    * @param distance        The distance
    * @param angleCalculator The angle calculator
@@ -227,8 +227,7 @@ protected:
   virtual void resetPid();
 
   /**
-   * Controls the chassis movement
-   * Applies magnitude control to prioritize turning
+   * Controls the chassis movement. Applies magnitude control to prioritize turning.
    *
    * @param forwardSpeed Forward speed
    * @param yaw          The yaw

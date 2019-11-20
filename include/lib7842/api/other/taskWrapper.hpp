@@ -34,6 +34,8 @@ public:
 
   /**
    * Gets the task name.
+   *
+   * @return The name.
    */
   virtual std::string getName();
 

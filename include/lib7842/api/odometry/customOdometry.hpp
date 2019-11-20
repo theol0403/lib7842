@@ -25,11 +25,15 @@ public:
 
   /**
    * Returns the current state.
+   *
+   * @return The state.
    */
   virtual const State& getState() const;
 
   /**
    * Sets a new state to be the current state.
+   *
+   * @param istate The state
    */
   virtual void setState(const State& istate);
 
@@ -45,6 +49,8 @@ public:
 
   /**
    * Sets the drive and turn scales.
+   *
+   * @param ichassisScales The chassis scales
    */
   void setScales(const ChassisScales& ichassisScales) override;
 
@@ -54,11 +60,15 @@ public:
   void step() override;
 
   /**
+   * Gets the chassis model.
+   *
    * @return The internal ChassisModel.
    */
   std::shared_ptr<ReadOnlyChassisModel> getModel() override;
 
   /**
+   * Gets the chassis scales.
+   *
    * @return The internal ChassisScales.
    */
   virtual const ChassisScales& getScales() const;
@@ -69,6 +79,7 @@ public:
   void loop() override;
 
 private:
+  // bass class overrides for polymorphism
   OdomState getState(const StateMode& imode) const override;
   void setState(const OdomState& istate, const StateMode& imode) override;
 

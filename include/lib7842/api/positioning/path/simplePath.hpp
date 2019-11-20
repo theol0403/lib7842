@@ -27,20 +27,24 @@ public:
 
   /**
    * Extract path containing copies of points
+   *
+   * @return copy of the path
    */
   SimplePath copy() const;
 
   /**
    * Smoothen path
+   *
+   * @param iweight    The smooth weight
+   * @param itolerance The smooth tolerance
    */
   void smoothen(const double iweight, const QLength& itolerance);
 
   /**
    * Interpolate the path
    *
-   * @param isteps how many points to interpolate per segment, from start (inclusive) to end
-   *               (exclusive) of segment
-   *
+   * @param  isteps how many points to interpolate per segment, from start (inclusive) to end
+   *                (exclusive) of segment
    * @return generated path
    */
   SimplePath generate(const int isteps = 1) const override;
@@ -49,11 +53,10 @@ protected:
   /**
    * Sample the segment
    *
-   * @param start  The start point
-   * @param end    The end point
-   * @param isteps the number of points to generate in the segment excluding the end
-   *
-   * @return { description_of_the_return_value }
+   * @param  start  The start point
+   * @param  end    The end point
+   * @param  isteps the number of points to generate in the segment excluding the end
+   * @return the generated segment
    */
   static SimplePath generateSegment(const Vector& start, const Vector& end, const int isteps);
 
