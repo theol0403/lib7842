@@ -5,7 +5,6 @@
 namespace lib7842 {
 
 class CompoundPath : public AbstractPath {
-
 public:
   /**
    * Default Constructors

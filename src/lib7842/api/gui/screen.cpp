@@ -7,7 +7,6 @@ Screen::Screen(lv_obj_t* iparent, const std::shared_ptr<Logger>& ilogger) :
 
 Screen::Screen(lv_obj_t* iparent, lv_color_t icolor, const std::shared_ptr<Logger>& ilogger) :
   tabview(lv_tabview_create(iparent, NULL)), themeColor(icolor), logger(ilogger) {
-
   lv_obj_set_size(tabview, lv_obj_get_width(iparent), lv_obj_get_height(iparent));
   lv_obj_align(tabview, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
 

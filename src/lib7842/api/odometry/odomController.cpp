@@ -53,7 +53,6 @@ void OdomController::moveDistanceAtAngle(
   const AngleCalculator& angleCalculator,
   double turnScale,
   const Settler& settler) {
-
   resetPid();
   auto lastTicks = model->getSensorVals();
 

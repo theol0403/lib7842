@@ -40,7 +40,6 @@ void CustomOdometry::setScales(const ChassisScales& ichassisScales) {
  * Odometry algorithm provided courtesy of the pilons from team 5225A
  */
 void CustomOdometry::step() {
-
   auto newTicks = model->getSensorVals();
 
   if (newTicks.size() < 3) {

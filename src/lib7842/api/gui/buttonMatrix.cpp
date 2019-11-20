@@ -3,7 +3,6 @@
 namespace lib7842 {
 
 void ButtonMatrix::initialize() {
-
   btnm = lv_btnm_create(container, NULL);
   lv_obj_set_size(btnm, lv_obj_get_width(container), lv_obj_get_height(container));
   lv_btnm_set_action(btnm, btnAction);

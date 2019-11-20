@@ -28,7 +28,6 @@ using Turner = std::function<void(ChassisModel& model, double vel)>;
 using AngleCalculator = std::function<QAngle(const OdomController& odom)>;
 
 class OdomController {
-
 public:
   /**
    * OdomController. Implements chassis movement algorithms

@@ -6,7 +6,6 @@
 namespace lib7842 {
 
 class DataPath : public AbstractPath {
-
 public:
   /**
    * Default Constructors

@@ -7,7 +7,7 @@ public:
     startTask();
   }
   bool taskRan = false;
-  virtual void loop() override {
+  void loop() override {
     taskRan = true;
   }
 };

@@ -9,7 +9,6 @@ class SimplePath;
  * Interface Path Class
  */
 class AbstractPath {
-
 public:
   /**
    * Default Constructors

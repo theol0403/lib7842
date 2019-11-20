@@ -7,7 +7,6 @@
 namespace lib7842 {
 
 class OdomXController : public OdomController {
-
 public:
   /**
    * OdomXController. Implements chassis movement algorithms for the X drive.

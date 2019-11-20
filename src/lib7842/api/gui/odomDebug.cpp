@@ -34,7 +34,6 @@ OdomDebug& OdomDebug::attachResetter(const std::function<void()>& iresetter) {
 }
 
 void OdomDebug::initializeField() {
-
   /**
   * Field
   */

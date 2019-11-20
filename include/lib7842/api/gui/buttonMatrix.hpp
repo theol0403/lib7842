@@ -6,7 +6,6 @@
 namespace lib7842 {
 
 class ButtonMatrix : public Page {
-
 public:
   using Page::Page;
 

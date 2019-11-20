@@ -9,7 +9,6 @@
 namespace lib7842 {
 
 class OdomDebug : public Page {
-
 public:
   using Page::Page;
 

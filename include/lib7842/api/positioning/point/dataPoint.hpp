@@ -10,7 +10,6 @@
 namespace lib7842 {
 
 class DataPoint : public Vector {
-
 public:
   using Vector::Vector;
   DataPoint(const DataPoint& istate) = default;

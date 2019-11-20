@@ -5,7 +5,6 @@
 namespace lib7842 {
 
 class AutonSelector : public ButtonMatrix {
-
 public:
   using ButtonMatrix::ButtonMatrix;
 

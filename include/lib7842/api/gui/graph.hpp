@@ -6,7 +6,6 @@
 namespace lib7842 {
 
 class Graph : public Page {
-
 public:
   using Page::Page;
 

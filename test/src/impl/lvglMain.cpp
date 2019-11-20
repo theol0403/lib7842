@@ -17,7 +17,6 @@ static int lvgl_thread(void* data);
 void lvglTest();
 
 int lvglMain() {
-
   /*Initialize LittlevGL*/
   lv_init();
 

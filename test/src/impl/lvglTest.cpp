@@ -5,7 +5,6 @@
 #include "lib7842/api.hpp"
 
 void lvglTest() {
-
   Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
   scr.startTask("Screen");
 

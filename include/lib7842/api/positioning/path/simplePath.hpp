@@ -9,7 +9,6 @@
 namespace lib7842 {
 
 class SimplePath : public AbstractPath {
-
 public:
   /**
    * Default Constructors
