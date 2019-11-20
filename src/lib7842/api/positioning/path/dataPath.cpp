@@ -1,5 +1,4 @@
 #include "dataPath.hpp"
-
 #include <algorithm>
 
 namespace lib7842 {
@@ -9,9 +8,9 @@ DataPath::DataPath(const std::initializer_list<DataPoint>& ipath) :
 
 DataPath::DataPath(const std::vector<DataPoint>& ipath) {
   path.reserve(ipath.size());
-  for (auto&& ipoint : ipath) {
-    path.emplace_back(std::make_shared<DataPoint>(ipoint));
-  }
+  std::transform(ipath.begin(), ipath.end(), std::back_inserter(path), [](const auto& ipoint) {
+    return std::make_shared<DataPoint>(ipoint);
+  });
 }
 
 DataPath::DataPath(const std::vector<std::shared_ptr<DataPoint>>& ipath) : path(ipath) {}

@@ -1,5 +1,6 @@
 #include "simplePath.hpp"
 #include "compoundPath.hpp"
+#include <algorithm>
 
 namespace lib7842 {
 
@@ -8,9 +9,9 @@ SimplePath::SimplePath(const std::initializer_list<Vector>& ipath) :
 
 SimplePath::SimplePath(const std::vector<Vector>& ipath) {
   path.reserve(ipath.size());
-  for (auto&& ipoint : ipath) {
-    path.emplace_back(std::make_shared<Vector>(ipoint));
-  }
+  std::transform(ipath.begin(), ipath.end(), std::back_inserter(path), [](const auto& ipoint) {
+    return std::make_shared<Vector>(ipoint);
+  });
 }
 
 SimplePath::SimplePath(const std::vector<std::shared_ptr<Vector>>& ipath) : path(ipath) {}
