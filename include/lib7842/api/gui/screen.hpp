@@ -10,8 +10,22 @@ using namespace okapi;
 
 class Screen : public TaskWrapper {
 public:
+  /**
+   * Creates a new screen. Theme color is inherited from the parent.
+   *
+   * @param iparent The LVGL parent, typically `lv_scr_act()`
+   * @param ilogger The logger
+   */
   explicit Screen(
     lv_obj_t* iparent, const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+
+  /**
+   * Creates a new screen.
+   *
+   * @param iparent The LVGL parent, typically `lv_scr_act()`W
+   * @param icolor  The theme color
+   * @param ilogger The logger
+   */
   explicit Screen(
     lv_obj_t* iparent,
     lv_color_t icolor,
@@ -21,20 +35,20 @@ public:
   virtual ~Screen();
 
   /**
-   * Creates a new tab
+   * Creates a new tab and returns the LVGL pointer.
    *
-   * @param iname The tab name
-   *
+   * @param  iname The tab name
    * @return LVGL pointer to the new tab
    */
   lv_obj_t* newPage(const std::string& iname);
 
   /**
-   * Creates a new page
+   * Helper function to create new page. Example use: `Screen::newPage<Graph>()`. Returns a
+   * reference to the newly created page for configuration purposes.
    *
-   * @tparam T The page type to create
-   *
-   * @return Pointer to the newly created page
+   * @param  iname The name of the page
+   * @tparam T     The Page type to create
+   * @return reference to the newly created page
    */
   template <typename T> T& makePage(const std::string& iname = T::getName()) {
     static_assert(std::is_base_of<Page, T>::value, "T is not a Page");
