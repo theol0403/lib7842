@@ -1,4 +1,72 @@
+#include "lib7842/api.hpp"
 #include "lvgl/lvgl.h"
+#include "test.hpp"
+
+void lvglTest() {
+  Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
+  scr.startTask("Screen");
+
+  scr.makePage<OdomDebug>().attachOdom(nullptr).attachResetter(nullptr);
+
+  scr.makePage<Graph>().withRange(0, 100).withSeries("Test", LV_COLOR_RED, []() {
+    return 50;
+  });
+
+  scr.makePage<ButtonMatrix>("Buttons")
+    .button(
+      "Claw",
+      [&]() {
+        std::cout << "help" << std::endl;
+      })
+    .button(
+      "Claw2",
+      [&]() {
+        std::cout << "help" << std::endl;
+      })
+    .build();
+
+  scr.makePage<AutonSelector>("Auton")
+    .button(
+      "Claw",
+      [&]() {
+        std::cout << "c" << std::endl;
+      })
+    .button(
+      "Arm",
+      [&]() {
+        std::cout << "a" << std::endl;
+      })
+    .button(
+      "Yeet",
+      [&]() {
+        std::cout << "y" << std::endl;
+      })
+    .build();
+
+  // .button(
+  //   "Test",
+  //   []() {
+  //     std::cout << "Test" << std::endl;
+  //   })
+  // .button(
+  //   "Test2",
+  //   []() {
+  //     std::cout << "Test" << std::endl;
+  //   })
+  // .newRow()
+  // .button(
+  //   "Test3",
+  //   []() {
+  //     std::cout << "Test" << std::endl;
+  //   })
+  // .button("Test4", []() {
+  //   std::cout << "Test" << std::endl;
+  // });
+
+  while (true) {
+    pros::delay(100);
+  }
+}
 
 #include <SDL2/SDL.h>
 #include <mutex>
@@ -13,8 +81,6 @@
 static void hal_init(void);
 static int tick_thread(void* data);
 static int lvgl_thread(void* data);
-
-void lvglTest();
 
 int lvglMain() {
   /*Initialize LittlevGL*/
