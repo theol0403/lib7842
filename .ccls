@@ -3,3 +3,4 @@ g++
 %h -x
 %h c++-header
 -Iinclude
+-Itest/include

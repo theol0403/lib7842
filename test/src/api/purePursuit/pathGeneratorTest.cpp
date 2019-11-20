@@ -2,17 +2,7 @@
 
 class PathGeneratorTest : public ::testing::Test {
 protected:
-  PathGenerator::limits limits {2_ips, 8_ips, 8_ips2, 1_curv};
 };
-
-TEST_F(PathGeneratorTest, SetDistancesSimple) {
-  DataPath path({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}});
-  PathGenerator::setDistances(path);
-
-  ASSERT_EQ(path()[0]->getData<QLength>("distance"), 0_in);
-  ASSERT_EQ(path()[1]->getData<QLength>("distance"), 5_in);
-  ASSERT_EQ(path()[2]->getData<QLength>("distance"), 10_in);
-}
 
 TEST_F(PathGeneratorTest, ComputeSingleCurvature) {
   QCurvature straight = PathGenerator::getCurvature({0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in});
@@ -52,7 +42,7 @@ TEST_F(PathGeneratorTest, SetCurvatures) {
 TEST_F(PathGeneratorTest, SetMaxVelocity) {
   DataPath path({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}});
   PathGenerator::setCurvatures(path);
-  PathGenerator::setMaxVelocity(path, limits);
+  PathGenerator::setMaxVelocity(path, 8_ips, 8_ips2, 1);
 
   ASSERT_EQ(path()[0]->getData<QSpeed>("velocity").convert(ips), 8);
   ASSERT_EQ(path()[1]->getData<QSpeed>("velocity").convert(ips), 8);
@@ -62,7 +52,7 @@ TEST_F(PathGeneratorTest, SetMaxVelocity) {
 TEST_F(PathGeneratorTest, SetMaxVelocityTurn) {
   DataPath path({{0_in, 0_in}, {3_in, 4_in}, {6_in, 10_in}, {5_in, 12_in}});
   PathGenerator::setCurvatures(path);
-  PathGenerator::setMaxVelocity(path, limits);
+  PathGenerator::setMaxVelocity(path, 8_ips, 8_ips2, 1);
 
   ASSERT_EQ(path()[0]->getData<QSpeed>("velocity").convert(ips), 8);
   ASSERT_LT(path()[1]->getData<QSpeed>("velocity").convert(ips), 8);
@@ -73,8 +63,8 @@ TEST_F(PathGeneratorTest, SetMaxVelocityTurn) {
 TEST_F(PathGeneratorTest, SetMinVelocity) {
   DataPath path(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}).generate(10));
   PathGenerator::setCurvatures(path);
-  PathGenerator::setMaxVelocity(path, limits);
-  PathGenerator::setMinVelocity(path, limits);
+  PathGenerator::setMaxVelocity(path, 8_ips, 8_ips2, 1);
+  PathGenerator::setMinVelocity(path, 2_ips, 8_ips2);
 
   for (auto&& point : path()) {
     ASSERT_GE(point->getData<QSpeed>("velocity").convert(ips), 2);
