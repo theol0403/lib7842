@@ -27,6 +27,9 @@ using Turner = std::function<void(ChassisModel& model, double vel)>;
  */
 using AngleCalculator = std::function<QAngle(const OdomController& odom)>;
 
+/**
+ * Odometry motion controller for skid-steer chassis.
+ */
 class OdomController {
 public:
   /**

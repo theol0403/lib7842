@@ -6,6 +6,9 @@
 
 namespace lib7842 {
 
+/**
+ * Odometry motion controller for X-Base chassis.
+ */
 class OdomXController : public OdomController {
 public:
   /**
