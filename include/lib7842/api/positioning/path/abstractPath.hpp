@@ -2,19 +2,13 @@
 
 namespace lib7842 {
 
-// Forward Declare
 class SimplePath;
 
 /**
- * Interface Path Class
+ * A generic path representation that can be interpolated into a SimplePath.
  */
 class AbstractPath {
 public:
-  /**
-   * Default Constructors
-   */
-  AbstractPath() = default;
-  AbstractPath(const AbstractPath& ipath) = default;
   virtual ~AbstractPath() = default;
 
   /**
