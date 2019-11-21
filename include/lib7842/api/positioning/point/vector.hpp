@@ -23,7 +23,7 @@ public:
    * Create a new point
    *
    * @param ix The x
-   * @param iy y
+   * @param iy The y
    */
   Vector(const QLength& ix, const QLength& iy);
 
