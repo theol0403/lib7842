@@ -32,9 +32,6 @@ const std::vector<std::shared_ptr<Vector>>& SimplePath::read() const {
   return path;
 }
 
-/**
- * Extract path containing copies of points
- */
 SimplePath SimplePath::copy() const {
   SimplePath temp;
   temp().reserve(path.size());
@@ -44,9 +41,6 @@ SimplePath SimplePath::copy() const {
   return temp;
 }
 
-/**
- * Smoothen path
- */
 void SimplePath::smoothen(const double iweight, const QLength& itolerance) {
   SimplePath destPath = this->copy();
 
@@ -69,12 +63,6 @@ void SimplePath::smoothen(const double iweight, const QLength& itolerance) {
   path = std::move(destPath.path);
 }
 
-/**
- * Interpolate the path
- *
- * @param isteps how many points to interpolate per segment, from start (inclusive) to end (exclusive) of segment
- * @return generated path
- */
 SimplePath SimplePath::generate(const int isteps) const {
   if (isteps < 1) throw std::runtime_error("SimplePath::generate: isteps is less than 1");
 
@@ -103,10 +91,6 @@ SimplePath SimplePath::generate(const int isteps) const {
   return temp;
 }
 
-/**
- * Sample the segment
- * @param  isteps the number of points to generate in the segment excluding the end
- */
 SimplePath SimplePath::generateSegment(const Vector& start, const Vector& end, const int isteps) {
   if (isteps < 1) throw std::runtime_error("SimplePath::generateSegment: isteps is less than 1");
   SimplePath segment;

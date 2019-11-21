@@ -9,13 +9,16 @@ class SimplePath;
  */
 class AbstractPath {
 public:
+  AbstractPath() = default;
+  AbstractPath(const AbstractPath& ipath) = default;
+  AbstractPath(AbstractPath&& ipath) = default;
   virtual ~AbstractPath() = default;
 
   /**
    * Interpolate the path
    *
    * @param  isteps how many points to interpolate per segment, from start (inclusive) to end
-   *                (exclusive) of segment
+   *                (exclusive) of segment.
    * @return generated path
    */
   virtual SimplePath generate(const int isteps = 1) const = 0;

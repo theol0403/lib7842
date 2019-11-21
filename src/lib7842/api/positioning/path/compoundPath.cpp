@@ -2,27 +2,17 @@
 
 namespace lib7842 {
 
-CompoundPath::CompoundPath(const std::shared_ptr<AbstractPath>& ipath) {
-  addPath(std::move(ipath));
-}
-
-CompoundPath& CompoundPath::addPath(const std::shared_ptr<AbstractPath>& ipath) {
-  paths.emplace_back(std::move(ipath));
+CompoundPath& CompoundPath::add(const std::shared_ptr<AbstractPath>& isegment) {
+  segments.emplace_back(isegment);
   return *this;
 }
 
-/**
- * Interpolate the path
- *
- * @param isteps how many points to interpolate per segment, from start (inclusive) to end (exclusive) of segment
- * @return generated path
- */
 SimplePath CompoundPath::generate(const int isteps) const {
   SimplePath temp;
-  for (auto&& path : paths) {
-    SimplePath ipath = path->generate(isteps);
-    temp().reserve(temp().size() + ipath().size());
-    for (auto&& point : ipath()) {
+  for (auto&& segment : segments) {
+    SimplePath isegment = segment->generate(isteps);
+    temp().reserve(temp().size() + isegment().size());
+    for (auto&& point : isegment()) {
       temp().emplace_back(point);
     }
   }
