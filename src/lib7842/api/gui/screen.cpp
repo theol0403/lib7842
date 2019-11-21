@@ -70,6 +70,8 @@ Screen::Screen(lv_obj_t* iparent, lv_color_t icolor, const std::shared_ptr<Logge
   pageStyle.body.border.width = 2;
   pageStyle.body.border.opa = LV_OPA_100;
   pageStyle.body.radius = 0;
+
+  startTask("Screen");
 }
 
 Screen::~Screen() {

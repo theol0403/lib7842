@@ -4,7 +4,6 @@
 
 void lvglTest() {
   Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
-  scr.startTask("Screen");
 
   scr.makePage<OdomDebug>().attachOdom(nullptr).attachResetter(nullptr);
 
