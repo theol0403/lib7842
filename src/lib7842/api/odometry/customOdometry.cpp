@@ -6,6 +6,7 @@ CustomOdometry::CustomOdometry(
   const std::shared_ptr<ChassisModel>& imodel,
   const ChassisScales& ichassisScales,
   const std::shared_ptr<Logger>& ilogger) :
+  TaskWrapper(ilogger),
   model(imodel),
   chassisScales(ichassisScales),
   chassisWidth(chassisScales.wheelTrack.convert(meter)),
