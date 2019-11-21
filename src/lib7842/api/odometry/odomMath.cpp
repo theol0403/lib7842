@@ -17,11 +17,11 @@ Vector closest(const State& state, const Vector& target) {
 }
 
 QAngle rollAngle360(const QAngle& angle) {
-  return angle - 360.0_deg * std::floor(angle.convert(degree) * (1.0 / 360.0));
+  return angle - 360.0_deg * std::floor(angle.convert(degree) / 360.0);
 }
 
 QAngle rollAngle180(const QAngle& angle) {
-  return angle - 360.0_deg * std::floor((angle.convert(degree) + 180.0) * (1.0 / 360.0));
+  return angle - 360.0_deg * std::floor((angle.convert(degree) + 180.0) / 360.0);
 }
 
 QAngle rotateAngle90(const QAngle& angle) {
