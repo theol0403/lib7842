@@ -11,6 +11,27 @@ namespace lib7842 {
 Vector::Vector(const QLength& ix, const QLength& iy) : x(ix), y(iy) {}
 
 /**
+ * Vector Accessors
+ */
+QLength& Vector::at(const size_t& iindex) {
+  switch (iindex) {
+    case 0: return x; break;
+    case 1: return y; break;
+    default:
+      throw std::runtime_error("Vector::at():: \"" + std::to_string(iindex) + "\" is invalid index");
+      break;
+  }
+}
+
+QLength& Vector::operator[](const size_t& iindex) {
+  return at(iindex);
+}
+
+const QLength& Vector::read(const size_t& iindex) const {
+  return const_cast<Vector*>(this)->at(iindex);
+}
+
+/**
  * Vector Math Operators
  */
 Vector Vector::operator+(const Vector& rhs) const {
@@ -30,27 +51,6 @@ bool Vector::operator==(const Vector& rhs) const {
 
 bool Vector::operator!=(const Vector& rhs) const {
   return !(rhs == *this);
-}
-
-/**
- * Vector Accessors
- */
-QLength& Vector::at(const size_t& iindex) {
-  switch (iindex) {
-    case 0: return x; break;
-    case 1: return y; break;
-    default:
-      throw std::runtime_error("Vector::at():: \"" + std::to_string(iindex) + "\" is invalid index");
-      break;
-  }
-}
-
-QLength& Vector::operator[](const size_t& iindex) {
-  return at(iindex);
-}
-
-const QLength& Vector::read(const size_t& iindex) const {
-  return const_cast<Vector*>(this)->at(iindex);
 }
 
 /**

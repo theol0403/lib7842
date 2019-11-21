@@ -7,6 +7,9 @@ namespace lib7842 {
 
 using namespace okapi;
 
+/**
+ * A 2D Point
+ */
 class Vector {
 public:
   QLength x {0_in};
@@ -16,21 +19,48 @@ public:
   Vector(const Vector& ipoint) = default;
   virtual ~Vector() = default;
 
+  /**
+   * Create a new point
+   *
+   * @param ix The x
+   * @param iy y
+   */
   Vector(const QLength& ix, const QLength& iy);
 
+  /**
+   * Get the coordinate given an index. 0 is X, 1 is Y.
+   *
+   * @param  iindex The index
+   * @return The coordinate
+   */
+  QLength& at(const size_t& iindex);
+  QLength& operator[](const size_t& iindex);
+
+  /**
+   * Get the read-only coordinate given an index. 0 is X, 1 is Y.
+   *
+   * @param  iindex The index
+   * @return The coordinate
+   */
+  const QLength& read(const size_t& iindex) const;
+
+  /**
+   * Binary operators
+   */
   Vector operator+(const Vector& rhs) const;
   Vector operator-(const Vector& rhs) const;
   bool operator==(const Vector& rhs) const;
   bool operator!=(const Vector& rhs) const;
 
-  QLength& at(const size_t& iindex);
-  QLength& operator[](const size_t& iindex);
-
-  const QLength& read(const size_t& iindex) const;
-
+  /**
+   * Scale operators
+   */
   Vector operator*(const double scalar) const;
   Vector operator/(const double scalar) const;
 
+  /**
+   * Vector operations
+   */
   static Vector normalize(const Vector& lhs);
   static Vector scalarMult(const Vector& lhs, const double scalar);
   static QArea dot(const Vector& lhs, const Vector& rhs);
