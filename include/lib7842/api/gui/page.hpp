@@ -16,18 +16,45 @@ using namespace okapi;
 
 class Page {
 public:
+  /**
+   * Create a new page. Theme color is inherited from the parent.
+   *
+   * @param iparent The LVGL parent, typically `lv_scr_act()`
+   * @param ilogger The logger
+   */
   explicit Page(lv_obj_t* iparent, const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+
+  /**
+   * Create a new page.
+   *
+   * @param iparent The LVGL parent, typically `lv_scr_act()`W
+   * @param icolor  The theme color
+   * @param ilogger The logger
+   */
   explicit Page(
     lv_obj_t* iparent,
     lv_color_t icolor,
     const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   Page(const Page& ipage) = delete;
+  Page(Page&& ipage) = default;
   virtual ~Page();
 
+  /**
+   * Initialize the page. Override this method to implement custom initialization.
+   */
   virtual void initialize() {};
+
+  /**
+   * Render the page. Override this method to implement custom rendering.
+   */
   virtual void render() {};
 
+  /**
+   * Get the lv_obj_t* to the page.
+   *
+   * @return The page.
+   */
   lv_obj_t* getPage() const;
 
 protected:
