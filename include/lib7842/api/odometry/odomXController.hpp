@@ -74,7 +74,7 @@ public:
 
 protected:
   /**
-   * Controls the chassis movement. Applies magnitude control to prioritize turning.
+   * Control the chassis movement. Applies magnitude control to prioritize turning.
    *
    * @param forwardSpeed The forward speed
    * @param yaw          The yaw speed
@@ -83,7 +83,7 @@ protected:
   void driveXVector(double forwardSpeed, double yaw, double strafe);
 
   /**
-   * Controls the chassis movement. Strafes at the given speed at the given direction.
+   * Control the chassis movement. Strafes at the given speed at the given direction.
    *
    * @param speed     The speed
    * @param direction The direction

@@ -27,19 +27,19 @@ protected:
 
 public:
   /**
-   * Starts the task.
+   * Start the task.
    *
    * @param iname The task name, optional.
    */
   virtual void startTask(const std::string& iname = "TaskWrapper");
 
   /**
-   * Kills the task.
+   * Kill the task.
    */
   virtual void killTask();
 
   /**
-   * Gets the task name.
+   * Get the task name.
    *
    * @return The name.
    */

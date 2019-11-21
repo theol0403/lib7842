@@ -24,7 +24,7 @@ public:
   explicit DataPoint(const Vector& ipoint);
 
   /**
-   * Sets the point data.
+   * Set the point data.
    *
    * @param iid   The data name
    * @param idata The data
@@ -32,7 +32,7 @@ public:
   void setData(const std::string& iid, const std::any& idata);
 
   /**
-   * Gets the point data.
+   * Get the point data.
    *
    * @param  iid The data name
    * @tparam T   The data type

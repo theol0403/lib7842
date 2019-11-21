@@ -11,7 +11,7 @@ using namespace okapi;
 class Screen : public TaskWrapper {
 public:
   /**
-   * Creates a new screen. Theme color is inherited from the parent.
+   * Create a new screen. Theme color is inherited from the parent.
    *
    * @param iparent The LVGL parent, typically `lv_scr_act()`
    * @param ilogger The logger
@@ -20,7 +20,7 @@ public:
     lv_obj_t* iparent, const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   /**
-   * Creates a new screen.
+   * Create a new screen.
    *
    * @param iparent The LVGL parent, typically `lv_scr_act()`W
    * @param icolor  The theme color
@@ -35,7 +35,7 @@ public:
   virtual ~Screen();
 
   /**
-   * Creates a new tab and returns the LVGL pointer.
+   * Create a new tab and return the LVGL pointer.
    *
    * @param  iname The tab name
    * @return LVGL pointer to the new tab
@@ -43,7 +43,7 @@ public:
   lv_obj_t* newPage(const std::string& iname);
 
   /**
-   * Helper function to create new page. Example use: `Screen::newPage<Graph>()`. Returns a
+   * Helper function to create a new page. Example use: `Screen::newPage<Graph>()`. Returns a
    * reference to the newly created page for configuration purposes.
    *
    * @param  iname The name of the page

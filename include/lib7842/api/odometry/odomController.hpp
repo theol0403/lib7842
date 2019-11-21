@@ -185,49 +185,49 @@ public:
   static Settler makeSettler(const QLength& distance, const QAngle& angle);
 
   /**
-   * Generates an AngleCalculator that seeks a given absolute angle
+   * Make an AngleCalculator that seeks a given absolute angle
    *
    * @param angle The angle
    */
   static AngleCalculator makeAngleCalculator(const QAngle& angle);
 
   /**
-   * Generates an AngleCaclulator that seeks a given point.
+   * Make an AngleCaclulator that seeks a given point.
    *
    * @param point The point
    */
   static AngleCalculator makeAngleCalculator(const Vector& point);
 
   /**
-   * Generates an AngleCaclulator that returns a constant error.
+   * Make an AngleCaclulator that returns a constant error.
    *
    * @param error The error
    */
   static AngleCalculator makeAngleCalculator(double error);
 
   /**
-   * Generates an AngleCalculator that does nothing
+   * Make an AngleCalculator that does nothing
    */
   static AngleCalculator makeAngleCalculator();
 
   /**
-   * Calculates angle from the chassis to the point
+   * Calculate angle from the chassis to the point
    */
   QAngle angleToPoint(const Vector& point) const;
 
   /**
-   * Calculates distance from the chassis to the point
+   * Calculate distance from the chassis to the point
    */
   QLength distanceToPoint(const Vector& point) const;
 
 protected:
   /**
-   * Resets the pid controllers, used before every motion
+   * Reset the pid controllers, used before every motion
    */
   virtual void resetPid();
 
   /**
-   * Controls the chassis movement. Applies magnitude control to prioritize turning.
+   * Control the chassis movement. Applies magnitude control to prioritize turning.
    *
    * @param forwardSpeed Forward speed
    * @param yaw          The yaw

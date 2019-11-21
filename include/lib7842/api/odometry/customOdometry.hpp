@@ -24,31 +24,31 @@ public:
   virtual ~CustomOdometry() = default;
 
   /**
-   * Returns the current state.
+   * Return the current state.
    *
    * @return The state.
    */
   virtual const State& getState() const;
 
   /**
-   * Sets a new state to be the current state.
+   * Set a new state to be the current state.
    *
    * @param istate The state
    */
   virtual void setState(const State& istate);
 
   /**
-   * Resets state to {0, 0, 0}
+   * Reset state to {0, 0, 0}
    */
   virtual void resetState();
 
   /**
-   * Resets sensors and state
+   * Reset sensors and state
    */
   virtual void reset();
 
   /**
-   * Sets the drive and turn scales.
+   * Set the drive and turn scales.
    *
    * @param ichassisScales The chassis scales
    */
@@ -60,14 +60,14 @@ public:
   void step() override;
 
   /**
-   * Gets the chassis model.
+   * Get the chassis model.
    *
    * @return The internal ChassisModel.
    */
   std::shared_ptr<ReadOnlyChassisModel> getModel() override;
 
   /**
-   * Gets the chassis scales.
+   * Get the chassis scales.
    *
    * @return The internal ChassisScales.
    */

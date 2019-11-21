@@ -12,7 +12,7 @@ public:
   CompoundPath() = default;
 
   /**
-   * Adds a path segment.
+   * Add a path segment.
    *
    * @param  isegment The segment.
    */
