@@ -1,6 +1,6 @@
 #include "selector.hpp"
 
-namespace lib7842 {
+namespace lib7842::GUI {
 
 void Selector::initialize() {
   Actions::initialize();
@@ -33,4 +33,4 @@ lv_res_t Selector::btnAction(lv_obj_t* ibtnm, const char* itxt) {
   return LV_RES_OK;
 }
 
-} // namespace lib7842
+} // namespace lib7842::GUI

@@ -2,7 +2,7 @@
 
 #include "actions.hpp"
 
-namespace lib7842 {
+namespace lib7842::GUI {
 
 class Selector : public Actions {
 public:
@@ -19,4 +19,4 @@ protected:
   int currentIndex {0};
 };
 
-} // namespace lib7842
+} // namespace lib7842::GUI

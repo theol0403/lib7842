@@ -1,6 +1,6 @@
 #include "page.hpp"
 
-namespace lib7842 {
+namespace lib7842::GUI {
 
 Page::Page(lv_obj_t* iparent, const std::shared_ptr<Logger>& ilogger) :
   Page(iparent, lv_obj_get_style(iparent)->body.main_color, ilogger) {}
@@ -24,4 +24,4 @@ lv_obj_t* Page::getPage() const {
   return container;
 }
 
-} // namespace lib7842
+} // namespace lib7842::GUI

@@ -1,6 +1,6 @@
 #include "screen.hpp"
 
-namespace lib7842 {
+namespace lib7842::GUI {
 
 Screen::Screen(lv_obj_t* iparent, const std::shared_ptr<Logger>& ilogger) :
   Screen(iparent, lv_obj_get_style(iparent)->body.main_color, ilogger) {}
@@ -95,4 +95,4 @@ void Screen::loop() {
   }
 }
 
-} // namespace lib7842
+} // namespace lib7842::GUI

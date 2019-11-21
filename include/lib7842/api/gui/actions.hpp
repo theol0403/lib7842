@@ -3,7 +3,7 @@
 #include "page.hpp"
 #include <vector>
 
-namespace lib7842 {
+namespace lib7842::GUI {
 
 class Actions : public Page {
 public:
@@ -29,4 +29,4 @@ protected:
   std::vector<const char*> matrix {""};
 };
 
-} // namespace lib7842
+} // namespace lib7842::GUI

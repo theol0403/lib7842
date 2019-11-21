@@ -3,15 +3,15 @@
 #include "test.hpp"
 
 void lvglTest() {
-  Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
+  GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
 
-  scr.makePage<Odom>().attachOdom(nullptr).attachResetter(nullptr);
+  scr.makePage<GUI::Odom>().attachOdom(nullptr).attachResetter(nullptr);
 
-  scr.makePage<Graph>().withRange(0, 100).withSeries("Test", LV_COLOR_RED, []() {
+  scr.makePage<GUI::Graph>().withRange(0, 100).withSeries("Test", LV_COLOR_RED, []() {
     return 50;
   });
 
-  scr.makePage<Actions>("Buttons")
+  scr.makePage<GUI::Actions>("Buttons")
     .button(
       "Claw",
       [&]() {
@@ -24,7 +24,7 @@ void lvglTest() {
       })
     .build();
 
-  scr.makePage<Selector>("Auton")
+  scr.makePage<GUI::Selector>("Auton")
     .button(
       "Claw",
       [&]() {

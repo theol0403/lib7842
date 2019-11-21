@@ -1,6 +1,6 @@
 #include "actions.hpp"
 
-namespace lib7842 {
+namespace lib7842::GUI {
 
 void Actions::initialize() {
   btnm = lv_btnm_create(container, NULL);
@@ -84,4 +84,4 @@ lv_res_t Actions::btnAction(lv_obj_t* ibtnm, const char* itxt) {
   return LV_RES_OK;
 }
 
-} // namespace lib7842
+} // namespace lib7842::GUI

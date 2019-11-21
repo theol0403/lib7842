@@ -3,7 +3,7 @@
 #include "page.hpp"
 #include <tuple>
 
-namespace lib7842 {
+namespace lib7842::GUI {
 
 class Graph : public Page {
 public:
@@ -68,4 +68,4 @@ private:
     series = {};
 };
 
-} // namespace lib7842
+} // namespace lib7842::GUI

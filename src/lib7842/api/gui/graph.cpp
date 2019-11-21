@@ -1,7 +1,7 @@
 #include "graph.hpp"
 #include <iostream>
 
-namespace lib7842 {
+namespace lib7842::GUI {
 
 void Graph::initialize() {
   graph = lv_chart_create(container, NULL);
@@ -66,4 +66,4 @@ Graph& Graph::withSeries(
   return *this;
 }
 
-} // namespace lib7842
+} // namespace lib7842::GUI

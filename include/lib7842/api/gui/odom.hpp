@@ -6,7 +6,7 @@
 #include <functional>
 #include <string>
 
-namespace lib7842 {
+namespace lib7842::GUI {
 
 class Odom : public Page {
 public:
@@ -87,4 +87,4 @@ private:
   bool hasWarnedRender = false;
 };
 
-} // namespace lib7842
+} // namespace lib7842::GUI

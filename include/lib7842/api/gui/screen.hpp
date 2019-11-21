@@ -4,7 +4,7 @@
 #include "page.hpp"
 #include <string>
 
-namespace lib7842 {
+namespace lib7842::GUI {
 
 using namespace okapi;
 
@@ -76,4 +76,4 @@ private:
   lv_style_t pageStyle;
 };
 
-} // namespace lib7842
+} // namespace lib7842::GUI

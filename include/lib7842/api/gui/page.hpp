@@ -10,7 +10,7 @@
   #include "lvgl/lvgl.h"
 #endif
 
-namespace lib7842 {
+namespace lib7842::GUI {
 
 using namespace okapi;
 
@@ -65,4 +65,4 @@ protected:
   std::shared_ptr<Logger> logger {nullptr};
 };
 
-} // namespace lib7842
+} // namespace lib7842::GUI

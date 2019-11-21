@@ -1,6 +1,6 @@
 #include "odom.hpp"
 
-namespace lib7842 {
+namespace lib7842::GUI {
 
 void Odom::initialize() {
   initializeField();
@@ -257,4 +257,4 @@ lv_res_t Odom::resetAction(lv_obj_t* btn) {
   return LV_RES_OK;
 }
 
-} // namespace lib7842
+} // namespace lib7842::GUI
