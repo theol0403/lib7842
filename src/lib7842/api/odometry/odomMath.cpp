@@ -24,7 +24,7 @@ QAngle rollAngle180(const QAngle& angle) {
   return angle - 360.0_deg * std::floor((angle.convert(degree) + 180.0) * (1.0 / 360.0));
 }
 
-QAngle rollAngle90(const QAngle& angle) {
+QAngle rotateAngle90(const QAngle& angle) {
   QAngle iangle = rollAngle180(angle);
   if (iangle.abs() > 90_deg) {
     iangle += 180_deg;

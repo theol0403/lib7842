@@ -53,7 +53,7 @@ QAngle rollAngle180(const QAngle& angle);
  * @param  angle The input angle
  * @return The rotated angle
  */
-QAngle rollAngle90(const QAngle& angle);
+QAngle rotateAngle90(const QAngle& angle);
 
 } // namespace OdomMath
 
