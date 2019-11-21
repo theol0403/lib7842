@@ -5,7 +5,7 @@
 void lvglTest() {
   Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
 
-  scr.makePage<OdomDebug>().attachOdom(nullptr).attachResetter(nullptr);
+  scr.makePage<Odom>().attachOdom(nullptr).attachResetter(nullptr);
 
   scr.makePage<Graph>().withRange(0, 100).withSeries("Test", LV_COLOR_RED, []() {
     return 50;
@@ -24,7 +24,7 @@ void lvglTest() {
       })
     .build();
 
-  scr.makePage<AutonSelector>("Auton")
+  scr.makePage<Selector>("Auton")
     .button(
       "Claw",
       [&]() {
