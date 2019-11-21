@@ -5,16 +5,16 @@
 
 namespace lib7842 {
 
-class ButtonMatrix : public Page {
+class Actions : public Page {
 public:
   using Page::Page;
 
   void initialize() override;
   static std::string getName();
 
-  ButtonMatrix& button(const std::string& iname, const std::function<void()>& iaction);
-  ButtonMatrix& newRow();
-  ButtonMatrix& build();
+  Actions& button(const std::string& iname, const std::function<void()>& iaction);
+  Actions& newRow();
+  Actions& build();
 
 protected:
   static lv_res_t btnAction(lv_obj_t* ibtnm, const char* itxt);

@@ -8,7 +8,7 @@
 
 namespace lib7842 {
 
-class OdomDebug : public Page {
+class Odom : public Page {
 public:
   using Page::Page;
 
@@ -34,7 +34,7 @@ public:
    *
    * @param iodom The odometry
    */
-  OdomDebug& attachOdom(const std::shared_ptr<Odometry>& iodom);
+  Odom& attachOdom(const std::shared_ptr<Odometry>& iodom);
 
   /**
    * Specify the function to be called when the reset button is pressed. The default resetter is
@@ -42,7 +42,7 @@ public:
    *
    * @param  iresetter a function that resets the odometry and sensors
    */
-  OdomDebug& attachResetter(const std::function<void()>& iresetter);
+  Odom& attachResetter(const std::function<void()>& iresetter);
 
 private:
   std::shared_ptr<Odometry> odom {nullptr};

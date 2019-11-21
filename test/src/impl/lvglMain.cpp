@@ -11,7 +11,7 @@ void lvglTest() {
     return 50;
   });
 
-  scr.makePage<ButtonMatrix>("Buttons")
+  scr.makePage<Actions>("Buttons")
     .button(
       "Claw",
       [&]() {

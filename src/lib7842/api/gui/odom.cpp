@@ -1,39 +1,39 @@
-#include "odomDebug.hpp"
+#include "odom.hpp"
 
 namespace lib7842 {
 
-void OdomDebug::initialize() {
+void Odom::initialize() {
   initializeField();
   initializeText();
   initializeButton();
 }
 
-void OdomDebug::render() {
+void Odom::render() {
   if (odom) {
     updateOdom();
   } else {
     if (!hasWarnedRender) {
       hasWarnedRender = true;
-      LOG_WARN_S("OdomDebug::render: odom not attached");
+      LOG_WARN_S("Odom::render: odom not attached");
     }
   }
 }
 
-std::string OdomDebug::getName() {
+std::string Odom::getName() {
   return "Odom";
 }
 
-OdomDebug& OdomDebug::attachOdom(const std::shared_ptr<Odometry>& iodom) {
+Odom& Odom::attachOdom(const std::shared_ptr<Odometry>& iodom) {
   odom = iodom;
   return *this;
 }
 
-OdomDebug& OdomDebug::attachResetter(const std::function<void()>& iresetter) {
+Odom& Odom::attachResetter(const std::function<void()>& iresetter) {
   resetter = iresetter;
   return *this;
 }
 
-void OdomDebug::initializeField() {
+void Odom::initializeField() {
   /**
   * Field
   */
@@ -128,7 +128,7 @@ void OdomDebug::initializeField() {
   lv_obj_set_style(line, &lineStyle);
 }
 
-void OdomDebug::initializeText() {
+void Odom::initializeText() {
   statusLabel = lv_label_create(container, NULL);
 
   lv_style_copy(&textStyle, &lv_style_plain);
@@ -143,7 +143,7 @@ void OdomDebug::initializeText() {
     -lv_obj_get_width(container) / 2.0 + (lv_obj_get_width(container) - fieldDim) / 2.0, 0);
 }
 
-void OdomDebug::initializeButton() {
+void Odom::initializeButton() {
   /**
   * Button
   */
@@ -183,7 +183,7 @@ void OdomDebug::initializeButton() {
   lv_label_set_text(label, "Reset");
 }
 
-void OdomDebug::updateOdom() {
+void Odom::updateOdom() {
   OdomState state = odom->getState(StateMode::CARTESIAN);
 
   // position in court units
@@ -226,15 +226,15 @@ void OdomDebug::updateOdom() {
  * Sets odom state when tile is pressed
  * Decodes tile ID to find position
  */
-lv_res_t OdomDebug::tileAction(lv_obj_t* tileObj) {
-  OdomDebug* that = static_cast<OdomDebug*>(lv_obj_get_free_ptr(tileObj));
+lv_res_t Odom::tileAction(lv_obj_t* tileObj) {
+  Odom* that = static_cast<Odom*>(lv_obj_get_free_ptr(tileObj));
   int num = lv_obj_get_free_num(tileObj);
   int y = num / 6;
   int x = num - y * 6;
   if (that->odom) {
     that->odom->setState({x * tile + 0.5_tl, 1_crt - y * tile - 0.5_tl, 0_deg}, StateMode::CARTESIAN);
   } else {
-    that->LOG_WARN_S("OdomDebug::tileAction: odom not attached");
+    that->LOG_WARN_S("Odom::tileAction: odom not attached");
   }
   return LV_RES_OK;
 }
@@ -242,16 +242,16 @@ lv_res_t OdomDebug::tileAction(lv_obj_t* tileObj) {
 /**
  * Reset Sensors and Position
  */
-lv_res_t OdomDebug::resetAction(lv_obj_t* btn) {
-  OdomDebug* that = static_cast<OdomDebug*>(lv_obj_get_free_ptr(btn));
+lv_res_t Odom::resetAction(lv_obj_t* btn) {
+  Odom* that = static_cast<Odom*>(lv_obj_get_free_ptr(btn));
   if (that->resetter) {
     that->resetter();
   } else {
     if (that->odom) {
-      that->LOG_INFO_S("OdomDebug::resetAction: using default resetter");
+      that->LOG_INFO_S("Odom::resetAction: using default resetter");
       that->odom->setState({0_in, 0_in, 0_deg});
     } else {
-      that->LOG_WARN_S("OdomDebug::resetAction: odom not attached");
+      that->LOG_WARN_S("Odom::resetAction: odom not attached");
     }
   }
   return LV_RES_OK;

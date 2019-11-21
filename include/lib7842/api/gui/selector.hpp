@@ -1,12 +1,12 @@
 #pragma once
 
-#include "buttonMatrix.hpp"
+#include "actions.hpp"
 
 namespace lib7842 {
 
-class AutonSelector : public ButtonMatrix {
+class Selector : public Actions {
 public:
-  using ButtonMatrix::ButtonMatrix;
+  using Actions::Actions;
 
   void initialize() override;
   static std::string getName();

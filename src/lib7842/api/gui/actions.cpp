@@ -1,8 +1,8 @@
-#include "buttonMatrix.hpp"
+#include "actions.hpp"
 
 namespace lib7842 {
 
-void ButtonMatrix::initialize() {
+void Actions::initialize() {
   btnm = lv_btnm_create(container, NULL);
   lv_obj_set_size(btnm, lv_obj_get_width(container), lv_obj_get_height(container));
   lv_btnm_set_action(btnm, btnAction);
@@ -45,21 +45,21 @@ void ButtonMatrix::initialize() {
   lv_btnm_set_style(btnm, LV_BTNM_STYLE_BTN_REL, &inaStyle);
 }
 
-std::string ButtonMatrix::getName() {
+std::string Actions::getName() {
   return "ButtonMatrix";
 }
 
-ButtonMatrix& ButtonMatrix::button(const std::string& iname, const std::function<void()>& iaction) {
+Actions& Actions::button(const std::string& iname, const std::function<void()>& iaction) {
   buttons.push_back(std::make_pair(iname, iaction));
   return *this;
 }
 
-ButtonMatrix& ButtonMatrix::newRow() {
+Actions& Actions::newRow() {
   buttons.push_back(std::make_pair("\n", nullptr));
   return *this;
 }
 
-ButtonMatrix& ButtonMatrix::build() {
+Actions& Actions::build() {
   matrix.clear();
   matrix.reserve(buttons.size() + 1);
 
@@ -72,8 +72,8 @@ ButtonMatrix& ButtonMatrix::build() {
   return *this;
 }
 
-lv_res_t ButtonMatrix::btnAction(lv_obj_t* ibtnm, const char* itxt) {
-  ButtonMatrix& that = *static_cast<ButtonMatrix*>(lv_obj_get_free_ptr(ibtnm));
+lv_res_t Actions::btnAction(lv_obj_t* ibtnm, const char* itxt) {
+  Actions& that = *static_cast<Actions*>(lv_obj_get_free_ptr(ibtnm));
   std::string txt(itxt);
 
   auto it = std::find_if(that.buttons.begin(), that.buttons.end(), [&](auto& button) {

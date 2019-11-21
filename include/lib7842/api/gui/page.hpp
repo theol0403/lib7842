@@ -59,12 +59,10 @@ public:
 
 protected:
   lv_obj_t* container;
+  lv_style_t cStyle;
   const lv_color_t themeColor;
 
   std::shared_ptr<Logger> logger {nullptr};
-
-private:
-  lv_style_t cStyle;
 };
 
 } // namespace lib7842
