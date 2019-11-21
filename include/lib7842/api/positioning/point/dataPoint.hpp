@@ -10,7 +10,7 @@
 namespace lib7842 {
 
 /**
- * A point that contains extra information that can be any type.
+ * A point that contains extra information of any type.
  */
 class DataPoint : public Vector {
 public:
