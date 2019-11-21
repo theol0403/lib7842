@@ -17,6 +17,8 @@ using namespace okapi;
 class TaskWrapper {
 protected:
   explicit TaskWrapper(const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  TaskWrapper(const TaskWrapper& itask) = delete;
+  TaskWrapper(TaskWrapper&& itask) = default;
   virtual ~TaskWrapper() = default;
 
   /**
