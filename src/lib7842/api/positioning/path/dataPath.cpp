@@ -16,7 +16,6 @@ DataPath::DataPath(const std::vector<DataPoint>& ipath) {
 DataPath::DataPath(const std::vector<std::shared_ptr<DataPoint>>& ipath) : path(ipath) {}
 
 DataPath::DataPath(const SimplePath& ipath) {
-  // copy from source path to data path
   path.reserve(ipath.read().size());
   std::transform(
     ipath.read().begin(), ipath.read().end(), std::back_inserter(path),
