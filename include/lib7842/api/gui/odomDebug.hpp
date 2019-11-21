@@ -12,31 +12,42 @@ class OdomDebug : public Page {
 public:
   using Page::Page;
 
+  /**
+   * Initialize the odomDebug.
+   */
   void initialize() override;
+
+  /**
+   * Render the odomDebug.
+   */
   void render() override;
 
+  /**
+   * Get the default tab name.
+   *
+   * @return The name.
+   */
   static std::string getName();
 
   /**
-   * Attach the odom for reading
+   * Provide the odometry for displaying.
    *
    * @param iodom The odometry
    */
   OdomDebug& attachOdom(const std::shared_ptr<Odometry>& iodom);
 
   /**
-   * Sets the function to be called when the reset button is pressed The default resetter is only
-   * able to reset the state, not the sensors.
+   * Specify the function to be called when the reset button is pressed. The default resetter is
+   * only able to reset the state but not the sensors.
    *
    * @param  iresetter a function that resets the odometry and sensors
    */
   OdomDebug& attachResetter(const std::function<void()>& iresetter);
 
-protected:
+private:
   std::shared_ptr<Odometry> odom {nullptr};
   std::function<void()> resetter {nullptr};
 
-private:
   void initializeField();
   void initializeText();
   void initializeButton();

@@ -53,7 +53,7 @@ public:
    */
   template <typename T> T& makePage(const std::string& iname = T::getName()) {
     static_assert(std::is_base_of<Page, T>::value, "T is not a Page");
-    auto ptr = std::make_shared<T>(newPage(iname), themeColor);
+    auto ptr = std::make_shared<T>(newPage(iname), themeColor, logger);
     ptr->initialize();
     pages.emplace_back(ptr);
     return *ptr;
@@ -61,15 +61,12 @@ public:
 
   void loop() override;
 
-protected:
+private:
   lv_obj_t* tabview {nullptr};
   const lv_color_t themeColor;
-
   std::shared_ptr<Logger> logger {nullptr};
-
   std::vector<std::shared_ptr<Page>> pages {};
 
-private:
   lv_style_t style_bg;
   lv_style_t style_indic;
   lv_style_t style_btn_bg;

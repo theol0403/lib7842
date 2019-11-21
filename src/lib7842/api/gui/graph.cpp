@@ -20,7 +20,7 @@ void Graph::initialize() {
 
 void Graph::render() {
   for (auto&& [ser, data, style] : series) {
-    (void)style; // ignore warning
+    (void)style;
     lv_chart_set_next(graph, ser, data());
   }
 }
@@ -44,12 +44,8 @@ Graph& Graph::withGrid(int ihor, int iver) {
   return *this;
 }
 
-Graph& Graph::withRefreshRate(int iminDelta) {
-  minDelta = iminDelta;
-  return *this;
-}
-
-Graph& Graph::withSeries(const std::string& iname, const lv_color_t& icolor, const Data& idata) {
+Graph& Graph::withSeries(
+  const std::string& iname, const lv_color_t& icolor, const std::function<double()>& idata) {
   lv_chart_series_t* ser = lv_chart_add_series(graph, icolor);
   lv_chart_init_points(graph, ser, idata());
 
