@@ -90,7 +90,7 @@ void opcontrol() {
     std::make_unique<IterativePosPIDController>(
       0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)));
 
-  Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
+  GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
   scr.startTask("Screen");
 
   while (true) {
