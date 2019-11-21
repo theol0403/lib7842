@@ -4,8 +4,12 @@
 
 namespace lib7842 {
 
-SimplePath::SimplePath(const std::initializer_list<Vector>& ipath) :
-  SimplePath(std::vector<Vector>(ipath)) {}
+SimplePath::SimplePath(const std::initializer_list<Vector>& ipath) {
+  path.reserve(ipath.size());
+  std::transform(ipath.begin(), ipath.end(), std::back_inserter(path), [](const auto& ipoint) {
+    return std::make_shared<Vector>(ipoint);
+  });
+}
 
 SimplePath::SimplePath(const std::vector<Vector>& ipath) {
   path.reserve(ipath.size());

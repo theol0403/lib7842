@@ -8,32 +8,50 @@
 
 namespace lib7842 {
 
+/**
+ * A path that represents a collection of points which are stored using shared pointers. To have
+ * full access to the underlying array, use `operator()`. To have read-only access to the
+ * underlying array, use `read()`.
+ */
 class SimplePath : public AbstractPath {
 public:
-  /**
-   * Default Constructors
-   */
   SimplePath() = default;
-  SimplePath(const SimplePath& ipath) = default;
-  virtual ~SimplePath() = default;
 
+  /**
+   * Create a path using an array of points. The points will be reallocated as shared pointers.
+   *
+   * @param ipath The array of points
+   */
   explicit SimplePath(const std::initializer_list<Vector>& ipath);
   explicit SimplePath(const std::vector<Vector>& ipath);
+
+  /**
+   * Create a path using an array of shared pointers.
+   *
+   * @param ipath The array of shared pointers
+   */
   explicit SimplePath(const std::vector<std::shared_ptr<Vector>>& ipath);
 
+  /**
+   * Get the underlying array.
+   */
   std::vector<std::shared_ptr<Vector>>& get();
   std::vector<std::shared_ptr<Vector>>& operator()();
+
+  /**
+   * Get the underlying array, read-only.
+   */
   const std::vector<std::shared_ptr<Vector>>& read() const;
 
   /**
-   * Extract path containing copies of points
+   * Copy the entire path.
    *
    * @return copy of the path
    */
   SimplePath copy() const;
 
   /**
-   * Smoothen path
+   * Smoothen the path
    *
    * @param iweight    The smooth weight
    * @param itolerance The smooth tolerance
