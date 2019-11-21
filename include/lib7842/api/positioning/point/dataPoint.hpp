@@ -9,16 +9,35 @@
 
 namespace lib7842 {
 
+/**
+ * A point that contains extra information that can be any type.
+ */
 class DataPoint : public Vector {
 public:
   using Vector::Vector;
-  DataPoint(const DataPoint& istate) = default;
-  virtual ~DataPoint() = default;
 
+  /**
+   * Convert a Vector into a DataPoint
+   *
+   * @param ipoint The point
+   */
   explicit DataPoint(const Vector& ipoint);
 
+  /**
+   * Sets the point data.
+   *
+   * @param iid   The data name
+   * @param idata The data
+   */
   void setData(const std::string& iid, const std::any& idata);
 
+  /**
+   * Gets the point data.
+   *
+   * @param  iid The data name
+   * @tparam T   The data type
+   * @return The data
+   */
   template <typename T> T getData(const std::string& iid) const {
     const std::any& data = getID(iid);
     try {
