@@ -1,8 +1,6 @@
 #include "odomMath.hpp"
 
-namespace lib7842 {
-
-namespace OdomMath {
+namespace lib7842::OdomMath {
 
 Vector closest(const Vector& current, const QAngle& heading, const Vector& target) {
   double headRad = heading.convert(radian);
@@ -33,6 +31,4 @@ QAngle rotateAngle90(const QAngle& angle) {
   return iangle;
 }
 
-} // namespace OdomMath
-
-} // namespace lib7842
+} // namespace lib7842::OdomMath

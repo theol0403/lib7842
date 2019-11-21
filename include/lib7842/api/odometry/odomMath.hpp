@@ -4,9 +4,7 @@
 #include "lib7842/api/positioning/point/vector.hpp"
 #include "okapi/api/units/QAngle.hpp"
 
-namespace lib7842 {
-
-namespace OdomMath {
+namespace lib7842::OdomMath {
 
 /**
  * Calculate the point along a given heading that is closest to a target point.
@@ -55,6 +53,4 @@ QAngle rollAngle180(const QAngle& angle);
  */
 QAngle rotateAngle90(const QAngle& angle);
 
-} // namespace OdomMath
-
-} // namespace lib7842
+} // namespace lib7842::OdomMath
