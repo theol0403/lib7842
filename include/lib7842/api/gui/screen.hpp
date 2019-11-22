@@ -8,7 +8,10 @@ namespace lib7842::GUI {
 
 using namespace okapi;
 
-class Screen : public TaskWrapper {
+/**
+ * An LVGL TabView that manages Pages. It contains its own task for rendering.
+ */
+class Screen : public Page, public TaskWrapper {
 public:
   /**
    * Create a new screen. Theme color is inherited from the parent.
@@ -59,12 +62,19 @@ public:
     return *ptr;
   }
 
+  /**
+   * Render the page. Override this method to implement custom rendering.
+   */
+  void render() override;
+
+  /**
+   * Task to render the page.
+   */
   void loop() override;
 
 private:
-  lv_obj_t* tabview {nullptr};
-  const lv_color_t themeColor;
   std::shared_ptr<Logger> logger {nullptr};
+  lv_obj_t* tabview {nullptr};
   std::vector<std::shared_ptr<Page>> pages {};
 
   lv_style_t style_bg;

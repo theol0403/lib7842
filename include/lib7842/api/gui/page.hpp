@@ -14,6 +14,9 @@ namespace lib7842::GUI {
 
 using namespace okapi;
 
+/**
+ * An LVGL container. This class can be extended to implement pages.
+ */
 class Page {
 public:
   /**

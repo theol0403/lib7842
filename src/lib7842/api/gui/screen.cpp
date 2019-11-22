@@ -6,8 +6,11 @@ Screen::Screen(lv_obj_t* iparent, const std::shared_ptr<Logger>& ilogger) :
   Screen(iparent, lv_obj_get_style(iparent)->body.main_color, ilogger) {}
 
 Screen::Screen(lv_obj_t* iparent, lv_color_t icolor, const std::shared_ptr<Logger>& ilogger) :
-  TaskWrapper(ilogger), tabview(lv_tabview_create(iparent, NULL)), themeColor(icolor), logger(ilogger) {
-  lv_obj_set_size(tabview, lv_obj_get_width(iparent), lv_obj_get_height(iparent));
+  Page(iparent, icolor, ilogger),
+  TaskWrapper(ilogger),
+  logger(ilogger),
+  tabview(lv_tabview_create(container, NULL)) {
+  lv_obj_set_size(tabview, lv_obj_get_width(container), lv_obj_get_height(container));
   lv_obj_align(tabview, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
 
   lv_style_copy(&style_bg, &lv_style_plain);
@@ -86,11 +89,15 @@ lv_obj_t* Screen::newPage(const std::string& iname) {
   return page;
 }
 
+void Screen::render() {
+  for (auto&& page : pages) {
+    page->render();
+  }
+}
+
 void Screen::loop() {
   while (true) {
-    for (auto&& page : pages) {
-      page->render();
-    }
+    render();
     pros::delay(100);
   }
 }
