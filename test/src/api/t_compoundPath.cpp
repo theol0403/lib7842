@@ -67,8 +67,8 @@ TEST_F(CompoundPathTest, SimplicityTest) {
   path.add(SimplePath({{2_in, 3_in}, {3_in, 4_in}}));
 
   CompoundPath segment1 = CompoundPath() + SimplePath({{4_in, 5_in}, {5_in, 6_in}});
-  CompoundPath segment2 = CompoundPath() + SimplePath({{6_in, 7_in}});
-  CompoundPath segment3 = CompoundPath() + SimplePath({{7_in, 8_in}});
+  CompoundPath segment2 = CompoundPath() + StatePath({{6_in, 7_in}});
+  CompoundPath segment3 = CompoundPath() + DataPath({{7_in, 8_in}});
   CompoundPath segment4 = segment2 + segment3;
   CompoundPath segment5 = CompoundPath() + SimplePath({{8_in, 9_in}});
 
