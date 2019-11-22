@@ -30,30 +30,34 @@ TEST_F(CompoundPathTest, StressTest) {
   path.add(std::make_shared<SimplePath>(SimplePath({{2_in, 3_in}, {3_in, 4_in}})));
 
   CompoundPath segment1 =
-    CompoundPath().add(std::make_shared<CompoundPath>(CompoundPath().add(std::make_shared<CompoundPath>(
-      CompoundPath().add(std::make_shared<SimplePath>(SimplePath({{4_in, 5_in}, {5_in, 6_in}})))))));
+    CompoundPath() + std::make_shared<CompoundPath>(
+                       CompoundPath() + std::make_shared<CompoundPath>(
+                                          CompoundPath() + std::make_shared<SimplePath>(
+                                                             SimplePath({{4_in, 5_in}, {5_in, 6_in}}))));
 
-  CompoundPath segment2 = CompoundPath().add(std::make_shared<CompoundPath>(
-    CompoundPath().add(std::make_shared<SimplePath>(SimplePath({{6_in, 7_in}})))));
+  CompoundPath segment2 =
+    CompoundPath() + std::make_shared<CompoundPath>(
+                       CompoundPath() + std::make_shared<SimplePath>(SimplePath({{6_in, 7_in}})));
 
   CompoundPath segment3 = CompoundPath().add(std::make_shared<CompoundPath>(
-    CompoundPath().add(std::make_shared<SimplePath>(SimplePath({{7_in, 8_in}})))));
+    CompoundPath() + std::make_shared<SimplePath>(SimplePath({{7_in, 8_in}}))));
 
-  CompoundPath segment3b = CompoundPath().add(
-    std::make_shared<CompoundPath>(CompoundPath().add(std::make_shared<CompoundPath>(segment3))));
+  CompoundPath segment3b = CompoundPath() + std::make_shared<CompoundPath>(
+                                              CompoundPath() + std::make_shared<CompoundPath>(segment3));
 
-  CompoundPath segment4 = CompoundPath().add(
-    std::make_shared<CompoundPath>(CompoundPath()
-                                     .add(std::make_shared<CompoundPath>(segment2))
-                                     .add(std::make_shared<CompoundPath>(segment3b))));
+  CompoundPath segment4 =
+    CompoundPath() + std::make_shared<CompoundPath>(CompoundPath()
+                                                      .add(std::make_shared<CompoundPath>(segment2))
+                                                      .add(std::make_shared<CompoundPath>(segment3b)));
 
-  CompoundPath segment5 = CompoundPath().add(std::make_shared<CompoundPath>(
-    CompoundPath().add(std::make_shared<SimplePath>(SimplePath({{8_in, 9_in}})))));
+  CompoundPath segment5 =
+    CompoundPath() + std::make_shared<CompoundPath>(
+                       CompoundPath() + std::make_shared<SimplePath>(SimplePath({{8_in, 9_in}})));
 
-  path
-    .add(std::shared_ptr<CompoundPath>(&segment1, [](AbstractPath*) {})) // empty deleter
-    .add(std::make_shared<CompoundPath>(std::move(segment4))) // move the local into shared
-    .add(std::make_shared<CompoundPath>(segment5)); // make copy
+  path += std::shared_ptr<CompoundPath>(&segment1, [](AbstractPath*) {}); // empty deleter
+  path += CompoundPath() + std::make_shared<CompoundPath>(std::move(segment4)) +
+          CompoundPath() // move the local into shared
+          + std::make_shared<CompoundPath>(segment5); // make copy
 
   SimplePath ipath = path.generate();
 

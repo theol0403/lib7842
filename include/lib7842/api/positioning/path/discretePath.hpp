@@ -6,7 +6,6 @@
 #include "lib7842/api/positioning/point/vector.hpp"
 #include <algorithm>
 #include <initializer_list>
-#include <memory>
 #include <vector>
 
 namespace lib7842 {
@@ -164,6 +163,17 @@ public:
     // if path is more than 1 point - return last point
     if (path.size() > 0) temp().emplace_back(path.back());
     return temp;
+  }
+
+  /**
+   * Implictly convert path to a shared pointer
+   */
+  operator std::shared_ptr<AbstractPath>() & override {
+    return std::make_shared<DiscretePath<T>>(*this);
+  }
+
+  operator std::shared_ptr<AbstractPath>() && override {
+    return std::make_shared<DiscretePath<T>>(std::move(*this));
   }
 
 protected:

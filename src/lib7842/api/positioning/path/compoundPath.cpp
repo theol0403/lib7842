@@ -7,6 +7,16 @@ CompoundPath& CompoundPath::add(const std::shared_ptr<AbstractPath>& isegment) {
   return *this;
 }
 
+CompoundPath&& CompoundPath::operator+(const std::shared_ptr<AbstractPath>& isegment) && {
+  segments.emplace_back(isegment);
+  return std::move(*this);
+}
+
+CompoundPath& CompoundPath::operator+=(const std::shared_ptr<AbstractPath>& isegment) & {
+  segments.emplace_back(isegment);
+  return *this;
+}
+
 SimplePath CompoundPath::generate(const int isteps) const {
   SimplePath temp;
   for (auto&& segment : segments) {
@@ -18,4 +28,13 @@ SimplePath CompoundPath::generate(const int isteps) const {
   }
   return temp;
 }
+
+CompoundPath::operator std::shared_ptr<AbstractPath>() & {
+  return std::make_shared<CompoundPath>(*this);
+}
+
+CompoundPath::operator std::shared_ptr<AbstractPath>() && {
+  return std::make_shared<CompoundPath>(std::move(*this));
+}
+
 } // namespace lib7842

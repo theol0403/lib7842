@@ -17,6 +17,8 @@ public:
    * @param  isegment The segment.
    */
   CompoundPath& add(const std::shared_ptr<AbstractPath>& isegment);
+  CompoundPath&& operator+(const std::shared_ptr<AbstractPath>& isegment) &&;
+  CompoundPath& operator+=(const std::shared_ptr<AbstractPath>& isegment) &;
 
   /**
    * Interpolate the path
@@ -27,8 +29,14 @@ public:
    */
   SimplePath generate(const int isteps = 1) const override;
 
+  /**
+   * Implictly convert path to a shared pointer
+   */
+  operator std::shared_ptr<AbstractPath>() & override;
+  operator std::shared_ptr<AbstractPath>() && override;
+
 protected:
   std::vector<std::shared_ptr<AbstractPath>> segments {};
-}; // namespace lib7842
+};
 
 } // namespace lib7842
