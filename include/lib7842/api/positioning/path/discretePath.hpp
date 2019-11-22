@@ -15,9 +15,14 @@ template <typename T> class DiscretePath;
 using SimplePath = DiscretePath<Vector>;
 
 /**
- * A path that represents a collection of discrete points which are stored using shared pointers. To have
- * full access to the underlying array, use `operator()`. To have read-only access to the
+ * A path that represents a collection of discrete points which are stored using shared pointers. To
+ * have full access to the underlying array, use `operator()`. To have read-only access to the
  * underlying array, use `read()`.
+ *
+ * There are three types of discrete paths: SimplePath<Vector>, DataPath<DataPoint>, and
+ * StatePath<State>>
+ *
+ * @tparam T The point type.
  */
 template <typename T> class DiscretePath : public AbstractPath {
 public:
@@ -87,26 +92,18 @@ protected:
   std::vector<std::shared_ptr<T>> path {};
 };
 
-class DataPath : public DiscretePath<DataPoint> {
+template <typename T> class ExtraPath : public DiscretePath<T> {
 public:
-  using DiscretePath::DiscretePath;
+  using DiscretePath<T>::DiscretePath;
   /**
-   * Convert a SimplePath to a DataPath
+   * Convert a SimplePath to a ExtraPath
    *
    * @param ipath The path
    */
-  explicit DataPath(const SimplePath& ipath);
+  explicit ExtraPath(const SimplePath& ipath);
 };
 
-class StatePath : public DiscretePath<State> {
-public:
-  using DiscretePath::DiscretePath;
-  /**
-   * Convert a SimplePath to a StatePath
-   *
-   * @param ipath The path
-   */
-  explicit StatePath(const SimplePath& ipath);
-};
+using DataPath = ExtraPath<DataPoint>;
+using StatePath = ExtraPath<State>;
 
 } // namespace lib7842

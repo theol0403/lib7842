@@ -109,26 +109,19 @@ SimplePath DiscretePath<T>::generateSegment(const Vector& start, const Vector& e
   return segment;
 }
 
-DataPath::DataPath(const SimplePath& ipath) {
-  path.reserve(ipath.read().size());
+template <typename T> ExtraPath<T>::ExtraPath(const SimplePath& ipath) {
+  DiscretePath<T>::path.reserve(ipath.read().size());
   std::transform(
-    ipath.read().begin(), ipath.read().end(), std::back_inserter(path),
+    ipath.read().begin(), ipath.read().end(), std::back_inserter(DiscretePath<T>::path),
     [](const std::shared_ptr<Vector>& ipoint) {
-      return std::make_shared<DataPoint>(*ipoint);
-    });
-}
-
-StatePath::StatePath(const SimplePath& ipath) {
-  path.reserve(ipath.read().size());
-  std::transform(
-    ipath.read().begin(), ipath.read().end(), std::back_inserter(path),
-    [](const std::shared_ptr<Vector>& ipoint) {
-      return std::make_shared<State>(*ipoint);
+      return std::make_shared<T>(*ipoint);
     });
 }
 
 template class DiscretePath<Vector>;
 template class DiscretePath<DataPoint>;
 template class DiscretePath<State>;
+template class ExtraPath<DataPoint>;
+template class ExtraPath<State>;
 
 } // namespace lib7842
