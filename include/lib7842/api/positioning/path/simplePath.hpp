@@ -10,6 +10,10 @@
 
 namespace lib7842 {
 
+// forward declaration
+template <typename T> class DiscretePath;
+using SimplePath = DiscretePath<Vector>;
+
 /**
  * A path that represents a collection of discrete points which are stored using shared pointers. To have
  * full access to the underlying array, use `operator()`. To have read-only access to the
@@ -83,10 +87,9 @@ protected:
   std::vector<std::shared_ptr<T>> path {};
 };
 
-using SimplePath = DiscretePath<Vector>;
-
 class DataPath : public DiscretePath<DataPoint> {
 public:
+  using DiscretePath::DiscretePath;
   /**
    * Convert a SimplePath to a DataPath
    *
@@ -95,6 +98,15 @@ public:
   explicit DataPath(const SimplePath& ipath);
 };
 
-// using StatePath = DiscretePath<State>;
+class StatePath : public DiscretePath<State> {
+public:
+  using DiscretePath::DiscretePath;
+  /**
+   * Convert a SimplePath to a StatePath
+   *
+   * @param ipath The path
+   */
+  explicit StatePath(const SimplePath& ipath);
+};
 
 } // namespace lib7842
