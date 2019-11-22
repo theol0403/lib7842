@@ -1,8 +1,11 @@
 #pragma once
+#include "lib7842/api/positioning/point/vector.hpp"
 
 namespace lib7842 {
 
-class SimplePath;
+// forward declaration
+template <typename T> class DiscretePath;
+using SimplePath = DiscretePath<Vector>;
 
 /**
  * A generic path representation that can be interpolated into a SimplePath.

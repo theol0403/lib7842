@@ -1,6 +1,8 @@
 #pragma once
 #include "abstractPath.hpp"
 
+#include "lib7842/api/positioning/point/dataPoint.hpp"
+#include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 #include <initializer_list>
 #include <memory>
@@ -9,46 +11,46 @@
 namespace lib7842 {
 
 /**
- * A path that represents a collection of points which are stored using shared pointers. To have
+ * A path that represents a collection of discrete points which are stored using shared pointers. To have
  * full access to the underlying array, use `operator()`. To have read-only access to the
  * underlying array, use `read()`.
  */
-class SimplePath : public AbstractPath {
+template <typename T> class DiscretePath : public AbstractPath {
 public:
-  SimplePath() = default;
+  DiscretePath() = default;
 
   /**
    * Create a path using an array of points. The points will be reallocated as shared pointers.
    *
    * @param ipath The array of points
    */
-  explicit SimplePath(const std::initializer_list<Vector>& ipath);
-  explicit SimplePath(const std::vector<Vector>& ipath);
+  explicit DiscretePath(const std::initializer_list<T>& ipath);
+  explicit DiscretePath(const std::vector<T>& ipath);
 
   /**
    * Create a path using an array of shared pointers.
    *
    * @param ipath The array of shared pointers
    */
-  explicit SimplePath(const std::vector<std::shared_ptr<Vector>>& ipath);
+  explicit DiscretePath(const std::vector<std::shared_ptr<T>>& ipath);
 
   /**
    * Get the underlying array.
    */
-  std::vector<std::shared_ptr<Vector>>& get();
-  std::vector<std::shared_ptr<Vector>>& operator()();
+  std::vector<std::shared_ptr<T>>& get();
+  std::vector<std::shared_ptr<T>>& operator()();
 
   /**
    * Get the underlying array, read-only.
    */
-  const std::vector<std::shared_ptr<Vector>>& read() const;
+  const std::vector<std::shared_ptr<T>>& read() const;
 
   /**
    * Copy the entire path.
    *
    * @return copy of the path
    */
-  SimplePath copy() const;
+  DiscretePath<T> copy() const;
 
   /**
    * Smoothen the path
@@ -78,7 +80,21 @@ protected:
    */
   static SimplePath generateSegment(const Vector& start, const Vector& end, const int isteps);
 
-  std::vector<std::shared_ptr<Vector>> path {};
+  std::vector<std::shared_ptr<T>> path {};
 };
+
+using SimplePath = DiscretePath<Vector>;
+
+class DataPath : public DiscretePath<DataPoint> {
+public:
+  /**
+   * Convert a SimplePath to a DataPath
+   *
+   * @param ipath The path
+   */
+  explicit DataPath(const SimplePath& ipath);
+};
+
+// using StatePath = DiscretePath<State>;
 
 } // namespace lib7842

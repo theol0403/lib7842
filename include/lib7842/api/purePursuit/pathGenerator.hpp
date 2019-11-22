@@ -1,7 +1,6 @@
 #pragma once
 
 #include "lib7842/api/other/utility.hpp"
-#include "lib7842/api/positioning/path/dataPath.hpp"
 #include "lib7842/api/positioning/path/simplePath.hpp"
 #include "okapi/api/units/QSpeed.hpp"
 
