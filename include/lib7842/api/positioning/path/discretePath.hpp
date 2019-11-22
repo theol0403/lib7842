@@ -33,17 +33,17 @@ public:
    *
    * @param ipath The array of points
    */
-  explicit DiscretePath(const std::initializer_list<T>& ipath) {
+  explicit DiscretePath(const std::vector<T>& ipath) {
     path.reserve(ipath.size());
     std::transform(ipath.begin(), ipath.end(), std::back_inserter(path), [](const auto& ipoint) {
       return std::make_shared<T>(ipoint);
     });
   }
 
-  explicit DiscretePath(const std::vector<T>& ipath) {
+  explicit DiscretePath(std::vector<T>&& ipath) {
     path.reserve(ipath.size());
-    std::transform(ipath.begin(), ipath.end(), std::back_inserter(path), [](const auto& ipoint) {
-      return std::make_shared<T>(ipoint);
+    std::transform(ipath.begin(), ipath.end(), std::back_inserter(path), [](auto&& ipoint) {
+      return std::make_shared<T>(std::move(ipoint));
     });
   }
 
