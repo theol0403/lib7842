@@ -1,4 +1,4 @@
-#include "simplePath.hpp"
+#include "discretePath.hpp"
 #include "compoundPath.hpp"
 #include <algorithm>
 

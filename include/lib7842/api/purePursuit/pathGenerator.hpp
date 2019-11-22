@@ -1,7 +1,7 @@
 #pragma once
 
 #include "lib7842/api/other/utility.hpp"
-#include "lib7842/api/positioning/path/simplePath.hpp"
+#include "lib7842/api/positioning/path/discretePath.hpp"
 #include "okapi/api/units/QSpeed.hpp"
 
 namespace lib7842 {

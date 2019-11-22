@@ -1,6 +1,6 @@
 #pragma once
 #include "abstractPath.hpp"
-#include "simplePath.hpp"
+#include "discretePath.hpp"
 
 namespace lib7842 {
 
