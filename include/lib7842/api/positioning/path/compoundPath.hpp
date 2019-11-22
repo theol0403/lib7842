@@ -12,13 +12,20 @@ public:
   CompoundPath() = default;
 
   /**
-   * Add a path segment.
+   * Add a path segment to an existing path.
    *
    * @param  isegment The segment.
    */
   CompoundPath& add(const std::shared_ptr<AbstractPath>& isegment);
+  CompoundPath& operator+=(const std::shared_ptr<AbstractPath>& isegment);
+
+  /**
+   * Combine two paths together
+   *
+   * @param  isegment The segment
+   */
+  CompoundPath operator+(const std::shared_ptr<AbstractPath>& isegment) &;
   CompoundPath&& operator+(const std::shared_ptr<AbstractPath>& isegment) &&;
-  CompoundPath& operator+=(const std::shared_ptr<AbstractPath>& isegment) &;
 
   /**
    * Interpolate the path
