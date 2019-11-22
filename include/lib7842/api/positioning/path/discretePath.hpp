@@ -4,6 +4,7 @@
 #include "lib7842/api/positioning/point/dataPoint.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
+#include <algorithm>
 #include <initializer_list>
 #include <memory>
 #include <vector>
@@ -42,6 +43,21 @@ public:
    * @param ipath The array of shared pointers
    */
   explicit DiscretePath(const std::vector<std::shared_ptr<T>>& ipath);
+
+  /**
+   * Convert a SimplePath to a Derived Path. Avoids conversion if Derived Path is already a
+   * SimplePath.
+   *
+   * @param  ipath     The path
+   */
+  template <typename std::enable_if<true>* = nullptr> DiscretePath(const SimplePath& ipath) {
+    path.reserve(ipath.read().size());
+    std::transform(
+      ipath.read().begin(), ipath.read().end(), std::back_inserter(path),
+      [](const std::shared_ptr<Vector>& ipoint) {
+        return std::make_shared<T>(*ipoint);
+      });
+  }
 
   /**
    * Get the underlying array.
@@ -92,18 +108,7 @@ protected:
   std::vector<std::shared_ptr<T>> path {};
 };
 
-template <typename T> class ExtraPath : public DiscretePath<T> {
-public:
-  using DiscretePath<T>::DiscretePath;
-  /**
-   * Convert a SimplePath to a ExtraPath
-   *
-   * @param ipath The path
-   */
-  explicit ExtraPath(const SimplePath& ipath);
-};
-
-using DataPath = ExtraPath<DataPoint>;
-using StatePath = ExtraPath<State>;
+using DataPath = DiscretePath<DataPoint>;
+using StatePath = DiscretePath<State>;
 
 } // namespace lib7842
