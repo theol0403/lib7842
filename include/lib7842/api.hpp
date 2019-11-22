@@ -9,8 +9,7 @@
 
 #include "lib7842/api/positioning/path/abstractPath.hpp"
 #include "lib7842/api/positioning/path/compoundPath.hpp"
-#include "lib7842/api/positioning/path/dataPath.hpp"
-#include "lib7842/api/positioning/path/simplePath.hpp"
+#include "lib7842/api/positioning/path/discretePath.hpp"
 
 #include "lib7842/api/purePursuit/pathGenerator.hpp"
 

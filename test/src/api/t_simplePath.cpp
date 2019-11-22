@@ -7,7 +7,6 @@ protected:
 
 TEST_F(SimplePathTest, Constructors) {
   SimplePath();
-  SimplePath {point1};
   SimplePath({point1});
   SimplePath({point1, point1});
   SimplePath(std::vector<Vector>({point1, point1}));
