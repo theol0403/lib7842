@@ -2,7 +2,15 @@
 	"folders":
 	[
 		{
-			"path": "."
+			"path": ".",
+			"folder_exclude_patterns":
+			[
+				"/home/theol/Documents/github/lib7842/test/bin",
+				"/home/theol/Documents/github/lib7842/bin",
+				"/home/theol/Documents/github/lib7842/.d",
+				"/home/theol/Documents/github/lib7842/.lsp-cache",
+				"/home/theol/Documents/github/lib7842/.ccls-cache"
+			],
 		}
 	],
 
@@ -11,6 +19,8 @@
 			"format_on_save": true,
 			"style": "File",
 			"languages": ["C++", "C++11"]
-		}
-	}
+		},
+
+	},
+	
 }
