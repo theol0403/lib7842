@@ -61,7 +61,7 @@ public:
    * @param ipath The path
    */
   template <typename std::enable_if<!std::is_same<T, Vector>::value>* = nullptr>
-  DiscretePath(const SimplePath& ipath) {
+  explicit DiscretePath(const SimplePath& ipath) {
     path.reserve(ipath.read().size());
     std::transform(
       ipath.read().begin(), ipath.read().end(), std::back_inserter(path),
