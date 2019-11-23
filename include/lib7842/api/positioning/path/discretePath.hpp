@@ -157,7 +157,7 @@ public:
    */
   template <
     typename C,
-    typename = std::enable_if<std::is_constructible<C, T>::value && !std::is_same<T, C>::value>>
+    typename = std::enable_if_t<std::is_constructible<C, T>::value && !std::is_same<T, C>::value>>
   operator DiscretePath<C>() const {
     DiscretePath<C> opath;
     opath().reserve(path.size());
