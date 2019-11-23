@@ -20,7 +20,7 @@ using SimplePath = DiscretePath<Vector>;
  * underlying array, use `read()`.
  *
  * There are three types of discrete paths: SimplePath<Vector>, DataPath<DataPoint>, and
- * StatePath<State>>
+ * StatePath<State>>. The point type must be derived from Vector.
  *
  * @tparam T The point type.
  */
