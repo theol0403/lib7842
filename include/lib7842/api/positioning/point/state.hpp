@@ -1,6 +1,7 @@
 #pragma once
 #include "vector.hpp"
 
+#include "okapi/api/odometry/odomState.hpp"
 #include "okapi/api/units/QAngle.hpp"
 
 namespace lib7842 {
@@ -31,6 +32,13 @@ public:
    * @param ipoint The point
    */
   explicit State(const Vector& ipoint);
+
+  /**
+   * Convert a OdomState to a State
+   *
+   * @param ipoint The point
+   */
+  explicit State(const OdomState& ipoint);
 
   /**
    * Binary operators
