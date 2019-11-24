@@ -43,8 +43,8 @@ public:
     try {
       return std::any_cast<T>(data);
     } catch (const std::bad_any_cast& e) {
-      throw std::runtime_error(
-        "DataPoint::getData:: \"" + iid + "\" contains wrong type \"" + data.type().name() + "\"");
+      throw std::runtime_error("DataPoint::getData:: \"" + iid + "\" contains wrong type \"" +
+                               data.type().name() + "\"");
     }
   }
 

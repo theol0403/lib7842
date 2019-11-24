@@ -25,7 +25,8 @@ public:
    * @param iparent The LVGL parent, typically `lv_scr_act()`
    * @param ilogger The logger
    */
-  explicit Page(lv_obj_t* iparent, const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  explicit Page(lv_obj_t* iparent,
+                const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   /**
    * Create a new page.
@@ -34,10 +35,9 @@ public:
    * @param icolor  The theme color
    * @param ilogger The logger
    */
-  explicit Page(
-    lv_obj_t* iparent,
-    lv_color_t icolor,
-    const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  explicit Page(lv_obj_t* iparent,
+                lv_color_t icolor,
+                const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   Page(const Page& ipage) = delete;
   Page(Page&& ipage) = default;

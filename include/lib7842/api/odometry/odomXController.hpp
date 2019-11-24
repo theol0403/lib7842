@@ -20,12 +20,11 @@ public:
    * @param iturnController     The turning pid controller
    * @param iangleController    The angle pid controller, used to keep distance driving straight
    */
-  OdomXController(
-    const std::shared_ptr<XDriveModel>& imodel,
-    const std::shared_ptr<Odometry>& iodometry,
-    std::unique_ptr<IterativePosPIDController> idistanceController,
-    std::unique_ptr<IterativePosPIDController> iturnController,
-    std::unique_ptr<IterativePosPIDController> iangleController);
+  OdomXController(const std::shared_ptr<XDriveModel>& imodel,
+                  const std::shared_ptr<Odometry>& iodometry,
+                  std::unique_ptr<IterativePosPIDController> idistanceController,
+                  std::unique_ptr<IterativePosPIDController> iturnController,
+                  std::unique_ptr<IterativePosPIDController> iangleController);
 
   virtual ~OdomXController() = default;
 
@@ -38,12 +37,12 @@ public:
    * @param turnScale       The turn scale
    * @param settler         The settler
    */
-  virtual void strafeRelativeDirection(
-    const QLength& distance,
-    const QAngle& direction,
-    const AngleCalculator& angleCalculator = makeAngleCalculator(),
-    double turnScale = 1,
-    const Settler& settler = defaultDriveSettler);
+  virtual void
+    strafeRelativeDirection(const QLength& distance,
+                            const QAngle& direction,
+                            const AngleCalculator& angleCalculator = makeAngleCalculator(),
+                            double turnScale = 1,
+                            const Settler& settler = defaultDriveSettler);
 
   /**
    * Strafe a distance in an absolute direction while correcting angle using an AngleCalculator
@@ -54,12 +53,12 @@ public:
    * @param turnScale       The turn scale
    * @param settler         The settler
    */
-  virtual void strafeAbsoluteDirection(
-    const QLength& distance,
-    const QAngle& direction,
-    const AngleCalculator& angleCalculator = makeAngleCalculator(),
-    double turnScale = 1,
-    const Settler& settler = defaultDriveSettler);
+  virtual void
+    strafeAbsoluteDirection(const QLength& distance,
+                            const QAngle& direction,
+                            const AngleCalculator& angleCalculator = makeAngleCalculator(),
+                            double turnScale = 1,
+                            const Settler& settler = defaultDriveSettler);
 
   /**
    * Strafe to a point using field-centric math and an AngleCalculator
@@ -69,11 +68,10 @@ public:
    * @param turnScale       The turn scale
    * @param settler         The settler
    */
-  virtual void strafeToPoint(
-    const Vector& targetPoint,
-    const AngleCalculator& angleCalculator = makeAngleCalculator(),
-    double turnScale = 1,
-    const Settler& settler = defaultDriveSettler);
+  virtual void strafeToPoint(const Vector& targetPoint,
+                             const AngleCalculator& angleCalculator = makeAngleCalculator(),
+                             double turnScale = 1,
+                             const Settler& settler = defaultDriveSettler);
 
 protected:
   /**

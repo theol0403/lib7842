@@ -3,16 +3,15 @@
 class MockThreeEncoderXDriveModel : public ThreeEncoderXDriveModel {
 public:
   MockThreeEncoderXDriveModel() :
-    ThreeEncoderXDriveModel(
-      std::make_shared<MockMotor>(),
-      std::make_shared<MockMotor>(),
-      std::make_shared<MockMotor>(),
-      std::make_shared<MockMotor>(),
-      std::make_shared<MockContinuousRotarySensor>(),
-      std::make_shared<MockContinuousRotarySensor>(),
-      std::make_shared<MockContinuousRotarySensor>(),
-      200,
-      12000) {}
+    ThreeEncoderXDriveModel(std::make_shared<MockMotor>(),
+                            std::make_shared<MockMotor>(),
+                            std::make_shared<MockMotor>(),
+                            std::make_shared<MockMotor>(),
+                            std::make_shared<MockContinuousRotarySensor>(),
+                            std::make_shared<MockContinuousRotarySensor>(),
+                            std::make_shared<MockContinuousRotarySensor>(),
+                            200,
+                            12000) {}
 
   std::valarray<std::int32_t> getSensorVals() const override {
     return std::valarray<std::int32_t> {leftEnc, rightEnc, middleEnc};
@@ -40,8 +39,9 @@ protected:
     return (ticks / 360.0) * 1_pi * 4_in;
   }
 
-  void assertOdomState(
-    const State& istate, std::shared_ptr<CustomOdometry> iodom = nullptr, double error = 1e-10) {
+  void assertOdomState(const State& istate,
+                       std::shared_ptr<CustomOdometry> iodom = nullptr,
+                       double error = 1e-10) {
     if (!iodom) iodom = odom;
     EXPECT_NEAR(iodom->getState().x.convert(meter), istate.x.convert(meter), error);
     EXPECT_NEAR(iodom->getState().y.convert(meter), istate.y.convert(meter), error);

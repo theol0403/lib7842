@@ -35,16 +35,14 @@ public:
    */
   explicit DiscretePath(const std::vector<T>& ipath) {
     path.reserve(ipath.size());
-    std::transform(ipath.begin(), ipath.end(), std::back_inserter(path), [](const auto& ipoint) {
-      return std::make_shared<T>(ipoint);
-    });
+    std::transform(ipath.begin(), ipath.end(), std::back_inserter(path),
+                   [](const auto& ipoint) { return std::make_shared<T>(ipoint); });
   }
 
   explicit DiscretePath(std::vector<T>&& ipath) {
     path.reserve(ipath.size());
-    std::transform(ipath.begin(), ipath.end(), std::back_inserter(path), [](auto&& ipoint) {
-      return std::make_shared<T>(std::move(ipoint));
-    });
+    std::transform(ipath.begin(), ipath.end(), std::back_inserter(path),
+                   [](auto&& ipoint) { return std::make_shared<T>(std::move(ipoint)); });
   }
 
   /**
@@ -155,15 +153,13 @@ public:
    *
    * @tparam C The type of point for the points to be converted into.
    */
-  template <
-    typename C,
-    typename = std::enable_if_t<std::is_constructible_v<C, T> && !std::is_same_v<T, C>>>
+  template <typename C,
+            typename = std::enable_if_t<std::is_constructible_v<C, T> && !std::is_same_v<T, C>>>
   operator DiscretePath<C>() const {
     DiscretePath<C> opath;
     opath().reserve(path.size());
-    std::transform(path.begin(), path.end(), std::back_inserter(opath()), [](const auto& ipoint) {
-      return std::make_shared<C>(*ipoint);
-    });
+    std::transform(path.begin(), path.end(), std::back_inserter(opath()),
+                   [](const auto& ipoint) { return std::make_shared<C>(*ipoint); });
     return opath;
   }
 

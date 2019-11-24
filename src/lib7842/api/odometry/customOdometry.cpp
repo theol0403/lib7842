@@ -2,10 +2,9 @@
 
 namespace lib7842 {
 
-CustomOdometry::CustomOdometry(
-  const std::shared_ptr<ChassisModel>& imodel,
-  const ChassisScales& ichassisScales,
-  const std::shared_ptr<Logger>& ilogger) :
+CustomOdometry::CustomOdometry(const std::shared_ptr<ChassisModel>& imodel,
+                               const ChassisScales& ichassisScales,
+                               const std::shared_ptr<Logger>& ilogger) :
   TaskWrapper(ilogger),
   model(imodel),
   chassisScales(ichassisScales),

@@ -20,12 +20,11 @@ public:
    *                down around only a very sharp curvature.
    * @return the generated path
    */
-  static DataPath generate(
-    const SimplePath& ipath,
-    const QSpeed& minVel,
-    const QSpeed& maxVel,
-    const QAcceleration& accel,
-    double k);
+  static DataPath generate(const SimplePath& ipath,
+                           const QSpeed& minVel,
+                           const QSpeed& maxVel,
+                           const QAcceleration& accel,
+                           double k);
 
   /**
    * Sets the waypoint curvatures.

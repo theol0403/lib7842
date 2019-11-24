@@ -20,10 +20,9 @@ public:
    * @param ichassisScales The chassis dimensions.
    * @param ilogger        The logger
    */
-  CustomOdometry(
-    const std::shared_ptr<ChassisModel>& imodel,
-    const ChassisScales& ichassisScales,
-    const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  CustomOdometry(const std::shared_ptr<ChassisModel>& imodel,
+                 const ChassisScales& ichassisScales,
+                 const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   virtual ~CustomOdometry() = default;
 

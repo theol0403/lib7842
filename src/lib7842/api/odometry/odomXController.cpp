@@ -4,27 +4,24 @@ namespace lib7842 {
 
 using namespace lib7842::OdomMath;
 
-OdomXController::OdomXController(
-  const std::shared_ptr<XDriveModel>& imodel,
-  const std::shared_ptr<Odometry>& iodometry,
-  std::unique_ptr<IterativePosPIDController> idistanceController,
-  std::unique_ptr<IterativePosPIDController> iturnController,
-  std::unique_ptr<IterativePosPIDController> iangleController) :
-  OdomController(
-    imodel,
-    iodometry,
-    std::move(idistanceController),
-    std::move(iturnController),
-    std::move(iangleController),
-    0_in),
+OdomXController::OdomXController(const std::shared_ptr<XDriveModel>& imodel,
+                                 const std::shared_ptr<Odometry>& iodometry,
+                                 std::unique_ptr<IterativePosPIDController> idistanceController,
+                                 std::unique_ptr<IterativePosPIDController> iturnController,
+                                 std::unique_ptr<IterativePosPIDController> iangleController) :
+  OdomController(imodel,
+                 iodometry,
+                 std::move(idistanceController),
+                 std::move(iturnController),
+                 std::move(iangleController),
+                 0_in),
   xModel(imodel) {};
 
-void OdomXController::strafeRelativeDirection(
-  const QLength& distance,
-  const QAngle& direction,
-  const AngleCalculator& angleCalculator,
-  double turnScale,
-  const Settler& settler) {
+void OdomXController::strafeRelativeDirection(const QLength& distance,
+                                              const QAngle& direction,
+                                              const AngleCalculator& angleCalculator,
+                                              double turnScale,
+                                              const Settler& settler) {
   State state = State(odometry->getState(StateMode::CARTESIAN));
   QAngle absoluteDirection = direction + state.theta;
   QLength x = sin(absoluteDirection.convert(radian)) * distance;
@@ -33,23 +30,21 @@ void OdomXController::strafeRelativeDirection(
   strafeToPoint(target, angleCalculator, turnScale, settler);
 }
 
-void OdomXController::strafeAbsoluteDirection(
-  const QLength& distance,
-  const QAngle& direction,
-  const AngleCalculator& angleCalculator,
-  double turnScale,
-  const Settler& settler) {
+void OdomXController::strafeAbsoluteDirection(const QLength& distance,
+                                              const QAngle& direction,
+                                              const AngleCalculator& angleCalculator,
+                                              double turnScale,
+                                              const Settler& settler) {
   QLength x = sin(direction.convert(radian)) * distance;
   QLength y = cos(direction.convert(radian)) * distance;
   Vector target = Vector(State(odometry->getState(StateMode::CARTESIAN))) + Vector(x, y);
   strafeToPoint(target, angleCalculator, turnScale, settler);
 }
 
-void OdomXController::strafeToPoint(
-  const Vector& targetPoint,
-  const AngleCalculator& angleCalculator,
-  double turnScale,
-  const Settler& settler) {
+void OdomXController::strafeToPoint(const Vector& targetPoint,
+                                    const AngleCalculator& angleCalculator,
+                                    double turnScale,
+                                    const Settler& settler) {
   resetPid();
   do {
     distanceErr = distanceToPoint(targetPoint);
@@ -99,10 +94,10 @@ void OdomXController::driveXVector(double speed, double yaw, double strafe) {
 void OdomXController::strafeXVector(double speed, const QAngle& direction, double yaw) {
   speed = std::clamp(speed, -1.0, 1.0);
 
-  double scaleTopLeft =
-    remapRange(std::sin((direction + 45_deg).convert(radian)), -0.70710678118, 0.70710678118, -1.0, 1.0);
-  double scaleTopRight =
-    remapRange(std::cos((direction + 45_deg).convert(radian)), -0.70710678118, 0.70710678118, -1.0, 1.0);
+  double scaleTopLeft = remapRange(std::sin((direction + 45_deg).convert(radian)), -0.70710678118,
+                                   0.70710678118, -1.0, 1.0);
+  double scaleTopRight = remapRange(std::cos((direction + 45_deg).convert(radian)), -0.70710678118,
+                                    0.70710678118, -1.0, 1.0);
 
   double topLeft = speed * scaleTopLeft + yaw;
   double topRight = speed * scaleTopRight - yaw;

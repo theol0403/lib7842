@@ -7,39 +7,18 @@ void lvglTest() {
 
   scr.makePage<GUI::Odom>().attachOdom(nullptr).attachResetter(nullptr);
 
-  scr.makePage<GUI::Graph>().withRange(0, 100).withSeries("Test", LV_COLOR_RED, []() {
-    return 50;
-  });
+  scr.makePage<GUI::Graph>().withRange(0, 100).withSeries("Test", LV_COLOR_RED,
+                                                          []() { return 50; });
 
   scr.makePage<GUI::Actions>("Buttons")
-    .button(
-      "Claw",
-      [&]() {
-        std::cout << "help" << std::endl;
-      })
-    .button(
-      "Claw2",
-      [&]() {
-        std::cout << "help" << std::endl;
-      })
+    .button("Claw", [&]() { std::cout << "help" << std::endl; })
+    .button("Claw2", [&]() { std::cout << "help" << std::endl; })
     .build();
 
   scr.makePage<GUI::Selector>("Auton")
-    .button(
-      "Claw",
-      [&]() {
-        std::cout << "c" << std::endl;
-      })
-    .button(
-      "Arm",
-      [&]() {
-        std::cout << "a" << std::endl;
-      })
-    .button(
-      "Yeet",
-      [&]() {
-        std::cout << "y" << std::endl;
-      })
+    .button("Claw", [&]() { std::cout << "c" << std::endl; })
+    .button("Arm", [&]() { std::cout << "a" << std::endl; })
+    .button("Yeet", [&]() { std::cout << "y" << std::endl; })
     .build();
 
   // .button(

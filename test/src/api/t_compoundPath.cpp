@@ -30,7 +30,8 @@ TEST_F(CompoundPathTest, StressTest) {
   path.add(SimplePath({{2_in, 3_in}, {3_in, 4_in}}));
 
   CompoundPath segment1 =
-    CompoundPath() + CompoundPath().add(CompoundPath().add(SimplePath({{4_in, 5_in}, {5_in, 6_in}})));
+    CompoundPath() +
+    CompoundPath().add(CompoundPath().add(SimplePath({{4_in, 5_in}, {5_in, 6_in}})));
 
   CompoundPath segment2 =
     CompoundPath().add(CompoundPath() + std::make_shared<SimplePath>(SimplePath({{6_in, 7_in}})));
@@ -38,13 +39,15 @@ TEST_F(CompoundPathTest, StressTest) {
   CompoundPath segment3 =
     CompoundPath().add(CompoundPath().add(CompoundPath() + SimplePath({{7_in, 8_in}})));
 
-  CompoundPath segment3b = CompoundPath() + std::make_shared<CompoundPath>() +
-                           std::make_shared<CompoundPath>(CompoundPath() + CompoundPath().add(segment3));
+  CompoundPath segment3b =
+    CompoundPath() + std::make_shared<CompoundPath>() +
+    std::make_shared<CompoundPath>(CompoundPath() + CompoundPath().add(segment3));
 
   CompoundPath segment4 =
-    CompoundPath() + std::make_shared<CompoundPath>(
-                       CompoundPath().add(std::make_shared<CompoundPath>(CompoundPath().add(segment2))) +
-                       std::make_shared<CompoundPath>(segment3b));
+    CompoundPath() +
+    std::make_shared<CompoundPath>(
+      CompoundPath().add(std::make_shared<CompoundPath>(CompoundPath().add(segment2))) +
+      std::make_shared<CompoundPath>(segment3b));
 
   CompoundPath segment5 = CompoundPath().add(CompoundPath() + SimplePath({{8_in, 9_in}}));
 

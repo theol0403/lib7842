@@ -94,15 +94,14 @@ void opcontrol() {
   scr.startTask("Screen");
 
   while (true) {
-    model->xArcade(
-      controller.getAnalog(ControllerAnalog::rightX), controller.getAnalog(ControllerAnalog::rightY),
-      controller.getAnalog(ControllerAnalog::leftX));
+    model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
+                   controller.getAnalog(ControllerAnalog::rightY),
+                   controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::A)) {
       // odomController->driveToPoint2({0_ft, 0_ft}, 2);
-      odomController->strafeToPoint(
-        {0_ft, 0_ft}, OdomController::makeAngleCalculator({0_ft, 3_ft}), 1,
-        OdomController::defaultDriveAngleSettler);
+      odomController->strafeToPoint({0_ft, 0_ft}, OdomController::makeAngleCalculator({0_ft, 3_ft}),
+                                    1, OdomController::defaultDriveAngleSettler);
       // odomController->strafeDistance(1_ft, 90_deg);
     }
 
