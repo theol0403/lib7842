@@ -76,7 +76,7 @@ lv_res_t Actions::btnAction(lv_obj_t* ibtnm, const char* itxt) {
   Actions& that = *static_cast<Actions*>(lv_obj_get_free_ptr(ibtnm));
   std::string txt(itxt);
 
-  auto it = std::find_if(that.buttons.begin(), that.buttons.end(), [&](auto& button) {
+  auto it = std::find_if(that.buttons.begin(), that.buttons.end(), [&](const auto& button) {
     return button.first == txt;
   });
 
