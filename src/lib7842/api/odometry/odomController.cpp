@@ -6,7 +6,7 @@ using namespace OdomMath;
 
 OdomController::OdomController(
   const std::shared_ptr<ChassisModel>& imodel,
-  const std::shared_ptr<CustomOdometry>& iodometry,
+  const std::shared_ptr<Odometry>& iodometry,
   std::unique_ptr<IterativePosPIDController> idistanceController,
   std::unique_ptr<IterativePosPIDController> iturnController,
   std::unique_ptr<IterativePosPIDController> iangleController,
@@ -84,7 +84,7 @@ void OdomController::moveDistance(const QLength& distance, const Settler& settle
 void OdomController::driveToPoint(const Vector& targetPoint, double turnScale, const Settler& settler) {
   resetPid();
   do {
-    Vector closestPoint = closest(odometry->getState(), targetPoint);
+    Vector closestPoint = closest(State(odometry->getState(StateMode::CARTESIAN)), targetPoint);
 
     QAngle angleToClose = angleToPoint(closestPoint);
     QAngle angleToTarget = angleToPoint(targetPoint);
@@ -223,14 +223,14 @@ AngleCalculator OdomController::makeAngleCalculator() {
   * Position Calculations
   */
 QAngle OdomController::angleToPoint(const Vector& point) const {
-  const State& state = odometry->getState();
+  State state = State(odometry->getState(StateMode::CARTESIAN));
   Vector diff = point - state;
   QAngle angle = (std::atan2(diff.x.convert(meter), diff.y.convert(meter)) * radian) - state.theta;
   return rollAngle180(angle);
 }
 
 QLength OdomController::distanceToPoint(const Vector& point) const {
-  return Vector::dist(odometry->getState(), point);
+  return Vector::dist(State(odometry->getState(StateMode::CARTESIAN)), point);
 }
 
 /**
