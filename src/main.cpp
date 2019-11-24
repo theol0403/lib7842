@@ -1,12 +1,18 @@
 #include "main.h"
 
+#include "lib7842/api.hpp"
+
+using namespace lib7842;
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {}
+void initialize() {
+  pros::delay(200);
+}
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -52,4 +58,54 @@ void autonomous() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-void opcontrol() {}
+void opcontrol() {
+  Controller controller(ControllerId::master);
+
+  auto model = std::make_shared<ThreeEncoderXDriveModel>(
+    // motors
+    std::make_shared<Motor>(1), //
+    std::make_shared<Motor>(-2), //
+    std::make_shared<Motor>(-3), //
+    std::make_shared<Motor>(4), //
+    // sensors
+    std::make_shared<ADIEncoder>(3, 4, true), //
+    std::make_shared<ADIEncoder>(5, 6), //
+    std::make_shared<ADIEncoder>(1, 2, true), //
+    // limits
+    200, 12000);
+
+  auto odom =
+    std::make_shared<CustomOdometry>(model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360));
+  odom->startTask("Odometry");
+
+  auto odomController = std::make_shared<OdomXController>(
+    model, odom,
+    //Distance PID - To mm
+    std::make_unique<IterativePosPIDController>(
+      0.015, 0.0002, 0.0002, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 100_ms)),
+    //Turn PID - To Degree
+    std::make_unique<IterativePosPIDController>(
+      0.03, 0.00, 0.0003, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
+    //Angle PID - To Degree
+    std::make_unique<IterativePosPIDController>(
+      0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)));
+
+  GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
+  scr.startTask("Screen");
+
+  while (true) {
+    model->xArcade(
+      controller.getAnalog(ControllerAnalog::rightX), controller.getAnalog(ControllerAnalog::rightY),
+      controller.getAnalog(ControllerAnalog::leftX));
+
+    if (controller.getDigital(ControllerDigital::A)) {
+      // odomController->driveToPoint2({0_ft, 0_ft}, 2);
+      odomController->strafeToPoint(
+        {0_ft, 0_ft}, OdomController::makeAngleCalculator({0_ft, 3_ft}), 1,
+        OdomController::defaultDriveAngleSettler);
+      // odomController->strafeDistance(1_ft, 90_deg);
+    }
+
+    pros::delay(10);
+  }
+}

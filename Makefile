@@ -12,22 +12,22 @@ BINDIR=$(ROOT)/bin
 SRCDIR=$(ROOT)/src
 INCDIR=$(ROOT)/include
 
-WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi
+WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-sign-compare
 EXTRA_CFLAGS=
 EXTRA_CXXFLAGS=
 
 # Set to 1 to enable hot/cold linking
-USE_PACKAGE:=1
+USE_PACKAGE:=0
 
 # Add libraries you do not wish to include in the cold image here
 # EXCLUDE_COLD_LIBRARIES:= $(FWDIR)/your_library.a
-EXCLUDE_COLD_LIBRARIES:= $(FWDIR)/lib7842.a
+EXCLUDE_COLD_LIBRARIES:= #$(BINDIR)/lib7842.a
 
 # Set this to 1 to add additional rules to compile your project as a PROS library template
 IS_LIBRARY:=1
 # TODO: CHANGE THIS!
 LIBNAME:=lib7842
-VERSION:=1.0.0
+VERSION:=1.6.0
 # EXCLUDE_SRC_FROM_LIB= $(SRCDIR)/unpublishedfile.c
 # this line excludes opcontrol.c and similar files
 EXCLUDE_SRC_FROM_LIB+=$(foreach file, $(SRCDIR)/main,$(foreach cext,$(CEXTS),$(file).$(cext)) $(foreach cxxext,$(CXXEXTS),$(file).$(cxxext)))
