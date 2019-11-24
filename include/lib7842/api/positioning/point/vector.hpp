@@ -1,5 +1,6 @@
 #pragma once
 
+#include "okapi/api/odometry/point.hpp"
 #include "okapi/api/units/QArea.hpp"
 #include "okapi/api/units/QLength.hpp"
 
@@ -26,6 +27,13 @@ public:
    * @param iy The y
    */
   Vector(const QLength& ix, const QLength& iy);
+
+  /**
+   * Convert a Point to a Vector
+   *
+   * @param ipoint The point
+   */
+  explicit Vector(const Point& ipoint);
 
   /**
    * Get the coordinate given an index. 0 is X, 1 is Y.

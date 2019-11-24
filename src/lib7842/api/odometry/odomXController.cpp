@@ -6,7 +6,7 @@ using namespace lib7842::OdomMath;
 
 OdomXController::OdomXController(
   const std::shared_ptr<XDriveModel>& imodel,
-  const std::shared_ptr<CustomOdometry>& iodometry,
+  const std::shared_ptr<Odometry>& iodometry,
   std::unique_ptr<IterativePosPIDController> idistanceController,
   std::unique_ptr<IterativePosPIDController> iturnController,
   std::unique_ptr<IterativePosPIDController> iangleController) :
@@ -25,7 +25,7 @@ void OdomXController::strafeRelativeDirection(
   const AngleCalculator& angleCalculator,
   double turnScale,
   const Settler& settler) {
-  const State& state = odometry->getState();
+  State state = State(odometry->getState(StateMode::CARTESIAN));
   QAngle absoluteDirection = direction + state.theta;
   QLength x = sin(absoluteDirection.convert(radian)) * distance;
   QLength y = cos(absoluteDirection.convert(radian)) * distance;
@@ -41,7 +41,7 @@ void OdomXController::strafeAbsoluteDirection(
   const Settler& settler) {
   QLength x = sin(direction.convert(radian)) * distance;
   QLength y = cos(direction.convert(radian)) * distance;
-  Vector target = Vector(odometry->getState()) + Vector(x, y);
+  Vector target = Vector(State(odometry->getState(StateMode::CARTESIAN))) + Vector(x, y);
   strafeToPoint(target, angleCalculator, turnScale, settler);
 }
 

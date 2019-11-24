@@ -98,7 +98,7 @@ std::shared_ptr<ReadOnlyChassisModel> CustomOdometry::getModel() {
 /**
  * @return The internal ChassisScales.
  */
-const ChassisScales& CustomOdometry::getScales() const {
+ChassisScales CustomOdometry::getScales() {
   return chassisScales;
 }
 

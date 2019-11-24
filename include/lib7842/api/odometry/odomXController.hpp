@@ -22,7 +22,7 @@ public:
    */
   OdomXController(
     const std::shared_ptr<XDriveModel>& imodel,
-    const std::shared_ptr<CustomOdometry>& iodometry,
+    const std::shared_ptr<Odometry>& iodometry,
     std::unique_ptr<IterativePosPIDController> idistanceController,
     std::unique_ptr<IterativePosPIDController> iturnController,
     std::unique_ptr<IterativePosPIDController> iangleController);

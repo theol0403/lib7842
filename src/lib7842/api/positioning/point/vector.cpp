@@ -11,6 +11,12 @@ namespace lib7842 {
 Vector::Vector(const QLength& ix, const QLength& iy) : x(ix), y(iy) {}
 
 /**
+ * Vector Constructor 
+ * Upcast Point 
+ */
+Vector::Vector(const Point& ipoint) : Vector(ipoint.x, ipoint.y) {}
+
+/**
  * Vector Accessors
  */
 QLength& Vector::at(const size_t& iindex) {
