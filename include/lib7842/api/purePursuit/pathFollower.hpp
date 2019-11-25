@@ -4,6 +4,7 @@
 #include "lib7842/api/positioning/path/discretePath.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/units/QLength.hpp"
+#include "okapi/api/units/QSpeed.hpp"
 #include <optional>
 
 namespace lib7842 {
@@ -12,7 +13,8 @@ class PathFollower {
 public:
   PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                const std::shared_ptr<Odometry>& iodometry,
-               const QLength& ilookahead);
+               const QLength& ilookahead,
+               const QSpeed& iminVel);
 
   void followPath(const DataPath& ipath);
 
@@ -33,5 +35,6 @@ protected:
   std::shared_ptr<ChassisModel> model {nullptr};
   std::shared_ptr<Odometry> odometry {nullptr};
   QLength lookahead {0_in};
+  QSpeed minVel {0_mps};
 };
 } // namespace lib7842

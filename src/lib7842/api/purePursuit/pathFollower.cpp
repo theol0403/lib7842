@@ -4,8 +4,9 @@ namespace lib7842 {
 
 PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                            const std::shared_ptr<Odometry>& iodometry,
-                           const QLength& ilookahead) :
-  model(imodel), odometry(iodometry), lookahead(ilookahead) {}
+                           const QLength& ilookahead,
+                           const QSpeed& iminVel) :
+  model(imodel), odometry(iodometry), lookahead(ilookahead), minVel(iminVel) {}
 
 void PathFollower::followPath(const DataPath& ipath) {
   State pos = State(odometry->getState(StateMode::CARTESIAN));
