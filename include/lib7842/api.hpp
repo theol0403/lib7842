@@ -13,6 +13,8 @@
 
 #include "lib7842/api/purePursuit/pathFollower.hpp"
 #include "lib7842/api/purePursuit/pathGenerator.hpp"
+#include "lib7842/api/purePursuit/pursuitLimits.hpp"
+#include "lib7842/api/purePursuit/pursuitPath.hpp"
 
 #include "lib7842/api/odometry/customOdometry.hpp"
 #include "lib7842/api/odometry/odomController.hpp"
