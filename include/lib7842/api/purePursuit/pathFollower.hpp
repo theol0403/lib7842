@@ -36,5 +36,9 @@ protected:
   std::shared_ptr<Odometry> odometry {nullptr};
   QLength lookahead {0_in};
   QSpeed minVel {0_mps};
+
+  DataPath::array_t::iterator lastClosest {nullptr};
+  size_t lastLookIndex {0};
+  double lastLookT {0};
 };
 } // namespace lib7842
