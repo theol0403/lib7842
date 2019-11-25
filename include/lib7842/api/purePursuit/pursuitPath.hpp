@@ -12,6 +12,11 @@ namespace lib7842 {
 class PursuitPath : public DataPath {
 public:
   /**
+   * A PursuitPath is treated like a DataPath
+   */
+  using DataPath::DataPath;
+
+  /**
    * Set the limits.
    *
    * @param ilimits The pursuit limits
