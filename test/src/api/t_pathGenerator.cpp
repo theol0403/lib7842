@@ -1,7 +1,8 @@
 #include "test.hpp"
 
-class PathGeneratorTest : public ::testing::Test {
+class PathGeneratorTest : public ::testing::Test, public PathGenerator {
 protected:
+  PursuitLimits limits {2_ips, 8_ips, 8_ips2, 1};
 };
 
 TEST_F(PathGeneratorTest, ComputeSingleCurvature) {
@@ -17,7 +18,7 @@ TEST_F(PathGeneratorTest, ComputeSingleCurvature) {
 }
 
 TEST_F(PathGeneratorTest, SetCurvatures) {
-  DataPath pathStraight({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}});
+  PursuitPath pathStraight({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}});
   PathGenerator::setCurvatures(pathStraight);
 
   ASSERT_EQ(pathStraight()[1]->getData<QCurvature>("curvature").convert(curvature), 0);
@@ -25,14 +26,14 @@ TEST_F(PathGeneratorTest, SetCurvatures) {
   ASSERT_EQ(pathStraight()[0]->getData<QCurvature>("curvature").convert(curvature), 0);
   ASSERT_EQ(pathStraight()[2]->getData<QCurvature>("curvature").convert(curvature), 0);
 
-  DataPath pathCurv({{0_in, 0_in}, {3_in, 5_in}, {0_in, 10_in}});
+  PursuitPath pathCurv({{0_in, 0_in}, {3_in, 5_in}, {0_in, 10_in}});
   PathGenerator::setCurvatures(pathCurv);
   ASSERT_NE(pathCurv()[1]->getData<QCurvature>("curvature").convert(curvature), 0);
 
   ASSERT_EQ(pathCurv()[0]->getData<QCurvature>("curvature").convert(curvature), 0);
   ASSERT_EQ(pathCurv()[2]->getData<QCurvature>("curvature").convert(curvature), 0);
 
-  DataPath pathTurn({{0_in, 0_in}, {3_in, 5_in}, {0_in, 0_in}});
+  PursuitPath pathTurn({{0_in, 0_in}, {3_in, 5_in}, {0_in, 0_in}});
   PathGenerator::setCurvatures(pathTurn);
   ASSERT_EQ(pathTurn()[1]->getData<QCurvature>("curvature").convert(curvature), 0);
 
@@ -41,9 +42,9 @@ TEST_F(PathGeneratorTest, SetCurvatures) {
 }
 
 TEST_F(PathGeneratorTest, SetMaxVelocity) {
-  DataPath path({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}});
+  PursuitPath path({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}});
   PathGenerator::setCurvatures(path);
-  PathGenerator::setMaxVelocity(path, 8_ips, 8_ips2, 1);
+  PathGenerator::setMaxVelocity(path, limits);
 
   ASSERT_EQ(path()[0]->getData<QSpeed>("velocity").convert(ips), 8);
   ASSERT_EQ(path()[1]->getData<QSpeed>("velocity").convert(ips), 8);
@@ -51,9 +52,9 @@ TEST_F(PathGeneratorTest, SetMaxVelocity) {
 }
 
 TEST_F(PathGeneratorTest, SetMaxVelocityTurn) {
-  DataPath path({{0_in, 0_in}, {3_in, 4_in}, {6_in, 10_in}, {5_in, 12_in}});
+  PursuitPath path({{0_in, 0_in}, {3_in, 4_in}, {6_in, 10_in}, {5_in, 12_in}});
   PathGenerator::setCurvatures(path);
-  PathGenerator::setMaxVelocity(path, 8_ips, 8_ips2, 1);
+  PathGenerator::setMaxVelocity(path, limits);
 
   ASSERT_EQ(path()[0]->getData<QSpeed>("velocity").convert(ips), 8);
   ASSERT_LT(path()[1]->getData<QSpeed>("velocity").convert(ips), 8);
