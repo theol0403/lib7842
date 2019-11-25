@@ -3,6 +3,7 @@
 #include "lib7842/api/other/utility.hpp"
 #include "lib7842/api/positioning/path/discretePath.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
+#include "okapi/api/units/QAngularSpeed.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include "okapi/api/units/QSpeed.hpp"
 #include <optional>
@@ -33,7 +34,9 @@ protected:
 
   static QCurvature calculateCurvature(const State& istate, const Vector& ilookaheadPoint);
 
-  static std::valarray<QSpeed> calculateVelocity(const QSpeed& ivel, const QCurvature& icurvature);
+  static std::valarray<QSpeed> calculateVelocity(const QSpeed& ivel,
+                                                 const QCurvature& icurvature,
+                                                 const QLength& ichassisWidth);
 
   std::shared_ptr<ChassisModel> model {nullptr};
   std::shared_ptr<Odometry> odometry {nullptr};

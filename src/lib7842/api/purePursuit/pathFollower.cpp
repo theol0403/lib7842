@@ -37,9 +37,9 @@ void PathFollower::followPath(const DataPath& ipath) {
     // the robot is on the path if the distance to the closest point is smaller than the lookahead
     bool onPath = Vector::dist(pos, **closest) < lookahead;
 
-    // project the lookahead point onto the lookahead radius. When the lookahead point is further than
-    // the lookahead radius, this can cause some problems with the robot curvature calculation. The
-    // projected point will cause the robot to rotate more appropriately.
+    // project the lookahead point onto the lookahead radius. When the lookahead point is further
+    // than the lookahead radius, this can cause some problems with the robot curvature calculation.
+    // The projected point will cause the robot to rotate more appropriately.
     Vector projectedLookPoint =
       (Vector::normalize(lookPoint - pos) * lookahead.convert(meter)) + pos;
 
@@ -69,8 +69,8 @@ void PathFollower::followPath(const DataPath& ipath) {
     }
 
     // add an upwards rate limiter to the robot velocity. Assume the robot starts at the minimum
-    // velocity and prevent the robot from going slower than it. Calculate the distance travelled since
-    // the last calculation and calculate maximum change in velocity acording to acceleration.
+    // velocity and prevent the robot from going slower than it. Calculate the distance travelled
+    // since the last calculation and calculate maximum change in velocity acording to acceleration.
     targetVel = std::max(targetVel, minVel); // add minimum velocity
     // get distance traveled since last calculation
     QLength distDt = Vector::dist(lastPos, pos);
@@ -80,28 +80,20 @@ void PathFollower::followPath(const DataPath& ipath) {
     // limit the velocity
     if (targetVel > maxVelocity) targetVel = maxVelocity;
 
-    // lastPos = currentPos;
-    // lastVelocity = targetVel;
+    lastPos = pos;
+    lastVelocity = targetVel;
 
-    // let leftVel = 0;
-    // let rightVel = 0;
-    // if (!isFinished) {
-    //   if (!followBackward) {
-    //     leftVel = computeLeftVel(targetVel, curv, robotTrack);
-    //     rightVel = computeRightVel(targetVel, curv, robotTrack);
-    //   } else {
-    //     leftVel = -computeRightVel(targetVel, curv, robotTrack);
-    //     rightVel = -computeLeftVel(targetVel, curv, robotTrack);
-    //   }
-    // }
+    // calculate robot wheel velocities
+    auto robotVel = calculateVelocity(targetVel, curv, odometry->getScales().wheelTrack);
 
-    // bot.tank(leftVel / maxVel, rightVel / maxVel);
-    // bot.update();
+    // convert to rpm
+    QAngularSpeed leftWheel =
+      (robotVel[0] / (1_pi * odometry->getScales().wheelDiameter)) * 360_deg;
+    QAngularSpeed rightWheel =
+      (robotVel[1] / (1_pi * odometry->getScales().wheelDiameter)) * 360_deg;
 
-    // drawLookahead(bot.getCanvasPos(), lookPoint, lookDistance, finalLookPoint);
-    // drawClosest(bot.getCanvasPos(), closestPoint.vector());
-    // drawCurvature(curv, bot.getLocalPos(), finalLookPoint);
-    // bot.draw();
+    model->tank(leftWheel.convert(rpm), rightWheel.convert(rpm));
+
     pros::delay(10);
   }
 }
