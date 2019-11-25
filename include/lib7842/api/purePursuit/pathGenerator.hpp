@@ -20,11 +20,8 @@ public:
    *                down around only a very sharp curvature.
    * @return the generated path
    */
-  static DataPath generate(const SimplePath& ipath,
-                           const QSpeed& minVel,
-                           const QSpeed& maxVel,
-                           const QAcceleration& accel,
-                           double k);
+  static DataPath
+    generate(const SimplePath& ipath, const QSpeed& maxVel, const QAcceleration& accel, double k);
 
   /**
    * Sets the waypoint curvatures.
@@ -46,16 +43,6 @@ public:
    */
   static void
     setMaxVelocity(DataPath& ipath, const QSpeed& maxVel, const QAcceleration& accel, double k);
-
-  /**
-   * Sets the waypoint minimum velocities respecting acceleration. Traverses the path forward using
-   * a rate limiter.
-   *
-   * @param ipath  The path
-   * @param minVel The minimum velocity
-   * @param accel  The maximum acceleration
-   */
-  static void setMinVelocity(DataPath& ipath, const QSpeed& minVel, const QAcceleration& accel);
 
   /**
    * Gets the curvature of a given segment.

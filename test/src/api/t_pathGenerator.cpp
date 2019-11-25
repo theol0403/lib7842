@@ -59,14 +59,3 @@ TEST_F(PathGeneratorTest, SetMaxVelocityTurn) {
   ASSERT_LT(path()[2]->getData<QSpeed>("velocity").convert(ips), 8);
   ASSERT_EQ(path()[3]->getData<QSpeed>("velocity").convert(ips), 0);
 }
-
-TEST_F(PathGeneratorTest, SetMinVelocity) {
-  DataPath path(SimplePath({{0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in}}).generate(10));
-  PathGenerator::setCurvatures(path);
-  PathGenerator::setMaxVelocity(path, 8_ips, 8_ips2, 1);
-  PathGenerator::setMinVelocity(path, 2_ips, 8_ips2);
-
-  for (auto&& point : path()) {
-    ASSERT_GE(point->getData<QSpeed>("velocity").convert(ips), 2);
-  }
-}

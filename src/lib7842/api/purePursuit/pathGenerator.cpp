@@ -3,7 +3,6 @@
 namespace lib7842 {
 
 DataPath PathGenerator::generate(const SimplePath& ipath,
-                                 const QSpeed& minVel,
                                  const QSpeed& maxVel,
                                  const QAcceleration& accel,
                                  double k) {
@@ -11,7 +10,6 @@ DataPath PathGenerator::generate(const SimplePath& ipath,
 
   setCurvatures(path);
   setMaxVelocity(path, maxVel, accel, k);
-  setMinVelocity(path, minVel, accel);
 
   return path;
 }
@@ -48,31 +46,6 @@ void PathGenerator::setMaxVelocity(DataPath& ipath,
 
     // limiting to maximum accelerated velocity
     double newVel = std::min(wantedVel, maxIncrement);
-    end.setData("velocity", newVel * mps);
-  }
-}
-
-void PathGenerator::setMinVelocity(DataPath& ipath,
-                                   const QSpeed& minVel,
-                                   const QAcceleration& accel) {
-  ipath().at(0)->setData("velocity", minVel);
-  for (size_t i = 0; i < ipath().size() - 1; i++) {
-    DataPoint& start = *ipath()[i];
-    DataPoint& end = *ipath()[i + 1];
-
-    // distance to next point
-    double distance = Vector::dist(start, end).convert(meter);
-
-    // maximum velocity given distance respecting acceleration
-    // vf = sqrt(vi2 + 2ad)
-    double maxIncrement = std::sqrt(std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) +
-                                    (2 * accel.convert(mps2) * distance));
-
-    // limiting to maximum accelerated velocity
-    double wantedVel = std::min(end.getData<QSpeed>("velocity").convert(mps), maxIncrement);
-
-    // limiting to minimum vel
-    double newVel = std::max(wantedVel, minVel.convert(mps));
     end.setData("velocity", newVel * mps);
   }
 }
