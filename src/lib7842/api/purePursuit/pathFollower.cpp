@@ -4,25 +4,17 @@ namespace lib7842 {
 
 PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                            const std::shared_ptr<Odometry>& iodometry,
-                           const QLength& ilookahead,
-                           const QSpeed& iminVel,
-                           const QSpeed& imaxVel,
-                           const QAcceleration& iaccel,
-                           double ik) :
-  model(imodel),
-  odometry(iodometry),
-  lookahead(ilookahead),
-  minVel(iminVel),
-  maxVel(imaxVel),
-  accel(iaccel),
-  k(ik) {}
+                           const QLength& ilookahead) :
+  model(imodel), odometry(iodometry), lookahead(ilookahead) {}
 
-void PathFollower::followPath(const DataPath& ipath) {
+void PathFollower::followPath(const PursuitPath& ipath) {
 
+  // get the pursuit limits
+  PursuitLimits limits = ipath.getLimits();
   // get the starting position
   State lastPos = State(odometry->getState(StateMode::CARTESIAN));
   // assume the robot starts at minimum velocity
-  QSpeed lastVelocity = minVel;
+  QSpeed lastVelocity = limits.minVel;
 
   // loop until the robot is considered to have finished the path
   bool isFinished = false;
@@ -63,20 +55,21 @@ void PathFollower::followPath(const DataPath& ipath) {
     QSpeed targetVel = 0_mps;
     if (onPath) {
       targetVel = mps * std::min(closest->get()->getData<QSpeed>("velocity").convert(mps),
-                                 k / std::abs(curv.convert(curvature)));
+                                 limits.k / std::abs(curv.convert(curvature)));
     } else {
-      targetVel = mps * std::min(maxVel.convert(mps), k / std::abs(curv.convert(curvature)));
+      targetVel =
+        mps * std::min(limits.maxVel.convert(mps), limits.k / std::abs(curv.convert(curvature)));
     }
 
     // add an upwards rate limiter to the robot velocity. Assume the robot starts at the minimum
     // velocity and prevent the robot from going slower than it. Calculate the distance travelled
     // since the last calculation and calculate maximum change in velocity acording to acceleration.
-    targetVel = std::max(targetVel, minVel); // add minimum velocity
+    targetVel = std::max(targetVel, limits.minVel); // add minimum velocity
     // get distance traveled since last calculation
     QLength distDt = Vector::dist(lastPos, pos);
     // get maximum allowable change in velocity
     QSpeed maxVelocity = mps * std::sqrt(std::pow(lastVelocity.convert(mps), 2) +
-                                         (2 * accel.convert(mps2) * distDt.convert(meter)));
+                                         (2 * limits.accel.convert(mps2) * distDt.convert(meter)));
     // limit the velocity
     if (targetVel > maxVelocity) targetVel = maxVelocity;
 
