@@ -11,6 +11,7 @@
 #include "lib7842/api/positioning/path/compoundPath.hpp"
 #include "lib7842/api/positioning/path/discretePath.hpp"
 
+#include "lib7842/api/purePursuit/pathFollower.hpp"
 #include "lib7842/api/purePursuit/pathGenerator.hpp"
 
 #include "lib7842/api/odometry/customOdometry.hpp"
