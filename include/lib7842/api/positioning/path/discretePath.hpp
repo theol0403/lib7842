@@ -64,14 +64,18 @@ public:
     return path;
   }
 
-  array_t& operator()() {
+  const array_t& get() const {
     return path;
   }
 
   /**
-   * Get the underlying array, read-only.
+   * Get the underlying array using the () operator.
    */
-  const array_t& read() const {
+  array_t& operator()() {
+    return path;
+  }
+
+  const array_t& operator()() const {
     return path;
   }
 
