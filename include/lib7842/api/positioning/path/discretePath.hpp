@@ -13,6 +13,8 @@ namespace lib7842 {
 // forward declaration
 template <typename T> class DiscretePath;
 using SimplePath = DiscretePath<Vector>;
+using DataPath = DiscretePath<DataPoint>;
+using StatePath = DiscretePath<State>;
 
 /**
  * A path that represents a collection of discrete points which are stored using shared pointers. To
@@ -210,8 +212,5 @@ protected:
 
   array_t path {};
 };
-
-using DataPath = DiscretePath<DataPoint>;
-using StatePath = DiscretePath<State>;
 
 } // namespace lib7842
