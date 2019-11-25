@@ -29,6 +29,11 @@ public:
   DiscretePath() = default;
 
   /**
+   * The underlying array type
+   */
+  using array_t = std::vector<std::shared_ptr<T>>;
+
+  /**
    * Create a path using an array of points. The points will be reallocated as shared pointers.
    *
    * @param ipath The array of points
@@ -50,23 +55,23 @@ public:
    *
    * @param ipath The array of shared pointers
    */
-  explicit DiscretePath(const std::vector<std::shared_ptr<T>>& ipath) : path(ipath) {}
+  explicit DiscretePath(const array_t& ipath) : path(ipath) {}
 
   /**
    * Get the underlying array.
    */
-  std::vector<std::shared_ptr<T>>& get() {
+  array_t& get() {
     return path;
   }
 
-  std::vector<std::shared_ptr<T>>& operator()() {
+  array_t& operator()() {
     return path;
   }
 
   /**
    * Get the underlying array, read-only.
    */
-  const std::vector<std::shared_ptr<T>>& read() const {
+  const array_t& read() const {
     return path;
   }
 
@@ -199,7 +204,7 @@ protected:
     return segment;
   }
 
-  std::vector<std::shared_ptr<T>> path {};
+  array_t path {};
 };
 
 using DataPath = DiscretePath<DataPoint>;
