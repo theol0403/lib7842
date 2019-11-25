@@ -17,7 +17,7 @@ DataPath PathGenerator::generate(const SimplePath& ipath,
 void PathGenerator::setCurvatures(DataPath& ipath) {
   ipath().at(0)->setData("curvature", 0_curv);
   for (size_t i = 1; i < ipath().size() - 1; i++) {
-    QCurvature curv = getCurvature(*ipath()[i - 1], *ipath()[i], *ipath()[i + 1]);
+    QCurvature curv = calculateCurvature(*ipath()[i - 1], *ipath()[i], *ipath()[i + 1]);
     ipath()[i]->setData("curvature", curv);
   }
   ipath().back()->setData("curvature", 0_curv);
@@ -51,7 +51,7 @@ void PathGenerator::setMaxVelocity(DataPath& ipath,
 }
 
 QCurvature
-  PathGenerator::getCurvature(const Vector& prev, const Vector& point, const Vector& next) {
+  PathGenerator::calculateCurvature(const Vector& prev, const Vector& point, const Vector& next) {
   double distOne = Vector::dist(point, prev).convert(meter);
   double distTwo = Vector::dist(point, next).convert(meter);
   double distThree = Vector::dist(next, prev).convert(meter);

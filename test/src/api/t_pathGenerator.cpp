@@ -5,13 +5,14 @@ protected:
 };
 
 TEST_F(PathGeneratorTest, ComputeSingleCurvature) {
-  QCurvature straight = PathGenerator::getCurvature({0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in});
+  QCurvature straight =
+    PathGenerator::calculateCurvature({0_in, 0_in}, {0_in, 5_in}, {0_in, 10_in});
   ASSERT_EQ(straight, 0_curv);
 
-  QCurvature curv = PathGenerator::getCurvature({0_in, 0_in}, {3_in, 5_in}, {0_in, 10_in});
+  QCurvature curv = PathGenerator::calculateCurvature({0_in, 0_in}, {3_in, 5_in}, {0_in, 10_in});
   ASSERT_NE(curv, 0_curv);
 
-  QCurvature turn = PathGenerator::getCurvature({0_in, 0_in}, {3_in, 5_in}, {0_in, 0_in});
+  QCurvature turn = PathGenerator::calculateCurvature({0_in, 0_in}, {3_in, 5_in}, {0_in, 0_in});
   ASSERT_EQ(turn, 0_curv);
 }
 

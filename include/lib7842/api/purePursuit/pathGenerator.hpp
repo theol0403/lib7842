@@ -2,7 +2,6 @@
 
 #include "lib7842/api/other/utility.hpp"
 #include "lib7842/api/positioning/path/discretePath.hpp"
-#include "okapi/api/units/QSpeed.hpp"
 
 namespace lib7842 {
 
@@ -52,7 +51,7 @@ public:
    * @param  next  The next point
    * @return The curvature
    */
-  static QCurvature getCurvature(const Vector& prev, const Vector& point, const Vector& next);
+  static QCurvature calculateCurvature(const Vector& prev, const Vector& point, const Vector& next);
 };
 
 } // namespace lib7842
