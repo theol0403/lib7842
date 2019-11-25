@@ -2,19 +2,17 @@
 
 namespace lib7842 {
 
-DataPath PathGenerator::generate(const SimplePath& ipath,
-                                 const QSpeed& maxVel,
-                                 const QAcceleration& accel,
-                                 double k) {
-  DataPath path(ipath);
+PursuitPath PathGenerator::generate(const SimplePath& ipath, const PursuitLimits& limits) {
+  PursuitPath path(ipath);
+  path.setLimits(limits);
 
   setCurvatures(path);
-  setMaxVelocity(path, maxVel, accel, k);
+  setMaxVelocity(path, limits);
 
   return path;
 }
 
-void PathGenerator::setCurvatures(DataPath& ipath) {
+void PathGenerator::setCurvatures(PursuitPath& ipath) {
   ipath().at(0)->setData("curvature", 0_curv);
   for (size_t i = 1; i < ipath().size() - 1; i++) {
     QCurvature curv = calculateCurvature(*ipath()[i - 1], *ipath()[i], *ipath()[i + 1]);
@@ -23,18 +21,16 @@ void PathGenerator::setCurvatures(DataPath& ipath) {
   ipath().back()->setData("curvature", 0_curv);
 }
 
-void PathGenerator::setMaxVelocity(DataPath& ipath,
-                                   const QSpeed& maxVel,
-                                   const QAcceleration& accel,
-                                   double k) {
+void PathGenerator::setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limits) {
   ipath().back()->setData("velocity", 0_mps);
   for (size_t i = ipath().size() - 1; i > 0; i--) {
     DataPoint& start = *ipath()[i];
     DataPoint& end = *ipath()[i - 1];
 
     // k / curvature, limited to max
-    double wantedVel = std::min(
-      maxVel.convert(mps), k / ipath()[i]->getData<QCurvature>("curvature").convert(curvature));
+    double wantedVel =
+      std::min(limits.maxVel.convert(mps),
+               limits.k / ipath()[i]->getData<QCurvature>("curvature").convert(curvature));
 
     // distance from last point
     double distance = Vector::dist(start, end).convert(meter);
@@ -42,7 +38,7 @@ void PathGenerator::setMaxVelocity(DataPath& ipath,
     // maximum velocity given distance respecting acceleration
     // vf = sqrt(vi2 + 2ad)
     double maxIncrement = std::sqrt(std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) +
-                                    (2 * accel.convert(mps2) * distance));
+                                    (2 * limits.accel.convert(mps2) * distance));
 
     // limiting to maximum accelerated velocity
     double newVel = std::min(wantedVel, maxIncrement);
