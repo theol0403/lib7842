@@ -5,8 +5,17 @@ namespace lib7842 {
 PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                            const std::shared_ptr<Odometry>& iodometry,
                            const QLength& ilookahead,
-                           const QSpeed& iminVel) :
-  model(imodel), odometry(iodometry), lookahead(ilookahead), minVel(iminVel) {}
+                           const QSpeed& iminVel,
+                           const QSpeed& imaxVel,
+                           const QAcceleration& iaccel,
+                           double ik) :
+  model(imodel),
+  odometry(iodometry),
+  lookahead(ilookahead),
+  minVel(iminVel),
+  maxVel(imaxVel),
+  accel(iaccel),
+  k(ik) {}
 
 void PathFollower::followPath(const DataPath& ipath) {
 
@@ -15,6 +24,7 @@ void PathFollower::followPath(const DataPath& ipath) {
   // assume the robot starts at minimum velocity
   QSpeed lastVelocity = minVel;
 
+  // loop until the robot is considered to have finished the path
   bool isFinished = false;
   while (!isFinished) {
     // get the robot state
@@ -40,13 +50,58 @@ void PathFollower::followPath(const DataPath& ipath) {
         ? lookPoint
         : projectedLookPoint;
 
-    // calculate the curvature for the robot to arc to the lookahead
-    QCurvature curvature = calculateCurvature(pos, finalLookPoint);
+    // calculate the curvature in order for the robot to arc to the lookahead
+    QCurvature curv = calculateCurvature(pos, finalLookPoint);
 
     // the robot is considered finished if it is on the path, the closest point is the end of the
     // path, and the lookahead is the end of the path
     isFinished = onPath && (closest >= ipath().end() - 1) && lastLookIndex >= ipath().size() - 2;
 
+    // if the robot is on the path, choose the lowest of either the path velocity or the
+    // curvature-based speed reduction. If the robot is not on the path, choose the lowest of either
+    // the max velocity or the curvature-based speed reduction.
+    QSpeed targetVel = 0_mps;
+    if (onPath) {
+      targetVel = mps * std::min(closest->get()->getData<QSpeed>("velocity").convert(mps),
+                                 k / std::abs(curv.convert(curvature)));
+    } else {
+      targetVel = mps * std::min(maxVel.convert(mps), k / std::abs(curv.convert(curvature)));
+    }
+
+    // add an upwards rate limiter to the robot velocity. Assume the robot starts at the minimum
+    // velocity and prevent the robot from going slower than it. Calculate the distance travelled since
+    // the last calculation and calculate maximum change in velocity acording to acceleration.
+    targetVel = std::max(targetVel, minVel); // add minimum velocity
+    // get distance traveled since last calculation
+    QLength distDt = Vector::dist(lastPos, pos);
+    // get maximum allowable change in velocity
+    QSpeed maxVelocity = mps * std::sqrt(std::pow(lastVelocity.convert(mps), 2) +
+                                         (2 * accel.convert(mps2) * distDt.convert(meter)));
+    // limit the velocity
+    if (targetVel > maxVelocity) targetVel = maxVelocity;
+
+    // lastPos = currentPos;
+    // lastVelocity = targetVel;
+
+    // let leftVel = 0;
+    // let rightVel = 0;
+    // if (!isFinished) {
+    //   if (!followBackward) {
+    //     leftVel = computeLeftVel(targetVel, curv, robotTrack);
+    //     rightVel = computeRightVel(targetVel, curv, robotTrack);
+    //   } else {
+    //     leftVel = -computeRightVel(targetVel, curv, robotTrack);
+    //     rightVel = -computeLeftVel(targetVel, curv, robotTrack);
+    //   }
+    // }
+
+    // bot.tank(leftVel / maxVel, rightVel / maxVel);
+    // bot.update();
+
+    // drawLookahead(bot.getCanvasPos(), lookPoint, lookDistance, finalLookPoint);
+    // drawClosest(bot.getCanvasPos(), closestPoint.vector());
+    // drawCurvature(curv, bot.getLocalPos(), finalLookPoint);
+    // bot.draw();
     pros::delay(10);
   }
 }
