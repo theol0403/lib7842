@@ -60,6 +60,21 @@ public:
   explicit DiscretePath(const array_t& ipath) : path(ipath) {}
 
   /**
+   * Construct a DiscretePath from any other type of DiscretePath. It will only convert if C is
+   * convertible to T, and it will avoid conversion to itself.
+   *
+   * @param  ipath     The path
+   * @tparam C         the type of point to be converted from
+   */
+  template <typename C,
+            typename = std::enable_if_t<std::is_constructible_v<T, C> && !std::is_same_v<T, C>>>
+  explicit DiscretePath(const DiscretePath<C>& ipath) {
+    path.reserve(ipath().size());
+    std::transform(ipath().begin(), ipath().end(), std::back_inserter(path),
+                   [](const auto& ipoint) { return std::make_shared<T>(*ipoint); });
+  }
+
+  /**
    * Get the underlying array.
    */
   array_t& get() {
@@ -156,22 +171,6 @@ public:
     // if path is more than 1 point - return last point
     if (path.size() > 0) temp().emplace_back(path.back());
     return temp;
-  }
-
-  /**
-   * Convert a DiscretePath to any other type of DiscretePath. It will only convert if T is
-   * convertible to C, and it will avoid conversion to itself.
-   *
-   * @tparam C The type of point for the points to be converted into.
-   */
-  template <typename C,
-            typename = std::enable_if_t<std::is_constructible_v<C, T> && !std::is_same_v<T, C>>>
-  operator DiscretePath<C>() const {
-    DiscretePath<C> opath;
-    opath().reserve(path.size());
-    std::transform(path.begin(), path.end(), std::back_inserter(opath()),
-                   [](const auto& ipoint) { return std::make_shared<C>(*ipoint); });
-    return opath;
   }
 
   /**
