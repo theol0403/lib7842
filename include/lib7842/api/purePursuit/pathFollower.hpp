@@ -22,7 +22,7 @@ public:
 protected:
   PursuitPath::array_t::const_iterator findClosest(const PursuitPath& ipath, const Vector& ipos);
 
-  Vector findLookaheadPoint(const Vector& ipos);
+  Vector findLookaheadPoint(const PursuitPath& ipath, const Vector& ipos);
 
   static std::optional<double> findIntersectT(const Vector& ifirst,
                                               const Vector& isecond,

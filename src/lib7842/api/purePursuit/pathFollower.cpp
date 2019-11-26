@@ -30,7 +30,7 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     // get an iterator to the closest point
     auto closest = findClosest(ipath, pos);
     // get the lookahead point
-    Vector lookPoint = findLookaheadPoint(pos);
+    Vector lookPoint = findLookaheadPoint(ipath, pos);
     // the robot is on the path if the distance to the closest point is smaller than the lookahead
     bool onPath = Vector::dist(pos, **closest) < lookahead;
 
@@ -124,6 +124,40 @@ PursuitPath::array_t::const_iterator PathFollower::findClosest(const PursuitPath
 
   lastClosest = closest;
   return closest;
+}
+
+Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& ipos) {
+  // used for optimizing number of intersection searches
+  size_t lastIntersect = 0;
+
+  // loop through every segment looking for intersection
+  for (size_t i = lastLookIndex; i < ipath().size() - 1; i++) {
+    auto& start = *ipath()[i];
+    auto& end = *ipath()[i + 1];
+
+    auto t = findIntersectT(start, end, ipos, lookahead);
+    if (t) {
+      // If the segment is further along or the fractional index is greater, then this is the correct point
+      if (i > lastLookIndex || t.value() > lastLookT) {
+        lastLookIndex = i;
+        lastLookT = t.value();
+        // if this is the second intersection that was found, we are done
+        if (lastIntersect > 0) break;
+        // record the index of the first intersection
+        lastIntersect = i;
+      }
+    }
+
+    // Optimization: if an intersection has been found, and the loop is checking distances from
+    // the last intersection that are further than the lookahead, we are done.
+    if (lastIntersect > 0 && Vector::dist(*ipath()[i], *ipath()[lastIntersect]) >= lookahead) {
+      break;
+    }
+  }
+
+  auto& start = *ipath()[lastLookIndex];
+  auto& end = *ipath()[lastLookIndex + 1];
+  return start + ((end - start) * lastLookT);
 }
 
 } // namespace lib7842
