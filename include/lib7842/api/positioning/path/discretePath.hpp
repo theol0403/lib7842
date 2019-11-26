@@ -127,11 +127,11 @@ public:
       for (size_t i = 1; i < path.size() - 1; i++) {
         for (size_t j = 0; j < 2; j++) {
           QLength& destPoint = destPath()[i]->at(j);
-          QLength dataFac = iweight * (path[i]->read(j) - destPoint);
+          QLength dataFac = iweight * (path[i]->at(j) - destPoint);
           QLength smoothFac =
-            weight * (destPath()[i - 1]->read(j) + path[i + 1]->read(j) - (2.0 * destPoint));
+            weight * (destPath()[i - 1]->at(j) + path[i + 1]->at(j) - (2.0 * destPoint));
           destPoint += (dataFac + smoothFac);
-          change = (destPoint - destPath()[i]->read(j)).abs();
+          change = (destPoint - destPath()[i]->at(j)).abs();
         }
       }
     }
