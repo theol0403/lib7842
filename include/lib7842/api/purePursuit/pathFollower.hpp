@@ -20,7 +20,7 @@ public:
   void followPath(const PursuitPath& ipath);
 
 protected:
-  PursuitPath::array_t::iterator findClosest(const PursuitPath& ipath, const Vector& ipos);
+  PursuitPath::array_t::const_iterator findClosest(const PursuitPath& ipath, const Vector& ipos);
 
   Vector findLookaheadPoint(const Vector& ipos);
 
@@ -40,7 +40,7 @@ protected:
 
   const QLength lookahead {0_in};
 
-  PursuitPath::array_t::iterator lastClosest {nullptr};
+  std::optional<PursuitPath::array_t::const_iterator> lastClosest {std::nullopt};
   size_t lastLookIndex {0};
   double lastLookT {0};
 };

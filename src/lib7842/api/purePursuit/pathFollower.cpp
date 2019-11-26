@@ -10,7 +10,7 @@ PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
 void PathFollower::followPath(const PursuitPath& ipath) {
 
   // reset pursuit
-  lastClosest = nullptr;
+  lastClosest = std::nullopt;
   lastLookIndex = 0;
   lastLookT = 0;
 
@@ -97,6 +97,33 @@ void PathFollower::followPath(const PursuitPath& ipath) {
   }
 
   model->tank(0, 0);
+}
+
+PursuitPath::array_t::const_iterator PathFollower::findClosest(const PursuitPath& ipath,
+                                                               const Vector& ipos) {
+  QLength closestDist {std::numeric_limits<double>::max()};
+  auto closest = lastClosest.value_or(ipath().begin());
+
+  // Optimization:
+  // limit the progression of the closest point
+  // it considers the last closest point, and all the options up to the lookahead + 1
+  // if the lookahead is 0, then new options will never be discovered unless the closest searches beyond
+  // so it searches one point beyond the lookahead, and if that's closer, it will choose that
+  // then later the lookahead will be bumped so it's not behind closest
+  // this makes it so the closest can consider pushing the lookahead forward
+  // the reason it does not scan all options so that the closest won't catch a much further point in an intersection
+
+  // loop from the last closest point to one point past the lookahead
+  for (auto it = closest; it <= ipath().begin() + lastLookIndex + 1; it++) {
+    QLength distance = Vector::dist(ipos, **it);
+    if (distance < closestDist) {
+      closestDist = distance;
+      closest = it;
+    }
+  }
+
+  lastClosest = closest;
+  return closest;
 }
 
 } // namespace lib7842
