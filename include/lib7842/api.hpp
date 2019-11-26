@@ -4,6 +4,7 @@
 #include "lib7842/api/other/utility.hpp"
 
 #include "lib7842/api/positioning/point/dataPoint.hpp"
+#include "lib7842/api/positioning/point/mathPoint.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 
