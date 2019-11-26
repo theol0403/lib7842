@@ -60,3 +60,5 @@ double MathPoint::dot(const MathPoint& lhs, const MathPoint& rhs) {
 double MathPoint::mag(const MathPoint& point) {
   return std::sqrt(point.x * point.x + point.y * point.y);
 }
+
+} // namespace lib7842

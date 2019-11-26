@@ -4,10 +4,10 @@ namespace lib7842::OdomMath {
 
 Vector closest(const Vector& current, const QAngle& heading, const Vector& target) {
   double headRad = heading.convert(radian);
-  Vector n = Vector::normalize({sin(headRad) * meter, cos(headRad) * meter});
+  MathPoint n = MathPoint::normalize({sin(headRad), cos(headRad)});
   Vector v = target - current;
-  QArea d = Vector::dot(v, n);
-  return current + (n * d.convert(meter2));
+  double d = MathPoint::dot(v, n);
+  return current + (n * d);
 }
 
 Vector closest(const State& state, const Vector& target) {

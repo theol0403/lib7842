@@ -29,7 +29,7 @@ public:
    *
    * @param ipoint The point
    */
-  explicit MathPoint(const Vector& ipoint);
+  MathPoint(const Vector& ipoint);
 
   /**
    * Convert a MathPoint to a Vector
