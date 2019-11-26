@@ -38,7 +38,7 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     // than the lookahead radius, this can cause some problems with the robot curvature calculation.
     // The projected point will cause the robot to rotate more appropriately.
     Vector projectedLookPoint =
-      (Vector::normalize(lookPoint - pos) * lookahead.convert(meter)) + pos;
+      (MathPoint::normalize(lookPoint - pos) * lookahead.convert(meter)) + pos;
 
     // use the normal lookahead point if the robot is on the path and the distance to the lookahead
     // is smaller than the distance to the projected point
@@ -165,21 +165,21 @@ std::optional<double> PathFollower::findIntersectT(const Vector& ifirst,
   Vector d = isecond - ifirst;
   Vector f = ifirst - ipos;
 
-  QArea a = Vector::dot(d, d);
-  QArea b = 2 * Vector::dot(f, d);
-  QArea c = Vector::dot(f, f) - (ilookahead * ilookahead);
-  QArea discriminant = ((b * b) - (4 * (a * c))) / meter2;
+  double a = MathPoint::dot(d, d);
+  double b = 2 * MathPoint::dot(f, d);
+  double c = MathPoint::dot(f, f) - (ilookahead * ilookahead).convert(meter2);
+  double discriminant = ((b * b) - (4 * (a * c)));
 
-  if (discriminant >= 0 * meter2) {
-    discriminant = discriminant.sqrt() * meter;
-    Number t1 = (-b - discriminant) / (2 * a);
-    Number t2 = (-b + discriminant) / (2 * a);
+  if (discriminant >= 0) {
+    discriminant = std::sqrt(discriminant);
+    double t1 = (-b - discriminant) / (2 * a);
+    double t2 = (-b + discriminant) / (2 * a);
 
     // prioritize further down path
-    if (t2.convert(number) >= 0.0 && t2.convert(number) <= 1.0) {
-      return t2.convert(number);
-    } else if (t1.convert(number) >= 0.0 && t1.convert(number) <= 1.0) {
-      return t1.convert(number);
+    if (t2 >= 0.0 && t2 <= 1.0) {
+      return t2;
+    } else if (t1 >= 0.0 && t1 <= 1.0) {
+      return t1;
     }
   }
 

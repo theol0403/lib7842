@@ -2,6 +2,7 @@
 #include "lib7842/api/odometry/customOdometry.hpp"
 #include "lib7842/api/other/utility.hpp"
 #include "lib7842/api/positioning/path/discretePath.hpp"
+#include "lib7842/api/positioning/point/mathPoint.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/units/QAngularSpeed.hpp"
 #include "okapi/api/units/QSpeed.hpp"
