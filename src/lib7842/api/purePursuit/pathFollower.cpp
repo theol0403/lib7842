@@ -166,14 +166,14 @@ std::optional<double> PathFollower::findIntersectT(const Vector& ifirst,
   Vector f = ifirst - ipos;
 
   double a = MathPoint::dot(d, d);
-  double b = 2 * MathPoint::dot(f, d);
+  double b = 2.0 * MathPoint::dot(f, d);
   double c = MathPoint::dot(f, f) - (ilookahead * ilookahead).convert(meter2);
-  double discriminant = ((b * b) - (4 * (a * c)));
+  double discriminant = ((b * b) - (4.0 * (a * c)));
 
   if (discriminant >= 0) {
     discriminant = std::sqrt(discriminant);
-    double t1 = (-b - discriminant) / (2 * a);
-    double t2 = (-b + discriminant) / (2 * a);
+    double t1 = (-b - discriminant) / (2.0 * a);
+    double t2 = (-b + discriminant) / (2.0 * a);
 
     // prioritize further down path
     if (t2 >= 0.0 && t2 <= 1.0) {
@@ -195,7 +195,14 @@ QCurvature PathFollower::calculateCurvature(const State& istate, const Vector& i
   double c = std::tan(headRad) * (istate.x - istate.y).convert(meter);
   double x =
     std::abs(a * (ilookPoint.x + ilookPoint.y).convert(meter) + c) / std::sqrt(std::pow(a, 2) + 1);
-  return curvature * side * ((2 * x) / std::pow(MathPoint::dist(istate, ilookPoint), 2));
+  return curvature * side * ((2.0 * x) / std::pow(MathPoint::dist(istate, ilookPoint), 2));
+}
+
+std::valarray<QSpeed> PathFollower::calculateVelocity(const QSpeed& ivel,
+                                                      const QCurvature& icurvature,
+                                                      const QLength& ichassisWidth) {
+  return {ivel * (2.0 + ichassisWidth.convert(meter) * icurvature.convert(curvature)) / 2.0,
+          ivel * (2.0 - ichassisWidth.convert(meter) * icurvature.convert(curvature)) / 2.0};
 }
 
 } // namespace lib7842
