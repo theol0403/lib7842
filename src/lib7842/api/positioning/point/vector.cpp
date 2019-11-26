@@ -9,7 +9,7 @@ Vector::Vector(const QLength& ix, const QLength& iy) : x(ix), y(iy) {}
 
 Vector::Vector(const Point& ipoint) : Vector(ipoint.x, ipoint.y) {}
 
-QLength& Vector::operator[](size_t iindex) {
+QLength& Vector::at(size_t iindex) {
   switch (iindex) {
     case 0: return x; break;
     case 1: return y; break;
@@ -20,8 +20,8 @@ QLength& Vector::operator[](size_t iindex) {
   }
 }
 
-const QLength& Vector::operator[](size_t iindex) const {
-  return const_cast<Vector*>(this)->operator[](iindex);
+const QLength& Vector::at(size_t iindex) const {
+  return const_cast<Vector*>(this)->at(iindex);
 }
 
 Vector Vector::operator+(const Vector& rhs) const {

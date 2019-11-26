@@ -41,8 +41,8 @@ public:
    * @param  iindex The index
    * @return The coordinate
    */
-  QLength& operator[](size_t iindex);
-  const QLength& operator[](size_t iindex) const;
+  QLength& at(size_t iindex);
+  const QLength& at(size_t iindex) const;
 
   /**
    * Binary operators
