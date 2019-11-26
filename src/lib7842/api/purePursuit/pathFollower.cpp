@@ -9,6 +9,11 @@ PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
 
 void PathFollower::followPath(const PursuitPath& ipath) {
 
+  // reset pursuit
+  lastClosest = nullptr;
+  lastLookIndex = 0;
+  lastLookT = 0;
+
   // get the pursuit limits
   PursuitLimits limits = ipath.getLimits();
   // get the starting position
@@ -85,10 +90,13 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     QAngularSpeed rightWheel =
       (robotVel[1] / (1_pi * odometry->getScales().wheelDiameter)) * 360_deg;
 
-    model->tank(leftWheel.convert(rpm), rightWheel.convert(rpm));
+    model->left(leftWheel.convert(rpm));
+    model->right(rightWheel.convert(rpm));
 
     pros::delay(10);
   }
+
+  model->tank(0, 0);
 }
 
 } // namespace lib7842

@@ -38,7 +38,7 @@ protected:
   std::shared_ptr<ChassisModel> model {nullptr};
   std::shared_ptr<Odometry> odometry {nullptr};
 
-  QLength lookahead {0_in};
+  const QLength lookahead {0_in};
 
   PursuitPath::array_t::iterator lastClosest {nullptr};
   size_t lastLookIndex {0};
