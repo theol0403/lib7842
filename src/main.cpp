@@ -61,6 +61,9 @@ void autonomous() {}
 void opcontrol() {
   Controller controller(ControllerId::master);
 
+  /**
+   * Model
+   */
   auto model = std::make_shared<ThreeEncoderXDriveModel>(
     // motors
     std::make_shared<Motor>(1), //
@@ -74,10 +77,16 @@ void opcontrol() {
     // limits
     200, 12000);
 
+  /**
+   * Odom
+   */
   auto odom =
     std::make_shared<CustomOdometry>(model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360));
   odom->startTask("Odometry");
 
+  /**
+   * Controller
+   */
   auto odomController = std::make_shared<OdomXController>(
     model, odom,
     //Distance PID - To mm
@@ -90,8 +99,23 @@ void opcontrol() {
     std::make_unique<IterativePosPIDController>(
       0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)));
 
+  /**
+   * Screen
+   */
   GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
   scr.startTask("Screen");
+  scr.makePage<GUI::Odom>("Odom").attachOdom(odom).attachResetter([&] { odom->reset(); });
+
+  /**
+   * Follower
+   */
+  PathFollower follower(model, odom, 6_in);
+  PursuitLimits limits {0_mps, 1_mps, 1_mps2, 3};
+
+  SimplePath path({{0_ft, 0_ft}, {0_ft, 2_ft}});
+  path = path.generate(5);
+
+  PursuitPath pPath = PathGenerator::generate(path, limits);
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -100,9 +124,11 @@ void opcontrol() {
 
     if (controller.getDigital(ControllerDigital::A)) {
       // odomController->driveToPoint2({0_ft, 0_ft}, 2);
-      odomController->strafeToPoint({0_ft, 0_ft}, OdomController::makeAngleCalculator({0_ft, 3_ft}),
-                                    1, OdomController::defaultDriveAngleSettler);
+      // odomController->strafeToPoint({0_ft, 0_ft}, OdomController::makeAngleCalculator({0_ft, 3_ft}),
+      //                               1, OdomController::defaultDriveAngleSettler);
       // odomController->strafeDistance(1_ft, 90_deg);
+
+      follower.followPath(pPath);
     }
 
     pros::delay(10);
