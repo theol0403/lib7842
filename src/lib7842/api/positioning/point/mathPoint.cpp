@@ -11,9 +11,6 @@ MathPoint::operator Vector() const {
   return {x * meter, y * meter};
 }
 
-/**
- * MathPoint Math Operators
- */
 MathPoint MathPoint::operator+(const MathPoint& rhs) const {
   return {x + rhs.x, y + rhs.y};
 }
@@ -22,9 +19,6 @@ MathPoint MathPoint::operator-(const MathPoint& rhs) const {
   return {x - rhs.x, y - rhs.y};
 }
 
-/**
- * MathPoint Equality Operators
- */
 bool MathPoint::operator==(const MathPoint& rhs) const {
   return x == rhs.x && y == rhs.y;
 }
@@ -33,9 +27,6 @@ bool MathPoint::operator!=(const MathPoint& rhs) const {
   return !(rhs == *this);
 }
 
-/**
- * Vector Functions
- */
 MathPoint MathPoint::operator*(const double scalar) const {
   return {x * scalar, y * scalar};
 }
