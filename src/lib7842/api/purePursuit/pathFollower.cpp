@@ -160,4 +160,33 @@ Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& 
   return start + ((end - start) * lastLookT);
 }
 
+std::optional<double> PathFollower::findIntersectT(const Vector& ifirst,
+                                                   const Vector& isecond,
+                                                   const Vector& ipos,
+                                                   const QLength& ilookahead) {
+  Vector d = isecond - ifirst;
+  Vector f = ifirst - ipos;
+
+  QArea a = Vector::dot(d, d);
+  QArea b = 2 * Vector::dot(f, d);
+  QArea c = Vector::dot(f, f) - (ilookahead * ilookahead);
+  QArea discriminant = ((b * b) - (4 * (a * c))) / meter2;
+
+  if (discriminant >= 0 * meter2) {
+    discriminant = discriminant.sqrt() * meter;
+    Number t1 = (-b - discriminant) / (2 * a);
+    Number t2 = (-b + discriminant) / (2 * a);
+
+    // prioritize further down path
+    if (t2.convert(number) >= 0.0 && t2.convert(number) <= 1.0) {
+      return t2.convert(number);
+    } else if (t1.convert(number) >= 0.0 && t1.convert(number) <= 1.0) {
+      return t1.convert(number);
+    }
+  }
+
+  //no intersection on this interval
+  return std::nullopt;
+}
+
 } // namespace lib7842
