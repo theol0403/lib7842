@@ -18,6 +18,9 @@ public:
   AbstractPath(AbstractPath&& ipath) = default;
   virtual ~AbstractPath() = default;
 
+  AbstractPath& operator=(const AbstractPath& ipath) = default;
+  AbstractPath& operator=(AbstractPath&& ipath) = default;
+
   /**
    * Interpolate the path
    *
