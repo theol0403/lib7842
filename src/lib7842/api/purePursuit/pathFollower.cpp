@@ -187,4 +187,15 @@ std::optional<double> PathFollower::findIntersectT(const Vector& ifirst,
   return std::nullopt;
 }
 
+QCurvature PathFollower::calculateCurvature(const State& istate, const Vector& ilookPoint) {
+  double headRad = istate.theta.convert(radian);
+  MathPoint diff = ilookPoint - istate;
+  int side = sgn(std::sin(headRad) * diff.x - std::cos(headRad) * diff.y);
+  double a = -std::tan(headRad);
+  double c = std::tan(headRad) * (istate.x - istate.y).convert(meter);
+  double x =
+    std::abs(a * (ilookPoint.x + ilookPoint.y).convert(meter) + c) / std::sqrt(std::pow(a, 2) + 1);
+  return curvature * side * ((2 * x) / std::pow(MathPoint::dist(istate, ilookPoint), 2));
+}
+
 } // namespace lib7842

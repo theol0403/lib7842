@@ -30,7 +30,7 @@ protected:
                                               const Vector& ipos,
                                               const QLength& ilookahead);
 
-  static QCurvature calculateCurvature(const State& istate, const Vector& ilookaheadPoint);
+  static QCurvature calculateCurvature(const State& istate, const Vector& ilookPoint);
 
   static std::valarray<QSpeed> calculateVelocity(const QSpeed& ivel,
                                                  const QCurvature& icurvature,
