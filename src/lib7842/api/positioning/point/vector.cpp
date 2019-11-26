@@ -5,20 +5,10 @@
 
 namespace lib7842 {
 
-/**
- * Vector Constructor
- */
 Vector::Vector(const QLength& ix, const QLength& iy) : x(ix), y(iy) {}
 
-/**
- * Vector Constructor 
- * Upcast Point 
- */
 Vector::Vector(const Point& ipoint) : Vector(ipoint.x, ipoint.y) {}
 
-/**
- * Vector Accessors
- */
 QLength& Vector::operator[](size_t iindex) {
   switch (iindex) {
     case 0: return x; break;
@@ -34,9 +24,6 @@ const QLength& Vector::operator[](size_t iindex) const {
   return const_cast<Vector*>(this)->operator[](iindex);
 }
 
-/**
- * Vector Math Operators
- */
 Vector Vector::operator+(const Vector& rhs) const {
   return {x + rhs.x, y + rhs.y};
 }
@@ -45,9 +32,6 @@ Vector Vector::operator-(const Vector& rhs) const {
   return {x - rhs.x, y - rhs.y};
 }
 
-/**
- * Vector Equality Operators
- */
 bool Vector::operator==(const Vector& rhs) const {
   return x == rhs.x && y == rhs.y;
 }
@@ -56,9 +40,6 @@ bool Vector::operator!=(const Vector& rhs) const {
   return !(rhs == *this);
 }
 
-/**
- * Vector Functions
- */
 Vector Vector::operator*(const double scalar) const {
   return {x * scalar, y * scalar};
 }
