@@ -41,16 +41,10 @@ public:
    * @param  iindex The index
    * @return The coordinate
    */
-  QLength& at(const size_t& iindex);
-  QLength& operator[](const size_t& iindex);
-
-  /**
-   * Get the read-only coordinate given an index. 0 is X, 1 is Y.
-   *
-   * @param  iindex The index
-   * @return The coordinate
-   */
-  const QLength& read(const size_t& iindex) const;
+  QLength& at(size_t iindex);
+  const QLength& at(size_t iindex) const;
+  QLength& operator[](size_t iindex);
+  const QLength& operator[](size_t iindex) const;
 
   /**
    * Binary operators
@@ -67,12 +61,8 @@ public:
   Vector operator/(const double scalar) const;
 
   /**
-   * Vector operations
+   * Utility functions
    */
-  static Vector normalize(const Vector& lhs);
-  static Vector scalarMult(const Vector& lhs, const double scalar);
-  static QArea dot(const Vector& lhs, const Vector& rhs);
-  static QLength mag(const Vector& lhs);
   static QLength dist(const Vector& lhs, const Vector& rhs);
 };
 
