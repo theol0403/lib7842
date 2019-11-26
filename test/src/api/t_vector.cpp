@@ -34,9 +34,9 @@ TEST_F(VectorTest, EqualityOperators) {
 }
 
 TEST_F(VectorTest, AccessorOperator) {
-  EXPECT_EQ(point[0], point.x);
-  EXPECT_EQ(point[1], point.y);
-  ASSERT_THROW(point[2], std::runtime_error);
-  ASSERT_THROW(point[5], std::runtime_error);
-  ASSERT_THROW(point[-1], std::runtime_error);
+  EXPECT_EQ(point.at(0), point.x);
+  EXPECT_EQ(point.at(1), point.y);
+  ASSERT_THROW(point.at(2), std::runtime_error);
+  ASSERT_THROW(point.at(5), std::runtime_error);
+  ASSERT_THROW(point.at(-1), std::runtime_error);
 }

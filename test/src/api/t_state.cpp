@@ -49,11 +49,11 @@ TEST_F(StateTest, EqualityOperators) {
 }
 
 TEST_F(StateTest, AccessorOperator) {
-  EXPECT_EQ(state[0], state.x);
-  EXPECT_EQ(state[1], state.y);
-  ASSERT_THROW(state[2], std::runtime_error);
-  ASSERT_THROW(state[5], std::runtime_error);
-  ASSERT_THROW(state[-1], std::runtime_error);
+  EXPECT_EQ(state.at(0), state.x);
+  EXPECT_EQ(state.at(1), state.y);
+  ASSERT_THROW(state.at(2), std::runtime_error);
+  ASSERT_THROW(state.at(5), std::runtime_error);
+  ASSERT_THROW(state.at(-1), std::runtime_error);
 }
 
 TEST_F(StateTest, Conversions) {
