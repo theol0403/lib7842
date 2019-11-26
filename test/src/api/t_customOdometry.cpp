@@ -1,33 +1,5 @@
 #include "test.hpp"
 
-class MockThreeEncoderXDriveModel : public ThreeEncoderXDriveModel {
-public:
-  MockThreeEncoderXDriveModel() :
-    ThreeEncoderXDriveModel(std::make_shared<MockMotor>(),
-                            std::make_shared<MockMotor>(),
-                            std::make_shared<MockMotor>(),
-                            std::make_shared<MockMotor>(),
-                            std::make_shared<MockContinuousRotarySensor>(),
-                            std::make_shared<MockContinuousRotarySensor>(),
-                            std::make_shared<MockContinuousRotarySensor>(),
-                            200,
-                            12000) {}
-
-  std::valarray<std::int32_t> getSensorVals() const override {
-    return std::valarray<std::int32_t> {leftEnc, rightEnc, middleEnc};
-  }
-
-  void setSensorVals(std::int32_t left, std::int32_t right, std::int32_t middle) {
-    leftEnc = left;
-    rightEnc = right;
-    middleEnc = middle;
-  }
-
-  std::int32_t leftEnc {0};
-  std::int32_t rightEnc {0};
-  std::int32_t middleEnc {0};
-};
-
 class CustomOdometryTest : public ::testing::Test {
 protected:
   void SetUp() override {
