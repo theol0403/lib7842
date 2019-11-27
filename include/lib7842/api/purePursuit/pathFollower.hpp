@@ -6,8 +6,10 @@
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/units/QAngularSpeed.hpp"
 #include "okapi/api/units/QSpeed.hpp"
+#include "okapi/api/util/logging.hpp"
 #include "pursuitLimits.hpp"
 #include "pursuitPath.hpp"
+#include <iostream>
 #include <optional>
 
 namespace lib7842 {

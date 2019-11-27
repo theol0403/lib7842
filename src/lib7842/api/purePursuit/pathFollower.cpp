@@ -29,10 +29,12 @@ void PathFollower::followPath(const PursuitPath& ipath) {
 
     // get an iterator to the closest point
     auto closest = findClosest(ipath, pos);
+    std::cout << "Close: " << closest - ipath().begin() << ", ";
     // get the lookahead point
     Vector lookPoint = findLookaheadPoint(ipath, pos);
     // the robot is on the path if the distance to the closest point is smaller than the lookahead
     bool onPath = Vector::dist(pos, **closest) < lookahead;
+    std::cout << "On: " << onPath << ", ";
 
     // project the lookahead point onto the lookahead radius. When the lookahead point is further
     // than the lookahead radius, this can cause some problems with the robot curvature calculation.
@@ -49,10 +51,12 @@ void PathFollower::followPath(const PursuitPath& ipath) {
 
     // calculate the curvature in order for the robot to arc to the lookahead
     QCurvature curv = calculateCurvature(pos, finalLookPoint);
+    std::cout << "Curv: " << curv.convert(curvature) << ", ";
 
     // the robot is considered finished if it is on the path, the closest point is the end of the
     // path, and the lookahead is the end of the path
     isFinished = onPath && (closest >= ipath().end() - 1) && lastLookIndex >= ipath().size() - 2;
+    std::cout << "Done " << isFinished << ", ";
 
     // if the robot is on the path, choose the lowest of either the path velocity or the
     // curvature-based speed reduction. If the robot is not on the path, choose the lowest of either
@@ -81,17 +85,21 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     lastPos = pos;
     lastVelocity = targetVel;
 
+    std::cout << "Vel: " << targetVel.convert(mps) << ", ";
+
     // calculate robot wheel velocities
     auto robotVel = calculateVelocity(targetVel, curv, odometry->getScales().wheelTrack);
+    auto leftVel = std::clamp(robotVel[0], -limits.maxVel, limits.maxVel);
+    auto rightVel = std::clamp(robotVel[1], -limits.maxVel, limits.maxVel);
 
     // convert to rpm
-    QAngularSpeed leftWheel =
-      (robotVel[0] / (1_pi * odometry->getScales().wheelDiameter)) * 360_deg;
-    QAngularSpeed rightWheel =
-      (robotVel[1] / (1_pi * odometry->getScales().wheelDiameter)) * 360_deg;
+    QAngularSpeed leftWheel = (leftVel / (1_pi * odometry->getScales().wheelDiameter)) * 360_deg;
+    QAngularSpeed rightWheel = (rightVel / (1_pi * odometry->getScales().wheelDiameter)) * 360_deg;
 
-    model->left(leftWheel.convert(rpm));
-    model->right(rightWheel.convert(rpm));
+    std::cout << "Left: " << leftWheel.convert(rpm) << std::endl;
+    std::cout << "Right: " << rightWheel.convert(rpm) << std::endl;
+    model->left(leftWheel.convert(rpm) / 200);
+    model->right(rightWheel.convert(rpm) / 200);
 
     pros::delay(10);
   }
@@ -106,11 +114,12 @@ PursuitPath::array_t::const_iterator PathFollower::findClosest(const PursuitPath
   auto closest = lastClosest.value_or(ipath().begin());
 
   // Optimization: limit the progression of the closest point. It considers the last closest point,
-  // and all the options up to the lookahead (inclusive). This improves performance and prevents the
-  // robot from skipping ahead on the path.
+  // and all the options up to one point ahead of the lookahead. This improves performance and
+  // prevents the robot from skipping ahead on the path.
 
   // loop from the last closest point to one point past the lookahead
-  for (auto it = closest; it <= ipath().begin() + lastLookIndex; it++) {
+  for (auto it = closest; it <= ipath().begin() + lastLookIndex + 1; it++) {
+    if (it >= ipath().end()) break;
     QLength distance = Vector::dist(ipos, **it);
     if (distance < closestDist) {
       closestDist = distance;
@@ -187,14 +196,16 @@ std::optional<double> PathFollower::findIntersectT(const Vector& ifirst,
 }
 
 QCurvature PathFollower::calculateCurvature(const State& istate, const Vector& ilookPoint) {
+  double headRadRotate = (istate.theta + 90_deg).convert(radian);
   double headRad = istate.theta.convert(radian);
   MathPoint diff = ilookPoint - istate;
-  int side = sgn(std::sin(headRad) * diff.x - std::cos(headRad) * diff.y);
+  int side = sgn(std::sin(headRadRotate) * diff.x - std::cos(headRadRotate) * diff.y);
   double a = -std::tan(headRad);
   double c = std::tan(headRad) * (istate.x - istate.y).convert(meter);
   double x =
     std::abs(a * (ilookPoint.x + ilookPoint.y).convert(meter) + c) / std::sqrt(std::pow(a, 2) + 1);
-  return curvature * side * ((2.0 * x) / std::pow(MathPoint::dist(istate, ilookPoint), 2));
+  std::cout << "Side: " << side << ", ";
+  return curvature * (side * ((2.0 * x) / std::pow(MathPoint::dist(istate, ilookPoint), 2)));
 }
 
 std::valarray<QSpeed> PathFollower::calculateVelocity(const QSpeed& ivel,
