@@ -23,6 +23,12 @@ TEST_F(PathFollowerTest, TestVelConversions) {
   ASSERT_EQ(600, leftWheel.convert(rpm));
 }
 
+TEST_F(PathFollowerTest, ReverseVelConversions) {
+  QAngularSpeed wheel = (1_mps / (1_pi * 10_cm)) * 360_deg;
+  QSpeed vel = (wheel * 1_pi * 10_cm) / 360_deg;
+  ASSERT_EQ(vel.convert(mps), 1);
+}
+
 TEST_F(PathFollowerTest, TestClosest) {
   PursuitPath path({{0_ft, 0_ft}, {1_ft, 1_ft}, {2_ft, 2_ft}, {3_ft, 3_ft}, {4_ft, 4_ft}});
   follower->lastLookIndex = 4;
