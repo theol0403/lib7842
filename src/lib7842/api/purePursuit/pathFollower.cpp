@@ -196,16 +196,17 @@ std::optional<double> PathFollower::findIntersectT(const Vector& ifirst,
 }
 
 QCurvature PathFollower::calculateCurvature(const State& istate, const Vector& ilookPoint) {
-  double headRadRotate = (istate.theta + 90_deg).convert(radian);
-  double headRad = istate.theta.convert(radian);
-  MathPoint diff = ilookPoint - istate;
-  int side = sgn(std::sin(headRadRotate) * diff.x - std::cos(headRadRotate) * diff.y);
-  double a = -std::tan(headRad);
-  double c = std::tan(headRad) * (istate.x - istate.y).convert(meter);
-  double x =
-    std::abs(a * (ilookPoint.x + ilookPoint.y).convert(meter) + c) / std::sqrt(std::pow(a, 2) + 1);
-  std::cout << "Side: " << side << ", ";
-  return curvature * (side * ((2.0 * x) / std::pow(MathPoint::dist(istate, ilookPoint), 2)));
+  double heading = ((istate.theta * -1) + 90_deg).convert(radian);
+  double a = -std::tan(heading);
+  double b = 1;
+  double c = (std::tan(heading) * istate.x.convert(meter)) - istate.y.convert(meter);
+  double x = std::abs(a * ilookPoint.x.convert(meter) + b * ilookPoint.y.convert(meter) + c) /
+             std::sqrt(std::pow(a, 2) + std::pow(b, 2));
+  double cross = (std::sin(heading) * (ilookPoint.x.convert(meter) - istate.x.convert(meter))) -
+                 (std::cos(heading) * (ilookPoint.y.convert(meter) - istate.y.convert(meter)));
+  double side = cross > 0 ? 1 : -1;
+  double curv = (2 * x) / (std::pow(MathPoint::dist(istate, ilookPoint), 2));
+  return curvature * curv * side;
 }
 
 std::valarray<QSpeed> PathFollower::calculateVelocity(const QSpeed& ivel,

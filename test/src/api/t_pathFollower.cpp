@@ -77,3 +77,29 @@ TEST_F(PathFollowerTest, TestLookahead) {
   lookahead = follower->findLookaheadPoint(path, {0_ft, 2_ft});
   ASSERT_NEAR(lookahead.y.convert(foot), estimated.y.convert(foot), 1e-10);
 }
+
+TEST_F(PathFollowerTest, TestCurvature) {
+  auto curv = PathFollower::calculateCurvature({0_in, 0_in, 0_deg}, {0_in, 5_in});
+  ASSERT_LT(curv.abs().convert(curvature), 1e-4);
+
+  curv = PathFollower::calculateCurvature({0_in, 0_in, 90_deg}, {5_in, 0_in});
+  ASSERT_LT(curv.abs().convert(curvature), 1e-4);
+
+  curv = PathFollower::calculateCurvature({0_in, 0_in, 90_deg}, {-5_in, 0_in});
+  ASSERT_LT(curv.abs().convert(curvature), 1e-4);
+
+  curv = PathFollower::calculateCurvature({0_in, 0_in, 45_deg}, {5_in, 5_in});
+  ASSERT_LT(curv.abs().convert(curvature), 1e-4);
+
+  curv = PathFollower::calculateCurvature({0_in, 0_in, 45_deg}, {-5_in, -5_in});
+  ASSERT_LT(curv.abs().convert(curvature), 1e-4);
+
+  curv = PathFollower::calculateCurvature({0_in, 0_in, 45_deg}, {10_in, 5_in});
+  ASSERT_GT(curv.abs().convert(curvature), 2);
+
+  curv = PathFollower::calculateCurvature({0_in, 0_in, -45_deg}, {-5_in, 5_in});
+  ASSERT_LT(curv.abs().convert(curvature), 1e-4);
+
+  curv = PathFollower::calculateCurvature({0_in, 0_in, 200_deg}, {10_in, 5_in});
+  ASSERT_GT(curv.abs().convert(curvature), 4);
+}
