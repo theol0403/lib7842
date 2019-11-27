@@ -24,21 +24,50 @@ TEST_F(PathFollowerTest, TestVelConversions) {
 }
 
 TEST_F(PathFollowerTest, TestClosest) {
-  PursuitPath path({{0_in, 0_in}, {1_in, 1_in}, {2_in, 2_in}, {3_in, 3_in}, {4_in, 4_in}});
+  PursuitPath path({{0_ft, 0_ft}, {1_ft, 1_ft}, {2_ft, 2_ft}, {3_ft, 3_ft}, {4_ft, 4_ft}});
   follower->lastLookIndex = 4;
 
-  auto closest = follower->findClosest(path, {1_in, 1_in});
+  auto closest = follower->findClosest(path, {1_ft, 1_ft});
   ASSERT_EQ(closest - path().begin(), 1);
 
-  closest = follower->findClosest(path, {0_in, 0_in});
+  closest = follower->findClosest(path, {0_ft, 0_ft});
   ASSERT_EQ(closest - path().begin(), 1);
 
-  closest = follower->findClosest(path, {3_in, 3.3_in});
+  closest = follower->findClosest(path, {3_ft, 3.3_ft});
   ASSERT_EQ(closest - path().begin(), 3);
 
-  closest = follower->findClosest(path, {6_in, 6_in});
+  closest = follower->findClosest(path, {6_ft, 6_ft});
   ASSERT_EQ(closest - path().begin(), 4);
 
-  closest = follower->findClosest(path, {0_in, 0_in});
+  closest = follower->findClosest(path, {0_ft, 0_ft});
   ASSERT_EQ(closest - path().begin(), 4);
+}
+
+TEST_F(PathFollowerTest, TestLookahead) {
+  PursuitPath path({{0_ft, 0_ft}, {0_ft, 1_ft}, {0_ft, 2_ft}, {0_ft, 3_ft}, {0_ft, 4_ft}});
+
+  Vector lookahead = follower->findLookaheadPoint(path, {0_ft, 1_ft});
+  Vector estimated {0_ft, 1.5_ft};
+  ASSERT_EQ(lookahead, estimated);
+
+  lookahead = follower->findLookaheadPoint(path, {0_ft, 1_ft});
+  ASSERT_EQ(lookahead, estimated);
+
+  lookahead = follower->findLookaheadPoint(path, {0_ft, 2_ft});
+  estimated = {0_ft, 2.5_ft};
+  ASSERT_EQ(lookahead, estimated);
+
+  lookahead = follower->findLookaheadPoint(path, {0_ft, 0_ft});
+  ASSERT_EQ(lookahead, estimated);
+
+  lookahead = follower->findLookaheadPoint(path, {0_ft, 3.5_ft});
+  estimated = {0_ft, 4_ft};
+  ASSERT_NEAR(lookahead.y.convert(foot), estimated.y.convert(foot), 1e-10);
+
+  lookahead = follower->findLookaheadPoint(path, {0_ft, 4_ft});
+  estimated = {0_ft, 4_ft};
+  ASSERT_NEAR(lookahead.y.convert(foot), estimated.y.convert(foot), 1e-10);
+
+  lookahead = follower->findLookaheadPoint(path, {0_ft, 2_ft});
+  ASSERT_NEAR(lookahead.y.convert(foot), estimated.y.convert(foot), 1e-10);
 }
