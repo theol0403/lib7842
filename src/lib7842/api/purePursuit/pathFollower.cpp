@@ -196,16 +196,15 @@ std::optional<double> PathFollower::findIntersectT(const Vector& ifirst,
 }
 
 QCurvature PathFollower::calculateCurvature(const State& istate, const Vector& ilookPoint) {
+  MathPoint pos(istate);
+  MathPoint look(ilookPoint);
+  MathPoint diff = look - pos;
   double heading = ((istate.theta * -1) + 90_deg).convert(radian);
   double a = -std::tan(heading);
-  double b = 1;
-  double c = (std::tan(heading) * istate.x.convert(meter)) - istate.y.convert(meter);
-  double x = std::abs(a * ilookPoint.x.convert(meter) + b * ilookPoint.y.convert(meter) + c) /
-             std::sqrt(std::pow(a, 2) + std::pow(b, 2));
-  double cross = (std::sin(heading) * (ilookPoint.x.convert(meter) - istate.x.convert(meter))) -
-                 (std::cos(heading) * (ilookPoint.y.convert(meter) - istate.y.convert(meter)));
-  double side = cross > 0 ? 1 : -1;
-  double curv = (2 * x) / (std::pow(MathPoint::dist(istate, ilookPoint), 2));
+  double c = std::tan(heading) * pos.x - pos.y;
+  double x = std::abs(a * look.x + 1.0 * look.y + c) / std::sqrt(std::pow(a, 2) + 1);
+  int side = sgn(std::sin(heading) * diff.x - std::cos(heading) * diff.y);
+  double curv = (2.0 * x) / std::pow(MathPoint::dist(istate, ilookPoint), 2);
   return curvature * curv * side;
 }
 
