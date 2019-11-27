@@ -96,7 +96,7 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     QAngularSpeed leftWheel = (leftVel / (1_pi * odometry->getScales().wheelDiameter)) * 360_deg;
     QAngularSpeed rightWheel = (rightVel / (1_pi * odometry->getScales().wheelDiameter)) * 360_deg;
 
-    std::cout << "Left: " << leftWheel.convert(rpm) << std::endl;
+    std::cout << "Left: " << leftWheel.convert(rpm) << ", ";
     std::cout << "Right: " << rightWheel.convert(rpm) << std::endl;
     model->left(leftWheel.convert(rpm) / 200);
     model->right(rightWheel.convert(rpm) / 200);
