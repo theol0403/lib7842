@@ -1,12 +1,15 @@
 #pragma once
 
-#include "customOdometry.hpp"
+#include "lib7842/api/other/utility.hpp"
 #include "odomMath.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/control/iterative/iterativePosPidController.hpp"
+#include "okapi/api/odometry/odometry.hpp"
 #include <functional>
 
 namespace lib7842 {
+
+using namespace okapi;
 
 class OdomController;
 
@@ -230,14 +233,6 @@ protected:
    * Reset the pid controllers, used before every motion
    */
   virtual void resetPid();
-
-  /**
-   * Control the chassis movement. Applies magnitude control to prioritize turning.
-   *
-   * @param forwardSpeed Forward speed
-   * @param yaw          The yaw
-   */
-  void driveVector(double forwardSpeed, double yaw);
 
   std::shared_ptr<ChassisModel> model {nullptr};
   std::shared_ptr<Odometry> odometry {nullptr};

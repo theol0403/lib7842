@@ -1,7 +1,6 @@
 #pragma once
 
 #include "odomController.hpp"
-#include "odomMath.hpp"
 #include "okapi/api/chassis/model/xDriveModel.hpp"
 
 namespace lib7842 {
@@ -74,24 +73,6 @@ public:
                              const Settler& settler = defaultDriveSettler);
 
 protected:
-  /**
-   * Control the chassis movement. Applies magnitude control to prioritize turning.
-   *
-   * @param forwardSpeed The forward speed
-   * @param yaw          The yaw speed
-   * @param strafe       The strafe speed
-   */
-  void driveXVector(double forwardSpeed, double yaw, double strafe);
-
-  /**
-   * Control the chassis movement. Strafes at the given speed at the given direction.
-   *
-   * @param speed     The speed
-   * @param direction The direction
-   * @param yaw       The yaw
-   */
-  void strafeXVector(double speed, const QAngle& direction, double yaw);
-
   std::shared_ptr<XDriveModel> xModel {nullptr};
 };
 

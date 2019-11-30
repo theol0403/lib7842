@@ -3,6 +3,7 @@
 namespace lib7842 {
 
 using namespace OdomMath;
+using namespace util;
 
 OdomController::OdomController(const std::shared_ptr<ChassisModel>& imodel,
                                const std::shared_ptr<Odometry>& iodometry,
@@ -70,11 +71,11 @@ void OdomController::moveDistanceAtAngle(const QLength& distance,
     double distanceVel = distanceController->step(-distanceErr.convert(millimeter));
     double angleVel = angleController->step(-angleErr.convert(degree));
 
-    driveVector(distanceVel, angleVel * turnScale);
+    driveVector(model, distanceVel, angleVel * turnScale);
     pros::delay(10);
   } while (!settler(*this));
 
-  driveVector(0, 0);
+  driveVector(model, 0, 0);
 }
 
 void OdomController::moveDistance(const QLength& distance, const Settler& settler) {
@@ -116,11 +117,11 @@ void OdomController::driveToPoint(const Vector& targetPoint,
     double angleVel = angleController->step(-angleErr.convert(degree));
     double distanceVel = distanceController->step(-distanceToClose.convert(millimeter));
 
-    driveVector(distanceVel, angleVel * turnScale);
+    driveVector(model, distanceVel, angleVel * turnScale);
     pros::delay(10);
   } while (!settler(*this));
 
-  driveVector(0, 0);
+  driveVector(model, 0, 0);
 }
 
 void OdomController::driveToPoint2(const Vector& targetPoint,
@@ -138,13 +139,13 @@ void OdomController::driveToPoint2(const Vector& targetPoint,
     double angleVel = angleController->step(-angleErr.convert(degree));
     double distanceVel = distanceController->step(-distanceErr.convert(millimeter));
 
-    driveVector(distanceVel, angleVel * turnScale);
+    driveVector(model, distanceVel, angleVel * turnScale);
     pros::delay(10);
   } while (!(exitFunc(*this) || settler(*this)));
 
   moveDistanceAtAngle(distanceToPoint(targetPoint), makeAngleCalculator(angleToPoint(targetPoint)),
                       turnScale, settler);
-  driveVector(0, 0);
+  driveVector(model, 0, 0);
 }
 
 /**
@@ -244,24 +245,11 @@ QLength OdomController::distanceToPoint(const Vector& point) const {
  * OdomController utilities
  */
 void OdomController::resetPid() {
-  turnController->reset();
   distanceController->reset();
+  turnController->reset();
   angleController->reset();
-  angleErr = 0_deg;
   distanceErr = 0_in;
-}
-
-void OdomController::driveVector(double forwardSpeed, double yaw) {
-  forwardSpeed = std::clamp(forwardSpeed, -1.0, 1.0);
-  double leftOutput = forwardSpeed + yaw;
-  double rightOutput = forwardSpeed - yaw;
-  double maxInputMag = std::max(std::abs(leftOutput), std::abs(rightOutput));
-  if (maxInputMag > 1) {
-    leftOutput /= maxInputMag;
-    rightOutput /= maxInputMag;
-  }
-
-  model->tank(leftOutput, rightOutput);
+  angleErr = 0_deg;
 }
 
 } // namespace lib7842
