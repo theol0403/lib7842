@@ -1,5 +1,7 @@
 #include "test.hpp"
 
+using namespace lib7842::units;
+
 class PathGeneratorTest : public ::testing::Test, public PathGenerator {
 protected:
   PursuitLimits limits {2_ips, 8_ips, 8_ips2, 1};

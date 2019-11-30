@@ -203,7 +203,7 @@ QCurvature PathFollower::calculateCurvature(const State& istate, const Vector& i
   double a = -std::tan(heading);
   double c = std::tan(heading) * pos.x - pos.y;
   double x = std::abs(a * look.x + 1.0 * look.y + c) / std::sqrt(std::pow(a, 2) + 1);
-  int side = sgn(std::sin(heading) * diff.x - std::cos(heading) * diff.y);
+  int side = util::sgn(std::sin(heading) * diff.x - std::cos(heading) * diff.y);
   double curv = (2.0 * x) / std::pow(MathPoint::dist(istate, ilookPoint), 2);
   return curvature * curv * side;
 }

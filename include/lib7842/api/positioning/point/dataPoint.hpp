@@ -1,7 +1,6 @@
 #pragma once
 #include "vector.hpp"
 
-#include "lib7842/api/other/utility.hpp"
 #include <any>
 #include <map>
 #include <stdexcept>
