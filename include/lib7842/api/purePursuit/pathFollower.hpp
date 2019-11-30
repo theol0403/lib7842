@@ -32,11 +32,10 @@ protected:
                                               const Vector& ipos,
                                               const QLength& ilookahead);
 
-  static QCurvature calculateCurvature(const State& istate, const Vector& ilookPoint);
+  static double calculateCurvature(const State& istate, const Vector& ilookPoint);
 
-  static std::valarray<QSpeed> calculateVelocity(const QSpeed& ivel,
-                                                 const QCurvature& icurvature,
-                                                 const QLength& ichassisWidth);
+  static std::valarray<QSpeed>
+    calculateVelocity(const QSpeed& ivel, double icurvature, const QLength& ichassisWidth);
 
   std::shared_ptr<ChassisModel> model {nullptr};
   std::shared_ptr<Odometry> odometry {nullptr};

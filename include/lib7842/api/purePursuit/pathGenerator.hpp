@@ -41,7 +41,7 @@ protected:
    * @param  next  The next point
    * @return The curvature
    */
-  static QCurvature calculateCurvature(const Vector& prev, const Vector& point, const Vector& next);
+  static double calculateCurvature(const Vector& prev, const Vector& point, const Vector& next);
 };
 
 } // namespace lib7842

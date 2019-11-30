@@ -13,12 +13,12 @@ PursuitPath PathGenerator::generate(const SimplePath& ipath, const PursuitLimits
 }
 
 void PathGenerator::setCurvatures(PursuitPath& ipath) {
-  ipath().at(0)->setData("curvature", 0_curv);
+  ipath().at(0)->setData("curvature", 0.0);
   for (size_t i = 1; i < ipath().size() - 1; i++) {
-    QCurvature curv = calculateCurvature(*ipath()[i - 1], *ipath()[i], *ipath()[i + 1]);
-    ipath()[i]->setData("curvature", curv);
+    double curvature = calculateCurvature(*ipath()[i - 1], *ipath()[i], *ipath()[i + 1]);
+    ipath()[i]->setData("curvature", curvature);
   }
-  ipath().back()->setData("curvature", 0_curv);
+  ipath().back()->setData("curvature", 0.0);
 }
 
 void PathGenerator::setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limits) {
@@ -29,8 +29,7 @@ void PathGenerator::setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limi
 
     // k / curvature, limited to max
     double wantedVel =
-      std::min(limits.maxVel.convert(mps),
-               limits.k / ipath()[i]->getData<QCurvature>("curvature").convert(curvature));
+      std::min(limits.maxVel.convert(mps), limits.k / ipath()[i]->getData<double>("curvature"));
 
     // distance from last point
     double distance = Vector::dist(start, end).convert(meter);
@@ -46,7 +45,7 @@ void PathGenerator::setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limi
   }
 }
 
-QCurvature
+double
   PathGenerator::calculateCurvature(const Vector& prev, const Vector& point, const Vector& next) {
   double distOne = Vector::dist(point, prev).convert(meter);
   double distTwo = Vector::dist(point, next).convert(meter);
@@ -61,8 +60,8 @@ QCurvature
                                   (semiPerimeter - distThree));
 
   double r = (productOfSides) / (4 * triangleArea);
-  double curv = std::isnormal(1 / r) ? 1 / r : 0;
-  return curv * curvature;
+  double curvature = std::isnormal(1 / r) ? 1 / r : 0;
+  return curvature * curvature;
 }
 
 } // namespace lib7842

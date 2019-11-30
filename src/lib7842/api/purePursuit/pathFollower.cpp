@@ -50,8 +50,8 @@ void PathFollower::followPath(const PursuitPath& ipath) {
         : projectedLookPoint;
 
     // calculate the curvature in order for the robot to arc to the lookahead
-    QCurvature curv = calculateCurvature(pos, finalLookPoint);
-    std::cout << "Curv: " << curv.convert(curvature) << ", ";
+    double curvature = calculateCurvature(pos, finalLookPoint);
+    std::cout << "Curv: " << curvature << ", ";
 
     // the robot is considered finished if it is on the path, the closest point is the end of the
     // path, and the lookahead is the end of the path
@@ -64,10 +64,9 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     QSpeed targetVel = 0_mps;
     if (onPath) {
       targetVel = mps * std::min(closest->get()->getData<QSpeed>("velocity").convert(mps),
-                                 limits.k / std::abs(curv.convert(curvature)));
+                                 limits.k / std::abs(curvature));
     } else {
-      targetVel =
-        mps * std::min(limits.maxVel.convert(mps), limits.k / std::abs(curv.convert(curvature)));
+      targetVel = mps * std::min(limits.maxVel.convert(mps), limits.k / std::abs(curvature));
     }
 
     // add an upwards rate limiter to the robot velocity. Assume the robot starts at the minimum
@@ -88,7 +87,7 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     std::cout << "Vel: " << targetVel.convert(mps) << ", ";
 
     // calculate robot wheel velocities
-    auto robotVel = calculateVelocity(targetVel, curv, odometry->getScales().wheelTrack);
+    auto robotVel = calculateVelocity(targetVel, curvature, odometry->getScales().wheelTrack);
     auto leftVel = std::clamp(robotVel[0], -limits.maxVel, limits.maxVel);
     auto rightVel = std::clamp(robotVel[1], -limits.maxVel, limits.maxVel);
 
@@ -195,7 +194,7 @@ std::optional<double> PathFollower::findIntersectT(const Vector& ifirst,
   return std::nullopt;
 }
 
-QCurvature PathFollower::calculateCurvature(const State& istate, const Vector& ilookPoint) {
+double PathFollower::calculateCurvature(const State& istate, const Vector& ilookPoint) {
   MathPoint pos(istate);
   MathPoint look(ilookPoint);
   MathPoint diff = look - pos;
@@ -204,15 +203,15 @@ QCurvature PathFollower::calculateCurvature(const State& istate, const Vector& i
   double c = std::tan(heading) * pos.x - pos.y;
   double x = std::abs(a * look.x + 1.0 * look.y + c) / std::sqrt(std::pow(a, 2) + 1);
   int side = util::sgn(std::sin(heading) * diff.x - std::cos(heading) * diff.y);
-  double curv = (2.0 * x) / std::pow(MathPoint::dist(istate, ilookPoint), 2);
-  return curvature * curv * side;
+  double curvature = (2.0 * x) / std::pow(MathPoint::dist(istate, ilookPoint), 2);
+  return curvature * curvature * side;
 }
 
 std::valarray<QSpeed> PathFollower::calculateVelocity(const QSpeed& ivel,
-                                                      const QCurvature& icurvature,
+                                                      double icurvature,
                                                       const QLength& ichassisWidth) {
-  return {ivel * (2.0 + ichassisWidth.convert(meter) * icurvature.convert(curvature)) / 2.0,
-          ivel * (2.0 - ichassisWidth.convert(meter) * icurvature.convert(curvature)) / 2.0};
+  return {ivel * (2.0 + ichassisWidth.convert(meter) * icurvature) / 2.0,
+          ivel * (2.0 - ichassisWidth.convert(meter) * icurvature) / 2.0};
 }
 
 } // namespace lib7842
