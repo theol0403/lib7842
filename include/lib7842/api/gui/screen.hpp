@@ -62,7 +62,7 @@ public:
   }
 
   /**
-   * Render the page. Override this method to implement custom rendering.
+   * Render all the sub pages.
    */
   void render() override;
 
