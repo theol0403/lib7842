@@ -3,7 +3,6 @@
 
 namespace lib7842 {
 
-using namespace OdomMath;
 using namespace util;
 
 OdomController::OdomController(const std::shared_ptr<ChassisModel>& imodel,

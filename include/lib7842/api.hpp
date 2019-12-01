@@ -20,7 +20,6 @@
 
 #include "lib7842/api/odometry/customOdometry.hpp"
 #include "lib7842/api/odometry/odomController.hpp"
-#include "lib7842/api/odometry/odomMath.hpp"
 #include "lib7842/api/odometry/odomXController.hpp"
 
 #include "lib7842/api/gui/actions.hpp"

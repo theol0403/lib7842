@@ -3,7 +3,6 @@
 
 namespace lib7842 {
 
-using namespace lib7842::OdomMath;
 using namespace util;
 
 OdomXController::OdomXController(const std::shared_ptr<XDriveModel>& imodel,
