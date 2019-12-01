@@ -112,7 +112,20 @@ void opcontrol() {
   PathFollower follower(model, odom, 0.9_ft, 14_in);
   PursuitLimits limits {0.1_mps, 0.73_mps, 0.7_mps2, 20};
 
-  SimplePath path = SimplePath({{0_ft, 0_ft}, {0_ft, 1_ft}}).generate(50);
+  SimplePath path = SimplePath({
+                                 {0_ft, 0_ft},
+                                 {0_ft, 2_ft},
+                                 {2_ft, 2_ft},
+                                 {2_ft, 4_ft},
+                                 {0_ft, 4_ft},
+                                 {1_ft, 3_ft},
+                                 {0_ft, 5_ft},
+                                 // {2_ft, 0_ft}
+                               })
+                      .generate(50)
+                      .smoothen(.008, 1e-10);
+
+  std::cout << path().size() << std::endl;
 
   PursuitPath pPath = PathGenerator::generate(path, limits);
 
