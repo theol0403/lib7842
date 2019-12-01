@@ -112,8 +112,7 @@ void opcontrol() {
   PathFollower follower(model, odom, 2_ft);
   PursuitLimits limits {0.1_mps, 0.73_mps, 0.5_mps2, 10};
 
-  SimplePath path({{0_ft, 0_ft}, {0_ft, 3_ft}, {3_ft, 3_ft}});
-  path = path.generate(20);
+  SimplePath path = SimplePath({{0_ft, 0_ft}, {0_ft, 1_ft}}).generate(50);
 
   PursuitPath pPath = PathGenerator::generate(path, limits);
 

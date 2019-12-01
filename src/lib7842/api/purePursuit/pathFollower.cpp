@@ -60,7 +60,7 @@ void PathFollower::followPath(const PursuitPath& ipath) {
 
     // the robot is considered finished if it is on the path, the closest point is the end of the
     // path, and the lookahead is the end of the path
-    isFinished = onPath && (closest >= ipath().end() - 1);
+    isFinished = closest >= ipath().end() - 1;
     std::cout << "Done " << isFinished << ", ";
 
     // if the robot is on the path, choose the lowest of either the path velocity or the
