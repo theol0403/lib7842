@@ -54,4 +54,8 @@ QLength Vector::dist(const Vector& lhs, const Vector& rhs) {
            ((lhs.x - rhs.x) * (lhs.x - rhs.x) + (lhs.y - rhs.y) * (lhs.y - rhs.y)).convert(meter2));
 }
 
+QLength Vector::distTo(const Vector& ipoint) {
+  return dist(*this, ipoint);
+}
+
 } // namespace lib7842

@@ -60,6 +60,7 @@ public:
    * Utility functions
    */
   static QLength dist(const Vector& lhs, const Vector& rhs);
+  QLength distTo(const Vector& ipoint);
 };
 
 } // namespace lib7842

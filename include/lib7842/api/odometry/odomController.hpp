@@ -217,14 +217,14 @@ public:
   static AngleCalculator makeAngleCalculator();
 
   /**
-   * Calculate angle from the chassis to the point
-   */
-  QAngle angleToPoint(const Vector& point) const;
-
-  /**
    * Calculate distance from the chassis to the point
    */
   QLength distanceToPoint(const Vector& point) const;
+
+  /**
+   * Calculate angle from the chassis to the point
+   */
+  QAngle angleToPoint(const Vector& point) const;
 
 protected:
   /**

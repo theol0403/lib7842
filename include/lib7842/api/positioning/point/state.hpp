@@ -47,6 +47,13 @@ public:
   State operator-(const State& rhs) const;
   bool operator==(const State& rhs) const;
   bool operator!=(const State& rhs) const;
+
+  /**
+   * Calculate angle from the state to a point
+   *
+   * @param  ipoint The point
+   */
+  QAngle angleTo(const Vector& ipoint) const;
 };
 
 } // namespace lib7842

@@ -228,22 +228,16 @@ AngleCalculator OdomController::makeAngleCalculator() {
 }
 
 /**
-  * Position Calculations
-  */
-QAngle OdomController::angleToPoint(const Vector& point) const {
-  State state = State(odometry->getState(StateMode::CARTESIAN));
-  Vector diff = point - state;
-  QAngle angle = (std::atan2(diff.x.convert(meter), diff.y.convert(meter)) * radian) - state.theta;
-  return rollAngle180(angle);
-}
-
-QLength OdomController::distanceToPoint(const Vector& point) const {
-  return Vector::dist(State(odometry->getState(StateMode::CARTESIAN)), point);
-}
-
-/**
  * OdomController utilities
  */
+QLength OdomController::distanceToPoint(const Vector& point) const {
+  return State(odometry->getState(StateMode::CARTESIAN)).distTo(point);
+}
+
+QAngle OdomController::angleToPoint(const Vector& point) const {
+  return State(odometry->getState(StateMode::CARTESIAN)).angleTo(point);
+}
+
 void OdomController::resetPid() {
   distanceController->reset();
   turnController->reset();
