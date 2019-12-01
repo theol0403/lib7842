@@ -35,12 +35,12 @@ void PathFollower::followPath(const PursuitPath& ipath) {
 
     // get an iterator to the closest point
     auto closest = findClosest(ipath, pos);
-    std::cout << "Close: " << closest - ipath().begin() << ", ";
+    // std::cout << "Close: " << closest - ipath().begin() << ", ";
     // get the lookahead point
     Vector lookPoint = findLookaheadPoint(ipath, pos);
     // the robot is on the path if the distance to the closest point is smaller than the lookahead
     bool onPath = Vector::dist(pos, **closest) < lookahead;
-    std::cout << "On: " << onPath << ", ";
+    // std::cout << "On: " << onPath << ", ";
 
     // project the lookahead point onto the lookahead radius. When the lookahead point is further
     // than the lookahead radius, this can cause some problems with the robot curvature calculation.
@@ -57,12 +57,12 @@ void PathFollower::followPath(const PursuitPath& ipath) {
 
     // calculate the curvature in order for the robot to arc to the lookahead
     double curvature = calculateCurvature(pos, finalLookPoint);
-    std::cout << "Curv: " << curvature << ", ";
+    // std::cout << "Curv: " << curvature << ", ";
 
     // the robot is considered finished if it is on the path, the closest point is the end of the
     // path, and the lookahead is the end of the path
     isFinished = closest >= ipath().end() - 1;
-    std::cout << "Done " << isFinished << ", ";
+    // std::cout << "Done " << isFinished << ", ";
 
     // if the robot is on the path, choose the lowest of either the path velocity or the
     // curvature-based speed reduction. If the robot is not on the path, choose the lowest of either
@@ -90,7 +90,7 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     lastPos = pos;
     lastVelocity = targetVel;
 
-    std::cout << "Vel: " << targetVel.convert(mps) << ", ";
+    // std::cout << "Vel: " << targetVel.convert(mps) << ", ";
 
     // calculate robot wheel velocities
     auto robotVel = calculateVelocity(targetVel, curvature, chassisWidth);
@@ -101,10 +101,11 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     QAngularSpeed leftWheel = (leftVel / (1_pi * odometry->getScales().wheelDiameter)) * 360_deg;
     QAngularSpeed rightWheel = (rightVel / (1_pi * odometry->getScales().wheelDiameter)) * 360_deg;
 
-    std::cout << "Left: " << leftWheel.convert(rpm) << ", ";
-    std::cout << "Right: " << rightWheel.convert(rpm) << std::endl;
-    model->left(leftWheel.convert(rpm) / 200);
-    model->right(rightWheel.convert(rpm) / 200);
+    // std::cout << "Left: " << leftWheel.convert(rpm) << ", ";
+    // std::cout << "Right: " << rightWheel.convert(rpm) << std::endl;
+    // model->left(leftWheel.convert(rpm) / 200);
+    // model->right(rightWheel.convert(rpm) / 200);
+    model->tank(leftWheel.convert(rpm) / 200, rightWheel.convert(rpm) / 200);
 
     pros::delay(10);
   }
