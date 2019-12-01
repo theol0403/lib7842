@@ -1,5 +1,4 @@
 #pragma once
-
 #include "page.hpp"
 #include <tuple>
 

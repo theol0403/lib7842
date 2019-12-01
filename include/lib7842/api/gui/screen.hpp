@@ -1,5 +1,4 @@
 #pragma once
-
 #include "lib7842/api/other/taskWrapper.hpp"
 #include "page.hpp"
 #include <string>

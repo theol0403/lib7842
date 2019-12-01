@@ -1,5 +1,4 @@
 #pragma once
-
 #include "okapi/api/units/QAcceleration.hpp"
 #include "okapi/api/units/QSpeed.hpp"
 

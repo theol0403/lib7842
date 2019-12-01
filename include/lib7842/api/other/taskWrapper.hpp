@@ -1,5 +1,4 @@
 #pragma once
-
 #include "okapi/api/coreProsAPI.hpp"
 #include "okapi/api/util/logging.hpp"
 #include "pros/rtos.hpp"

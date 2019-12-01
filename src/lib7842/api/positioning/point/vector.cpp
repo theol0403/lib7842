@@ -1,5 +1,5 @@
 #include "vector.hpp"
-
+#include "okapi/api/units/QArea.hpp"
 #include <stdexcept>
 #include <string>
 

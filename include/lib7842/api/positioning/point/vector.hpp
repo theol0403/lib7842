@@ -1,7 +1,5 @@
 #pragma once
-
 #include "okapi/api/odometry/point.hpp"
-#include "okapi/api/units/QArea.hpp"
 #include "okapi/api/units/QLength.hpp"
 
 namespace lib7842 {

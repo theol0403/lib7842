@@ -1,8 +1,6 @@
 #pragma once
-
 #include "okapi/api/util/logging.hpp"
 #include <memory>
-#include <string>
 
 #ifndef THREADS_STD
   #include "display/lvgl.h"
