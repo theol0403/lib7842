@@ -109,8 +109,8 @@ void opcontrol() {
   /**
    * Follower
    */
-  PathFollower follower(model, odom, 2_ft);
-  PursuitLimits limits {0.1_mps, 0.73_mps, 0.5_mps2, 10};
+  PathFollower follower(model, odom, 0.9_ft, 14_in);
+  PursuitLimits limits {0.1_mps, 0.73_mps, 0.7_mps2, 20};
 
   SimplePath path = SimplePath({{0_ft, 0_ft}, {0_ft, 1_ft}}).generate(50);
 

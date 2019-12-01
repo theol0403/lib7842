@@ -9,8 +9,9 @@ namespace lib7842 {
 
 PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                            const std::shared_ptr<Odometry>& iodometry,
-                           const QLength& ilookahead) :
-  model(imodel), odometry(iodometry), lookahead(ilookahead) {}
+                           const QLength& ilookahead,
+                           const QLength& ichassisWidth) :
+  model(imodel), odometry(iodometry), chassisWidth(ichassisWidth), lookahead(ilookahead) {}
 
 void PathFollower::followPath(const PursuitPath& ipath) {
 
@@ -92,7 +93,7 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     std::cout << "Vel: " << targetVel.convert(mps) << ", ";
 
     // calculate robot wheel velocities
-    auto robotVel = calculateVelocity(targetVel, curvature, odometry->getScales().wheelTrack);
+    auto robotVel = calculateVelocity(targetVel, curvature, chassisWidth);
     auto leftVel = std::clamp(robotVel[0], -limits.maxVel, limits.maxVel);
     auto rightVel = std::clamp(robotVel[1], -limits.maxVel, limits.maxVel);
 

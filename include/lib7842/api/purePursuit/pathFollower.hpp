@@ -15,6 +15,7 @@ class PathFollower {
 public:
   PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                const std::shared_ptr<Odometry>& iodometry,
+               const QLength& ichassisWidth,
                const QLength& ilookahead);
 
   void followPath(const PursuitPath& ipath);
@@ -37,6 +38,7 @@ protected:
   std::shared_ptr<ChassisModel> model {nullptr};
   std::shared_ptr<Odometry> odometry {nullptr};
 
+  const QLength chassisWidth {0_in};
   const QLength lookahead {0_in};
 
   std::optional<PursuitPath::array_t::const_iterator> lastClosest {std::nullopt};
