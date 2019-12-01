@@ -28,7 +28,7 @@ public:
    *                (exclusive) of segment.
    * @return generated path
    */
-  virtual SimplePath generate(const int isteps = 1) const = 0;
+  virtual SimplePath generate(int isteps = 1) const = 0;
 
   /**
    * Implictly convert path to a shared pointer

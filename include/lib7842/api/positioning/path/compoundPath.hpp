@@ -34,7 +34,7 @@ public:
    *                (exclusive) of segment.
    * @return generated path
    */
-  SimplePath generate(const int isteps = 1) const override;
+  SimplePath generate(int isteps = 1) const override;
 
   /**
    * Implictly convert path to a shared pointer
