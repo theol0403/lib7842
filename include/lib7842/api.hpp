@@ -1,6 +1,7 @@
 #pragma once
 
 #include "lib7842/api/other/taskWrapper.hpp"
+#include "lib7842/api/other/units.hpp"
 #include "lib7842/api/other/utility.hpp"
 
 #include "lib7842/api/positioning/point/dataPoint.hpp"
