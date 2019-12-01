@@ -23,7 +23,7 @@ void OdomXController::strafeRelativeDirection(const QLength& distance,
                                               const AngleCalculator& angleCalculator,
                                               double turnScale,
                                               const Settler& settler) {
-  QAngle absoluteDirection = direction + odometry->getState(StateMode::CARTESIAN).theta;
+  QAngle absoluteDirection = direction + getState().theta;
   strafeAbsoluteDirection(distance, absoluteDirection, angleCalculator, turnScale, settler);
 }
 
@@ -34,7 +34,7 @@ void OdomXController::strafeAbsoluteDirection(const QLength& distance,
                                               const Settler& settler) {
   QLength x = sin(direction.convert(radian)) * distance;
   QLength y = cos(direction.convert(radian)) * distance;
-  Vector target = Vector(State(odometry->getState(StateMode::CARTESIAN))) + Vector(x, y);
+  Vector target = Vector(State(getState())) + Vector(x, y);
   strafeToPoint(target, angleCalculator, turnScale, settler);
 }
 
@@ -44,7 +44,8 @@ void OdomXController::strafeToPoint(const Vector& targetPoint,
                                     const Settler& settler) {
   resetPid();
   do {
-    distanceErr = distanceToPoint(targetPoint);
+    State state = getState();
+    distanceErr = state.distTo(targetPoint);
     angleErr = angleCalculator(*this);
 
     QAngle angleToTarget = angleToPoint(targetPoint);

@@ -41,7 +41,7 @@ void OdomController::turnToAngle(const QAngle& angle,
 }
 
 void OdomController::turnAngle(const QAngle& angle, const Turner& turner, const Settler& settler) {
-  turn(makeAngleCalculator(angle + odometry->getState().theta), turner, settler);
+  turn(makeAngleCalculator(angle + getState().theta), turner, settler);
 }
 
 void OdomController::turnToPoint(const Vector& point,
@@ -79,7 +79,7 @@ void OdomController::moveDistanceAtAngle(const QLength& distance,
 }
 
 void OdomController::moveDistance(const QLength& distance, const Settler& settler) {
-  moveDistanceAtAngle(distance, makeAngleCalculator(odometry->getState().theta), 1, settler);
+  moveDistanceAtAngle(distance, makeAngleCalculator(getState().theta), 1, settler);
 }
 
 /**
@@ -90,13 +90,14 @@ void OdomController::driveToPoint(const Vector& targetPoint,
                                   const Settler& settler) {
   resetPid();
   do {
-    Vector closestPoint = closest(State(odometry->getState(StateMode::CARTESIAN)), targetPoint);
+    State state = getState();
+    Vector closestPoint = closest(state, targetPoint);
 
-    QAngle angleToClose = angleToPoint(closestPoint);
-    QAngle angleToTarget = angleToPoint(targetPoint);
+    QAngle angleToClose = state.angleTo(closestPoint);
+    QAngle angleToTarget = state.angleTo(targetPoint);
 
-    QLength distanceToClose = distanceToPoint(closestPoint);
-    QLength distanceToTarget = distanceToPoint(targetPoint);
+    QLength distanceToClose = state.distTo(closestPoint);
+    QLength distanceToTarget = state.distTo(targetPoint);
 
     // go backwards
     if (angleToClose.abs() >= 90_deg) distanceToClose = -distanceToClose;
@@ -130,8 +131,9 @@ void OdomController::driveToPoint2(const Vector& targetPoint,
   resetPid();
   Settler exitFunc = makeSettler(settleRadius);
   do {
-    angleErr = angleToPoint(targetPoint);
-    distanceErr = distanceToPoint(targetPoint);
+    State state = getState();
+    angleErr = state.angleTo(targetPoint);
+    distanceErr = state.distTo(targetPoint);
 
     if (angleErr.abs() > 90_deg) distanceErr = -distanceErr;
     angleErr = rotateAngle90(angleErr);
@@ -205,7 +207,7 @@ Settler OdomController::makeSettler(const QLength& distance, const QAngle& angle
 AngleCalculator OdomController::makeAngleCalculator(const QAngle& angle) {
   QAngle iangle = rollAngle180(angle);
   return [=](const OdomController& odom) {
-    return rollAngle180(iangle - odom.odometry->getState().theta);
+    return rollAngle180(iangle - odom.getState().theta);
   };
 }
 
@@ -230,12 +232,16 @@ AngleCalculator OdomController::makeAngleCalculator() {
 /**
  * OdomController utilities
  */
+State OdomController::getState() const {
+  return State(odometry->getState(StateMode::CARTESIAN));
+}
+
 QLength OdomController::distanceToPoint(const Vector& point) const {
-  return State(odometry->getState(StateMode::CARTESIAN)).distTo(point);
+  return getState().distTo(point);
 }
 
 QAngle OdomController::angleToPoint(const Vector& point) const {
-  return State(odometry->getState(StateMode::CARTESIAN)).angleTo(point);
+  return getState().angleTo(point);
 }
 
 void OdomController::resetPid() {

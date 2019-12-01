@@ -217,6 +217,11 @@ public:
   static AngleCalculator makeAngleCalculator();
 
   /**
+   * Get the odometry state.
+   */
+  State getState() const;
+
+  /**
    * Calculate distance from the chassis to the point
    */
   QLength distanceToPoint(const Vector& point) const;
