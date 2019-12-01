@@ -1,4 +1,9 @@
 #include "pathFollower.hpp"
+#include "lib7842/api/positioning/point/mathPoint.hpp"
+#include "okapi/api/units/QAngularSpeed.hpp"
+#include "okapi/api/units/QArea.hpp"
+#include "pros/rtos.hpp"
+#include <iostream>
 
 namespace lib7842 {
 

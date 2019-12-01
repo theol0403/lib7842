@@ -1,4 +1,5 @@
 #include "odomMath.hpp"
+#include "lib7842/api/positioning/point/mathPoint.hpp"
 
 namespace lib7842::OdomMath {
 

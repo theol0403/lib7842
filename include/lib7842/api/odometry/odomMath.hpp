@@ -1,6 +1,4 @@
 #pragma once
-
-#include "lib7842/api/positioning/point/mathPoint.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 #include "okapi/api/units/QAngle.hpp"
