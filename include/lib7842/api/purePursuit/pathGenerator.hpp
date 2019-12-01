@@ -1,5 +1,4 @@
 #pragma once
-
 #include "pursuitLimits.hpp"
 #include "pursuitPath.hpp"
 

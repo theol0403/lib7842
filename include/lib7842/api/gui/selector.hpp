@@ -1,5 +1,4 @@
 #pragma once
-
 #include "actions.hpp"
 
 namespace lib7842::GUI {

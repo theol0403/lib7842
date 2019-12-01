@@ -1,5 +1,4 @@
 #pragma once
-
 #include "lib7842/api/positioning/path/discretePath.hpp"
 #include "pursuitLimits.hpp"
 #include <optional>

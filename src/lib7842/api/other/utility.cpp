@@ -1,4 +1,5 @@
 #include "utility.hpp"
+#include "okapi/api/util/mathUtil.hpp"
 
 namespace lib7842::util {
 

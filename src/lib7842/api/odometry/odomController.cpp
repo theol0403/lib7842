@@ -1,4 +1,5 @@
 #include "odomController.hpp"
+#include "pros/rtos.hpp"
 
 namespace lib7842 {
 

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "odomController.hpp"
 #include "okapi/api/chassis/model/xDriveModel.hpp"
 

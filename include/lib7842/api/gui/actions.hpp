@@ -1,7 +1,5 @@
 #pragma once
-
 #include "page.hpp"
-#include <vector>
 
 namespace lib7842::GUI {
 

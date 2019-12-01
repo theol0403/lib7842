@@ -1,5 +1,4 @@
 #include "graph.hpp"
-#include <iostream>
 
 namespace lib7842::GUI {
 

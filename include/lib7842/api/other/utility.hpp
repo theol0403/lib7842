@@ -2,7 +2,6 @@
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/chassis/model/xDriveModel.hpp"
 #include "okapi/api/units/QAngle.hpp"
-#include "okapi/api/util/mathUtil.hpp"
 #include <memory>
 
 namespace lib7842::util {

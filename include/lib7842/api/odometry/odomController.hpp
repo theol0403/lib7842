@@ -1,5 +1,4 @@
 #pragma once
-
 #include "lib7842/api/other/utility.hpp"
 #include "odomMath.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"

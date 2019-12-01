@@ -1,15 +1,12 @@
 #pragma once
-#include "lib7842/api/odometry/customOdometry.hpp"
 #include "lib7842/api/other/utility.hpp"
 #include "lib7842/api/positioning/path/discretePath.hpp"
-#include "lib7842/api/positioning/point/mathPoint.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
-#include "okapi/api/units/QAngularSpeed.hpp"
+#include "okapi/api/odometry/odometry.hpp"
 #include "okapi/api/units/QSpeed.hpp"
 #include "okapi/api/util/logging.hpp"
 #include "pursuitLimits.hpp"
 #include "pursuitPath.hpp"
-#include <iostream>
 #include <optional>
 
 namespace lib7842 {

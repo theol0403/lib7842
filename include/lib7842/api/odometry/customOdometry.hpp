@@ -1,5 +1,4 @@
 #pragma once
-
 #include "lib7842/api/other/taskWrapper.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
