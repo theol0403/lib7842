@@ -80,8 +80,8 @@ void opcontrol() {
   /**
    * Odom
    */
-  auto odom =
-    std::make_shared<CustomOdometry>(model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360));
+  auto odom = std::make_shared<CustomOdometry>(
+    model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360), TimeUtilFactory().create());
   odom->startTask("Odometry");
 
   /**
@@ -97,7 +97,8 @@ void opcontrol() {
       0.03, 0.00, 0.0003, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
     //Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
-      0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)));
+      0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)),
+    TimeUtilFactory().create());
 
   /**
    * Screen
@@ -109,7 +110,7 @@ void opcontrol() {
   /**
    * Follower
    */
-  PathFollower follower(model, odom, 0.9_ft, 14_in);
+  PathFollower follower(model, odom, 0.9_ft, 14_in, TimeUtilFactory().create());
   PursuitLimits limits {0.1_mps, 0.73_mps, 0.7_mps2, 20};
 
   SimplePath path = SimplePath({

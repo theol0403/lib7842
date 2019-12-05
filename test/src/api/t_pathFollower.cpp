@@ -5,9 +5,10 @@ class PathFollowerTest : public ::testing::Test {
 protected:
   void SetUp() override {
     model = std::make_shared<MockThreeEncoderXDriveModel>();
-    odom = std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}));
+    odom = std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}),
+                                            createTimeUtil());
 
-    follower = std::make_shared<PathFollower>(model, odom, 6_in);
+    follower = std::make_shared<PathFollower>(model, odom, 10_in, 6_in, createTimeUtil());
   }
 
   PursuitLimits limits {0_mps, 1_mps, 0.5_mps2, 1};

@@ -4,7 +4,8 @@ class CustomOdometryTest : public ::testing::Test {
 protected:
   void SetUp() override {
     model = std::make_shared<MockThreeEncoderXDriveModel>();
-    odom = std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}));
+    odom = std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}),
+                                            createTimeUtil());
   }
 
   QLength calculateDistanceTraveled(int ticks) {
@@ -100,7 +101,7 @@ TEST_F(CustomOdometryTest, DriveForwardWhileStrafingTest) {
 
 TEST_F(CustomOdometryTest, SmallSwingTurnOnRightWheels) {
   auto smallOdom = std::make_shared<CustomOdometry>(
-    model, ChassisScales({{2.75_in, 12.9_in, 0.5_in, 2.75_in}, quadEncoderTPR}));
+    model, ChassisScales({{2.75_in, 12.9_in, 0.5_in, 2.75_in}, quadEncoderTPR}), createTimeUtil());
 
   model->setSensorVals(0, 0, 0);
   smallOdom->step();
@@ -112,8 +113,8 @@ TEST_F(CustomOdometryTest, SmallSwingTurnOnRightWheels) {
 }
 
 TEST_F(CustomOdometryTest, NinetyDegreePivotTurn) {
-  auto straightOdom =
-    std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 0_in, 4_in}, 360}));
+  auto straightOdom = std::make_shared<CustomOdometry>(
+    model, ChassisScales({{4_in, 10_in, 0_in, 4_in}, 360}), createTimeUtil());
 
   assertOdomState({0_m, 0_m, 0_deg}, straightOdom);
 
@@ -123,8 +124,8 @@ TEST_F(CustomOdometryTest, NinetyDegreePivotTurn) {
 }
 
 TEST_F(CustomOdometryTest, FullPivotRotation) {
-  auto straightOdom =
-    std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 0_in, 4_in}, 360}));
+  auto straightOdom = std::make_shared<CustomOdometry>(
+    model, ChassisScales({{4_in, 10_in, 0_in, 4_in}, 360}), createTimeUtil());
 
   assertOdomState({0_m, 0_m, 0_deg}, straightOdom);
 
@@ -134,8 +135,8 @@ TEST_F(CustomOdometryTest, FullPivotRotation) {
 }
 
 TEST_F(CustomOdometryTest, FullPointRotation) {
-  auto straightOdom =
-    std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 0_in, 4_in}, 360}));
+  auto straightOdom = std::make_shared<CustomOdometry>(
+    model, ChassisScales({{4_in, 10_in, 0_in, 4_in}, 360}), createTimeUtil());
 
   assertOdomState({0_m, 0_m, 0_deg}, straightOdom);
 
