@@ -136,7 +136,7 @@ void Odom::initializeText() {
   textStyle.text.opa = LV_OPA_100;
   lv_obj_set_style(statusLabel, &textStyle);
 
-  lv_label_set_text(statusLabel, "No Odom Provided");
+  lv_label_set_text(statusLabel, "No odom provided");
 
   lv_obj_align(statusLabel, container, LV_ALIGN_CENTER,
                -lv_obj_get_width(container) / 2.0 + (lv_obj_get_width(container) - fieldDim) / 2.0,
