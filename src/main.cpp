@@ -124,7 +124,7 @@ void opcontrol() {
                                  // {2_ft, 0_ft}
                                })
                       .generate(50)
-                      .smoothen(.008, 1e-10);
+                      .smoothen(.008, 1e-10 * meter);
 
   std::cout << path().size() << std::endl;
 
