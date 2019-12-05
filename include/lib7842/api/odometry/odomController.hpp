@@ -3,6 +3,7 @@
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/control/iterative/iterativePosPidController.hpp"
 #include "okapi/api/odometry/odometry.hpp"
+#include "okapi/api/util/timeUtil.hpp"
 #include <functional>
 
 namespace lib7842 {
@@ -42,13 +43,15 @@ public:
    * @param iturnController     The turning pid controller
    * @param iangleController    The angle pid controller, used to keep distance driving straight
    * @param isettleRadius       The radius from the target point to give up angle correction
+   * @param itimeUtil           The time utility
    */
   OdomController(const std::shared_ptr<ChassisModel>& imodel,
                  const std::shared_ptr<Odometry>& iodometry,
                  std::unique_ptr<IterativePosPIDController> idistanceController,
                  std::unique_ptr<IterativePosPIDController> iturnController,
                  std::unique_ptr<IterativePosPIDController> iangleController,
-                 const QLength& isettleRadius);
+                 const QLength& isettleRadius,
+                 const TimeUtil& itimeUtil);
 
   virtual ~OdomController() = default;
 
@@ -243,6 +246,7 @@ protected:
   std::unique_ptr<IterativePosPIDController> angleController {nullptr};
   std::unique_ptr<IterativePosPIDController> turnController {nullptr};
   const QLength settleRadius;
+  std::unique_ptr<AbstractRate> rate {nullptr};
 
   QAngle angleErr = 0_deg;
   QLength distanceErr = 0_in;

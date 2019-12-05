@@ -4,6 +4,7 @@
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/odometry/odometry.hpp"
 #include "okapi/api/util/logging.hpp"
+#include "okapi/api/util/timeUtil.hpp"
 
 namespace lib7842 {
 
@@ -17,10 +18,12 @@ public:
    *
    * @param imodel         The chassis model for reading sensors.
    * @param ichassisScales The chassis dimensions.
+   * @param itimeUtil      The time utility
    * @param ilogger        The logger
    */
   CustomOdometry(const std::shared_ptr<ChassisModel>& imodel,
                  const ChassisScales& ichassisScales,
+                 const TimeUtil& itimeUtil,
                  const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   virtual ~CustomOdometry() = default;
@@ -92,6 +95,7 @@ protected:
   double chassisWidth;
   double middleDistance;
 
+  std::unique_ptr<AbstractRate> rate {nullptr};
   std::shared_ptr<Logger> logger {nullptr};
 
   State state;

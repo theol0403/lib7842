@@ -5,6 +5,7 @@
 #include "okapi/api/odometry/odometry.hpp"
 #include "okapi/api/units/QSpeed.hpp"
 #include "okapi/api/util/logging.hpp"
+#include "okapi/api/util/timeUtil.hpp"
 #include "pursuitLimits.hpp"
 #include "pursuitPath.hpp"
 #include <optional>
@@ -16,7 +17,8 @@ public:
   PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                const std::shared_ptr<Odometry>& iodometry,
                const QLength& ichassisWidth,
-               const QLength& ilookahead);
+               const QLength& ilookahead,
+               const TimeUtil& itimeUtil);
 
   void followPath(const PursuitPath& ipath);
 
@@ -40,6 +42,8 @@ protected:
 
   const QLength chassisWidth {0_in};
   const QLength lookahead {0_in};
+
+  std::unique_ptr<AbstractRate> rate {nullptr};
 
   std::optional<PursuitPath::array_t::const_iterator> lastClosest {std::nullopt};
   size_t lastLookIndex {0};

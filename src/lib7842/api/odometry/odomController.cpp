@@ -10,13 +10,15 @@ OdomController::OdomController(const std::shared_ptr<ChassisModel>& imodel,
                                std::unique_ptr<IterativePosPIDController> idistanceController,
                                std::unique_ptr<IterativePosPIDController> iturnController,
                                std::unique_ptr<IterativePosPIDController> iangleController,
-                               const QLength& isettleRadius) :
+                               const QLength& isettleRadius,
+                               const TimeUtil& itimeUtil) :
   model(std::move(imodel)),
   odometry(std::move(iodometry)),
   distanceController(std::move(idistanceController)),
   angleController(std::move(iangleController)),
   turnController(std::move(iturnController)),
-  settleRadius(isettleRadius) {};
+  settleRadius(isettleRadius),
+  rate(itimeUtil.getRate()) {};
 
 /**
  * Turning API
@@ -29,7 +31,7 @@ void OdomController::turn(const AngleCalculator& angleCalculator,
     angleErr = angleCalculator(*this);
     double vel = turnController->step(-angleErr.convert(degree));
     turner(*model, vel);
-    pros::delay(10);
+    rate->delayUntil(10_ms);
   } while (!settler(*this));
   turner(*model, 0);
 }
@@ -72,7 +74,7 @@ void OdomController::moveDistanceAtAngle(const QLength& distance,
     double angleVel = angleController->step(-angleErr.convert(degree));
 
     driveVector(model, distanceVel, angleVel * turnScale);
-    pros::delay(10);
+    rate->delayUntil(10_ms);
   } while (!settler(*this));
 
   driveVector(model, 0, 0);
@@ -119,7 +121,7 @@ void OdomController::driveToPoint(const Vector& targetPoint,
     double distanceVel = distanceController->step(-distanceToClose.convert(millimeter));
 
     driveVector(model, distanceVel, angleVel * turnScale);
-    pros::delay(10);
+    rate->delayUntil(10_ms);
   } while (!settler(*this));
 
   driveVector(model, 0, 0);
@@ -142,7 +144,7 @@ void OdomController::driveToPoint2(const Vector& targetPoint,
     double distanceVel = distanceController->step(-distanceErr.convert(millimeter));
 
     driveVector(model, distanceVel, angleVel * turnScale);
-    pros::delay(10);
+    rate->delayUntil(10_ms);
   } while (!(exitFunc(*this) || settler(*this)));
 
   moveDistanceAtAngle(distanceToPoint(targetPoint), makeAngleCalculator(angleToPoint(targetPoint)),

@@ -10,8 +10,13 @@ namespace lib7842 {
 PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                            const std::shared_ptr<Odometry>& iodometry,
                            const QLength& ilookahead,
-                           const QLength& ichassisWidth) :
-  model(imodel), odometry(iodometry), chassisWidth(ichassisWidth), lookahead(ilookahead) {}
+                           const QLength& ichassisWidth,
+                           const TimeUtil& itimeUtil) :
+  model(imodel),
+  odometry(iodometry),
+  chassisWidth(ichassisWidth),
+  lookahead(ilookahead),
+  rate(itimeUtil.getRate()) {}
 
 void PathFollower::followPath(const PursuitPath& ipath) {
 
@@ -107,7 +112,7 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     // model->right(rightWheel.convert(rpm) / 200);
     model->tank(leftWheel.convert(rpm) / 200, rightWheel.convert(rpm) / 200);
 
-    pros::delay(10);
+    rate->delayUntil(10_ms);
   }
 
   model->tank(0, 0);
