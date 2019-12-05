@@ -116,7 +116,7 @@ public:
    * @param iweight    The smooth weight
    * @param itolerance The smooth tolerance
    */
-  SimplePath smoothen(double iweight, const QLength& itolerance) {
+  DiscretePath<T>& smoothen(double iweight, const QLength& itolerance) {
     auto temp = copy();
     double smoothWeight = 1.0 - iweight;
     auto change = itolerance;
@@ -125,15 +125,16 @@ public:
       for (size_t i = 1; i < path.size() - 1; i++) {
         for (size_t j = 0; j < 2; j++) {
           auto aux = temp()[i]->at(j);
-          auto dataFac = iweight * (path[i]->at(j) - temp()[i]->at(j));
+          auto dataFac = iweight * (path[i]->at(j) - aux);
           auto smoothFac =
-            smoothWeight * (temp()[i - 1]->at(j) + temp()[i + 1]->at(j) - (2.0 * temp()[i]->at(j)));
+            smoothWeight * (temp()[i - 1]->at(j) + temp()[i + 1]->at(j) - (2.0 * aux));
           temp()[i]->at(j) += (dataFac + smoothFac);
           change = (aux - temp()[i]->at(j)).abs();
         }
       }
     }
-    return temp;
+    path = std::move(temp());
+    return *this;
   }
 
   /**
