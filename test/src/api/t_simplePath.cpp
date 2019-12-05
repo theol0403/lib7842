@@ -109,17 +109,17 @@ TEST_F(SimplePathTest, GenerateSmoothPointsDontCopy) {
 TEST_F(SimplePathTest, GenerateSmoothPointsDontPassWayPoints) {
   SimplePath ipath({{0_in, 0_in}, {5_in, 4_in}, {5_in, 0_in}, {3_in, 5_in}, {0_in, 10_in}});
   SimplePath path = ipath.copy();
-  path.smoothen(0.25, 0.0001_in);
+  path = path.smoothen(0.25, 0.0001_in);
   for (size_t i = 1; i < path().size() - 1; i++) {
-    ASSERT_NE(*path()[i], *ipath()[i]);
+    ASSERT_NE(path()[i]->x.convert(inch), ipath()[i]->x.convert(inch));
   }
 }
 
 TEST_F(SimplePathTest, GenerateSmoothPointsFunction) {
   SimplePath path = SimplePath({{1_in, 1_in}, {5_in, 4_in}, {9_in, 1_in}}).generate(10);
   ASSERT_EQ(path().size(), 21);
-  path.smoothen(0.25, 0.0001_in);
+  path = path.smoothen(0.25, 1e-10 * inch);
 
-  ASSERT_NEAR(path()[10]->x.convert(inch), 5, 0.1);
-  ASSERT_NEAR(path()[10]->y.convert(inch), 3.5, 0.3);
+  ASSERT_NEAR(path()[10]->x.convert(inch), 5, 0.0001);
+  ASSERT_NEAR(path()[10]->y.convert(inch), 3.5, 0.01);
 }
