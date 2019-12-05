@@ -9,8 +9,8 @@ namespace lib7842 {
 
 PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                            const std::shared_ptr<Odometry>& iodometry,
-                           const QLength& ilookahead,
                            const QLength& ichassisWidth,
+                           const QLength& ilookahead,
                            const TimeUtil& itimeUtil) :
   model(imodel),
   odometry(iodometry),
