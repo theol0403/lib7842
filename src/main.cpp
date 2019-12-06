@@ -110,7 +110,8 @@ void opcontrol() {
   /**
    * Follower
    */
-  PathFollower follower(model, odom, 0.9_ft, 14_in, TimeUtilFactory().create());
+  PathFollower follower(model, odom, ChassisScales({2.75_in, 14_in}, imev5GreenTPR), 0.9_ft,
+                        TimeUtilFactory().create());
   PursuitLimits limits {0.1_mps, 0.73_mps, 0.7_mps2, 20};
 
   SimplePath path = SimplePath({

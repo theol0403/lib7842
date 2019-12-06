@@ -9,12 +9,12 @@ namespace lib7842 {
 
 PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                            const std::shared_ptr<Odometry>& iodometry,
-                           const QLength& ichassisWidth,
+                           const ChassisScales& ichassisScales,
                            const QLength& ilookahead,
                            const TimeUtil& itimeUtil) :
   model(imodel),
   odometry(iodometry),
-  chassisWidth(ichassisWidth),
+  chassisScales(ichassisScales),
   lookahead(ilookahead),
   rate(itimeUtil.getRate()) {}
 
@@ -98,13 +98,13 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     // std::cout << "Vel: " << targetVel.convert(mps) << ", ";
 
     // calculate robot wheel velocities
-    auto robotVel = calculateVelocity(targetVel, curvature, chassisWidth);
+    auto robotVel = calculateVelocity(targetVel, curvature, chassisScales.wheelTrack);
     auto leftVel = std::clamp(robotVel[0], -limits.maxVel, limits.maxVel);
     auto rightVel = std::clamp(robotVel[1], -limits.maxVel, limits.maxVel);
 
     // convert to rpm
-    QAngularSpeed leftWheel = (leftVel / (1_pi * odometry->getScales().wheelDiameter)) * 360_deg;
-    QAngularSpeed rightWheel = (rightVel / (1_pi * odometry->getScales().wheelDiameter)) * 360_deg;
+    QAngularSpeed leftWheel = (leftVel / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
+    QAngularSpeed rightWheel = (rightVel / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
 
     // std::cout << "Left: " << leftWheel.convert(rpm) << ", ";
     // std::cout << "Right: " << rightWheel.convert(rpm) << std::endl;

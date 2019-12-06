@@ -16,7 +16,7 @@ class PathFollower {
 public:
   PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                const std::shared_ptr<Odometry>& iodometry,
-               const QLength& ichassisWidth,
+               const ChassisScales& ichassisScales,
                const QLength& ilookahead,
                const TimeUtil& itimeUtil);
 
@@ -39,8 +39,8 @@ protected:
 
   std::shared_ptr<ChassisModel> model {nullptr};
   std::shared_ptr<Odometry> odometry {nullptr};
+  ChassisScales chassisScales;
 
-  const QLength chassisWidth {0_in};
   const QLength lookahead {0_in};
 
   std::unique_ptr<AbstractRate> rate {nullptr};
