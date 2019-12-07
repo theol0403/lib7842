@@ -118,8 +118,8 @@ void PathFollower::followPath(const PursuitPath& ipath) {
   model->tank(0, 0);
 }
 
-PursuitPath::array_t::const_iterator PathFollower::findClosest(const PursuitPath& ipath,
-                                                               const Vector& ipos) {
+PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,
+                                                       const Vector& ipos) {
   QLength closestDist {std::numeric_limits<double>::max()};
   // get the last closest point, or the beginning of the path if there is none
   auto closest = lastClosest.value_or(ipath().begin());
@@ -187,22 +187,22 @@ Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& 
   return start + ((end - start) * lastLookT);
 }
 
-std::optional<double> PathFollower::findIntersectT(const Vector& ifirst,
-                                                   const Vector& isecond,
+std::optional<double> PathFollower::findIntersectT(const Vector& istart,
+                                                   const Vector& iend,
                                                    const Vector& ipos,
                                                    const QLength& ilookahead) {
-  Vector d = isecond - ifirst;
-  Vector f = ifirst - ipos;
+  Vector d = iend - istart;
+  Vector f = istart - ipos;
 
   double a = MathPoint::dot(d, d);
-  double b = 2.0 * MathPoint::dot(f, d);
-  double c = MathPoint::dot(f, f) - (ilookahead * ilookahead).convert(meter2);
-  double discriminant = ((b * b) - (4.0 * (a * c)));
+  double b = MathPoint::dot(d, f) * 2.0;
+  double c = MathPoint::dot(f, f) - std::pow(ilookahead.convert(meter), 2);
+  double dis = std::pow(b, 2) - (4.0 * (a * c));
 
-  if (discriminant >= 0) {
-    discriminant = std::sqrt(discriminant);
-    double t1 = (-b - discriminant) / (2.0 * a);
-    double t2 = (-b + discriminant) / (2.0 * a);
+  if (dis >= 0) {
+    dis = std::sqrt(dis);
+    double t1 = (-b - dis) / (2.0 * a);
+    double t2 = (-b + dis) / (2.0 * a);
 
     // prioritize further down path
     if (t2 >= 0.0 && t2 <= 1.0) {
@@ -220,13 +220,13 @@ double PathFollower::calculateCurvature(const State& istate, const Vector& ilook
   MathPoint pos(istate);
   MathPoint look(ilookPoint);
   MathPoint diff = look - pos;
-  double heading = ((istate.theta * -1) + 90_deg).convert(radian);
-  double a = -std::tan(heading);
-  double c = std::tan(heading) * pos.x - pos.y;
+  double head = ((istate.theta * -1) + 90_deg).convert(radian);
+  double a = -std::tan(head);
+  double c = -a * pos.x - pos.y;
   double x = std::abs(a * look.x + 1.0 * look.y + c) / std::sqrt(std::pow(a, 2) + 1);
-  int side = util::sgn(std::sin(heading) * diff.x - std::cos(heading) * diff.y);
-  double curvature = (2.0 * x) / std::pow(MathPoint::dist(istate, ilookPoint), 2);
-  return curvature * curvature * side;
+  int side = util::sgn(std::sin(head) * diff.x - std::cos(head) * diff.y);
+  double curv = (2.0 * x) / std::pow(MathPoint::dist(istate, ilookPoint), 2);
+  return std::pow(curv, 2) * side;
 }
 
 std::valarray<QSpeed> PathFollower::calculateVelocity(const QSpeed& ivel,
