@@ -12,7 +12,7 @@ protected:
                                               6_in, createTimeUtil());
   }
 
-  PursuitLimits limits {0_mps, 1_mps, 0.5_mps2, 1};
+  PursuitLimits limits {0_mps, 1_mps, 0.5_mps2, 1_mps};
 
   std::shared_ptr<MockThreeEncoderXDriveModel> model;
   std::shared_ptr<CustomOdometry> odom;

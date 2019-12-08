@@ -2,7 +2,7 @@
 
 class PathGeneratorTest : public ::testing::Test, public PathGenerator {
 protected:
-  PursuitLimits limits {2_mps, 8_mps, 8_mps2, 0.03};
+  PursuitLimits limits {2_mps, 8_mps, 8_mps2, 0.03_mps};
 };
 
 TEST_F(PathGeneratorTest, ComputeSingleCurvature) {

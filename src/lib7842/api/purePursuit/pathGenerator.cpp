@@ -28,39 +28,39 @@ void PathGenerator::setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limi
     DataPoint& end = *ipath()[i - 1];
 
     // k / curvature, limited to max
-    double wantedVel =
-      std::min(limits.maxVel.convert(mps), limits.k / ipath()[i]->getData<double>("curvature"));
+    QSpeed wantedVel = std::min(limits.maxVel, limits.k / ipath()[i]->getData<double>("curvature"));
 
     // distance from last point
-    double distance = Vector::dist(start, end).convert(meter);
+    double distance = MathPoint::dist(start, end);
 
     // maximum velocity given distance respecting acceleration
     // vf = sqrt(vi2 + 2ad)
-    double maxIncrement = std::sqrt(std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) +
-                                    (2 * limits.accel.convert(mps2) * distance));
+    QSpeed maxIncrement =
+      mps * std::sqrt(std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) +
+                      (2.0 * limits.accel.convert(mps2) * distance));
 
     // limiting to maximum accelerated velocity
-    double newVel = std::min(wantedVel, maxIncrement);
-    end.setData("velocity", newVel * mps);
+    QSpeed newVel = std::min(wantedVel, maxIncrement);
+    end.setData("velocity", newVel);
   }
 }
 
 double
   PathGenerator::calculateCurvature(const Vector& prev, const Vector& point, const Vector& next) {
-  double distOne = Vector::dist(point, prev).convert(meter);
-  double distTwo = Vector::dist(point, next).convert(meter);
-  double distThree = Vector::dist(next, prev).convert(meter);
+  double distOne = MathPoint::dist(point, prev);
+  double distTwo = MathPoint::dist(point, next);
+  double distThree = MathPoint::dist(next, prev);
 
   double productOfSides = distOne * distTwo * distThree;
-  double semiPerimeter = (distOne + distTwo + distThree) / 2;
+  double semiPerimeter = (distOne + distTwo + distThree) / 2.0;
 
   double triangleArea = std::sqrt(semiPerimeter * //
                                   (semiPerimeter - distOne) * //
                                   (semiPerimeter - distTwo) * //
                                   (semiPerimeter - distThree));
 
-  double r = (productOfSides) / (4 * triangleArea);
-  double curvature = std::isnormal(1 / r) ? 1 / r : 0;
+  double r = productOfSides / (4.0 * triangleArea);
+  double curvature = std::isnormal(1.0 / r) ? 1.0 / r : 0;
   return curvature * curvature;
 }
 

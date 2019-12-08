@@ -1,4 +1,5 @@
 #pragma once
+#include "lib7842/api/positioning/point/mathPoint.hpp"
 #include "pursuitLimits.hpp"
 #include "pursuitPath.hpp"
 
