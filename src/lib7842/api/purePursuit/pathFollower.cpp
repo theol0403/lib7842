@@ -19,11 +19,7 @@ PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
   rate(itimeUtil.getRate()) {}
 
 void PathFollower::followPath(const PursuitPath& ipath) {
-
-  // reset pursuit
-  lastClosest = std::nullopt;
-  lastLookIndex = 0;
-  lastLookT = 0;
+  resetPursuit();
 
   // get the pursuit limits
   PursuitLimits limits = ipath.getLimits();
@@ -234,6 +230,12 @@ std::valarray<QSpeed> PathFollower::calculateVelocity(const QSpeed& ivel,
                                                       const QLength& ichassisWidth) {
   return {ivel * (2.0 + ichassisWidth.convert(meter) * icurvature) / 2.0,
           ivel * (2.0 - ichassisWidth.convert(meter) * icurvature) / 2.0};
+}
+
+void PathFollower::resetPursuit() {
+  lastClosest = std::nullopt;
+  lastLookIndex = 0;
+  lastLookT = 0;
 }
 
 } // namespace lib7842

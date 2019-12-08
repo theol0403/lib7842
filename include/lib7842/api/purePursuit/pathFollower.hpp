@@ -97,6 +97,11 @@ protected:
   static std::valarray<QSpeed>
     calculateVelocity(const QSpeed& ivel, double icurvature, const QLength& ichassisWidth);
 
+  /**
+     * Reset the pursuit members
+     */
+  void resetPursuit();
+
   std::shared_ptr<ChassisModel> model {nullptr};
   std::shared_ptr<Odometry> odometry {nullptr};
   ChassisScales chassisScales;
