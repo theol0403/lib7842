@@ -105,3 +105,15 @@ TEST_F(PathFollowerTest, TestCurvature) {
   curvature = PathFollower::calculateCurvature({0_in, 0_in, 200_deg}, {10_in, 5_in});
   ASSERT_GT(std::abs(curvature), 4);
 }
+
+TEST_F(PathFollowerTest, TestVelocityStraight) {
+  auto vel = PathFollower::calculateVelocity(1_mps, 0, 10_m);
+  ASSERT_EQ(vel[0], 1_mps);
+  ASSERT_EQ(vel[1], 1_mps);
+}
+
+TEST_F(PathFollowerTest, TestVelocityCurved) {
+  auto vel = PathFollower::calculateVelocity(1_mps, 1, 10_m);
+  ASSERT_GT(vel[0], 1_mps);
+  ASSERT_LT(vel[1], 1_mps);
+}
