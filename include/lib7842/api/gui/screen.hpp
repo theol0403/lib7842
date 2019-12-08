@@ -4,7 +4,6 @@
 #include <string>
 
 namespace lib7842::GUI {
-
 using namespace okapi;
 
 /**
@@ -82,5 +81,4 @@ private:
   lv_style_t style_pr;
   lv_style_t pageStyle;
 };
-
 } // namespace lib7842::GUI

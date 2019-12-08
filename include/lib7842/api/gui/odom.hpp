@@ -84,5 +84,4 @@ private:
 
   bool hasWarnedRender = false;
 };
-
 } // namespace lib7842::GUI

@@ -5,7 +5,6 @@
 #include <memory>
 
 namespace lib7842 {
-
 using namespace okapi;
 
 /**
@@ -53,5 +52,4 @@ private:
   static void trampoline(void* iparam);
   std::unique_ptr<CrossplatformThread> task {nullptr};
 };
-
 } // namespace lib7842

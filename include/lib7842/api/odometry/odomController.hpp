@@ -7,9 +7,7 @@
 #include <functional>
 
 namespace lib7842 {
-
 using namespace okapi;
-
 class OdomController;
 
 /**
@@ -251,5 +249,4 @@ protected:
   QAngle angleErr = 0_deg;
   QLength distanceErr = 0_in;
 };
-
 } // namespace lib7842

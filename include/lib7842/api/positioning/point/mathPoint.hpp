@@ -61,5 +61,4 @@ public:
   static double dot(const MathPoint& lhs, const MathPoint& rhs);
   static double mag(const MathPoint& point);
 };
-
 } // namespace lib7842

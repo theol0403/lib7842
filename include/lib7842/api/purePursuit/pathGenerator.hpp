@@ -43,5 +43,4 @@ protected:
    */
   static double calculateCurvature(const Vector& prev, const Vector& point, const Vector& next);
 };
-
 } // namespace lib7842

@@ -45,5 +45,4 @@ public:
 protected:
   std::vector<std::shared_ptr<AbstractPath>> segments {};
 };
-
 } // namespace lib7842

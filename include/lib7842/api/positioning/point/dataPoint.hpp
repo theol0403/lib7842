@@ -53,5 +53,4 @@ protected:
 private:
   const std::any& getID(const std::string& iid) const;
 };
-
 } // namespace lib7842

@@ -67,5 +67,4 @@ private:
   std::vector<std::tuple<lv_chart_series_t*, std::function<double()>, std::shared_ptr<lv_style_t>>>
     series = {};
 };
-
 } // namespace lib7842::GUI

@@ -36,5 +36,4 @@ public:
   virtual operator std::shared_ptr<AbstractPath>() & = 0;
   virtual operator std::shared_ptr<AbstractPath>() && = 0;
 };
-
 } // namespace lib7842

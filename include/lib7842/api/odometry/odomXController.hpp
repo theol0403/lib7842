@@ -75,5 +75,4 @@ public:
 protected:
   std::shared_ptr<XDriveModel> xModel {nullptr};
 };
-
 } // namespace lib7842

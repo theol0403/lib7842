@@ -210,5 +210,4 @@ protected:
 
   array_t path {};
 };
-
 } // namespace lib7842

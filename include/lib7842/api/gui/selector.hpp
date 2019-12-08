@@ -17,5 +17,4 @@ protected:
 
   int currentIndex {0};
 };
-
 } // namespace lib7842::GUI

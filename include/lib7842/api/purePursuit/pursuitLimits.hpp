@@ -46,5 +46,4 @@ struct PursuitLimits {
    */
   QSpeed k {0_mps};
 };
-
 } // namespace lib7842

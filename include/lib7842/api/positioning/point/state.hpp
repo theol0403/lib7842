@@ -55,5 +55,4 @@ public:
    */
   QAngle angleTo(const Vector& ipoint) const;
 };
-
 } // namespace lib7842

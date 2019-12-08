@@ -3,7 +3,6 @@
 #include "okapi/api/units/QLength.hpp"
 
 namespace lib7842 {
-
 using namespace okapi;
 
 /**
@@ -62,5 +61,4 @@ public:
   static QLength dist(const Vector& lhs, const Vector& rhs);
   QLength distTo(const Vector& ipoint);
 };
-
 } // namespace lib7842
