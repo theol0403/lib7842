@@ -21,47 +21,37 @@ PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
 void PathFollower::followPath(const PursuitPath& ipath) {
   resetPursuit();
 
-  // get the pursuit limits
   PursuitLimits limits = ipath.getLimits();
-  // get the starting position
   State lastPos = State(odometry->getState(StateMode::CARTESIAN));
-  // assume the robot starts at minimum velocity
-  QSpeed lastVelocity = limits.minVel;
+  QSpeed lastVelocity = limits.minVel; // assume the robot starts at minimum velocity
 
-  // loop until the robot is considered to have finished the path
-  bool isFinished = false;
+  bool isFinished = false; // loop until the robot is considered to have finished the path
   while (!isFinished) {
-    // get the robot state
+    // get the robot position and heading
     State pos = State(odometry->getState(StateMode::CARTESIAN));
 
-    // get an iterator to the closest point
-    auto closest = findClosest(ipath, pos);
+    auto closest = findClosest(ipath, pos); // get an iterator to the closest point
     // std::cout << "Close: " << closest - ipath().begin() << ", ";
-    // get the lookahead point
     Vector lookPoint = findLookaheadPoint(ipath, pos);
     // the robot is on the path if the distance to the closest point is smaller than the lookahead
-    bool onPath = Vector::dist(pos, **closest) < lookahead;
+    bool onPath = Vector::dist(pos, **closest) <= lookahead;
     // std::cout << "On: " << onPath << ", ";
 
     // project the lookahead point onto the lookahead radius. When the lookahead point is further
     // than the lookahead radius, this can cause some problems with the robot curvature calculation.
     // The projected point will cause the robot to rotate more appropriately.
-    Vector projectedLookPoint =
-      (MathPoint::normalize(lookPoint - pos) * lookahead.convert(meter)) + pos;
+    Vector projectedLook = (MathPoint::normalize(lookPoint - pos) * lookahead.convert(meter)) + pos;
 
     // use the normal lookahead point if the robot is on the path and the distance to the lookahead
     // is smaller than the distance to the projected point
     Vector& finalLookPoint =
-      onPath && Vector::dist(pos, lookPoint) < Vector::dist(pos, projectedLookPoint)
-        ? lookPoint
-        : projectedLookPoint;
+      onPath && pos.distTo(lookPoint) < pos.distTo(projectedLook) ? lookPoint : projectedLook;
 
-    // calculate the curvature in order for the robot to arc to the lookahead
+    // calculate the arc curvature for the robot to travel to the lookahead
     double curvature = calculateCurvature(pos, finalLookPoint);
     // std::cout << "Curv: " << curvature << ", ";
 
-    // the robot is considered finished if it is on the path, the closest point is the end of the
-    // path, and the lookahead is the end of the path
+    // the robot is considered finished if the closest point is the end of the path
     isFinished = closest >= ipath().end() - 1;
     // std::cout << "Done " << isFinished << ", ";
 
@@ -70,10 +60,10 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     // the max velocity or the curvature-based speed reduction.
     QSpeed targetVel = 0_mps;
     if (onPath) {
-      targetVel = mps * std::min(closest->get()->getData<QSpeed>("velocity").convert(mps),
-                                 limits.k / std::abs(curvature));
+      targetVel =
+        std::min(closest->get()->getData<QSpeed>("velocity"), limits.k / std::abs(curvature));
     } else {
-      targetVel = mps * std::min(limits.maxVel.convert(mps), limits.k / std::abs(curvature));
+      targetVel = std::min(limits.maxVel, limits.k / std::abs(curvature));
     }
 
     // add an upwards rate limiter to the robot velocity. Assume the robot starts at the minimum
