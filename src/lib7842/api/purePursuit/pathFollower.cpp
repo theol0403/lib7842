@@ -106,9 +106,16 @@ PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,
   // Optimization: limit the progression of the closest point. It considers the last closest point,
   // and all the options up to one point ahead of the lookahead. This improves performance and
   // prevents the robot from skipping ahead on the path.
+  //
+  // If the end of the path is within the lookahead, it considers all options up to the end of the
+  // path. This is to make sure that the closest point is the end in the scenario where the
+  // lookahead is not the end of the path.
+
+  auto end = Vector::dist(ipos, *ipath().back()) > lookahead ? ipath().begin() + lastLookIndex + 2
+                                                             : ipath().end();
 
   // loop from the last closest point to one point past the lookahead
-  for (auto it = closest; it <= ipath().begin() + lastLookIndex + 1; it++) {
+  for (auto it = closest; it < end; it++) {
     if (it >= ipath().end()) break;
     QLength distance = Vector::dist(ipos, **it);
     if (distance < closestDist) {
@@ -122,13 +129,6 @@ PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,
 }
 
 Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& ipos) {
-  // return the end of the path if it is within the lookahead
-  if (Vector::dist(ipos, *ipath().back()) <= lookahead) {
-    lastLookIndex = ipath().size() - 2;
-    lastLookT = 1;
-    return *ipath().back();
-  }
-
   // used for optimizing number of intersection searches
   size_t lastIntersect = 0;
 
