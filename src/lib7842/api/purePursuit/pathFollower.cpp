@@ -84,19 +84,13 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     // std::cout << "Vel: " << targetVel.convert(mps) << ", ";
 
     // calculate robot wheel velocities
-    auto robotVel = calculateVelocity(targetVel, curvature, chassisScales.wheelTrack);
-    auto leftVel = std::clamp(robotVel[0], -limits.maxVel, limits.maxVel);
-    auto rightVel = std::clamp(robotVel[1], -limits.maxVel, limits.maxVel);
-
-    // convert to rpm
-    QAngularSpeed leftWheel = (leftVel / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
-    QAngularSpeed rightWheel = (rightVel / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
+    auto wheelVel = calculateVelocity(targetVel, curvature, chassisScales, limits);
 
     // std::cout << "Left: " << leftWheel.convert(rpm) << ", ";
     // std::cout << "Right: " << rightWheel.convert(rpm) << std::endl;
     // model->left(leftWheel.convert(rpm) / 200);
     // model->right(rightWheel.convert(rpm) / 200);
-    model->tank(leftWheel.convert(rpm) / 200, rightWheel.convert(rpm) / 200);
+    model->tank(wheelVel[0].convert(rpm) / 200, wheelVel[1].convert(rpm) / 200);
 
     rate->delayUntil(10_ms);
   }
@@ -173,16 +167,16 @@ Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& 
   return start + ((end - start) * lastLookT);
 }
 
-std::optional<double> PathFollower::findIntersectT(const Vector& istart,
-                                                   const Vector& iend,
-                                                   const Vector& ipos,
-                                                   const QLength& ilookahead) {
-  Vector d = iend - istart;
-  Vector f = istart - ipos;
+std::optional<double> PathFollower::findIntersectT(const Vector& start,
+                                                   const Vector& end,
+                                                   const Vector& pos,
+                                                   const QLength& lookahead) {
+  Vector d = end - start;
+  Vector f = start - pos;
 
   double a = MathPoint::dot(d, d);
   double b = MathPoint::dot(d, f) * 2.0;
-  double c = MathPoint::dot(f, f) - std::pow(ilookahead.convert(meter), 2);
+  double c = MathPoint::dot(f, f) - std::pow(lookahead.convert(meter), 2);
   double dis = std::pow(b, 2) - (4.0 * (a * c));
 
   if (dis >= 0) {
@@ -202,24 +196,33 @@ std::optional<double> PathFollower::findIntersectT(const Vector& istart,
   return std::nullopt;
 }
 
-double PathFollower::calculateCurvature(const State& istate, const Vector& ilookPoint) {
-  MathPoint pos(istate);
-  MathPoint look(ilookPoint);
+double PathFollower::calculateCurvature(const State& state, const Vector& lookPoint) {
+  MathPoint pos(state);
+  MathPoint look(lookPoint);
   MathPoint diff = look - pos;
-  double head = ((istate.theta * -1) + 90_deg).convert(radian);
+  double head = ((state.theta * -1) + 90_deg).convert(radian);
   double a = -std::tan(head);
   double c = -a * pos.x - pos.y;
   double x = std::abs(a * look.x + 1.0 * look.y + c) / std::sqrt(std::pow(a, 2) + 1);
   int side = util::sgn(std::sin(head) * diff.x - std::cos(head) * diff.y);
-  double curv = (2.0 * x) / std::pow(MathPoint::dist(istate, ilookPoint), 2);
+  double curv = (2.0 * x) / std::pow(MathPoint::dist(state, lookPoint), 2);
   return std::pow(curv, 2) * side;
 }
 
-std::valarray<QSpeed> PathFollower::calculateVelocity(const QSpeed& ivel,
-                                                      double icurvature,
-                                                      const QLength& ichassisWidth) {
-  return {ivel * (2.0 + ichassisWidth.convert(meter) * icurvature) / 2.0,
-          ivel * (2.0 - ichassisWidth.convert(meter) * icurvature) / 2.0};
+std::valarray<QAngularSpeed> PathFollower::calculateVelocity(const QSpeed& vel,
+                                                             double curvature,
+                                                             const ChassisScales& chassisScales,
+                                                             const PursuitLimits& limits) {
+  QSpeed leftVel = vel * (2.0 + chassisScales.wheelTrack.convert(meter) * curvature) / 2.0;
+  QSpeed rightVel = vel * (2.0 - chassisScales.wheelTrack.convert(meter) * curvature) / 2.0;
+
+  leftVel = std::clamp(leftVel, limits.maxVel * -1, limits.maxVel);
+  rightVel = std::clamp(rightVel, limits.maxVel * -1, limits.maxVel);
+
+  QAngularSpeed leftWheel = (leftVel / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
+  QAngularSpeed rightWheel = (rightVel / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
+
+  return {leftWheel, rightWheel};
 }
 
 void PathFollower::resetPursuit() {

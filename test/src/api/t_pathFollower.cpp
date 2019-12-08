@@ -107,13 +107,15 @@ TEST_F(PathFollowerTest, TestCurvature) {
 }
 
 TEST_F(PathFollowerTest, TestVelocityStraight) {
-  auto vel = PathFollower::calculateVelocity(1_mps, 0, 10_m);
-  ASSERT_EQ(vel[0], 1_mps);
-  ASSERT_EQ(vel[1], 1_mps);
+  auto vel = PathFollower::calculateVelocity(1_mps, 0, ChassisScales({{1_m / 1_pi, 10_m}, 360}),
+                                             {0_mps, 10_mps, 1_mps2, 1_mps});
+  ASSERT_EQ(vel[0].convert(rpm), 60);
+  ASSERT_EQ(vel[1].convert(rpm), 60);
 }
 
 TEST_F(PathFollowerTest, TestVelocityCurved) {
-  auto vel = PathFollower::calculateVelocity(1_mps, 1, 10_m);
-  ASSERT_GT(vel[0], 1_mps);
-  ASSERT_LT(vel[1], 1_mps);
+  auto vel = PathFollower::calculateVelocity(1_mps, 1, ChassisScales({{1_m / 1_pi, 10_m}, 360}),
+                                             {0_mps, 10_mps, 1_mps2, 1_mps});
+  ASSERT_GT(vel[0].convert(rpm), 60);
+  ASSERT_LT(vel[1].convert(rpm), 60);
 }

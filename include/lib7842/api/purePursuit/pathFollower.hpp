@@ -3,6 +3,7 @@
 #include "lib7842/api/positioning/path/discretePath.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/odometry/odometry.hpp"
+#include "okapi/api/units/QAngularSpeed.hpp"
 #include "okapi/api/units/QSpeed.hpp"
 #include "okapi/api/util/logging.hpp"
 #include "okapi/api/util/timeUtil.hpp"
@@ -66,42 +67,46 @@ protected:
    * Calculate the intersection of a lookahead circle with two points and return the interpolation
    * ratio. Return nullopt if no intersection found.
    *
-   * @param  istart     The starting point
-   * @param  iend       The ending point
-   * @param  ipos       The robot position
-   * @param  ilookahead The lookahead distance
+   * @param  start     The starting point
+   * @param  end       The ending point
+   * @param  pos       The robot position
+   * @param  lookahead The lookahead distance
    * @return The intersection ratio, if found
    */
-  static std::optional<double> findIntersectT(const Vector& istart,
-                                              const Vector& iend,
-                                              const Vector& ipos,
-                                              const QLength& ilookahead);
+  static std::optional<double> findIntersectT(const Vector& start,
+                                              const Vector& end,
+                                              const Vector& pos,
+                                              const QLength& lookahead);
 
   /**
    * Calculate the curvature from the robot position and heading to the lookahead point.
    *
-   * @param  istate     The robot state (position and heading)
-   * @param  ilookPoint The lookahead point
+   * @param  state     The robot state (position and heading)
+   * @param  lookPoint The lookahead point
    * @return The curvature
    */
-  static double calculateCurvature(const State& istate, const Vector& ilookPoint);
+  static double calculateCurvature(const State& state, const Vector& lookPoint);
 
   /**
-   * Calculate the velocity of each side given a desired robot velocity and curvature.
+   * Calculate the rotational velocity of each wheel given a desired robot velocity and curvature.
    *
-   * @param  ivel          The robot velocity
-   * @param  icurvature    The curvature
-   * @param  ichassisWidth The chassis width
-   * @return The velocity for each side.
+   * @param  vel           The robot velocity
+   * @param  curvature     The curvature
+   * @param  chassisScales The chassis scales
+   * @param  limits        The pursuit limits
+   * @return The rotational velocity for each wheel.
    */
-  static std::valarray<QSpeed>
-    calculateVelocity(const QSpeed& ivel, double icurvature, const QLength& ichassisWidth);
+  static std::valarray<QAngularSpeed> calculateVelocity(const QSpeed& vel,
+                                                        double curvature,
+                                                        const ChassisScales& chassisScales,
+                                                        const PursuitLimits& limits);
 
   /**
-     * Reset the pursuit members
-     */
+   * Reset the pursuit members
+   */
   void resetPursuit();
 
+protected:
   std::shared_ptr<ChassisModel> model {nullptr};
   std::shared_ptr<Odometry> odometry {nullptr};
   ChassisScales chassisScales;
