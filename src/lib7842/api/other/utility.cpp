@@ -17,9 +17,7 @@ void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, dou
   model->tank(leftOutput, rightOutput);
 }
 
-void strafeVector(const std::shared_ptr<XDriveModel>& model,
-                  double forward,
-                  double yaw,
+void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
                   double strafe) {
   forward = std::clamp(forward, -1.0, 1.0);
   strafe = std::clamp(strafe, -1.0, 1.0);
@@ -46,9 +44,7 @@ void strafeVector(const std::shared_ptr<XDriveModel>& model,
     static_cast<int16_t>(std::clamp(leftOutput - strafe, -1.0, 1.0) * model->getMaxVoltage()));
 }
 
-void strafeVector(const std::shared_ptr<XDriveModel>& model,
-                  double forward,
-                  double yaw,
+void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
                   const QAngle& direction) {
   forward = std::clamp(forward, -1.0, 1.0);
 

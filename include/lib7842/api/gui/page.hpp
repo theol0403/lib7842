@@ -32,8 +32,7 @@ public:
    * @param icolor  The theme color
    * @param ilogger The logger
    */
-  explicit Page(lv_obj_t* iparent,
-                lv_color_t icolor,
+  explicit Page(lv_obj_t* iparent, lv_color_t icolor,
                 const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   Page(const Page& ipage) = delete;

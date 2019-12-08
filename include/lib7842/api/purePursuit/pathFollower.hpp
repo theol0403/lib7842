@@ -25,10 +25,8 @@ public:
    * @param itimeUtil      The time utility
    */
   PathFollower(const std::shared_ptr<ChassisModel>& imodel,
-               const std::shared_ptr<Odometry>& iodometry,
-               const ChassisScales& ichassisScales,
-               const QLength& ilookahead,
-               const TimeUtil& itimeUtil);
+               const std::shared_ptr<Odometry>& iodometry, const ChassisScales& ichassisScales,
+               const QLength& ilookahead, const TimeUtil& itimeUtil);
 
   /**
    * Follow a pre-generated PursuitPath.
@@ -73,10 +71,8 @@ protected:
    * @param  lookahead The lookahead distance
    * @return The intersection ratio, if found
    */
-  static std::optional<double> findIntersectT(const Vector& start,
-                                              const Vector& end,
-                                              const Vector& pos,
-                                              const QLength& lookahead);
+  static std::optional<double> findIntersectT(const Vector& start, const Vector& end,
+                                              const Vector& pos, const QLength& lookahead);
 
   /**
    * Calculate the curvature from the robot position and heading to the lookahead point.
@@ -96,8 +92,7 @@ protected:
    * @param  limits        The pursuit limits
    * @return The rotational velocity for each wheel.
    */
-  static std::valarray<QAngularSpeed> calculateVelocity(const QSpeed& vel,
-                                                        double curvature,
+  static std::valarray<QAngularSpeed> calculateVelocity(const QSpeed& vel, double curvature,
                                                         const ChassisScales& chassisScales,
                                                         const PursuitLimits& limits);
 

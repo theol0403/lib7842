@@ -27,8 +27,7 @@ public:
    * @param icolor  The theme color
    * @param ilogger The logger
    */
-  explicit Screen(lv_obj_t* iparent,
-                  lv_color_t icolor,
+  explicit Screen(lv_obj_t* iparent, lv_color_t icolor,
                   const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   Screen(const Screen& iscreen) = delete;

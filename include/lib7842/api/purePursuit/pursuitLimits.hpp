@@ -17,9 +17,7 @@ struct PursuitLimits {
    *                lower velocity. This value is usually best around 1, 0.5 slows down at any
    *                curvature in the path and 2 slows down around only a very sharp curvature.
    */
-  PursuitLimits(const QSpeed& iminVel,
-                const QSpeed& imaxVel,
-                const QAcceleration& iaccel,
+  PursuitLimits(const QSpeed& iminVel, const QSpeed& imaxVel, const QAcceleration& iaccel,
                 const QSpeed& ik) :
     minVel(iminVel), maxVel(imaxVel), accel(iaccel), k(ik) {}
 

@@ -21,8 +21,7 @@ public:
    * @param itimeUtil      The time utility
    * @param ilogger        The logger
    */
-  CustomOdometry(const std::shared_ptr<ChassisModel>& imodel,
-                 const ChassisScales& ichassisScales,
+  CustomOdometry(const std::shared_ptr<ChassisModel>& imodel, const ChassisScales& ichassisScales,
                  const TimeUtil& itimeUtil,
                  const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 

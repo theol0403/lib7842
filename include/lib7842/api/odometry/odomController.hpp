@@ -48,8 +48,7 @@ public:
                  std::unique_ptr<IterativePosPIDController> idistanceController,
                  std::unique_ptr<IterativePosPIDController> iturnController,
                  std::unique_ptr<IterativePosPIDController> iangleController,
-                 const QLength& isettleRadius,
-                 const TimeUtil& itimeUtil);
+                 const QLength& isettleRadius, const TimeUtil& itimeUtil);
 
   virtual ~OdomController() = default;
 
@@ -60,8 +59,7 @@ public:
    * @param turner          The turner
    * @param settler         The settler
    */
-  virtual void turn(const AngleCalculator& angleCalculator,
-                    const Turner& turner = pointTurn,
+  virtual void turn(const AngleCalculator& angleCalculator, const Turner& turner = pointTurn,
                     const Settler& settler = defaultTurnSettler);
 
   /**
@@ -71,8 +69,7 @@ public:
    * @param turner  The turner
    * @param settler The settler
    */
-  virtual void turnToAngle(const QAngle& angle,
-                           const Turner& turner = pointTurn,
+  virtual void turnToAngle(const QAngle& angle, const Turner& turner = pointTurn,
                            const Settler& settler = defaultTurnSettler);
 
   /**
@@ -82,8 +79,7 @@ public:
    * @param turner  The turner
    * @param settler The settler
    */
-  virtual void turnAngle(const QAngle& angle,
-                         const Turner& turner = pointTurn,
+  virtual void turnAngle(const QAngle& angle, const Turner& turner = pointTurn,
                          const Settler& settler = defaultTurnSettler);
 
   /**
@@ -93,8 +89,7 @@ public:
    * @param turner  The turner
    * @param settler The settler
    */
-  virtual void turnToPoint(const Vector& point,
-                           const Turner& turner = pointTurn,
+  virtual void turnToPoint(const Vector& point, const Turner& turner = pointTurn,
                            const Settler& settler = defaultTurnSettler);
 
   /**
@@ -105,10 +100,8 @@ public:
    * @param turnScale       The turn scale
    * @param settler         The settler
    */
-  virtual void moveDistanceAtAngle(const QLength& distance,
-                                   const AngleCalculator& angleCalculator,
-                                   double turnScale,
-                                   const Settler& settler = defaultDriveSettler);
+  virtual void moveDistanceAtAngle(const QLength& distance, const AngleCalculator& angleCalculator,
+                                   double turnScale, const Settler& settler = defaultDriveSettler);
 
   /**
    * Drive a distance while maintaining starting angle
@@ -126,8 +119,7 @@ public:
    *                    higher value will make the robot turn to face the point sooner
    * @param settler     The settler
    */
-  virtual void driveToPoint(const Vector& targetPoint,
-                            double turnScale = 1,
+  virtual void driveToPoint(const Vector& targetPoint, double turnScale = 1,
                             const Settler& settler = defaultDriveSettler);
 
   /**
@@ -138,8 +130,7 @@ public:
    *                    higher value will make the robot turn to face the point sooner
    * @param settler     The settler
    */
-  virtual void driveToPoint2(const Vector& targetPoint,
-                             double turnScale = 1,
+  virtual void driveToPoint2(const Vector& targetPoint, double turnScale = 1,
                              const Settler& settler = defaultDriveSettler);
 
   /**

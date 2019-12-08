@@ -45,8 +45,8 @@ void PathGenerator::setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limi
   }
 }
 
-double
-  PathGenerator::calculateCurvature(const Vector& prev, const Vector& point, const Vector& next) {
+double PathGenerator::calculateCurvature(const Vector& prev, const Vector& point,
+                                         const Vector& next) {
   double distOne = MathPoint::dist(point, prev);
   double distTwo = MathPoint::dist(point, next);
   double distThree = MathPoint::dist(next, prev);

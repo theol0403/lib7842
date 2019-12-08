@@ -56,8 +56,7 @@ public:
    * @param  icolor The series color
    * @param  idata  The data function
    */
-  Graph& withSeries(const std::string& iname,
-                    const lv_color_t& icolor,
+  Graph& withSeries(const std::string& iname, const lv_color_t& icolor,
                     const std::function<double()>& idata);
 
 private:

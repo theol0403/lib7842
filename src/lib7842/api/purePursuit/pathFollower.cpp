@@ -9,8 +9,7 @@ namespace lib7842 {
 
 PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                            const std::shared_ptr<Odometry>& iodometry,
-                           const ChassisScales& ichassisScales,
-                           const QLength& ilookahead,
+                           const ChassisScales& ichassisScales, const QLength& ilookahead,
                            const TimeUtil& itimeUtil) :
   model(imodel),
   odometry(iodometry),
@@ -167,10 +166,8 @@ Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& 
   return start + ((end - start) * lastLookT);
 }
 
-std::optional<double> PathFollower::findIntersectT(const Vector& start,
-                                                   const Vector& end,
-                                                   const Vector& pos,
-                                                   const QLength& lookahead) {
+std::optional<double> PathFollower::findIntersectT(const Vector& start, const Vector& end,
+                                                   const Vector& pos, const QLength& lookahead) {
   Vector d = end - start;
   Vector f = start - pos;
 
@@ -209,8 +206,7 @@ double PathFollower::calculateCurvature(const State& state, const Vector& lookPo
   return std::pow(curv, 2) * side;
 }
 
-std::valarray<QAngularSpeed> PathFollower::calculateVelocity(const QSpeed& vel,
-                                                             double curvature,
+std::valarray<QAngularSpeed> PathFollower::calculateVelocity(const QSpeed& vel, double curvature,
                                                              const ChassisScales& chassisScales,
                                                              const PursuitLimits& limits) {
   QSpeed leftVel = vel * (2.0 + chassisScales.wheelTrack.convert(meter) * curvature) / 2.0;

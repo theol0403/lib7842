@@ -12,8 +12,7 @@ protected:
     return (ticks / 360.0) * 1_pi * 4_in;
   }
 
-  void assertOdomState(const State& istate,
-                       std::shared_ptr<CustomOdometry> iodom = nullptr,
+  void assertOdomState(const State& istate, std::shared_ptr<CustomOdometry> iodom = nullptr,
                        double error = 1e-10) {
     if (!iodom) iodom = odom;
     EXPECT_NEAR(iodom->getState().x.convert(meter), istate.x.convert(meter), error);

@@ -40,9 +40,7 @@ void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, dou
  * @param yaw     The yaw voltage
  * @param strafe  The strafe voltage
  */
-void strafeVector(const std::shared_ptr<XDriveModel>& model,
-                  double forward,
-                  double yaw,
+void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
                   double strafe);
 
 /**
@@ -55,9 +53,7 @@ void strafeVector(const std::shared_ptr<XDriveModel>& model,
  * @param yaw       The yaw voltage
  * @param direction The direction
  */
-void strafeVector(const std::shared_ptr<XDriveModel>& model,
-                  double forward,
-                  double yaw,
+void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
                   const QAngle& direction);
 
 /**

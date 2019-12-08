@@ -11,29 +11,20 @@ OdomXController::OdomXController(const std::shared_ptr<XDriveModel>& imodel,
                                  std::unique_ptr<IterativePosPIDController> iturnController,
                                  std::unique_ptr<IterativePosPIDController> iangleController,
                                  const TimeUtil& itimeUtil) :
-  OdomController(imodel,
-                 iodometry,
-                 std::move(idistanceController),
-                 std::move(iturnController),
-                 std::move(iangleController),
-                 0_in,
-                 itimeUtil),
+  OdomController(imodel, iodometry, std::move(idistanceController), std::move(iturnController),
+                 std::move(iangleController), 0_in, itimeUtil),
   xModel(imodel) {};
 
-void OdomXController::strafeRelativeDirection(const QLength& distance,
-                                              const QAngle& direction,
+void OdomXController::strafeRelativeDirection(const QLength& distance, const QAngle& direction,
                                               const AngleCalculator& angleCalculator,
-                                              double turnScale,
-                                              const Settler& settler) {
+                                              double turnScale, const Settler& settler) {
   QAngle absoluteDirection = direction + getState().theta;
   strafeAbsoluteDirection(distance, absoluteDirection, angleCalculator, turnScale, settler);
 }
 
-void OdomXController::strafeAbsoluteDirection(const QLength& distance,
-                                              const QAngle& direction,
+void OdomXController::strafeAbsoluteDirection(const QLength& distance, const QAngle& direction,
                                               const AngleCalculator& angleCalculator,
-                                              double turnScale,
-                                              const Settler& settler) {
+                                              double turnScale, const Settler& settler) {
   QLength x = sin(direction.convert(radian)) * distance;
   QLength y = cos(direction.convert(radian)) * distance;
   Vector target = Vector(State(getState())) + Vector(x, y);
@@ -41,8 +32,7 @@ void OdomXController::strafeAbsoluteDirection(const QLength& distance,
 }
 
 void OdomXController::strafeToPoint(const Vector& targetPoint,
-                                    const AngleCalculator& angleCalculator,
-                                    double turnScale,
+                                    const AngleCalculator& angleCalculator, double turnScale,
                                     const Settler& settler) {
   resetPid();
   do {
