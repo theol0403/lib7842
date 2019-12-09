@@ -1,5 +1,4 @@
 #include <catch.hpp>
-#include <gtest/gtest.h>
 
 #include "implMocks.hpp"
 
