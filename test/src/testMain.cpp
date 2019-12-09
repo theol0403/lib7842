@@ -1,3 +1,4 @@
+#define CATCH_CONFIG_RUNNER
 #include "okapi/api/util/logging.hpp"
 #include "test.hpp"
 
@@ -11,8 +12,7 @@ int main(int argc, char** argv) {
     std::cout << "Running lvgl:" << std::endl;
     return lvglMain();
   } else {
-    std::cout << "Running gtest:" << std::endl;
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    std::cout << "Running catch:" << std::endl;
+    return Catch::Session().run(argc, argv);
   }
 }
