@@ -2,7 +2,7 @@
 
 TEST_SUITE_BEGIN("State test");
 
-SCENARIO("State works as expected") {
+SCENARIO("state should work as expected") {
 
   GIVEN("a default-constructed state") {
     State state;

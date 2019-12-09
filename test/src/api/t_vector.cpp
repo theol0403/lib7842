@@ -2,7 +2,7 @@
 
 TEST_SUITE_BEGIN("Vector test");
 
-SCENARIO("Vector works as expected") {
+SCENARIO("vector should work as expected") {
 
   GIVEN("a default-constructed point") {
     Vector point;
