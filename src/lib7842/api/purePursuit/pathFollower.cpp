@@ -24,7 +24,6 @@ void PathFollower::followPath(const PursuitPath& ipath) {
   auto timer = timeUtil.getTimer();
 
   PursuitLimits limits = ipath.getLimits();
-  State lastPos = State(odometry->getState(StateMode::CARTESIAN));
   QSpeed lastVelocity = limits.minVel; // assume the robot starts at minimum velocity
 
   bool isFinished = false; // loop until the robot is considered to have finished the path
@@ -68,19 +67,13 @@ void PathFollower::followPath(const PursuitPath& ipath) {
       targetVel = std::min(limits.maxVel, limits.k / std::abs(curvature));
     }
 
-    // add an upwards rate limiter to the robot velocity. Assume the robot starts at the minimum
-    // velocity and prevent the robot from going slower than it. Calculate the distance travelled
-    // since the last calculation and calculate maximum change in velocity acording to acceleration.
+    // add an upwards rate limiter to the robot velocity using the formula vf=vi+at
     targetVel = std::max(targetVel, limits.minVel); // add minimum velocity
-    // get distance traveled since last calculation
-    QLength distDt = Vector::dist(lastPos, pos);
+    auto dT = timer->getDt();
     // get maximum allowable change in velocity
-    QSpeed maxVelocity = mps * std::sqrt(std::pow(lastVelocity.convert(mps), 2) +
-                                         (2 * limits.accel.convert(mps2) * distDt.convert(meter)));
+    QSpeed maxVelocity = lastVelocity + dT * limits.accel;
     // limit the velocity
     if (targetVel > maxVelocity) targetVel = maxVelocity;
-
-    lastPos = pos;
     lastVelocity = targetVel;
 
     // std::cout << "Vel: " << targetVel.convert(mps) << ", ";
