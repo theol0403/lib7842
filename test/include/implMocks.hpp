@@ -298,8 +298,6 @@ public:
 
   void delay(QFrequency ihz) override;
 
-  void delay(int ihz) override;
-
   void delayUntil(QTime itime) override;
 
   void delayUntil(uint32_t ims) override;
@@ -316,8 +314,9 @@ public:
   double reading {0};
 };
 
-std::unique_ptr<SettledUtil> createSettledUtilPtr(
-  double iatTargetError = 50, double iatTargetDerivative = 5, QTime iatTargetTime = 250_ms);
+std::unique_ptr<SettledUtil> createSettledUtilPtr(double iatTargetError = 50,
+                                                  double iatTargetDerivative = 5,
+                                                  QTime iatTargetTime = 250_ms);
 
 TimeUtil createTimeUtil();
 
@@ -397,14 +396,14 @@ public:
 
 void assertMotorsHaveBeenStopped(MockMotor* leftMotor, MockMotor* rightMotor);
 
-void assertMotorsGearsetEquals(
-  AbstractMotor::gearset expected, const std::initializer_list<MockMotor>& motors);
+void assertMotorsGearsetEquals(AbstractMotor::gearset expected,
+                               const std::initializer_list<MockMotor>& motors);
 
-void assertMotorsBrakeModeEquals(
-  AbstractMotor::brakeMode expected, const std::initializer_list<MockMotor>& motors);
+void assertMotorsBrakeModeEquals(AbstractMotor::brakeMode expected,
+                                 const std::initializer_list<MockMotor>& motors);
 
-void assertMotorsEncoderUnitsEquals(
-  AbstractMotor::encoderUnits expected, const std::initializer_list<MockMotor>& motors);
+void assertMotorsEncoderUnitsEquals(AbstractMotor::encoderUnits expected,
+                                    const std::initializer_list<MockMotor>& motors);
 
 template <typename I, typename O>
 void assertControllerIsSettledWhenDisabled(ClosedLoopController<I, O>& controller, I target) {
@@ -426,13 +425,12 @@ void assertWaitUntilSettledWorksWhenDisabled(AsyncController<I, O>& controller) 
   controller.waitUntilSettled();
 }
 
-void assertAsyncControllerFollowsDisableLifecycle(
-  AsyncController<double, double>& controller,
-  std::int16_t& domainValue,
-  std::int16_t& voltageValue,
-  int expectedOutput);
+void assertAsyncControllerFollowsDisableLifecycle(AsyncController<double, double>& controller,
+                                                  std::int16_t& domainValue,
+                                                  std::int16_t& voltageValue, int expectedOutput);
 
-void assertIterativeControllerFollowsDisableLifecycle(IterativeController<double, double>& controller);
+void assertIterativeControllerFollowsDisableLifecycle(
+  IterativeController<double, double>& controller);
 
 void assertControllerFollowsTargetLifecycle(ClosedLoopController<double, double>& controller);
 
@@ -553,13 +551,8 @@ public:
   explicit MockSkidSteerModel(
     const std::shared_ptr<MockMotor>& ileftMtr = std::make_shared<MockMotor>(),
     const std::shared_ptr<MockMotor>& irightMtr = std::make_shared<MockMotor>()) :
-    SkidSteerModel(
-      ileftMtr,
-      irightMtr,
-      ileftMtr->getMockEncoder(),
-      irightMtr->getMockEncoder(),
-      600,
-      v5MotorMaxVoltage),
+    SkidSteerModel(ileftMtr, irightMtr, ileftMtr->getMockEncoder(), irightMtr->getMockEncoder(),
+                   600, v5MotorMaxVoltage),
     leftMtr(ileftMtr),
     rightMtr(irightMtr),
     leftEnc(ileftMtr->getMockEncoder()),
