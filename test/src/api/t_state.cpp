@@ -1,6 +1,8 @@
 #include "test.hpp"
 
-SCENARIO("State works as expected", "[state]") {
+TEST_SUITE_BEGIN("State test");
+
+SCENARIO("State works as expected") {
 
   GIVEN("a default-constructed state") {
     State state;
@@ -113,3 +115,5 @@ SCENARIO("State works as expected", "[state]") {
     }
   }
 }
+
+TEST_SUITE_END();

@@ -1,4 +1,4 @@
-#define CATCH_CONFIG_RUNNER
+#define DOCTEST_CONFIG_IMPLEMENT
 #include "okapi/api/util/logging.hpp"
 #include "test.hpp"
 
@@ -12,7 +12,9 @@ int main(int argc, char** argv) {
     std::cout << "Running lvgl:" << std::endl;
     return lvglMain();
   } else {
-    std::cout << "Running catch:" << std::endl;
-    return Catch::Session().run(argc, argv);
+    doctest::Context context;
+    context.applyCommandLine(argc, argv);
+    std::cout << "Running doctest:" << std::endl;
+    return context.run(); // run
   }
 }
