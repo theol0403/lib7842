@@ -15,10 +15,13 @@ PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
   odometry(iodometry),
   chassisScales(ichassisScales),
   lookahead(ilookahead),
-  rate(itimeUtil.getRate()) {}
+  timeUtil(itimeUtil) {}
 
 void PathFollower::followPath(const PursuitPath& ipath) {
   resetPursuit();
+
+  auto rate = timeUtil.getRate();
+  auto timer = timeUtil.getTimer();
 
   PursuitLimits limits = ipath.getLimits();
   State lastPos = State(odometry->getState(StateMode::CARTESIAN));

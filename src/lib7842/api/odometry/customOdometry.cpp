@@ -10,7 +10,7 @@ CustomOdometry::CustomOdometry(const std::shared_ptr<ChassisModel>& imodel,
   chassisScales(ichassisScales),
   chassisWidth(chassisScales.wheelTrack.convert(meter)),
   middleDistance(chassisScales.middleWheelDistance.convert(meter)),
-  rate(itimeUtil.getRate()),
+  timeUtil(itimeUtil),
   logger(ilogger) {}
 
 const State& CustomOdometry::getState() const {
@@ -103,6 +103,7 @@ ChassisScales CustomOdometry::getScales() {
 }
 
 void CustomOdometry::loop() {
+  auto rate = timeUtil.getRate();
   while (true) {
     step();
     rate->delayUntil(5_ms);

@@ -107,8 +107,7 @@ protected:
   ChassisScales chassisScales;
 
   const QLength lookahead {0_in};
-
-  std::unique_ptr<AbstractRate> rate {nullptr};
+  TimeUtil timeUtil;
 
   std::optional<pathIterator_t> lastClosest {std::nullopt};
   size_t lastLookIndex {0};

@@ -94,7 +94,7 @@ protected:
   double chassisWidth;
   double middleDistance;
 
-  std::unique_ptr<AbstractRate> rate {nullptr};
+  TimeUtil timeUtil;
   std::shared_ptr<Logger> logger {nullptr};
 
   State state;

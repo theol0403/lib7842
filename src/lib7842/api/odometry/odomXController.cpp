@@ -35,6 +35,7 @@ void OdomXController::strafeToPoint(const Vector& targetPoint,
                                     const AngleCalculator& angleCalculator, double turnScale,
                                     const Settler& settler) {
   resetPid();
+  auto rate = timeUtil.getRate();
   do {
     State state = getState();
     distanceErr = state.distTo(targetPoint);

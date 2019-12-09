@@ -235,7 +235,7 @@ protected:
   std::unique_ptr<IterativePosPIDController> angleController {nullptr};
   std::unique_ptr<IterativePosPIDController> turnController {nullptr};
   const QLength settleRadius;
-  std::unique_ptr<AbstractRate> rate {nullptr};
+  TimeUtil timeUtil;
 
   QAngle angleErr = 0_deg;
   QLength distanceErr = 0_in;

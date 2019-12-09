@@ -17,7 +17,7 @@ OdomController::OdomController(const std::shared_ptr<ChassisModel>& imodel,
   angleController(std::move(iangleController)),
   turnController(std::move(iturnController)),
   settleRadius(isettleRadius),
-  rate(itimeUtil.getRate()) {};
+  timeUtil(itimeUtil) {};
 
 /**
  * Turning API
@@ -25,6 +25,7 @@ OdomController::OdomController(const std::shared_ptr<ChassisModel>& imodel,
 void OdomController::turn(const AngleCalculator& angleCalculator, const Turner& turner,
                           const Settler& settler) {
   resetPid();
+  auto rate = timeUtil.getRate();
   do {
     angleErr = angleCalculator(*this);
     double vel = turnController->step(-angleErr.convert(degree));
@@ -55,8 +56,8 @@ void OdomController::moveDistanceAtAngle(const QLength& distance,
                                          const AngleCalculator& angleCalculator, double turnScale,
                                          const Settler& settler) {
   resetPid();
+  auto rate = timeUtil.getRate();
   auto lastTicks = model->getSensorVals();
-
   do {
     auto newTicks = model->getSensorVals();
     QLength leftDistance = ((newTicks[0] - lastTicks[0]) / odometry->getScales().straight) * meter;
@@ -85,6 +86,7 @@ void OdomController::moveDistance(const QLength& distance, const Settler& settle
 void OdomController::driveToPoint(const Vector& targetPoint, double turnScale,
                                   const Settler& settler) {
   resetPid();
+  auto rate = timeUtil.getRate();
   do {
     State state = getState();
     Vector closestPoint = closest(state, targetPoint);
@@ -124,6 +126,7 @@ void OdomController::driveToPoint(const Vector& targetPoint, double turnScale,
 void OdomController::driveToPoint2(const Vector& targetPoint, double turnScale,
                                    const Settler& settler) {
   resetPid();
+  auto rate = timeUtil.getRate();
   Settler exitFunc = makeSettler(settleRadius);
   do {
     State state = getState();
