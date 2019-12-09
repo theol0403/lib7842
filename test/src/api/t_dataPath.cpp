@@ -1,41 +1,41 @@
-#include "test.hpp"
+// #include "test.hpp"
 
-class DataPathTest : public ::testing::Test {
-protected:
-  DataPoint point1 {5_in, 3_in};
-  void SetUp() override {
-    point1.setData("curvature", 5.0);
-    point1.setData("distance", 5_m);
-    point1.setData("velocity", 5_mps);
-    point1.setData("segmentIndex", 5);
-  }
-};
+// class DataPathTest : public ::testing::Test {
+// protected:
+//   DataPoint point1 {5_in, 3_in};
+//   void SetUp() override {
+//     point1.setData("curvature", 5.0);
+//     point1.setData("distance", 5_m);
+//     point1.setData("velocity", 5_mps);
+//     point1.setData("segmentIndex", 5);
+//   }
+// };
 
-TEST_F(DataPathTest, Constructors) {
-  DataPath();
-  DataPath({point1});
-  DataPath({point1, point1});
-  DataPath(std::vector<DataPoint>({point1, point1}));
-}
+// TEST_F(DataPathTest, Constructors) {
+//   DataPath();
+//   DataPath({point1});
+//   DataPath({point1, point1});
+//   DataPath(std::vector<DataPoint>({point1, point1}));
+// }
 
-TEST_F(DataPathTest, ExtractData) {
-  DataPath path({point1, point1, point1});
+// TEST_F(DataPathTest, ExtractData) {
+//   DataPath path({point1, point1, point1});
 
-  ASSERT_EQ(path().size(), 3);
-  for (auto&& point : path()) {
-    EXPECT_EQ(point->getData<double>("curvature"), 5.0);
-    EXPECT_EQ(point->getData<QLength>("distance"), 5_m);
-    EXPECT_EQ(point->getData<QSpeed>("velocity"), 5_mps);
-    EXPECT_EQ(point->getData<int>("segmentIndex"), 5);
-  }
-}
+//   ASSERT_EQ(path().size(), 3);
+//   for (auto&& point : path()) {
+//     EXPECT_EQ(point->getData<double>("curvature"), 5.0);
+//     EXPECT_EQ(point->getData<QLength>("distance"), 5_m);
+//     EXPECT_EQ(point->getData<QSpeed>("velocity"), 5_mps);
+//     EXPECT_EQ(point->getData<int>("segmentIndex"), 5);
+//   }
+// }
 
-TEST_F(DataPathTest, Generate) {
-  DataPath path({point1, point1, point1});
+// TEST_F(DataPathTest, Generate) {
+//   DataPath path({point1, point1, point1});
 
-  SimplePath ipath = path.generate();
-  ASSERT_EQ(ipath().size(), 3);
-  for (auto&& point : ipath()) {
-    ASSERT_EQ(*point, point1);
-  }
-}
+//   SimplePath ipath = path.generate();
+//   ASSERT_EQ(ipath().size(), 3);
+//   for (auto&& point : ipath()) {
+//     ASSERT_EQ(*point, point1);
+//   }
+// }
