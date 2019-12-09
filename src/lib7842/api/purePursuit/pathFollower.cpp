@@ -53,7 +53,9 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     // std::cout << "Curv: " << curvature << ", ";
 
     // the robot is considered finished if the closest point is the end of the path
-    isFinished = closest >= ipath().end() - 1;
+    isFinished = Vector::dist(**closest, *ipath().back()) < lookahead &&
+                 Vector::dist(pos, *ipath().back()) < lookahead;
+
     // std::cout << "Done " << isFinished << ", ";
 
     // if the robot is on the path, choose the lowest of either the path velocity or the
