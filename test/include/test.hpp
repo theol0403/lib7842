@@ -8,6 +8,7 @@
 using namespace lib7842;
 using namespace okapi;
 
+namespace okapi {
 class MockThreeEncoderXDriveModel : public ThreeEncoderXDriveModel {
 public:
   MockThreeEncoderXDriveModel();
@@ -19,7 +20,6 @@ public:
   std::int32_t middleEnc {0};
 };
 
-namespace okapi {
 template <typename MassDim, typename LengthDim, typename TimeDim, typename AngleDim>
 std::ostream& operator<<(std::ostream& os,
                          const RQuantity<MassDim, LengthDim, TimeDim, AngleDim>& value) {
@@ -27,3 +27,8 @@ std::ostream& operator<<(std::ostream& os,
   return os;
 }
 } // namespace okapi
+
+namespace lib7842 {
+std::ostream& operator<<(std::ostream& os, const Vector& value);
+std::ostream& operator<<(std::ostream& os, const State& value);
+} // namespace lib7842

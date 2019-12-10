@@ -20,6 +20,8 @@ void task_delay_until(uint32_t* const prev_time, const uint32_t delta) {
 } // namespace pros
 } // extern "C"
 
+namespace okapi {
+
 MockThreeEncoderXDriveModel::MockThreeEncoderXDriveModel() :
   ThreeEncoderXDriveModel(std::make_shared<MockMotor>(), std::make_shared<MockMotor>(),
                           std::make_shared<MockMotor>(), std::make_shared<MockMotor>(),
@@ -37,3 +39,17 @@ void MockThreeEncoderXDriveModel::setSensorVals(std::int32_t left, std::int32_t 
   rightEnc = right;
   middleEnc = middle;
 }
+
+} // namespace okapi
+
+namespace lib7842 {
+std::ostream& operator<<(std::ostream& os, const Vector& value) {
+  os << "{" << value.x << ", " << value.y << "}";
+  return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const State& value) {
+  os << "{" << value.x << ", " << value.y << ", " << value.theta << "}";
+  return os;
+}
+} // namespace lib7842
