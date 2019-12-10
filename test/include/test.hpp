@@ -21,7 +21,9 @@ public:
 
 namespace okapi {
 template <typename MassDim, typename LengthDim, typename TimeDim, typename AngleDim>
-doctest::String toString(const RQuantity<MassDim, LengthDim, TimeDim, AngleDim>& value) {
-  return std::to_string(value.getValue()).c_str();
+std::ostream& operator<<(std::ostream& os,
+                         const RQuantity<MassDim, LengthDim, TimeDim, AngleDim>& value) {
+  os << value.getValue();
+  return os;
 }
 } // namespace okapi
