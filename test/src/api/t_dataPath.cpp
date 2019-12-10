@@ -37,7 +37,7 @@ SCENARIO("DataPath test") {
         SimplePath ipath = path.generate();
 
         THEN("the size of the path should be three") {
-          CHECK(ipath().size() == 3);
+          REQUIRE(ipath().size() == 3);
         }
 
         THEN("the positions should be the same") {

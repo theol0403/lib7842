@@ -71,7 +71,7 @@ SCENARIO("CompoundPath test") {
         SimplePath ipath = path.generate();
 
         THEN("the size of the path should be eight") {
-          CHECK(ipath().size() == 8);
+          REQUIRE(ipath().size() == 8);
         }
 
         THEN("the points should be preserved") {
@@ -98,7 +98,7 @@ SCENARIO("CompoundPath test") {
         SimplePath ipath = path.generate();
 
         THEN("the size of the path should be eight") {
-          CHECK(ipath().size() == 8);
+          REQUIRE(ipath().size() == 8);
         }
 
         THEN("the points should be preserved") {

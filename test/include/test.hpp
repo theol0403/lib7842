@@ -7,6 +7,7 @@
 
 using namespace lib7842;
 using namespace okapi;
+using doctest::Approx;
 
 namespace okapi {
 class MockThreeEncoderXDriveModel : public ThreeEncoderXDriveModel {
