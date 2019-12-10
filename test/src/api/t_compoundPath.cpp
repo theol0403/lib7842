@@ -1,87 +1,116 @@
-// #include "test.hpp"
+#include "test.hpp"
 
-// class CompoundPathTest : public ::testing::Test {
-// protected:
-//   CompoundPath path;
-//   Vector point1 {5_in, 3_in};
-// };
+TEST_SUITE_BEGIN("CompoundPath test");
 
-// TEST_F(CompoundPathTest, AddPaths) {
-//   path.add(std::make_shared<SimplePath>());
-//   path.add(CompoundPath());
-//   path.add((SimplePath({point1})));
-//   path.add(std::make_shared<SimplePath>(SimplePath({point1, point1})));
-// }
+SCENARIO("compound path should work as expected") {
 
-// TEST_F(CompoundPathTest, ExtractSegments) {
-//   path.add(std::make_shared<SimplePath>(SimplePath({point1})));
-//   path.add(SimplePath({point1, point1}));
-//   path.add(SimplePath({point1}));
+  GIVEN("an empty path") {
+    CompoundPath path;
 
-//   SimplePath ipath = path.generate();
-//   ASSERT_EQ(ipath().size(), 4);
-//   for (auto&& point : ipath()) {
-//     ASSERT_EQ(*point, point1);
-//   }
-// }
+    GIVEN("a point") {
+      Vector point1 {5_in, 3_in};
 
-// TEST_F(CompoundPathTest, StressTest) {
-//   path.add(std::make_shared<SimplePath>(SimplePath({{1_in, 2_in}})));
-//   path.add(SimplePath({{2_in, 3_in}, {3_in, 4_in}}));
+      THEN("adding the point to the path in various ways should work") {
+        path.add(std::make_shared<SimplePath>());
+        path.add(CompoundPath());
+        path.add((SimplePath({point1})));
+        path.add(std::make_shared<SimplePath>(SimplePath({point1, point1})));
+      }
 
-//   CompoundPath segment1 =
-//     CompoundPath() +
-//     CompoundPath().add(CompoundPath().add(SimplePath({{4_in, 5_in}, {5_in, 6_in}})));
+      GIVEN("a path containing the point added in various ways") {
+        path.add(std::make_shared<SimplePath>(SimplePath({point1})));
+        path.add(SimplePath({point1, point1}));
+        path.add(SimplePath({point1}));
 
-//   CompoundPath segment2 =
-//     CompoundPath().add(CompoundPath() + std::make_shared<SimplePath>(SimplePath({{6_in, 7_in}})));
+        GIVEN("a simple path generated from the compound path") {
+          SimplePath ipath = path.generate();
 
-//   CompoundPath segment3 =
-//     CompoundPath().add(CompoundPath().add(CompoundPath() + SimplePath({{7_in, 8_in}})));
+          THEN("the size of the path should be four") {
+            REQUIRE(ipath().size() == 4);
+          }
 
-//   CompoundPath segment3b =
-//     CompoundPath() + std::make_shared<CompoundPath>() +
-//     std::make_shared<CompoundPath>(CompoundPath() + CompoundPath().add(segment3));
+          THEN("each generated point should be equal to the original point") {
+            for (auto&& point : ipath()) {
+              CHECK(*point == point1);
+            }
+          }
+        }
+      }
+    }
 
-//   CompoundPath segment4 =
-//     CompoundPath() +
-//     std::make_shared<CompoundPath>(
-//       CompoundPath().add(std::make_shared<CompoundPath>(CompoundPath().add(segment2))) +
-//       std::make_shared<CompoundPath>(segment3b));
+    GIVEN("a whole bunch of points and segments added in increasing order") {
+      path.add(std::make_shared<SimplePath>(SimplePath({{1_in, 2_in}})));
+      path.add(SimplePath({{2_in, 3_in}, {3_in, 4_in}}));
 
-//   CompoundPath segment5 = CompoundPath().add(CompoundPath() + SimplePath({{8_in, 9_in}}));
+      CompoundPath segment1 =
+        CompoundPath() +
+        CompoundPath().add(CompoundPath().add(SimplePath({{4_in, 5_in}, {5_in, 6_in}})));
 
-//   path += std::shared_ptr<CompoundPath>(&segment1, [](AbstractPath*) {}); // empty deleter
-//   path += CompoundPath() + std::make_shared<CompoundPath>(std::move(segment4)) +
-//           CompoundPath() // move the local into shared
-//           + segment5; // make copy
+      CompoundPath segment2 = CompoundPath().add(
+        CompoundPath() + std::make_shared<SimplePath>(SimplePath({{6_in, 7_in}})));
 
-//   SimplePath ipath = path.generate();
+      CompoundPath segment3 =
+        CompoundPath().add(CompoundPath().add(CompoundPath() + SimplePath({{7_in, 8_in}})));
 
-//   // test point values
-//   ASSERT_EQ(ipath().size(), 8);
-//   for (size_t i = 0; i < ipath().size(); ++i) {
-//     ASSERT_EQ(*ipath()[i], (Vector {(i + 1) * inch, (i + 2) * inch}));
-//   }
-// }
+      CompoundPath segment3b =
+        CompoundPath() + std::make_shared<CompoundPath>() +
+        std::make_shared<CompoundPath>(CompoundPath() + CompoundPath().add(segment3));
 
-// TEST_F(CompoundPathTest, SimplicityTest) {
-//   path.add(SimplePath({{1_in, 2_in}}));
-//   path.add(SimplePath({{2_in, 3_in}, {3_in, 4_in}}));
+      CompoundPath segment4 =
+        CompoundPath() +
+        std::make_shared<CompoundPath>(
+          CompoundPath().add(std::make_shared<CompoundPath>(CompoundPath().add(segment2))) +
+          std::make_shared<CompoundPath>(segment3b));
 
-//   CompoundPath segment1 = CompoundPath() + SimplePath({{4_in, 5_in}, {5_in, 6_in}});
-//   CompoundPath segment2 = CompoundPath() + StatePath({{6_in, 7_in}});
-//   CompoundPath segment3 = CompoundPath() + DataPath({{7_in, 8_in}});
-//   CompoundPath segment4 = segment2 + segment3;
-//   CompoundPath segment5 = CompoundPath() + SimplePath({{8_in, 9_in}});
+      CompoundPath segment5 = CompoundPath().add(CompoundPath() + SimplePath({{8_in, 9_in}}));
 
-//   path += (std::move(segment1) + std::move(segment4)) + segment5;
+      path += std::shared_ptr<CompoundPath>(&segment1, [](AbstractPath*) {}); // empty deleter
+      path += CompoundPath() + std::make_shared<CompoundPath>(std::move(segment4)) +
+              CompoundPath() // move the local into shared
+              + segment5; // make copy
 
-//   SimplePath ipath = path.generate();
+      GIVEN("a simple path generated from the compound path") {
+        SimplePath ipath = path.generate();
 
-//   // test point values
-//   ASSERT_EQ(ipath().size(), 8);
-//   for (size_t i = 0; i < ipath().size(); ++i) {
-//     ASSERT_EQ(*ipath()[i], (Vector {(i + 1) * inch, (i + 2) * inch}));
-//   }
-// }
+        THEN("the size of the path should be eight") {
+          CHECK(ipath().size() == 8);
+        }
+
+        THEN("the points should be preserved") {
+          for (size_t i = 0; i < ipath().size(); i++) {
+            CHECK(*ipath()[i] == (Vector {(i + 1) * inch, (i + 2) * inch}));
+          }
+        }
+      }
+    }
+
+    GIVEN("a whole bunch of points and segments added concisely in increasing order") {
+      path.add(SimplePath({{1_in, 2_in}}));
+      path.add(SimplePath({{2_in, 3_in}, {3_in, 4_in}}));
+
+      CompoundPath segment1 = CompoundPath() + SimplePath({{4_in, 5_in}, {5_in, 6_in}});
+      CompoundPath segment2 = CompoundPath() + StatePath({{6_in, 7_in}});
+      CompoundPath segment3 = CompoundPath() + DataPath({{7_in, 8_in}});
+      CompoundPath segment4 = segment2 + segment3;
+      CompoundPath segment5 = CompoundPath() + SimplePath({{8_in, 9_in}});
+
+      path += (std::move(segment1) + std::move(segment4)) + segment5;
+
+      GIVEN("a simple path generated from the compound path") {
+        SimplePath ipath = path.generate();
+
+        THEN("the size of the path should be eight") {
+          CHECK(ipath().size() == 8);
+        }
+
+        THEN("the points should be preserved") {
+          for (size_t i = 0; i < ipath().size(); i++) {
+            CHECK(*ipath()[i] == (Vector {(i + 1) * inch, (i + 2) * inch}));
+          }
+        }
+      }
+    }
+  }
+}
+
+TEST_SUITE_END();
