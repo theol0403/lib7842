@@ -1,6 +1,6 @@
 #include "test.hpp"
 
-TEST_SUITE_BEGIN("State test");
+TEST_SUITE_BEGIN("DataPoint test");
 
 SCENARIO("data point should work as expected") {
 
@@ -24,6 +24,10 @@ SCENARIO("data point should work as expected") {
         CHECK(point.getData<QLength>("distance") == 5_m);
         CHECK(point.getData<QSpeed>("velocity") == 5_mps);
         CHECK(point.getData<int>("segmentIndex") == 5);
+      }
+
+      THEN("the point should be equal to itself") {
+        CHECK(point == point);
       }
     }
 

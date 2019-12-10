@@ -1,7 +1,8 @@
-#include "test.hpp"
+#include "pros/rtos.hpp"
 #include <unistd.h>
 
-#include "pros/rtos.hpp"
+#define protected public
+#include "test.hpp"
 
 extern "C" {
 namespace pros {
@@ -43,13 +44,30 @@ void MockThreeEncoderXDriveModel::setSensorVals(std::int32_t left, std::int32_t 
 } // namespace okapi
 
 namespace lib7842 {
-std::ostream& operator<<(std::ostream& os, const Vector& value) {
-  os << "{" << value.x << ", " << value.y << "}";
+std::ostream& operator<<(std::ostream& os, const Vector& rhs) {
+  os << "{" << rhs.x << ", " << rhs.y << "}";
   return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const State& value) {
-  os << "{" << value.x << ", " << value.y << ", " << value.theta << "}";
+std::ostream& operator<<(std::ostream& os, const State& rhs) {
+  os << "{" << rhs.x << ", " << rhs.y << ", " << rhs.theta << "}";
+  return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const DataPoint& rhs) {
+  os << "{" << rhs.x << ", " << rhs.y;
+  bool first = true;
+  for (auto&& data : rhs.data) {
+    if (first) {
+      os << ", [";
+      first = false;
+    } else {
+      os << ", ";
+    }
+    os << data.first;
+  }
+  if (!first) { os << "]"; }
+  os << "}";
   return os;
 }
 } // namespace lib7842

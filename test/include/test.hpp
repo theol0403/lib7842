@@ -22,13 +22,14 @@ public:
 
 template <typename MassDim, typename LengthDim, typename TimeDim, typename AngleDim>
 std::ostream& operator<<(std::ostream& os,
-                         const RQuantity<MassDim, LengthDim, TimeDim, AngleDim>& value) {
-  os << value.getValue();
+                         const RQuantity<MassDim, LengthDim, TimeDim, AngleDim>& rhs) {
+  os << rhs.getValue();
   return os;
 }
 } // namespace okapi
 
 namespace lib7842 {
-std::ostream& operator<<(std::ostream& os, const Vector& value);
-std::ostream& operator<<(std::ostream& os, const State& value);
+std::ostream& operator<<(std::ostream& os, const Vector& rhs);
+std::ostream& operator<<(std::ostream& os, const State& rhs);
+std::ostream& operator<<(std::ostream& os, const DataPoint& rhs);
 } // namespace lib7842
