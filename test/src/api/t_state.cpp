@@ -24,9 +24,9 @@ SCENARIO("state should work as expected") {
     }
 
     THEN("the state should contain the proper info") {
-      CHECK(state.x.convert(inch) == 5);
-      CHECK(state.y.convert(inch) == 2);
-      CHECK(state.theta.convert(radian) == 3);
+      CHECK(state.x == 5_in);
+      CHECK(state.y == 2_in);
+      CHECK(state.theta == 3_rad);
     }
 
     WHEN("the copy constructor is called") {

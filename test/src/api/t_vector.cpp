@@ -15,8 +15,8 @@ SCENARIO("vector should work as expected") {
     Vector point {5_in, 2_in};
 
     THEN("the point should contain the proper info") {
-      CHECK(point.x.convert(inch) == 5);
-      CHECK(point.y.convert(inch) == 2);
+      CHECK(point.x == 5_in);
+      CHECK(point.y == 2_in);
     }
 
     WHEN("the copy constructor is called") {

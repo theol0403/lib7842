@@ -18,3 +18,10 @@ public:
   std::int32_t rightEnc {0};
   std::int32_t middleEnc {0};
 };
+
+namespace okapi {
+template <typename MassDim, typename LengthDim, typename TimeDim, typename AngleDim>
+doctest::String toString(const RQuantity<MassDim, LengthDim, TimeDim, AngleDim>& value) {
+  return std::to_string(value.getValue()).c_str();
+}
+} // namespace okapi
