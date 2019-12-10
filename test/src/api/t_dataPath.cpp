@@ -1,8 +1,6 @@
 #include "test.hpp"
 
-TEST_SUITE_BEGIN("DataPath test");
-
-SCENARIO("data path should work as expected") {
+SCENARIO("DataPath test") {
 
   GIVEN("a data point with some data") {
     DataPoint point1 {5_in, 3_in};
@@ -51,5 +49,3 @@ SCENARIO("data path should work as expected") {
     }
   }
 }
-
-TEST_SUITE_END();

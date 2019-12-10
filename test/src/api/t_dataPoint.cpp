@@ -1,8 +1,6 @@
 #include "test.hpp"
 
-TEST_SUITE_BEGIN("DataPoint test");
-
-SCENARIO("data point should work as expected") {
+SCENARIO("DataPoint test") {
 
   GIVEN("a data point") {
     DataPoint point {5_in, 2_in};
@@ -53,5 +51,3 @@ SCENARIO("data point should work as expected") {
     }
   }
 }
-
-TEST_SUITE_END();

@@ -1,8 +1,6 @@
 #include "test.hpp"
 
-TEST_SUITE_BEGIN("CompoundPath test");
-
-SCENARIO("compound path should work as expected") {
+SCENARIO("CompoundPath test") {
 
   GIVEN("an empty path") {
     CompoundPath path;
@@ -112,5 +110,3 @@ SCENARIO("compound path should work as expected") {
     }
   }
 }
-
-TEST_SUITE_END();

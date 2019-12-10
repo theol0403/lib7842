@@ -1,8 +1,6 @@
 #include "test.hpp"
 
-TEST_SUITE_BEGIN("Vector test");
-
-SCENARIO("vector should work as expected") {
+SCENARIO("Vector test") {
 
   GIVEN("a default-constructed point") {
     Vector point;
@@ -68,5 +66,3 @@ SCENARIO("vector should work as expected") {
     }
   }
 }
-
-TEST_SUITE_END();
