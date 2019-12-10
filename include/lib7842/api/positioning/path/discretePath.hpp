@@ -168,7 +168,7 @@ public:
     }
 
     // if path is more than 1 point - return last point
-    if (path.size() > 0) temp().emplace_back(path.back());
+    if (path.size() > 0) temp().emplace_back(std::make_shared<Vector>(*path.back()));
     return temp;
   }
 

@@ -1,5 +1,4 @@
 #include "test.hpp"
-#include <numeric>
 
 SCENARIO("SimpePath test") {
 
