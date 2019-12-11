@@ -44,9 +44,9 @@ TEST_CASE("PathGenerator test") {
     PathGenerator::setCurvatures(path);
     PathGenerator::setMaxVelocity(path, limits);
 
-    CHECK(path()[0]->getData<QSpeed>("velocity").convert(mps) == 8);
-    CHECK(path()[1]->getData<QSpeed>("velocity").convert(mps) == 8);
-    CHECK(path()[2]->getData<QSpeed>("velocity").convert(mps) == 0);
+    CHECK(path()[0]->getData<QSpeed>("velocity") == 8_mps);
+    CHECK(path()[1]->getData<QSpeed>("velocity") == 8_mps);
+    CHECK(path()[2]->getData<QSpeed>("velocity") == 0_mps);
   }
 
   SUBCASE("SetMaxVelocityTurn") {
@@ -54,9 +54,9 @@ TEST_CASE("PathGenerator test") {
     PathGenerator::setCurvatures(path);
     PathGenerator::setMaxVelocity(path, limits);
 
-    CHECK(path()[0]->getData<QSpeed>("velocity").convert(mps) == 8);
-    CHECK(path()[1]->getData<QSpeed>("velocity").convert(mps) < 8);
-    CHECK(path()[2]->getData<QSpeed>("velocity").convert(mps) < 8);
-    CHECK(path()[3]->getData<QSpeed>("velocity").convert(mps) == 0);
+    CHECK(path()[0]->getData<QSpeed>("velocity") == 8_mps);
+    CHECK(path()[1]->getData<QSpeed>("velocity") < 8_mps);
+    CHECK(path()[2]->getData<QSpeed>("velocity") < 8_mps);
+    CHECK(path()[3]->getData<QSpeed>("velocity") == 0_mps);
   }
 }
