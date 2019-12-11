@@ -37,7 +37,7 @@ TEST_CASE("CustomOdometry test") {
     }
 
     SUBCASE("RepeatedlyCallingStep") {
-      for (size_t i = 0; i < 1000; i++) {
+      for (size_t i = 0; i < 50; i++) {
         assertState({0_m, 0_m, 0_deg});
         odom->step();
         assertState({0_m, 0_m, 0_deg});
