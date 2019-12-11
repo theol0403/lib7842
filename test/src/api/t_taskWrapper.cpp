@@ -12,8 +12,14 @@ public:
   }
 };
 
-TEST(TaskWrapperTest, Task) {
-  MockTask task;
-  usleep(100000);
-  ASSERT_TRUE(task.taskRan);
+SCENARIO("TaskWrapper test") {
+  GIVEN("a mock task") {
+    MockTask task;
+    WHEN("we wait a few milliseconds") {
+      usleep(100000);
+      THEN("the task should have started") {
+        REQUIRE(task.taskRan);
+      }
+    }
+  }
 }

@@ -1,3 +1,4 @@
+#define DOCTEST_CONFIG_IMPLEMENT
 #include "okapi/api/util/logging.hpp"
 #include "test.hpp"
 
@@ -11,8 +12,9 @@ int main(int argc, char** argv) {
     std::cout << "Running lvgl:" << std::endl;
     return lvglMain();
   } else {
-    std::cout << "Running gtest:" << std::endl;
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    doctest::Context context;
+    context.applyCommandLine(argc, argv);
+    std::cout << "Running doctest:" << std::endl;
+    return context.run(); // run
   }
 }
