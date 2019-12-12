@@ -43,18 +43,12 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     // The projected point will cause the robot to rotate more appropriately.
     Vector projectedLook = (MathPoint::normalize(lookPoint - pos) * lookahead.convert(meter)) + pos;
 
-    // use the normal lookahead point if the robot is on the path and the distance to the lookahead
-    // is smaller than the distance to the projected point
-    Vector& finalLookPoint =
-      onPath && pos.distTo(lookPoint) < pos.distTo(projectedLook) ? lookPoint : projectedLook;
-
     // calculate the arc curvature for the robot to travel to the lookahead
-    double curvature = calculateCurvature(pos, finalLookPoint);
+    double curvature = calculateCurvature(pos, projectedLook);
     // std::cout << "Curv: " << curvature << ", ";
 
     // the robot is considered finished if the closest point is the end of the path
-    isFinished = Vector::dist(**closest, *ipath().back()) < lookahead &&
-                 Vector::dist(pos, *ipath().back()) < lookahead;
+    isFinished = closest >= ipath().end() - 1;
 
     // std::cout << "Done " << isFinished << ", ";
 
