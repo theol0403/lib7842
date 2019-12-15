@@ -32,11 +32,9 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     State pos = State(odometry->getState(StateMode::CARTESIAN));
 
     auto closest = findClosest(ipath, pos); // get an iterator to the closest point
-    // std::cout << "Close: " << closest - ipath().begin() << ", ";
     Vector lookPoint = findLookaheadPoint(ipath, pos);
     // the robot is on the path if the distance to the closest point is smaller than the lookahead
     bool onPath = Vector::dist(pos, **closest) <= lookahead;
-    // std::cout << "On: " << onPath << ", ";
 
     // project the lookahead point onto the lookahead radius. When the lookahead point is further
     // than the lookahead radius, this can cause some problems with the robot curvature calculation.
@@ -45,12 +43,9 @@ void PathFollower::followPath(const PursuitPath& ipath) {
 
     // calculate the arc curvature for the robot to travel to the lookahead
     double curvature = calculateCurvature(pos, projectedLook);
-    // std::cout << "Curv: " << curvature << ", ";
 
     // the robot is considered finished if the closest point is the end of the path
     isFinished = closest >= ipath().end() - 1;
-
-    // std::cout << "Done " << isFinished << ", ";
 
     // if the robot is on the path, choose the lowest of either the path velocity or the
     // curvature-based speed reduction. If the robot is not on the path, choose the lowest of either
@@ -72,13 +67,9 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     if (targetVel > maxVelocity) targetVel = maxVelocity;
     lastVelocity = targetVel;
 
-    // std::cout << "Vel: " << targetVel.convert(mps) << ", ";
-
     // calculate robot wheel velocities
     auto wheelVel = calculateVelocity(targetVel, curvature, chassisScales, limits);
 
-    // std::cout << "Left: " << leftWheel.convert(rpm) << ", ";
-    // std::cout << "Right: " << rightWheel.convert(rpm) << std::endl;
     // model->left(leftWheel.convert(rpm) / 200);
     // model->right(rightWheel.convert(rpm) / 200);
     model->tank(wheelVel[0].convert(rpm) / 200, wheelVel[1].convert(rpm) / 200);

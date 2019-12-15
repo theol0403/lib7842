@@ -110,28 +110,9 @@ void opcontrol() {
   /**
    * Follower
    */
-  PathFollower follower(model, odom, ChassisScales({2.75_in, 14_in}, imev5GreenTPR), 0.5_ft,
+  PathFollower follower(model, odom, ChassisScales({2.75_in, 14_in}, imev5GreenTPR), 1_ft,
                         TimeUtilFactory().create());
-  PursuitLimits limits {0.1_mps, 0.73_mps, 0.4_mps2, 40_mps};
-
-  SimplePath path = SimplePath({
-                                 {0_ft, 0_ft}, {0_ft, 4_ft},
-                                 // {2_ft, 3_ft},
-                                 // {2_ft, 2_ft},
-                                 // {1_ft, 1_ft},
-                                 // // {0_ft, 0_ft},
-                                 // {2_ft, 0_ft},
-                                 // {1_ft, 1_ft},
-                                 // {0_ft, 2_ft},
-                                 // {2_ft, 2_ft},
-                                 // {2_ft, 0_ft}
-                               })
-                      .generate(50)
-                      .smoothen(.008, 1e-10 * meter);
-
-  std::cout << path().size() << std::endl;
-
-  PursuitPath pPath = PathGenerator::generate(path, limits);
+  PursuitLimits limits {0.1_mps, 0.6_mps, 0.7_mps2, 20_mps};
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -139,12 +120,12 @@ void opcontrol() {
                    controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::A)) {
-      // odomController->driveToPoint2({0_ft, 0_ft}, 2);
-      // odomController->strafeToPoint({0_ft, 0_ft}, OdomController::makeAngleCalculator({0_ft, 3_ft}),
-      //                               1, OdomController::defaultDriveAngleSettler);
-      // odomController->strafeDistance(1_ft, 90_deg);
 
-      follower.followPath(pPath);
+      auto path = SimplePath({odom->getState(), {0_ft, 0_ft}, {0_ft, 2_ft}, {1_ft, 2_ft}})
+                    .generate(1_cm)
+                    .smoothen(.0045, 1e-10 * meter);
+
+      follower.followPath(PathGenerator::generate(path, limits));
     }
 
     pros::delay(10);
