@@ -2,6 +2,7 @@
 #include "abstractPath.hpp"
 
 #include "lib7842/api/positioning/point/dataPoint.hpp"
+#include "lib7842/api/positioning/point/mathPoint.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 #include <algorithm>
@@ -18,8 +19,7 @@ using StatePath = DiscretePath<State>;
 
 /**
  * A path that represents a collection of discrete points which are stored using shared pointers. To
- * have full access to the underlying array, use `operator()`. To have read-only access to the
- * underlying array, use `read()`.
+ * have access to the underlying array, use `operator()`.
  *
  * There are three types of discrete paths: SimplePath<Vector>, DataPath<DataPoint>, and
  * StatePath<State>>. The point type must be derived from Vector.
@@ -138,11 +138,41 @@ public:
   }
 
   /**
+   * Interpolate the path using distance sampling.
+   *
+   * @param  iresolution The distance between each point
+   * @return The generated path
+   */
+  SimplePath generate(const QLength& iresolution) const {
+    SimplePath temp;
+
+    for (size_t i = 0; i < path.size() - 1; i++) {
+      Vector& start = *path[i];
+      Vector& end = *path[i + 1];
+
+      Vector diff = end - start;
+      size_t steps = std::ceil(MathPoint::mag(diff) / iresolution.convert(meter));
+      Vector step = diff / steps;
+
+      temp().reserve(temp().size() + steps);
+      for (size_t j = 0; j < steps; j++) {
+        temp().emplace_back(std::make_shared<Vector>(start + (step * j)));
+      }
+    }
+
+    // if path is more than 1 point - return last point
+    if (path.size() > 0) temp().emplace_back(std::make_shared<Vector>(*path.back()));
+
+    return temp;
+  }
+
+  /**
    * Interpolate the path
    *
-   * @param  isteps how many points to interpolate per segment, from start (inclusive) to end
-   *                (exclusive) of segment.
-   * @return generated path
+   * @param  isteps The number of points to interpolate per segment. In the case of DiscretePath, a
+   *                segment is defined as the section between two control points, starting from the
+   *                first point.
+   * @return The generated path
    */
   SimplePath generate(const int isteps = 1) const override {
     if (isteps < 1) throw std::runtime_error("SimplePath::generate: isteps is less than 1");
@@ -156,10 +186,16 @@ public:
       for (size_t i = 0; i < path.size() - 1; i++) {
         // if interpolation needed
         if (isteps > 1) {
-          // generate segment
-          SimplePath segment = generateSegment(*path[i], *path[i + 1], isteps);
-          // move segment into path
-          std::move(segment().begin(), segment().end(), std::back_inserter(temp()));
+          Vector& start = *path[i];
+          Vector& end = *path[i + 1];
+
+          Vector diff = end - start;
+          Vector step = diff / isteps;
+
+          temp().reserve(temp().size() + isteps);
+          for (size_t j = 0; j < isteps; j++) {
+            temp().emplace_back(std::make_shared<Vector>(start + (step * j)));
+          }
         } else {
           // interpolation not needed
           temp().emplace_back(std::make_shared<Vector>(*path[i]));
@@ -184,30 +220,6 @@ public:
   }
 
 protected:
-  /**
-   * Sample the segment
-   *
-   * @param  start  The start point
-   * @param  end    The end point
-   * @param  isteps the number of points to generate in the segment excluding the end
-   * @return the generated segment
-   */
-  static SimplePath generateSegment(const Vector& start, const Vector& end, const int isteps) {
-    if (isteps < 1) throw std::runtime_error("SimplePath::generateSegment: isteps is less than 1");
-    SimplePath segment;
-
-    Vector diff = end - start;
-    Vector step = diff / isteps;
-    // reserve vector capacity
-    segment().reserve(isteps);
-
-    for (size_t i = 0; i < isteps; i++) {
-      segment().emplace_back(std::make_shared<Vector>(start + (step * i)));
-    }
-
-    return segment;
-  }
-
   array_t path {};
 };
 } // namespace lib7842
