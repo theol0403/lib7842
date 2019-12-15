@@ -46,7 +46,7 @@ TEST_CASE("PathGenerator test") {
 
     CHECK(path()[0]->getData<QSpeed>("velocity") == 8_mps);
     CHECK(path()[1]->getData<QSpeed>("velocity") == 8_mps);
-    CHECK(path()[2]->getData<QSpeed>("velocity") == 0_mps);
+    CHECK(path()[2]->getData<QSpeed>("velocity") == 2_mps);
   }
 
   SUBCASE("SetMaxVelocityTurn") {
@@ -57,6 +57,6 @@ TEST_CASE("PathGenerator test") {
     CHECK(path()[0]->getData<QSpeed>("velocity") == 8_mps);
     CHECK(path()[1]->getData<QSpeed>("velocity") < 8_mps);
     CHECK(path()[2]->getData<QSpeed>("velocity") < 8_mps);
-    CHECK(path()[3]->getData<QSpeed>("velocity") == 0_mps);
+    CHECK(path()[3]->getData<QSpeed>("velocity") == 2_mps);
   }
 }

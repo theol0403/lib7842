@@ -22,7 +22,7 @@ void PathGenerator::setCurvatures(PursuitPath& ipath) {
 }
 
 void PathGenerator::setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limits) {
-  ipath().back()->setData("velocity", 0_mps);
+  ipath().back()->setData("velocity", limits.minVel);
   for (size_t i = ipath().size() - 1; i > 0; i--) {
     DataPoint& start = *ipath()[i];
     DataPoint& end = *ipath()[i - 1];
