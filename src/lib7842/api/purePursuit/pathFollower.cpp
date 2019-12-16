@@ -46,8 +46,8 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
     bool endInLookahead = Vector::dist(**closest, *ipath().back()) < lookahead &&
                           Vector::dist(pos, *ipath().back()) < lookahead;
 
-    // if within the the of the path, ignore the default parameter and drive directly to the point
-    if (endInLookahead) ibackwards = pos.angleTo(projectedLook).abs() > 90_deg;
+    // if within the the of the path, ignore the default parameter and drive directly to the end
+    if (endInLookahead) ibackwards = pos.angleTo(*ipath().back()).abs() > 90_deg;
 
     // calculate the arc curvature for the robot to travel to the lookahead
     double curvature = endInLookahead ? 0 : calculateCurvature(pos, projectedLook);
