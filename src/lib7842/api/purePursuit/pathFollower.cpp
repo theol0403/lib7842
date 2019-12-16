@@ -46,14 +46,17 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
     bool endInLookahead = Vector::dist(**closest, *ipath().back()) < lookahead &&
                           Vector::dist(pos, *ipath().back()) < lookahead;
 
+    // we are past the end of the path if the angle is above 90
+    bool pastEnd = pos.angleTo(*ipath().back()).abs() > 90_deg;
+
     // if within the the of the path, ignore the default parameter and drive directly to the end
-    if (endInLookahead) ibackwards = pos.angleTo(*ipath().back()).abs() > 90_deg;
+    if (endInLookahead) ibackwards = pastEnd;
 
     // calculate the arc curvature for the robot to travel to the lookahead
     double curvature = endInLookahead ? 0 : calculateCurvature(pos, projectedLook);
 
     // the robot is considered finished if the closest point is the end of the path
-    isFinished = closest >= ipath().end() - 1;
+    isFinished = pastEnd && endInLookahead;
 
     // if the robot is on the path, choose the lowest of either the path velocity or the
     // curvature-based speed reduction. If the robot is not on the path, choose the lowest of either
@@ -87,7 +90,7 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
     rate->delayUntil(10_ms);
   }
 
-  model->tank(0, 0);
+  model->driveVector(0, 0); // apply velocity braking
 }
 
 PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,
