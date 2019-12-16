@@ -33,6 +33,7 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
 
     auto closest = findClosest(ipath, pos); // get an iterator to the closest point
     Vector lookPoint = findLookaheadPoint(ipath, pos);
+
     // the robot is on the path if the distance to the closest point is smaller than the lookahead
     bool onPath = Vector::dist(pos, **closest) <= lookahead;
 
@@ -46,16 +47,20 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
     bool endInLookahead = Vector::dist(**closest, *ipath().back()) < lookahead &&
                           Vector::dist(pos, *ipath().back()) < lookahead;
 
-    // we are past the end of the path if the angle is above 90
-    bool pastEnd = pos.angleTo(*ipath().back()).abs() > 90_deg;
-
-    // if within the the of the path, ignore the default parameter and drive directly to the end
-    if (endInLookahead) ibackwards = pastEnd;
-
     // calculate the arc curvature for the robot to travel to the lookahead
     double curvature = endInLookahead ? 0 : calculateCurvature(pos, projectedLook);
 
-    // the robot is considered finished if the closest point is the end of the path
+    // the angle to the end of the path
+    QAngle angleToEnd = pos.angleTo(*ipath().back()).abs();
+
+    // we are done the path if the angle is opposite of the drive direction
+    bool pastEnd = ibackwards ? angleToEnd < 90_deg : angleToEnd > 90_deg;
+
+    // if within the the of the path, ignore the default parameter and drive directly to the end. We
+    // are past the end of the path if the angle is above 90, so drive backwards if so.
+    if (endInLookahead) ibackwards = angleToEnd > 90_deg;
+
+    // the robot is considered finished if it has passed the end
     isFinished = pastEnd && endInLookahead;
 
     // if the robot is on the path, choose the lowest of either the path velocity or the
