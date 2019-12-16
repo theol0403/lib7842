@@ -12,7 +12,7 @@ TEST_CASE("PathFollower test") {
     auto follower = std::make_shared<PathFollower>(model, odom, ChassisScales({{4_in, 10_in}, 360}),
                                                    6_in, createTimeUtil());
 
-    PursuitLimits limits {0_mps, 1_mps, 0.5_mps2, 1_mps};
+    PursuitLimits limits {0_mps, 0.5_mps2, 1_mps, 1_mps};
 
     SUBCASE("TestClosest") {
       PursuitPath path({{0_ft, 0_ft}, {1_ft, 1_ft}, {2_ft, 2_ft}, {3_ft, 3_ft}, {4_ft, 4_ft}});
@@ -91,14 +91,14 @@ TEST_CASE("PathFollower test") {
 
     SUBCASE("TestVelocityStraight") {
       auto vel = PathFollower::calculateVelocity(1_mps, 0, ChassisScales({{1_m / 1_pi, 10_m}, 360}),
-                                                 {0_mps, 10_mps, 1_mps2, 1_mps});
+                                                 {0_mps, 1_mps2, 10_mps, 1_mps});
       CHECK(vel[0] == 60_rpm);
       CHECK(vel[1] == 60_rpm);
     }
 
     SUBCASE("TestVelocityCurved") {
       auto vel = PathFollower::calculateVelocity(1_mps, 1, ChassisScales({{1_m / 1_pi, 10_m}, 360}),
-                                                 {0_mps, 10_mps, 1_mps2, 1_mps});
+                                                 {0_mps, 1_mps2, 10_mps, 1_mps});
       CHECK(vel[0] > 60_rpm);
       CHECK(vel[1] < 60_rpm);
     }

@@ -112,7 +112,7 @@ void opcontrol() {
    */
   PathFollower follower(model, odom, ChassisScales({2.75_in, 14_in}, imev5GreenTPR), 1_ft,
                         TimeUtilFactory().create());
-  PursuitLimits limits {0.1_mps, 0.7_mps, 0.9_mps2, 30_mps};
+  PursuitLimits limits {0.2_mps, 1.1_mps2, 0.7_mps, 0.8_mps2, 0_mps, 30_mps};
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -121,7 +121,7 @@ void opcontrol() {
 
     if (controller.getDigital(ControllerDigital::A)) {
 
-      auto path = SimplePath({odom->getState(), {0_ft, 0_ft}, {0_ft, 2_ft}, {3_ft, 2_ft}})
+      auto path = SimplePath({odom->getState(), {0_ft, 0_ft}, {0_ft, 2_ft}})
                     .generate(1_cm)
                     .smoothen(.0045, 1e-10 * meter);
 

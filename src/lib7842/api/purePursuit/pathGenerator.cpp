@@ -22,7 +22,7 @@ void PathGenerator::setCurvatures(PursuitPath& ipath) {
 }
 
 void PathGenerator::setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limits) {
-  ipath().back()->setData("velocity", limits.minVel);
+  ipath().back()->setData("velocity", limits.finalVel);
   for (size_t i = ipath().size() - 1; i > 0; i--) {
     DataPoint& start = *ipath()[i];
     DataPoint& end = *ipath()[i - 1];
@@ -37,7 +37,7 @@ void PathGenerator::setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limi
     // vf = sqrt(vi2 + 2ad)
     QSpeed maxIncrement =
       mps * std::sqrt(std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) +
-                      (2.0 * limits.accel.convert(mps2) * distance));
+                      (2.0 * limits.decel.convert(mps2) * distance));
 
     // limiting to maximum accelerated velocity
     QSpeed newVel = std::min(wantedVel, maxIncrement);

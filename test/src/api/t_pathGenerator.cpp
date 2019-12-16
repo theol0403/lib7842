@@ -2,7 +2,7 @@
 #include "test.hpp"
 
 TEST_CASE("PathGenerator test") {
-  PursuitLimits limits {2_mps, 8_mps, 8_mps2, 0.03_mps};
+  PursuitLimits limits {2_mps, 8_mps2, 8_mps, 8_mps2, 3_mps, 0.03_mps};
 
   SUBCASE("ComputeSingleCurvature") {
     double straight = PathGenerator::calculateCurvature({0_m, 0_m}, {0_m, 5_m}, {0_m, 10_m});
@@ -46,7 +46,7 @@ TEST_CASE("PathGenerator test") {
 
     CHECK(path()[0]->getData<QSpeed>("velocity") == 8_mps);
     CHECK(path()[1]->getData<QSpeed>("velocity") == 8_mps);
-    CHECK(path()[2]->getData<QSpeed>("velocity") == 2_mps);
+    CHECK(path()[2]->getData<QSpeed>("velocity") == 3_mps);
   }
 
   SUBCASE("SetMaxVelocityTurn") {
@@ -57,6 +57,6 @@ TEST_CASE("PathGenerator test") {
     CHECK(path()[0]->getData<QSpeed>("velocity") == 8_mps);
     CHECK(path()[1]->getData<QSpeed>("velocity") < 8_mps);
     CHECK(path()[2]->getData<QSpeed>("velocity") < 8_mps);
-    CHECK(path()[3]->getData<QSpeed>("velocity") == 2_mps);
+    CHECK(path()[3]->getData<QSpeed>("velocity") == 3_mps);
   }
 }
