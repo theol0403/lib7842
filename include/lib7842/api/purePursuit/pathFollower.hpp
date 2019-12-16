@@ -31,9 +31,10 @@ public:
   /**
    * Follow a pre-generated PursuitPath.
    *
-   * @param ipath The path
+   * @param ipath      The path
+   * @param ibackwards Whether to follow the path backwards
    */
-  void followPath(const PursuitPath& ipath);
+  void followPath(const PursuitPath& ipath, bool ibackwards = false);
 
 protected:
   /**

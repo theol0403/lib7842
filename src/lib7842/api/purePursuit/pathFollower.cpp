@@ -17,7 +17,7 @@ PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
   lookahead(ilookahead),
   timeUtil(itimeUtil) {}
 
-void PathFollower::followPath(const PursuitPath& ipath) {
+void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
   resetPursuit();
 
   auto rate = timeUtil.getRate();
@@ -45,6 +45,9 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     // angle correction.
     bool endInLookahead = Vector::dist(**closest, *ipath().back()) < lookahead &&
                           Vector::dist(pos, *ipath().back()) < lookahead;
+
+    // if within the the of the path, ignore the default parameter and drive directly to the point
+    if (endInLookahead) ibackwards = pos.angleTo(projectedLook).abs() > 90_deg;
 
     // calculate the arc curvature for the robot to travel to the lookahead
     double curvature = endInLookahead ? 0 : calculateCurvature(pos, projectedLook);
@@ -75,9 +78,11 @@ void PathFollower::followPath(const PursuitPath& ipath) {
     // calculate robot wheel velocities
     auto wheelVel = calculateVelocity(targetVel, curvature, chassisScales, limits);
 
-    // model->left(leftWheel.convert(rpm) / 200);
-    // model->right(rightWheel.convert(rpm) / 200);
-    model->tank(wheelVel[0].convert(rpm) / 200, wheelVel[1].convert(rpm) / 200);
+    if (!ibackwards) {
+      model->tank(wheelVel[0].convert(rpm) / 200, wheelVel[1].convert(rpm) / 200);
+    } else {
+      model->tank(-wheelVel[0].convert(rpm) / 200, -wheelVel[1].convert(rpm) / 200);
+    }
 
     rate->delayUntil(10_ms);
   }
