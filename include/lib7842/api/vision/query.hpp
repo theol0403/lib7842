@@ -10,7 +10,7 @@ public:
   using function::function;
   static Query sig, x, y, width, height, area, avgDim, centerX, centerY;
 
-  double getFrom(const Object& obj);
+  double getFrom(const Object& obj) const;
 };
 
 } // namespace lib7842::Vision
