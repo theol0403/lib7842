@@ -130,11 +130,20 @@ PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,
 }
 
 Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& ipos) {
-  // used for optimizing number of intersection searches
-  size_t lastIntersect = 0;
+  // Optimization: if the robot starts within the end of the path, then the only intersection is
+  // behind the robot, causing the robot to drive backwards when we want it to go straight to the
+  // lookahead. To fix this, if the lookahead has not been found yet, but the robot is within the
+  // end of the path, then jump the lookahead to the end of the path.
+  if (lastClosest && Vector::dist(ipos, *ipath().back()) < lookahead) {
+    lastClosest = ipath().end() - 2;
+    lastLookT = 1;
+  }
 
   // lookahead intersection should not be behind closest
   size_t lastClosestIndex = lastClosest.value_or(ipath().begin()) - ipath().begin();
+
+  // used for optimizing number of intersection searches
+  size_t lastIntersect = 0;
 
   // loop through every segment looking for intersection
   for (size_t i = std::max(lastLookIndex, lastClosestIndex); i < ipath().size() - 1; i++) {
