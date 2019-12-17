@@ -1,12 +1,10 @@
 #pragma once
-
 #include "okapi/api/coreProsAPI.hpp"
 #include "okapi/api/util/logging.hpp"
 #include "pros/rtos.hpp"
 #include <memory>
 
 namespace lib7842 {
-
 using namespace okapi;
 
 /**
@@ -54,5 +52,4 @@ private:
   static void trampoline(void* iparam);
   std::unique_ptr<CrossplatformThread> task {nullptr};
 };
-
 } // namespace lib7842

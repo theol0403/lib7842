@@ -2,98 +2,66 @@
 
 namespace lib7842 {
 
-DataPath PathGenerator::generate(const SimplePath& ipath,
-                                 const QSpeed& minVel,
-                                 const QSpeed& maxVel,
-                                 const QAcceleration& accel,
-                                 double k) {
-  DataPath path(ipath);
+PursuitPath PathGenerator::generate(const SimplePath& ipath, const PursuitLimits& limits) {
+  PursuitPath path(ipath);
+  path.setLimits(limits);
 
   setCurvatures(path);
-  setMaxVelocity(path, maxVel, accel, k);
-  setMinVelocity(path, minVel, accel);
+  setMaxVelocity(path, limits);
 
   return path;
 }
 
-void PathGenerator::setCurvatures(DataPath& ipath) {
-  ipath().at(0)->setData("curvature", 0_curv);
+void PathGenerator::setCurvatures(PursuitPath& ipath) {
+  ipath().at(0)->setData("curvature", 0.0);
   for (size_t i = 1; i < ipath().size() - 1; i++) {
-    QCurvature curv = getCurvature(*ipath()[i - 1], *ipath()[i], *ipath()[i + 1]);
-    ipath()[i]->setData("curvature", curv);
+    double curvature = calculateCurvature(*ipath()[i - 1], *ipath()[i], *ipath()[i + 1]);
+    ipath()[i]->setData("curvature", curvature);
   }
-  ipath().back()->setData("curvature", 0_curv);
+  ipath().back()->setData("curvature", 0.0);
 }
 
-void PathGenerator::setMaxVelocity(DataPath& ipath,
-                                   const QSpeed& maxVel,
-                                   const QAcceleration& accel,
-                                   double k) {
-  ipath().back()->setData("velocity", 0_mps);
+void PathGenerator::setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limits) {
+  ipath().back()->setData("velocity", limits.finalVel);
   for (size_t i = ipath().size() - 1; i > 0; i--) {
     DataPoint& start = *ipath()[i];
     DataPoint& end = *ipath()[i - 1];
 
     // k / curvature, limited to max
-    double wantedVel = std::min(
-      maxVel.convert(mps), k / ipath()[i]->getData<QCurvature>("curvature").convert(curvature));
+    QSpeed wantedVel = std::min(limits.maxVel, limits.k / ipath()[i]->getData<double>("curvature"));
 
     // distance from last point
-    double distance = Vector::dist(start, end).convert(meter);
+    double distance = MathPoint::dist(start, end);
 
     // maximum velocity given distance respecting acceleration
     // vf = sqrt(vi2 + 2ad)
-    double maxIncrement = std::sqrt(std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) +
-                                    (2 * accel.convert(mps2) * distance));
+    QSpeed maxIncrement =
+      mps * std::sqrt(std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) +
+                      (2.0 * limits.decel.convert(mps2) * distance));
 
     // limiting to maximum accelerated velocity
-    double newVel = std::min(wantedVel, maxIncrement);
-    end.setData("velocity", newVel * mps);
+    QSpeed newVel = std::min(wantedVel, maxIncrement);
+    end.setData("velocity", newVel);
   }
 }
 
-void PathGenerator::setMinVelocity(DataPath& ipath,
-                                   const QSpeed& minVel,
-                                   const QAcceleration& accel) {
-  ipath().at(0)->setData("velocity", minVel);
-  for (size_t i = 0; i < ipath().size() - 1; i++) {
-    DataPoint& start = *ipath()[i];
-    DataPoint& end = *ipath()[i + 1];
-
-    // distance to next point
-    double distance = Vector::dist(start, end).convert(meter);
-
-    // maximum velocity given distance respecting acceleration
-    // vf = sqrt(vi2 + 2ad)
-    double maxIncrement = std::sqrt(std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) +
-                                    (2 * accel.convert(mps2) * distance));
-
-    // limiting to maximum accelerated velocity
-    double wantedVel = std::min(end.getData<QSpeed>("velocity").convert(mps), maxIncrement);
-
-    // limiting to minimum vel
-    double newVel = std::max(wantedVel, minVel.convert(mps));
-    end.setData("velocity", newVel * mps);
-  }
-}
-
-QCurvature
-  PathGenerator::getCurvature(const Vector& prev, const Vector& point, const Vector& next) {
-  double distOne = Vector::dist(point, prev).convert(meter);
-  double distTwo = Vector::dist(point, next).convert(meter);
-  double distThree = Vector::dist(next, prev).convert(meter);
+double PathGenerator::calculateCurvature(const Vector& prev, const Vector& point,
+                                         const Vector& next) {
+  double distOne = MathPoint::dist(point, prev);
+  double distTwo = MathPoint::dist(point, next);
+  double distThree = MathPoint::dist(next, prev);
 
   double productOfSides = distOne * distTwo * distThree;
-  double semiPerimeter = (distOne + distTwo + distThree) / 2;
+  double semiPerimeter = (distOne + distTwo + distThree) / 2.0;
 
   double triangleArea = std::sqrt(semiPerimeter * //
                                   (semiPerimeter - distOne) * //
                                   (semiPerimeter - distTwo) * //
                                   (semiPerimeter - distThree));
 
-  double r = (productOfSides) / (4 * triangleArea);
-  double curv = std::isnormal(1 / r) ? 1 / r : 0;
-  return curv * curvature;
+  double r = productOfSides / (4.0 * triangleArea);
+  double curvature = std::isnormal(1.0 / r) ? 1.0 / r : 0;
+  return curvature * curvature;
 }
 
 } // namespace lib7842

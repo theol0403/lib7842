@@ -1,6 +1,9 @@
 #include "odom.hpp"
+#include "lib7842/api/other/units.hpp"
 
 namespace lib7842::GUI {
+
+using namespace lib7842::units;
 
 void Odom::initialize() {
   initializeField();
@@ -188,7 +191,7 @@ void Odom::updateOdom() {
 
   // position in court units
   double c_x = state.x.convert(court);
-  double c_y = (1_crt - state.y).convert(court);
+  double c_y = (1_court - state.y).convert(court);
   double c_theta = state.theta.convert(radian);
 
   // place point on field
@@ -231,7 +234,7 @@ lv_res_t Odom::tileAction(lv_obj_t* tileObj) {
   int y = num / 6;
   int x = num - y * 6;
   if (that->odom) {
-    that->odom->setState({x * tile + 0.5_tl, 1_crt - y * tile - 0.5_tl, 0_deg},
+    that->odom->setState({x * tile + 0.5_tile, 1_court - y * tile - 0.5_tile, 0_deg},
                          StateMode::CARTESIAN);
   } else {
     that->LOG_WARN_S("Odom::tileAction: odom not attached");

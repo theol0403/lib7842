@@ -1,4 +1,5 @@
 #include "state.hpp"
+#include "lib7842/api/other/utility.hpp"
 
 namespace lib7842 {
 
@@ -40,6 +41,12 @@ bool State::operator==(const State& rhs) const {
 
 bool State::operator!=(const State& rhs) const {
   return !(rhs == *this);
+}
+
+QAngle State::angleTo(const Vector& ipoint) const {
+  Vector diff = ipoint - *this;
+  QAngle angle = (std::atan2(diff.x.convert(meter), diff.y.convert(meter)) * radian) - theta;
+  return util::rollAngle180(angle);
 }
 
 } // namespace lib7842

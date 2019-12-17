@@ -1,7 +1,5 @@
 #pragma once
-
 #include "page.hpp"
-#include <vector>
 
 namespace lib7842::GUI {
 
@@ -28,5 +26,4 @@ protected:
   std::vector<std::pair<std::string, std::function<void()>>> buttons {};
   std::vector<const char*> matrix {""};
 };
-
 } // namespace lib7842::GUI

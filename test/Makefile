@@ -16,8 +16,8 @@ EXTRA_CXXFLAGS= -std=gnu++17 -g -pthread -D THREADS_STD
 EXTRA_CXXFLAGS+= -fsanitize=undefined -fsanitize=vptr -fsanitize=integer-divide-by-zero -fsanitize=null
 # EXTRA_CXXFLAGS+= -fsanitize=address 
 
-CXXFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -I googletest/googletest/include -I ./include
-LDFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -lm -lgcc -lstdc++ -lsupc++ -lgtest ./firmware/libOkapiLibV5.a ./firmware/lvgl.a -lSDL2
+CXXFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -I ./include
+LDFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -lm -lgcc -lstdc++ -lsupc++ ./firmware/libOkapiLibV5.a ./firmware/lvgl.a -lSDL2
 
 CXX:=g++-9
 LD:=g++-9

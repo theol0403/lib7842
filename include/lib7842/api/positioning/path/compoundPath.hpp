@@ -34,7 +34,7 @@ public:
    *                (exclusive) of segment.
    * @return generated path
    */
-  SimplePath generate(const int isteps = 1) const override;
+  SimplePath generate(int isteps = 1) const override;
 
   /**
    * Implictly convert path to a shared pointer
@@ -45,5 +45,4 @@ public:
 protected:
   std::vector<std::shared_ptr<AbstractPath>> segments {};
 };
-
 } // namespace lib7842

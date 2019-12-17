@@ -1,10 +1,10 @@
 #pragma once
-
 #include "lib7842/api/other/taskWrapper.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/odometry/odometry.hpp"
 #include "okapi/api/util/logging.hpp"
+#include "okapi/api/util/timeUtil.hpp"
 
 namespace lib7842 {
 
@@ -18,10 +18,11 @@ public:
    *
    * @param imodel         The chassis model for reading sensors.
    * @param ichassisScales The chassis dimensions.
+   * @param itimeUtil      The time utility
    * @param ilogger        The logger
    */
-  CustomOdometry(const std::shared_ptr<ChassisModel>& imodel,
-                 const ChassisScales& ichassisScales,
+  CustomOdometry(const std::shared_ptr<ChassisModel>& imodel, const ChassisScales& ichassisScales,
+                 const TimeUtil& itimeUtil,
                  const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   virtual ~CustomOdometry() = default;
@@ -74,7 +75,7 @@ public:
    *
    * @return The internal ChassisScales.
    */
-  virtual ChassisScales getScales() override;
+  ChassisScales getScales() override;
 
   /**
    * Odometry calculation loop
@@ -93,6 +94,7 @@ protected:
   double chassisWidth;
   double middleDistance;
 
+  TimeUtil timeUtil;
   std::shared_ptr<Logger> logger {nullptr};
 
   State state;

@@ -18,6 +18,9 @@ public:
   AbstractPath(AbstractPath&& ipath) = default;
   virtual ~AbstractPath() = default;
 
+  AbstractPath& operator=(const AbstractPath& ipath) = default;
+  AbstractPath& operator=(AbstractPath&& ipath) = default;
+
   /**
    * Interpolate the path
    *
@@ -25,7 +28,7 @@ public:
    *                (exclusive) of segment.
    * @return generated path
    */
-  virtual SimplePath generate(const int isteps = 1) const = 0;
+  virtual SimplePath generate(int isteps = 1) const = 0;
 
   /**
    * Implictly convert path to a shared pointer
@@ -33,5 +36,4 @@ public:
   virtual operator std::shared_ptr<AbstractPath>() & = 0;
   virtual operator std::shared_ptr<AbstractPath>() && = 0;
 };
-
 } // namespace lib7842

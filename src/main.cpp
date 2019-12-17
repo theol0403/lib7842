@@ -61,6 +61,9 @@ void autonomous() {}
 void opcontrol() {
   Controller controller(ControllerId::master);
 
+  /**
+   * Model
+   */
   auto model = std::make_shared<ThreeEncoderXDriveModel>(
     // motors
     std::make_shared<Motor>(1), //
@@ -74,10 +77,16 @@ void opcontrol() {
     // limits
     200, 12000);
 
-  auto odom =
-    std::make_shared<CustomOdometry>(model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360));
+  /**
+   * Odom
+   */
+  auto odom = std::make_shared<CustomOdometry>(
+    model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360), TimeUtilFactory().create());
   odom->startTask("Odometry");
 
+  /**
+   * Controller
+   */
   auto odomController = std::make_shared<OdomXController>(
     model, odom,
     //Distance PID - To mm
@@ -88,10 +97,22 @@ void opcontrol() {
       0.03, 0.00, 0.0003, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
     //Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
-      0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)));
+      0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)),
+    TimeUtilFactory().create());
 
+  /**
+   * Screen
+   */
   GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
   scr.startTask("Screen");
+  scr.makePage<GUI::Odom>("Odom").attachOdom(odom).attachResetter([&] { odom->reset(); });
+
+  /**
+   * Follower
+   */
+  PathFollower follower(model, odom, ChassisScales({2.75_in, 14_in}, imev5GreenTPR), 1_ft,
+                        TimeUtilFactory().create());
+  PursuitLimits limits {0.2_mps, 1.1_mps2, 0.75_mps, 0.4_mps2, 0_mps, 40_mps};
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -99,10 +120,13 @@ void opcontrol() {
                    controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::A)) {
-      // odomController->driveToPoint2({0_ft, 0_ft}, 2);
-      odomController->strafeToPoint({0_ft, 0_ft}, OdomController::makeAngleCalculator({0_ft, 3_ft}),
-                                    1, OdomController::defaultDriveAngleSettler);
-      // odomController->strafeDistance(1_ft, 90_deg);
+
+      auto path =
+        SimplePath({odom->getState(), {0_ft, 0_ft}, {0_ft, 2_ft}, {2_ft, 2_ft}, {2_ft, 4_ft}})
+          .generate(1_cm)
+          .smoothen(.001, 1e-10 * meter);
+
+      follower.followPath(PathGenerator::generate(path, limits), false);
     }
 
     pros::delay(10);

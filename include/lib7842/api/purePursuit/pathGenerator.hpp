@@ -1,61 +1,37 @@
 #pragma once
-
-#include "lib7842/api/other/utility.hpp"
-#include "lib7842/api/positioning/path/discretePath.hpp"
-#include "okapi/api/units/QSpeed.hpp"
+#include "lib7842/api/positioning/point/mathPoint.hpp"
+#include "pursuitLimits.hpp"
+#include "pursuitPath.hpp"
 
 namespace lib7842 {
 
 class PathGenerator {
 public:
   /**
-   * Generate a DataPath containing waypoint information for pure pursuit.
+   * Generate a PursuitPath containing waypoint information for pure pursuit.
    *
    * @param  ipath  The path
-   * @param  minVel The minimum velocity
-   * @param  maxVel The maximum velocity
-   * @param  accel  The maximum acceleration
-   * @param  k      How much to slow down around turns. This value is usually best around 0.5-2, 0.5
-   *                tends to slow down around almost any curvature in the path, and 2 tends to slow
-   *                down around only a very sharp curvature.
+   * @param  limits The pure pursuit limits
    * @return the generated path
    */
-  static DataPath generate(const SimplePath& ipath,
-                           const QSpeed& minVel,
-                           const QSpeed& maxVel,
-                           const QAcceleration& accel,
-                           double k);
+  static PursuitPath generate(const SimplePath& ipath, const PursuitLimits& limits);
 
+protected:
   /**
    * Sets the waypoint curvatures.
    *
    * @param ipath The path
    */
-  static void setCurvatures(DataPath& ipath);
+  static void setCurvatures(PursuitPath& ipath);
 
   /**
    * Sets the waypoint velocities respecting curvature and deceleration. Traverses the path
    * backwards using a rate limiter.
    *
    * @param ipath  The path
-   * @param maxVel The maximum velocity
-   * @param accel  The maximum acceleration
-   * @param k      How much to slow down around turns. This value is usually best around 0.5-2, 0.5
-   *               tends to slow down around almost any curvature in the path, and 2 tends to slow
-   *               down around only a very sharp curvature.
+   * @param limits The pure pursuit limits
    */
-  static void
-    setMaxVelocity(DataPath& ipath, const QSpeed& maxVel, const QAcceleration& accel, double k);
-
-  /**
-   * Sets the waypoint minimum velocities respecting acceleration. Traverses the path forward using
-   * a rate limiter.
-   *
-   * @param ipath  The path
-   * @param minVel The minimum velocity
-   * @param accel  The maximum acceleration
-   */
-  static void setMinVelocity(DataPath& ipath, const QSpeed& minVel, const QAcceleration& accel);
+  static void setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limits);
 
   /**
    * Gets the curvature of a given segment.
@@ -65,7 +41,6 @@ public:
    * @param  next  The next point
    * @return The curvature
    */
-  static QCurvature getCurvature(const Vector& prev, const Vector& point, const Vector& next);
+  static double calculateCurvature(const Vector& prev, const Vector& point, const Vector& next);
 };
-
 } // namespace lib7842

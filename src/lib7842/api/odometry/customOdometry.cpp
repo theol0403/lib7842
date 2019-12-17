@@ -3,13 +3,14 @@
 namespace lib7842 {
 
 CustomOdometry::CustomOdometry(const std::shared_ptr<ChassisModel>& imodel,
-                               const ChassisScales& ichassisScales,
+                               const ChassisScales& ichassisScales, const TimeUtil& itimeUtil,
                                const std::shared_ptr<Logger>& ilogger) :
   TaskWrapper(ilogger),
   model(imodel),
   chassisScales(ichassisScales),
   chassisWidth(chassisScales.wheelTrack.convert(meter)),
   middleDistance(chassisScales.middleWheelDistance.convert(meter)),
+  timeUtil(itimeUtil),
   logger(ilogger) {}
 
 const State& CustomOdometry::getState() const {
@@ -102,9 +103,10 @@ ChassisScales CustomOdometry::getScales() {
 }
 
 void CustomOdometry::loop() {
+  auto rate = timeUtil.getRate();
   while (true) {
     step();
-    pros::delay(5);
+    rate->delayUntil(5_ms);
   }
 }
 

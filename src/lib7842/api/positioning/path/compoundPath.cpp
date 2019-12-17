@@ -21,7 +21,7 @@ CompoundPath&& CompoundPath::operator+(const std::shared_ptr<AbstractPath>& iseg
   return std::move(*this);
 }
 
-SimplePath CompoundPath::generate(const int isteps) const {
+SimplePath CompoundPath::generate(int isteps) const {
   SimplePath temp;
   for (auto&& segment : segments) {
     SimplePath isegment = segment->generate(isteps);
