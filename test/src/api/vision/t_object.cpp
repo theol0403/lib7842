@@ -38,15 +38,15 @@ TEST_CASE("Object test") {
       }
 
       THEN("alternative query method should work") {
-        CHECK(Query::sig.getFrom(obj) == 1);
-        CHECK(Query::x.getFrom(obj) == 100);
-        CHECK(Query::y.getFrom(obj) == 50);
-        CHECK(Query::width.getFrom(obj) == 150);
-        CHECK(Query::height.getFrom(obj) == 75);
-        CHECK(Query::area.getFrom(obj) == 11250);
-        CHECK(Query::avgDim.getFrom(obj) == 112.5);
-        CHECK(Query::centerX.getFrom(obj) == 175);
-        CHECK(Query::centerY.getFrom(obj) == 87.5);
+        CHECK(Query::sig(obj) == 1);
+        CHECK(Query::x(obj) == 100);
+        CHECK(Query::y(obj) == 50);
+        CHECK(Query::width(obj) == 150);
+        CHECK(Query::height(obj) == 75);
+        CHECK(Query::area(obj) == 11250);
+        CHECK(Query::avgDim(obj) == 112.5);
+        CHECK(Query::centerX(obj) == 175);
+        CHECK(Query::centerY(obj) == 87.5);
       }
 
       THEN("a custom query should work") {
