@@ -36,6 +36,14 @@ TEST_CASE("Object test") {
         CHECK(obj.get(Query::centerX) == 175);
         CHECK(obj.get(Query::centerY) == 87.5);
       }
+
+      THEN("a custom query should work") {
+        Query query = [](const Object& iobj) {
+          return iobj.x + iobj.y;
+        };
+
+        CHECK(obj.get(query) == 150);
+      }
     }
   }
 }

@@ -9,7 +9,6 @@ public:
   Object() = default;
   explicit Object(const pros::vision_object& iobject);
 
-  friend class Query;
   double get(const Query& iquery) const;
 
   uint16_t sig {0};
