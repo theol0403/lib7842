@@ -1,93 +1,106 @@
 #pragma once
+#include "lib7842/api/positioning/point/state.hpp"
+#include "lib7842/api/positioning/point/vector.hpp"
+#include "okapi/api/chassis/model/chassisModel.hpp"
+#include "okapi/api/chassis/model/xDriveModel.hpp"
+#include "okapi/api/units/QAngle.hpp"
+#include <memory>
 
-#include "okapi/api/units/QAcceleration.hpp"
-#include "okapi/api/units/QSpeed.hpp"
-#include "okapi/api/units/RQuantity.hpp"
-
-namespace lib7842 {
+namespace lib7842::util {
 
 using namespace okapi;
 
-/////////////////
-//    Units    //
-/////////////////
-
 /**
- * Unitless unit
+ * Returns the sign of the given number. Returns -1 if the number is negative, 1 if positive, 0
+ * otherwise.
+ *
+ * @param  val The value
  */
-constexpr Number number(1.0);
-
-///////////////////////
-// Units - Curvature //
-///////////////////////
-
-/**
- * Curvature dimension which is length-1
- */
-QUANTITY_TYPE(0, -1, 0, 0, QCurvature)
-
-/**
- * Curvature unit
- */
-constexpr QCurvature curvature(1.0);
-
-/**
- * Curvature literals
- */
-constexpr QCurvature operator"" _curv(long double x) {
-  return QCurvature(x);
-}
-constexpr QCurvature operator"" _curv(unsigned long long int x) {
-  return QCurvature(static_cast<double>(x));
-}
-
-//////////////////////
-// Units - Velocity //
-//////////////////////
-
-/**
- * Inches per second
- */
-constexpr QSpeed ips = inch / second;
-constexpr QSpeed operator"" _ips(long double x) {
-  return static_cast<double>(x) * ips;
-}
-constexpr QSpeed operator"" _ips(unsigned long long int x) {
-  return static_cast<double>(x) * ips;
+template <typename T> int sgn(T val) {
+  return (T(0) < val) - (val < T(0));
 }
 
 /**
- * Inches per second squared
+ * Control the chassis movement using voltage. Applies magnitude control to prioritize turning.
+ * Range of forward and yaw is +-1, but yaw may be outside of the range which prioritizes turning.
+ *
+ * @param model   The chassis model
+ * @param forward The forward voltage
+ * @param yaw     The yaw voltage
  */
-constexpr QAcceleration ips2 = inch / (second * second);
-constexpr QAcceleration operator"" _ips2(long double x) {
-  return static_cast<double>(x) * ips2;
-}
-constexpr QAcceleration operator"" _ips2(unsigned long long int x) {
-  return static_cast<double>(x) * ips2;
-}
-
-///////////////////
-// Units - Field //
-///////////////////
+void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, double yaw);
 
 /**
- * Units that represent a tile (2ft) and a court(12ft)
- * Literals are `_tl` and `_crt`, respectivly
+ * Control the chassis movement for an XDrive using voltage. Applies magnitude control to prioritize
+ * turning. Range of forward, yaw, and strafe is +-1, but yaw may be outside of the range which
+ * prioritizes turning.
+ *
+ * @param model   The chassis model
+ * @param forward The forward voltage
+ * @param yaw     The yaw voltage
+ * @param strafe  The strafe voltage
  */
-constexpr QLength tile = 2 * foot;
-constexpr QLength court = 12 * foot;
-constexpr QLength operator"" _tl(long double x) {
-  return static_cast<double>(x) * tile;
-}
-constexpr QLength operator"" _crt(long double x) {
-  return static_cast<double>(x) * court;
-}
-constexpr QLength operator"" _tl(unsigned long long int x) {
-  return static_cast<double>(x) * tile;
-}
-constexpr QLength operator"" _crt(unsigned long long int x) {
-  return static_cast<double>(x) * court;
-}
+void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
+                  double strafe);
 
-} // namespace lib7842
+/**
+ * Control the chassis movement for an XDrive using voltage. Strafes at the given voltage in the
+ * given direction. Applies magnitude control to prioritize turning. Range of forward, yaw, and
+ * strafe is +-1, but yaw may be outside of the range which prioritizes turning.
+ *
+ * @param model     The chassis model
+ * @param forward   The forward voltage
+ * @param yaw       The yaw voltage
+ * @param direction The direction
+ */
+void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
+                  const QAngle& direction);
+
+/**
+ * Calculate the point along a given heading that is closest to a target point.
+ *
+ * @param  current The current point
+ * @param  heading The heading
+ * @param  target  The target point
+ * @return the closest point
+ */
+Vector closest(const Vector& current, const QAngle& heading, const Vector& target);
+
+/**
+ * Calculate the point along a given heading that is closest to a target point. Uses the heading that is contained in State.
+ *
+ * @param  state  The current state with heading
+ * @param  target The target point
+ * @param current The current point
+ * @return the closest point
+ */
+Vector closest(const State& state, const Vector& target);
+
+/**
+ * Roll a given angle to be within the constraints of [0, 360] degrees. Does not change the actual
+ * direction.
+ *
+ * @param  angle The input angle
+ * @return The constrained angle
+ */
+QAngle rollAngle360(const QAngle& angle);
+
+/**
+ * Roll a given angle to be within the constraints of [-180, 180] degrees. Does not change the actual
+ * direction.
+ *
+ * @param  angle The input angle
+ * @return The constrained angle
+ */
+QAngle rollAngle180(const QAngle& angle);
+
+/**
+ * Rotate a given angle to be within the constraints of [-90, 90] degrees. Finds the nearest angle
+ * parallel to another angle. Used to calculate angle for driving backwards.
+ *
+ * @param  angle The input angle
+ * @return The rotated angle
+ */
+QAngle rotateAngle90(const QAngle& angle);
+
+} // namespace lib7842::util

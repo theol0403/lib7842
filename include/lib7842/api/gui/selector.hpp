@@ -1,5 +1,4 @@
 #pragma once
-
 #include "actions.hpp"
 
 namespace lib7842::GUI {
@@ -18,5 +17,4 @@ protected:
 
   int currentIndex {0};
 };
-
 } // namespace lib7842::GUI

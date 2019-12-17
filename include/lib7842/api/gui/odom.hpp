@@ -1,6 +1,4 @@
 #pragma once
-
-#include "lib7842/api/other/utility.hpp"
 #include "okapi/api/odometry/odometry.hpp"
 #include "page.hpp"
 #include <functional>
@@ -86,5 +84,4 @@ private:
 
   bool hasWarnedRender = false;
 };
-
 } // namespace lib7842::GUI

@@ -1,11 +1,9 @@
 #pragma once
-
 #include "lib7842/api/other/taskWrapper.hpp"
 #include "page.hpp"
 #include <string>
 
 namespace lib7842::GUI {
-
 using namespace okapi;
 
 /**
@@ -19,8 +17,8 @@ public:
    * @param iparent The LVGL parent, typically `lv_scr_act()`
    * @param ilogger The logger
    */
-  explicit Screen(
-    lv_obj_t* iparent, const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  explicit Screen(lv_obj_t* iparent,
+                  const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   /**
    * Create a new screen.
@@ -29,10 +27,8 @@ public:
    * @param icolor  The theme color
    * @param ilogger The logger
    */
-  explicit Screen(
-    lv_obj_t* iparent,
-    lv_color_t icolor,
-    const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  explicit Screen(lv_obj_t* iparent, lv_color_t icolor,
+                  const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   Screen(const Screen& iscreen) = delete;
   Screen(Screen&& iscreen) = default;
@@ -63,7 +59,7 @@ public:
   }
 
   /**
-   * Render the page. Override this method to implement custom rendering.
+   * Render all the sub pages.
    */
   void render() override;
 
@@ -84,5 +80,4 @@ private:
   lv_style_t style_pr;
   lv_style_t pageStyle;
 };
-
 } // namespace lib7842::GUI

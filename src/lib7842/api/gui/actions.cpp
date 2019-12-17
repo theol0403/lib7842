@@ -63,9 +63,8 @@ Actions& Actions::build() {
   matrix.clear();
   matrix.reserve(buttons.size() + 1);
 
-  std::transform(buttons.begin(), buttons.end(), std::back_inserter(matrix), [](auto& button) {
-    return button.first.c_str();
-  });
+  std::transform(buttons.begin(), buttons.end(), std::back_inserter(matrix),
+                 [](auto& button) { return button.first.c_str(); });
 
   matrix.push_back("");
   lv_btnm_set_map(btnm, matrix.data());
@@ -76,9 +75,8 @@ lv_res_t Actions::btnAction(lv_obj_t* ibtnm, const char* itxt) {
   Actions& that = *static_cast<Actions*>(lv_obj_get_free_ptr(ibtnm));
   std::string txt(itxt);
 
-  auto it = std::find_if(that.buttons.begin(), that.buttons.end(), [&](const auto& button) {
-    return button.first == txt;
-  });
+  auto it = std::find_if(that.buttons.begin(), that.buttons.end(),
+                         [&](const auto& button) { return button.first == txt; });
 
   it->second();
   return LV_RES_OK;

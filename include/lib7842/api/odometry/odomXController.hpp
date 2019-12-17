@@ -1,7 +1,5 @@
 #pragma once
-
 #include "odomController.hpp"
-#include "odomMath.hpp"
 #include "okapi/api/chassis/model/xDriveModel.hpp"
 
 namespace lib7842 {
@@ -20,12 +18,12 @@ public:
    * @param iturnController     The turning pid controller
    * @param iangleController    The angle pid controller, used to keep distance driving straight
    */
-  OdomXController(
-    const std::shared_ptr<XDriveModel>& imodel,
-    const std::shared_ptr<Odometry>& iodometry,
-    std::unique_ptr<IterativePosPIDController> idistanceController,
-    std::unique_ptr<IterativePosPIDController> iturnController,
-    std::unique_ptr<IterativePosPIDController> iangleController);
+  OdomXController(const std::shared_ptr<XDriveModel>& imodel,
+                  const std::shared_ptr<Odometry>& iodometry,
+                  std::unique_ptr<IterativePosPIDController> idistanceController,
+                  std::unique_ptr<IterativePosPIDController> iturnController,
+                  std::unique_ptr<IterativePosPIDController> iangleController,
+                  const TimeUtil& itimeUtil);
 
   virtual ~OdomXController() = default;
 
@@ -38,12 +36,10 @@ public:
    * @param turnScale       The turn scale
    * @param settler         The settler
    */
-  virtual void strafeRelativeDirection(
-    const QLength& distance,
-    const QAngle& direction,
-    const AngleCalculator& angleCalculator = makeAngleCalculator(),
-    double turnScale = 1,
-    const Settler& settler = defaultDriveSettler);
+  virtual void
+    strafeRelativeDirection(const QLength& distance, const QAngle& direction,
+                            const AngleCalculator& angleCalculator = makeAngleCalculator(),
+                            double turnScale = 1, const Settler& settler = defaultDriveSettler);
 
   /**
    * Strafe a distance in an absolute direction while correcting angle using an AngleCalculator
@@ -54,12 +50,10 @@ public:
    * @param turnScale       The turn scale
    * @param settler         The settler
    */
-  virtual void strafeAbsoluteDirection(
-    const QLength& distance,
-    const QAngle& direction,
-    const AngleCalculator& angleCalculator = makeAngleCalculator(),
-    double turnScale = 1,
-    const Settler& settler = defaultDriveSettler);
+  virtual void
+    strafeAbsoluteDirection(const QLength& distance, const QAngle& direction,
+                            const AngleCalculator& angleCalculator = makeAngleCalculator(),
+                            double turnScale = 1, const Settler& settler = defaultDriveSettler);
 
   /**
    * Strafe to a point using field-centric math and an AngleCalculator
@@ -69,32 +63,11 @@ public:
    * @param turnScale       The turn scale
    * @param settler         The settler
    */
-  virtual void strafeToPoint(
-    const Vector& targetPoint,
-    const AngleCalculator& angleCalculator = makeAngleCalculator(),
-    double turnScale = 1,
-    const Settler& settler = defaultDriveSettler);
+  virtual void strafeToPoint(const Vector& targetPoint,
+                             const AngleCalculator& angleCalculator = makeAngleCalculator(),
+                             double turnScale = 1, const Settler& settler = defaultDriveSettler);
 
 protected:
-  /**
-   * Control the chassis movement. Applies magnitude control to prioritize turning.
-   *
-   * @param forwardSpeed The forward speed
-   * @param yaw          The yaw speed
-   * @param strafe       The strafe speed
-   */
-  void driveXVector(double forwardSpeed, double yaw, double strafe);
-
-  /**
-   * Control the chassis movement. Strafes at the given speed at the given direction.
-   *
-   * @param speed     The speed
-   * @param direction The direction
-   * @param yaw       The yaw
-   */
-  void strafeXVector(double speed, const QAngle& direction, double yaw);
-
   std::shared_ptr<XDriveModel> xModel {nullptr};
 };
-
 } // namespace lib7842

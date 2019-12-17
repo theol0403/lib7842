@@ -24,9 +24,8 @@ lv_res_t Selector::btnAction(lv_obj_t* ibtnm, const char* itxt) {
   Selector& that = *static_cast<Selector*>(lv_obj_get_free_ptr(ibtnm));
   std::string txt(itxt);
 
-  auto it = std::find_if(that.buttons.begin(), that.buttons.end(), [&](const auto& button) {
-    return button.first == txt;
-  });
+  auto it = std::find_if(that.buttons.begin(), that.buttons.end(),
+                         [&](const auto& button) { return button.first == txt; });
 
   that.currentIndex = it - that.buttons.begin();
 

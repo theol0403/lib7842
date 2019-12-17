@@ -1,6 +1,9 @@
 #include "odom.hpp"
+#include "lib7842/api/other/units.hpp"
 
 namespace lib7842::GUI {
+
+using namespace lib7842::units;
 
 void Odom::initialize() {
   initializeField();
@@ -136,11 +139,11 @@ void Odom::initializeText() {
   textStyle.text.opa = LV_OPA_100;
   lv_obj_set_style(statusLabel, &textStyle);
 
-  lv_label_set_text(statusLabel, "No Odom Provided");
+  lv_label_set_text(statusLabel, "No odom provided");
 
-  lv_obj_align(
-    statusLabel, container, LV_ALIGN_CENTER,
-    -lv_obj_get_width(container) / 2.0 + (lv_obj_get_width(container) - fieldDim) / 2.0, 0);
+  lv_obj_align(statusLabel, container, LV_ALIGN_CENTER,
+               -lv_obj_get_width(container) / 2.0 + (lv_obj_get_width(container) - fieldDim) / 2.0,
+               0);
 }
 
 void Odom::initializeButton() {
@@ -149,9 +152,9 @@ void Odom::initializeButton() {
   */
   lv_obj_t* btn = lv_btn_create(container, NULL);
   lv_obj_set_size(btn, 100, 40);
-  lv_obj_align(
-    btn, NULL, LV_ALIGN_IN_TOP_MID,
-    -lv_obj_get_width(container) / 2.0 + (lv_obj_get_width(container) - fieldDim) / 2.0, 0);
+  lv_obj_align(btn, NULL, LV_ALIGN_IN_TOP_MID,
+               -lv_obj_get_width(container) / 2.0 + (lv_obj_get_width(container) - fieldDim) / 2.0,
+               0);
   lv_obj_set_free_ptr(btn, this);
   lv_btn_set_action(btn, LV_BTN_ACTION_PR, resetAction);
 
@@ -188,13 +191,12 @@ void Odom::updateOdom() {
 
   // position in court units
   double c_x = state.x.convert(court);
-  double c_y = (1_crt - state.y).convert(court);
+  double c_y = (1_court - state.y).convert(court);
   double c_theta = state.theta.convert(radian);
 
   // place point on field
-  lv_obj_set_pos(
-    led, (c_x * fieldDim) - lv_obj_get_width(led) / 2.0,
-    (c_y * fieldDim) - lv_obj_get_height(led) / 2.0 - 1.0);
+  lv_obj_set_pos(led, (c_x * fieldDim) - lv_obj_get_width(led) / 2.0,
+                 (c_y * fieldDim) - lv_obj_get_height(led) / 2.0 - 1.0);
 
   // move start and end of line
   linePoints.at(0) = {(int16_t)((c_x * fieldDim)), (int16_t)((c_y * fieldDim) - (3.0 / 2.0))};
@@ -217,9 +219,9 @@ void Odom::updateOdom() {
 
   lv_label_set_text(statusLabel, text.c_str());
 
-  lv_obj_align(
-    statusLabel, container, LV_ALIGN_CENTER,
-    -lv_obj_get_width(container) / 2.0 + (lv_obj_get_width(container) - fieldDim) / 2.0, 0);
+  lv_obj_align(statusLabel, container, LV_ALIGN_CENTER,
+               -lv_obj_get_width(container) / 2.0 + (lv_obj_get_width(container) - fieldDim) / 2.0,
+               0);
 }
 
 /**
@@ -232,7 +234,8 @@ lv_res_t Odom::tileAction(lv_obj_t* tileObj) {
   int y = num / 6;
   int x = num - y * 6;
   if (that->odom) {
-    that->odom->setState({x * tile + 0.5_tl, 1_crt - y * tile - 0.5_tl, 0_deg}, StateMode::CARTESIAN);
+    that->odom->setState({x * tile + 0.5_tile, 1_court - y * tile - 0.5_tile, 0_deg},
+                         StateMode::CARTESIAN);
   } else {
     that->LOG_WARN_S("Odom::tileAction: odom not attached");
   }

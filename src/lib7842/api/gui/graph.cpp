@@ -1,5 +1,4 @@
 #include "graph.hpp"
-#include <iostream>
 
 namespace lib7842::GUI {
 
@@ -44,8 +43,8 @@ Graph& Graph::withGrid(int ihor, int iver) {
   return *this;
 }
 
-Graph& Graph::withSeries(
-  const std::string& iname, const lv_color_t& icolor, const std::function<double()>& idata) {
+Graph& Graph::withSeries(const std::string& iname, const lv_color_t& icolor,
+                         const std::function<double()>& idata) {
   lv_chart_series_t* ser = lv_chart_add_series(graph, icolor);
   lv_chart_init_points(graph, ser, idata());
 

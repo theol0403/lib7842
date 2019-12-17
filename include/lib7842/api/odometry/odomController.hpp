@@ -1,13 +1,13 @@
 #pragma once
-
-#include "customOdometry.hpp"
-#include "odomMath.hpp"
+#include "lib7842/api/other/utility.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/control/iterative/iterativePosPidController.hpp"
+#include "okapi/api/odometry/odometry.hpp"
+#include "okapi/api/util/timeUtil.hpp"
 #include <functional>
 
 namespace lib7842 {
-
+using namespace okapi;
 class OdomController;
 
 /**
@@ -41,14 +41,14 @@ public:
    * @param iturnController     The turning pid controller
    * @param iangleController    The angle pid controller, used to keep distance driving straight
    * @param isettleRadius       The radius from the target point to give up angle correction
+   * @param itimeUtil           The time utility
    */
-  OdomController(
-    const std::shared_ptr<ChassisModel>& imodel,
-    const std::shared_ptr<Odometry>& iodometry,
-    std::unique_ptr<IterativePosPIDController> idistanceController,
-    std::unique_ptr<IterativePosPIDController> iturnController,
-    std::unique_ptr<IterativePosPIDController> iangleController,
-    const QLength& isettleRadius);
+  OdomController(const std::shared_ptr<ChassisModel>& imodel,
+                 const std::shared_ptr<Odometry>& iodometry,
+                 std::unique_ptr<IterativePosPIDController> idistanceController,
+                 std::unique_ptr<IterativePosPIDController> iturnController,
+                 std::unique_ptr<IterativePosPIDController> iangleController,
+                 const QLength& isettleRadius, const TimeUtil& itimeUtil);
 
   virtual ~OdomController() = default;
 
@@ -59,10 +59,8 @@ public:
    * @param turner          The turner
    * @param settler         The settler
    */
-  virtual void turn(
-    const AngleCalculator& angleCalculator,
-    const Turner& turner = pointTurn,
-    const Settler& settler = defaultTurnSettler);
+  virtual void turn(const AngleCalculator& angleCalculator, const Turner& turner = pointTurn,
+                    const Settler& settler = defaultTurnSettler);
 
   /**
    * Turn the chassis to face an absolue angle
@@ -71,8 +69,8 @@ public:
    * @param turner  The turner
    * @param settler The settler
    */
-  virtual void turnToAngle(
-    const QAngle& angle, const Turner& turner = pointTurn, const Settler& settler = defaultTurnSettler);
+  virtual void turnToAngle(const QAngle& angle, const Turner& turner = pointTurn,
+                           const Settler& settler = defaultTurnSettler);
 
   /**
    * Turn the chassis to face a relative angle
@@ -81,8 +79,8 @@ public:
    * @param turner  The turner
    * @param settler The settler
    */
-  virtual void turnAngle(
-    const QAngle& angle, const Turner& turner = pointTurn, const Settler& settler = defaultTurnSettler);
+  virtual void turnAngle(const QAngle& angle, const Turner& turner = pointTurn,
+                         const Settler& settler = defaultTurnSettler);
 
   /**
    * Turn the chassis to face a point
@@ -91,8 +89,8 @@ public:
    * @param turner  The turner
    * @param settler The settler
    */
-  virtual void turnToPoint(
-    const Vector& point, const Turner& turner = pointTurn, const Settler& settler = defaultTurnSettler);
+  virtual void turnToPoint(const Vector& point, const Turner& turner = pointTurn,
+                           const Settler& settler = defaultTurnSettler);
 
   /**
    * Drive a distance while correcting angle using an AngleCalculator
@@ -102,11 +100,8 @@ public:
    * @param turnScale       The turn scale
    * @param settler         The settler
    */
-  virtual void moveDistanceAtAngle(
-    const QLength& distance,
-    const AngleCalculator& angleCalculator,
-    double turnScale,
-    const Settler& settler = defaultDriveSettler);
+  virtual void moveDistanceAtAngle(const QLength& distance, const AngleCalculator& angleCalculator,
+                                   double turnScale, const Settler& settler = defaultDriveSettler);
 
   /**
    * Drive a distance while maintaining starting angle
@@ -124,8 +119,8 @@ public:
    *                    higher value will make the robot turn to face the point sooner
    * @param settler     The settler
    */
-  virtual void driveToPoint(
-    const Vector& targetPoint, double turnScale = 1, const Settler& settler = defaultDriveSettler);
+  virtual void driveToPoint(const Vector& targetPoint, double turnScale = 1,
+                            const Settler& settler = defaultDriveSettler);
 
   /**
    * Drive to a point using simple point seeking
@@ -135,8 +130,8 @@ public:
    *                    higher value will make the robot turn to face the point sooner
    * @param settler     The settler
    */
-  virtual void driveToPoint2(
-    const Vector& targetPoint, double turnScale = 1, const Settler& settler = defaultDriveSettler);
+  virtual void driveToPoint2(const Vector& targetPoint, double turnScale = 1,
+                             const Settler& settler = defaultDriveSettler);
 
   /**
    * A Settler that is used for turning which uses the turning pid's isSettled() method
@@ -214,14 +209,19 @@ public:
   static AngleCalculator makeAngleCalculator();
 
   /**
-   * Calculate angle from the chassis to the point
+   * Get the odometry state.
    */
-  QAngle angleToPoint(const Vector& point) const;
+  State getState() const;
 
   /**
    * Calculate distance from the chassis to the point
    */
   QLength distanceToPoint(const Vector& point) const;
+
+  /**
+   * Calculate angle from the chassis to the point
+   */
+  QAngle angleToPoint(const Vector& point) const;
 
 protected:
   /**
@@ -229,23 +229,15 @@ protected:
    */
   virtual void resetPid();
 
-  /**
-   * Control the chassis movement. Applies magnitude control to prioritize turning.
-   *
-   * @param forwardSpeed Forward speed
-   * @param yaw          The yaw
-   */
-  void driveVector(double forwardSpeed, double yaw);
-
   std::shared_ptr<ChassisModel> model {nullptr};
   std::shared_ptr<Odometry> odometry {nullptr};
   std::unique_ptr<IterativePosPIDController> distanceController {nullptr};
   std::unique_ptr<IterativePosPIDController> angleController {nullptr};
   std::unique_ptr<IterativePosPIDController> turnController {nullptr};
   const QLength settleRadius;
+  TimeUtil timeUtil;
 
   QAngle angleErr = 0_deg;
   QLength distanceErr = 0_in;
 };
-
 } // namespace lib7842
