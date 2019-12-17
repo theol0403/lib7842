@@ -10,10 +10,6 @@ Object::Object(const pros::vision_object& iobject) {
   height = iobject.height;
 }
 
-void Object::set(const Query& iquery, double ivalue) {
-  iquery(*this) = ivalue;
-}
-
 double Object::get(const Query& iquery) const {
   return iquery(*this);
 }
