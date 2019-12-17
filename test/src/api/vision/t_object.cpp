@@ -37,12 +37,25 @@ TEST_CASE("Object test") {
         CHECK(obj.get(Query::centerY) == 87.5);
       }
 
+      THEN("alternative query method should work") {
+        CHECK(Query::sig.getFrom(obj) == 1);
+        CHECK(Query::x.getFrom(obj) == 100);
+        CHECK(Query::y.getFrom(obj) == 50);
+        CHECK(Query::width.getFrom(obj) == 150);
+        CHECK(Query::height.getFrom(obj) == 75);
+        CHECK(Query::area.getFrom(obj) == 11250);
+        CHECK(Query::avgDim.getFrom(obj) == 112.5);
+        CHECK(Query::centerX.getFrom(obj) == 175);
+        CHECK(Query::centerY.getFrom(obj) == 87.5);
+      }
+
       THEN("a custom query should work") {
         Query query = [](const Object& iobj) {
           return iobj.x + iobj.y;
         };
 
         CHECK(obj.get(query) == 150);
+        CHECK(query.getFrom(obj) == 150);
       }
     }
   }
