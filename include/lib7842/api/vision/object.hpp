@@ -11,7 +11,7 @@ public:
 
   double get(const Query& iquery) const;
 
-  uint16_t sig {0};
+  uint16_t sig {VISION_OBJECT_ERR_SIG};
   double x {0};
   double y {0};
   double width {0};

@@ -28,5 +28,6 @@
 #include "lib7842/api/purePursuit/pursuitLimits.hpp"
 #include "lib7842/api/purePursuit/pursuitPath.hpp"
 
+#include "lib7842/api/vision/container.hpp"
 #include "lib7842/api/vision/object.hpp"
 #include "lib7842/api/vision/query.hpp"
