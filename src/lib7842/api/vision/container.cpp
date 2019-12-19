@@ -42,17 +42,8 @@ Container& Container::remove(const Query& query, const Compare& comp, double val
   return *this;
 }
 
-Container& Container::remove(const Query& query,
-                             const std::vector<std::pair<Compare, double>>& comps) {
-  objects.erase(std::remove_if(objects.begin(), objects.end(),
-                               [&](const Object& obj) {
-                                 return std::accumulate(
-                                   comps.begin(), comps.end(), true,
-                                   [&](bool a, const std::pair<Compare, double>& b) {
-                                     return a && b.first(query(obj), b.second);
-                                   });
-                               }),
-                objects.end());
+Container& Container::remove(const std::function<bool(const Object&)>& comp) {
+  objects.erase(std::remove_if(objects.begin(), objects.end(), comp), objects.end());
   return *this;
 }
 

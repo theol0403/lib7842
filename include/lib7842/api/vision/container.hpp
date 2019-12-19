@@ -20,7 +20,7 @@ public:
   using Compare = std::function<bool(double, double)>;
 
   Container& remove(const Query& query, const Compare& comp, double value);
-  Container& remove(const Query& query, const std::vector<std::pair<Compare, double>>& comps);
+  Container& remove(const std::function<bool(const Object&)>& comp);
 
   Container& sort(const Query& query, const Compare& comp);
 
