@@ -17,21 +17,22 @@ public:
   Container& remove(size_t index);
   Container& remove(size_t startIndex, size_t endIndex);
 
+  Object get(size_t index);
+  double get(size_t index, const Query& query);
+  double total(const Query& query);
+  double avg(const Query& query);
+
+  Container& resize(size_t size);
+  Container& trim(size_t size);
+
+  Container& reset();
+
   using Compare = std::function<bool(double, double)>;
 
   Container& remove(const Query& query, const Compare& comp, double value);
   Container& remove(const std::function<bool(const Object&)>& comp);
 
   Container& sort(const Query& query, const Compare& comp);
-
-  Container& resize(size_t size);
-  Container& trim(size_t size);
-  Container& reset();
-
-  Object get(size_t index);
-  Object total();
-  Object avg();
-  Container operator+(Container);
 
 protected:
   std::vector<Object> objects = {};

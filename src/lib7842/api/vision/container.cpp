@@ -35,6 +35,42 @@ Container& Container::remove(size_t startIndex, size_t endIndex) {
   return *this;
 }
 
+Object Container::get(size_t index) {
+  if (index < objects.size()) {
+    return objects.at(index);
+  } else {
+    return {};
+  }
+}
+
+double Container::get(size_t index, const Query& query) {
+  return get(index).get(query);
+}
+
+double Container::total(const Query& query) {
+  return std::accumulate(objects.begin(), objects.end(), 0.0,
+                         [&](double a, const Object& b) { return a + query(b); });
+}
+
+double Container::avg(const Query& query) {
+  return total(query) / static_cast<double>(objects.size());
+}
+
+Container& Container::resize(size_t size) {
+  objects.resize(size);
+  return *this;
+}
+
+Container& Container::trim(size_t size) {
+  if (size < objects.size()) resize(size);
+  return *this;
+}
+
+Container& Container::reset() {
+  resize(0);
+  return *this;
+}
+
 Container& Container::remove(const Query& query, const Compare& comp, double value) {
   objects.erase(std::remove_if(objects.begin(), objects.end(),
                                [&](const Object& obj) { return comp(query(obj), value); }),
