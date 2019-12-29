@@ -37,7 +37,7 @@ public:
   SimplePath generate(int isteps = 1) const override;
 
   /**
-   * Implictly convert path to a shared pointer
+   * Implicitly convert path to a shared pointer
    */
   operator std::shared_ptr<AbstractPath>() & override;
   operator std::shared_ptr<AbstractPath>() && override;

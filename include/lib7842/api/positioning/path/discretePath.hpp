@@ -209,7 +209,7 @@ public:
   }
 
   /**
-   * Implictly convert path to a shared pointer
+   * Implicitly convert path to a shared pointer
    */
   operator std::shared_ptr<AbstractPath>() & override {
     return std::make_shared<DiscretePath<T>>(*this);
