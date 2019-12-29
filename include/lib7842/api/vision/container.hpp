@@ -32,7 +32,9 @@ public:
   Container& remove(const Query& query, const Compare& comp, double value);
   Container& remove(const std::function<bool(const Object&)>& comp);
 
-  Container& sort(const Query& query, const Compare& comp);
+  Container& sort(const Query& query, const Compare& comp = std::greater<double>());
+
+  Container& operator+=(const Container& container);
 
 protected:
   std::vector<Object> objects = {};
