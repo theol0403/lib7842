@@ -114,10 +114,18 @@ void opcontrol() {
                         TimeUtilFactory().create());
   PursuitLimits limits {0.2_mps, 1.1_mps2, 0.75_mps, 0.4_mps2, 0_mps, 40_mps};
 
+  /**
+   * Vision
+   */
+  Vision::Vision vision(16);
+
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
                    controller.getAnalog(ControllerAnalog::rightY),
                    controller.getAnalog(ControllerAnalog::leftX));
+
+    auto container = vision.getAll();
+    std::cout << container().size() << std::endl;
 
     if (controller.getDigital(ControllerDigital::A)) {
 
