@@ -11,12 +11,12 @@ public:
   using Page::Page;
 
   /**
-   * Initialize the odomDebug.
+   * Initialize the odom page.
    */
   void initialize() override;
 
   /**
-   * Render the odomDebug.
+   * Render the odom page.
    */
   void render() override;
 
