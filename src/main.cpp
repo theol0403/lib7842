@@ -118,6 +118,7 @@ void opcontrol() {
    * Vision
    */
   Vision::Vision vision(16);
+  GUI::VisionDraw drawer(lv_scr_act());
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -126,6 +127,9 @@ void opcontrol() {
 
     auto container = vision.getAll();
     std::cout << container().size() << std::endl;
+
+    drawer.clear();
+    drawer.makeLayer().withColor(LV_COLOR_ORANGE).withColor(LV_COLOR_RED, 1).draw(container);
 
     if (controller.getDigital(ControllerDigital::A)) {
 
