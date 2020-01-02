@@ -26,11 +26,14 @@ void lvglTest() {
   Vision::Container container;
   container.add({1, 20, 20, 50, 50, 100, 100});
 
-  vision.makeLayer().withColor(LV_COLOR_RED).draw(container);
+  vision.makeLayer().draw(container);
 
   Vision::Container container2;
   container2.add({2, 30, 30, 50, 50, 100, 100});
-  vision.makeLayer().withColor(LV_COLOR_YELLOW).withColor(LV_COLOR_WHITE, 2).draw(container2);
+  vision.makeLayer()
+    .withColor(LV_COLOR_YELLOW)
+    .withColor(LV_COLOR_WHITE, LV_COLOR_GREEN, 2)
+    .draw(container2);
 
   pros::delay(3000);
 
@@ -40,7 +43,7 @@ void lvglTest() {
   container.add({1, 20, 20, 50, 50, 100, 100});
   container.add({1, 20, 20, 50, 50, 100, 100});
 
-  vision.makeLayer().withColor(LV_COLOR_RED).draw(container);
+  vision.makeLayer().withColor(LV_COLOR_RED, LV_COLOR_ORANGE).draw(container);
   // .button(
   //   "Test",
   //   []() {

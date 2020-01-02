@@ -14,6 +14,8 @@ public:
 
   VisionDrawer& clear();
   VisionDrawer& draw(const Vision::Object& object, const lv_color_t& color);
+  VisionDrawer& draw(const Vision::Object& object, const lv_color_t& main,
+                     const lv_color_t& border);
 
   VisionLayer makeLayer();
 
@@ -31,13 +33,16 @@ public:
 
   VisionLayer& withColor(const lv_color_t& color);
   VisionLayer& withColor(const lv_color_t& color, uint16_t sig);
+  VisionLayer& withColor(const lv_color_t& main, const lv_color_t& border);
+  VisionLayer& withColor(const lv_color_t& main, const lv_color_t& border, uint16_t sig);
 
   void draw(const Vision::Container& container);
 
 protected:
   VisionDrawer* drawer {nullptr};
-  lv_color_t defaultColor {LV_COLOR_BLACK};
-  std::map<uint16_t, lv_color_t> sigColors {};
+  using Style = std::pair<lv_color_t, lv_color_t>;
+  Style defaultColor {LV_COLOR_BLACK, LV_COLOR_WHITE};
+  std::map<uint16_t, Style> sigColors {};
 };
 
 } // namespace lib7842::GUI

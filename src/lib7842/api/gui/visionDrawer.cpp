@@ -14,9 +14,15 @@ VisionDrawer& VisionDrawer::clear() {
 }
 
 VisionDrawer& VisionDrawer::draw(const Object& object, const lv_color_t& color) {
+  return draw(object, color, color);
+}
+
+VisionDrawer& VisionDrawer::draw(const Object& object, const lv_color_t& main,
+                                 const lv_color_t& border) {
   auto& [obj, style] = addObject();
-  style.body.main_color = color;
-  style.body.grad_color = color;
+  style.body.main_color = main;
+  style.body.grad_color = main;
+  style.body.border.color = border;
   lv_obj_set_style(obj, &style);
   lv_obj_set_hidden(obj, false);
 
@@ -42,7 +48,8 @@ VisionDrawer::ScreenObject& VisionDrawer::addObject() {
     auto& [obj, style] = object;
     lv_obj_set_hidden(obj, true);
     lv_style_copy(&style, &lv_style_pretty_color);
-    style.body.border.width = 0;
+    style.body.border.width = 2;
+    style.body.border.opa = LV_OPA_100;
     objects.emplace_after(iterator, std::move(object));
   }
   return *(++iterator);
@@ -51,20 +58,31 @@ VisionDrawer::ScreenObject& VisionDrawer::addObject() {
 VisionLayer::VisionLayer(VisionDrawer* idrawer) : drawer(idrawer) {}
 
 VisionLayer& VisionLayer::withColor(const lv_color_t& color) {
-  defaultColor = color;
+  defaultColor = std::make_pair(color, color);
   return *this;
 }
 
 VisionLayer& VisionLayer::withColor(const lv_color_t& color, uint16_t sig) {
-  sigColors[sig] = color;
+  sigColors[sig] = std::make_pair(color, color);
+  return *this;
+}
+
+VisionLayer& VisionLayer::withColor(const lv_color_t& main, const lv_color_t& border) {
+  defaultColor = std::make_pair(main, border);
+  return *this;
+}
+
+VisionLayer& VisionLayer::withColor(const lv_color_t& main, const lv_color_t& border,
+                                    uint16_t sig) {
+  sigColors[sig] = std::make_pair(main, border);
   return *this;
 }
 
 void VisionLayer::draw(const Vision::Container& container) {
   for (auto&& object : container()) {
     auto it = sigColors.find(object.get(Query::sig));
-    lv_color_t& color = it == sigColors.end() ? defaultColor : it->second;
-    drawer->draw(object, color);
+    Style& color = it == sigColors.end() ? defaultColor : it->second;
+    drawer->draw(object, color.first, color.second);
   }
 }
 
