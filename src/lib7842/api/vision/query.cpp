@@ -23,6 +23,14 @@ Query Query::height = [](const Object& obj) {
   return obj.height;
 };
 
+Query Query::fovWidth = [](const Object& obj) {
+  return obj.fovWidth;
+};
+
+Query Query::fovHeight = [](const Object& obj) {
+  return obj.fovHeight;
+};
+
 Query Query::area = [](const Object& obj) {
   return obj.width * obj.height;
 };

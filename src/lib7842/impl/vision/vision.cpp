@@ -72,7 +72,8 @@ Container Vision::getAll() {
     pros::vision_object_s_t temp;
     vexDeviceVisionObjectGet(device->device_info, i, (V5_DeviceVisionObject*)&temp);
     container.add(Object {temp.signature, (double)temp.left_coord, (double)temp.top_coord,
-                          (double)temp.width, (double)temp.height});
+                          (double)temp.width, (double)temp.height, VISION_FOV_WIDTH,
+                          VISION_FOV_HEIGHT});
   }
 
   port_mutex_give(port - 1);

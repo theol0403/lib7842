@@ -12,6 +12,9 @@ public:
   double y {0};
   double width {0};
   double height {0};
+
+  double fovWidth {0};
+  double fovHeight {0};
 };
 
 } // namespace lib7842::Vision

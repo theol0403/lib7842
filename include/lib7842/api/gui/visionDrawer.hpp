@@ -12,16 +12,21 @@ public:
   using Page::Page;
 
   VisionDrawer& clear();
+  VisionDrawer& draw(const Vision::Object& object, const lv_color_t& color);
+
   VisionLayer makeLayer();
 
 protected:
-  lv_obj_t* canvas {nullptr};
-  std::vector<lv_color_t> buffer {};
+  using ScreenObject = std::pair<lv_obj_t*, lv_style_t>;
+  ScreenObject& addObject();
+
+  std::vector<ScreenObject> objects {};
+  size_t objectCount {0};
 };
 
 class VisionLayer {
 public:
-  VisionLayer(lv_obj_t* icanvas);
+  VisionLayer(VisionDrawer* idrawer);
 
   VisionLayer& withColor(const lv_color_t& color);
   VisionLayer& withColor(const lv_color_t& color, uint16_t sig);
@@ -29,7 +34,7 @@ public:
   void draw(const Vision::Container& container);
 
 protected:
-  lv_obj_t* canvas {nullptr};
+  VisionDrawer* drawer {nullptr};
   lv_color_t defaultColor {LV_COLOR_WHITE};
   std::map<uint16_t, lv_color_t> sigColors {};
 };
