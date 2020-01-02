@@ -21,7 +21,7 @@ void lvglTest() {
     .button("Yeet", [&]() { std::cout << "y" << std::endl; })
     .build();
 
-  auto& vision = scr.makePage<GUI::VisionDrawer>("Vision");
+  auto& vision = scr.makePage<GUI::VisionPage>("Vision");
 
   Vision::Container container;
   container.add({1, 20, 20, 50, 50, 100, 100});
@@ -35,15 +35,6 @@ void lvglTest() {
     .withColor(LV_COLOR_WHITE, LV_COLOR_GREEN, 2)
     .draw(container2);
 
-  pros::delay(3000);
-
-  container().clear();
-  vision.clear();
-
-  container.add({1, 20, 20, 50, 50, 100, 100});
-  container.add({1, 20, 20, 50, 50, 100, 100});
-
-  vision.makeLayer().withColor(LV_COLOR_RED, LV_COLOR_ORANGE).draw(container);
   // .button(
   //   "Test",
   //   []() {

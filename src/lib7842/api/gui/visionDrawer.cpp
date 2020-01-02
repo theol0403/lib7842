@@ -6,19 +6,19 @@ namespace lib7842::GUI {
 
 using namespace lib7842::Vision;
 
-VisionDrawer& VisionDrawer::clear() {
+VisionPage& VisionPage::clear() {
   std::for_each(objects.begin(), ++iterator,
                 [](const auto& object) { lv_obj_set_hidden(object.first, true); });
   iterator = objects.before_begin();
   return *this;
 }
 
-VisionDrawer& VisionDrawer::draw(const Object& object, const lv_color_t& color) {
+VisionPage& VisionPage::draw(const Object& object, const lv_color_t& color) {
   return draw(object, color, color);
 }
 
-VisionDrawer& VisionDrawer::draw(const Object& object, const lv_color_t& main,
-                                 const lv_color_t& border) {
+VisionPage& VisionPage::draw(const Object& object, const lv_color_t& main,
+                             const lv_color_t& border) {
   auto& [obj, style] = addObject();
   style.body.main_color = main;
   style.body.grad_color = main;
@@ -37,11 +37,11 @@ VisionDrawer& VisionDrawer::draw(const Object& object, const lv_color_t& main,
   return *this;
 }
 
-VisionLayer VisionDrawer::makeLayer() {
-  return VisionLayer(this);
+VisionLayer VisionPage::makeLayer() {
+  return VisionLayer(*this);
 }
 
-VisionDrawer::ScreenObject& VisionDrawer::addObject() {
+VisionPage::ScreenObject& VisionPage::addObject() {
   auto attempt = iterator;
   if (++attempt == objects.end()) {
     auto object = std::make_pair(lv_obj_create(container, NULL), lv_style_t());
@@ -55,20 +55,20 @@ VisionDrawer::ScreenObject& VisionDrawer::addObject() {
   return *(++iterator);
 }
 
-VisionLayer::VisionLayer(VisionDrawer* idrawer) : drawer(idrawer) {}
+VisionLayer::VisionLayer(VisionPage& idrawer) : drawer(idrawer) {}
 
 VisionLayer& VisionLayer::withColor(const lv_color_t& color) {
   defaultColor = std::make_pair(color, color);
   return *this;
 }
 
-VisionLayer& VisionLayer::withColor(const lv_color_t& color, uint16_t sig) {
-  sigColors[sig] = std::make_pair(color, color);
+VisionLayer& VisionLayer::withColor(const lv_color_t& main, const lv_color_t& border) {
+  defaultColor = std::make_pair(main, border);
   return *this;
 }
 
-VisionLayer& VisionLayer::withColor(const lv_color_t& main, const lv_color_t& border) {
-  defaultColor = std::make_pair(main, border);
+VisionLayer& VisionLayer::withColor(const lv_color_t& color, uint16_t sig) {
+  sigColors[sig] = std::make_pair(color, color);
   return *this;
 }
 
@@ -82,7 +82,7 @@ void VisionLayer::draw(const Vision::Container& container) {
   for (auto&& object : container()) {
     auto it = sigColors.find(object.get(Query::sig));
     Style& color = it == sigColors.end() ? defaultColor : it->second;
-    drawer->draw(object, color.first, color.second);
+    drawer.draw(object, color.first, color.second);
   }
 }
 
