@@ -21,13 +21,26 @@ void lvglTest() {
     .button("Yeet", [&]() { std::cout << "y" << std::endl; })
     .build();
 
-  auto& vision = scr.makePage<GUI::VisionDrawer>("Vision").clear();
+  auto& vision = scr.makePage<GUI::VisionDrawer>("Vision");
 
   Vision::Container container;
   container.add({1, 20, 20, 50, 50, 100, 100});
 
   vision.makeLayer().withColor(LV_COLOR_RED).draw(container);
 
+  Vision::Container container2;
+  container2.add({2, 30, 30, 50, 50, 100, 100});
+  vision.makeLayer().withColor(LV_COLOR_YELLOW).withColor(LV_COLOR_WHITE, 2).draw(container2);
+
+  pros::delay(3000);
+
+  container().clear();
+  vision.clear();
+
+  container.add({1, 20, 20, 50, 50, 100, 100});
+  container.add({1, 20, 20, 50, 50, 100, 100});
+
+  vision.makeLayer().withColor(LV_COLOR_RED).draw(container);
   // .button(
   //   "Test",
   //   []() {
