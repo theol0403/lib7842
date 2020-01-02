@@ -55,7 +55,7 @@ SCENARIO("State test") {
       }
     }
 
-    GIVEN("a state substracted by itself") {
+    GIVEN("a state subtracted by itself") {
       State state2 = state - state;
 
       THEN("the new state members should be 0") {

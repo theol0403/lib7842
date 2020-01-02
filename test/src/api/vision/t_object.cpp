@@ -8,7 +8,7 @@ TEST_CASE("Object test") {
     Object obj;
 
     THEN("all the values should be zero-initialized") {
-      CHECK(obj.sig == VISION_OBJECT_ERR_SIG);
+      CHECK(obj.sig == 0);
       CHECK(obj.x == 0);
       CHECK(obj.y == 0);
       CHECK(obj.width == 0);
@@ -22,7 +22,7 @@ TEST_CASE("Object test") {
       obj.width = 150;
       obj.height = 75;
 
-      THEN("all the data should be accesible") {
+      THEN("all the data should be accessible") {
         CHECK(obj.get(Query::sig) == 1);
         CHECK(obj.get(Query::x) == 100);
         CHECK(obj.get(Query::y) == 50);

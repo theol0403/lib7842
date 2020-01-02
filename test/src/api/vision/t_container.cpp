@@ -59,7 +59,7 @@ TEST_CASE("Object test") {
           CHECK(container.remove([](const Object& iobj) { return iobj.x == 100; })().size() == 0);
         }
 
-        THEN("totalling should work") {
+        THEN("totaling should work") {
           CHECK(container.total(Query::x) == 100);
         }
       }
@@ -101,7 +101,7 @@ TEST_CASE("Object test") {
                   .size() == 0);
         }
 
-        THEN("totalling should work") {
+        THEN("totaling should work") {
           CHECK(container.total(Query::x) == 300);
         }
 
