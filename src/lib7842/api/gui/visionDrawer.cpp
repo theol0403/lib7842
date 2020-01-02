@@ -37,6 +37,21 @@ VisionPage& VisionPage::draw(const Object& object, const lv_color_t& main,
   return *this;
 }
 
+VisionPage& VisionPage::draw(const Vision::Container& icontainer, const lv_color_t& color) {
+  for (auto&& object : icontainer()) {
+    draw(object, color);
+  }
+  return *this;
+}
+
+VisionPage& VisionPage::draw(const Vision::Container& icontainer, const lv_color_t& main,
+                             const lv_color_t& border) {
+  for (auto&& object : icontainer()) {
+    draw(object, main, border);
+  }
+  return *this;
+}
+
 VisionLayer VisionPage::makeLayer() {
   return VisionLayer(*this);
 }

@@ -37,19 +37,19 @@ public:
   /**
    * Draw a container to the screen. Use a single color.
    *
-   * @param  container The container
-   * @param  color     The color
+   * @param  icontainer The container
+   * @param  color      The color
    */
-  VisionPage& draw(const Vision::Container& container, const lv_color_t& color);
+  VisionPage& draw(const Vision::Container& icontainer, const lv_color_t& color);
 
   /**
    * Draw a container to the screen. Use a border color.
    *
-   * @param  container The container
-   * @param  main      The main color
-   * @param  border    The border color
+   * @param  icontainer The container
+   * @param  main       The main color
+   * @param  border     The border color
    */
-  VisionPage& draw(const Vision::Container& container, const lv_color_t& main,
+  VisionPage& draw(const Vision::Container& icontainer, const lv_color_t& main,
                    const lv_color_t& border);
 
   /**
