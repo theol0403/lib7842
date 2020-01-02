@@ -7,9 +7,9 @@ namespace lib7842::GUI {
 using namespace lib7842::Vision;
 
 VisionDrawer& VisionDrawer::clear() {
-  std::for_each_n(objects.begin(), objectCount,
-                  [](const auto& object) { lv_obj_set_hidden(object.first, true); });
-  objectCount = 0;
+  std::for_each(objects.begin(), ++iterator,
+                [](const auto& object) { lv_obj_set_hidden(object.first, true); });
+  iterator = objects.before_begin();
   return *this;
 }
 
@@ -36,20 +36,16 @@ VisionLayer VisionDrawer::makeLayer() {
 }
 
 VisionDrawer::ScreenObject& VisionDrawer::addObject() {
-  objectCount++;
-  if (objectCount > objects.size()) {
+  auto attempt = iterator;
+  if (++attempt == objects.end()) {
     auto object = std::make_pair(lv_obj_create(container, NULL), lv_style_t());
     auto& [obj, style] = object;
+    lv_obj_set_hidden(obj, true);
     lv_style_copy(&style, &lv_style_pretty_color);
     style.body.border.width = 0;
-    lv_obj_set_hidden(obj, true);
-    objects.emplace_back(std::move(object));
-    return objects.back();
-  } else {
-    auto it = objects.begin();
-    std::advance(it, objectCount - 1);
-    return *it;
+    objects.emplace_after(iterator, std::move(object));
   }
+  return *(++iterator);
 }
 
 VisionLayer::VisionLayer(VisionDrawer* idrawer) : drawer(idrawer) {}

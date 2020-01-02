@@ -1,7 +1,7 @@
 #pragma once
 #include "lib7842/api/vision/container.hpp"
 #include "page.hpp"
-#include <list>
+#include <forward_list>
 #include <map>
 
 namespace lib7842::GUI {
@@ -21,8 +21,8 @@ protected:
   using ScreenObject = std::pair<lv_obj_t*, lv_style_t>;
   ScreenObject& addObject();
 
-  std::list<ScreenObject> objects {};
-  size_t objectCount {0};
+  std::forward_list<ScreenObject> objects {};
+  std::forward_list<ScreenObject>::iterator iterator {objects.before_begin()};
 };
 
 class VisionLayer {
