@@ -6,6 +6,7 @@
 #include "lib7842/api/gui/page.hpp"
 #include "lib7842/api/gui/screen.hpp"
 #include "lib7842/api/gui/selector.hpp"
+#include "lib7842/api/gui/visionDrawer.hpp"
 
 #include "lib7842/api/odometry/customOdometry.hpp"
 #include "lib7842/api/odometry/odomController.hpp"

@@ -118,7 +118,7 @@ void opcontrol() {
    * Vision
    */
   Vision::Vision vision(16);
-  GUI::VisionDraw drawer(lv_scr_act());
+  GUI::VisionDrawer drawer(lv_scr_act());
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),

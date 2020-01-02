@@ -1,5 +1,5 @@
 #pragma once
-#include "lib7842/vision/container.hpp"
+#include "lib7842/api/vision/container.hpp"
 #include "page.hpp"
 #include <map>
 
@@ -25,11 +25,15 @@ public:
 
   VisionDrawer& clear();
   VisionLayer makeLayer();
+
+protected:
+  lv_obj_t* canvas {nullptr};
+  std::vector<lv_color_t> buffer {};
 };
 
 class VisionLayer {
 public:
-  VisionLayer(lv_obj_t* canvas);
+  VisionLayer(lv_obj_t* icanvas);
 
   VisionLayer& withColor(const lv_color_t& color);
   VisionLayer& withColor(const lv_color_t& color, uint16_t sig);

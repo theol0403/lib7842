@@ -21,6 +21,8 @@ void lvglTest() {
     .button("Yeet", [&]() { std::cout << "y" << std::endl; })
     .build();
 
+  scr.makePage<GUI::VisionDrawer>("Vision").clear();
+
   // .button(
   //   "Test",
   //   []() {
