@@ -19,13 +19,6 @@ public:
   void render() override;
 
   /**
-   * Get the default tab name.
-   *
-   * @return The name.
-   */
-  static std::string getName();
-
-  /**
    * Set the graph range.
    *
    * @param  imin The minimum value

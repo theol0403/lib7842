@@ -13,10 +13,6 @@ void VisionDrawer::initialize() {
   clear();
 }
 
-std::string VisionDrawer::getName() {
-  return "Vision";
-}
-
 VisionDrawer& VisionDrawer::clear() {
   lv_canvas_flood_fill(canvas, 0, 0, themeColor, themeColor);
   return *this;

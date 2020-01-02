@@ -21,13 +21,6 @@ public:
   void render() override;
 
   /**
-   * Get the default tab name.
-   *
-   * @return The name.
-   */
-  static std::string getName();
-
-  /**
    * Provide the odometry for displaying.
    *
    * @param iodom The odometry

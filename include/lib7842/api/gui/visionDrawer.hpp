@@ -11,18 +11,6 @@ class VisionDrawer : public Page {
 public:
   using Page::Page;
 
-  /**
-   * Initialize the vision drawer.
-   */
-  void initialize() override;
-
-  /**
-   * Get the default tab name.
-   *
-   * @return The name.
-   */
-  static std::string getName();
-
   VisionDrawer& clear();
   VisionLayer makeLayer();
 
