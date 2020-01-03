@@ -126,9 +126,12 @@ void opcontrol() {
                    controller.getAnalog(ControllerAnalog::leftX));
 
     auto container = vision.getAll();
-
-    drawer.clear();
-    drawer.makeLayer().withColor(LV_COLOR_ORANGE).draw(container);
+    container.remove(Vision::Query::area, std::less<double>(), 200);
+    drawer.clear()
+      .makeLayer()
+      .withColor(LV_COLOR_RED, 1)
+      .withColor(LV_COLOR_YELLOW, 2)
+      .draw(container);
 
     if (controller.getDigital(ControllerDigital::A)) {
 
