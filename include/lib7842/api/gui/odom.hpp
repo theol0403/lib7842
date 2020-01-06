@@ -11,21 +11,14 @@ public:
   using Page::Page;
 
   /**
-   * Initialize the odomDebug.
+   * Initialize the odom page.
    */
   void initialize() override;
 
   /**
-   * Render the odomDebug.
+   * Render the odom page.
    */
   void render() override;
-
-  /**
-   * Get the default tab name.
-   *
-   * @return The name.
-   */
-  static std::string getName();
 
   /**
    * Provide the odometry for displaying.

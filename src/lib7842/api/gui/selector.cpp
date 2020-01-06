@@ -12,10 +12,6 @@ void Selector::initialize() {
   lv_btnm_set_style(btnm, LV_BTNM_STYLE_BTN_REL, &inaStyle);
 }
 
-std::string Selector::getName() {
-  return "Selector";
-}
-
 void Selector::run() {
   buttons.at(currentIndex).second();
 }

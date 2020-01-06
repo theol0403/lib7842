@@ -114,10 +114,24 @@ void opcontrol() {
                         TimeUtilFactory().create());
   PursuitLimits limits {0.2_mps, 1.1_mps2, 0.75_mps, 0.4_mps2, 0_mps, 40_mps};
 
+  /**
+   * Vision
+   */
+  Vision::Vision vision(16);
+  auto& drawer = scr.makePage<GUI::VisionPage>("Vision");
+
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
                    controller.getAnalog(ControllerAnalog::rightY),
                    controller.getAnalog(ControllerAnalog::leftX));
+
+    auto container = vision.getAll();
+    container.remove(Vision::Query::area, std::less<double>(), 200);
+    drawer.clear()
+      .makeLayer()
+      .withColor(LV_COLOR_RED, 1)
+      .withColor(LV_COLOR_YELLOW, 2)
+      .draw(container);
 
     if (controller.getDigital(ControllerDigital::A)) {
 

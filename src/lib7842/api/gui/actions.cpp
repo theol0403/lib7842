@@ -45,10 +45,6 @@ void Actions::initialize() {
   lv_btnm_set_style(btnm, LV_BTNM_STYLE_BTN_REL, &inaStyle);
 }
 
-std::string Actions::getName() {
-  return "ButtonMatrix";
-}
-
 Actions& Actions::button(const std::string& iname, const std::function<void()>& iaction) {
   buttons.push_back(std::make_pair(iname, iaction));
   return *this;

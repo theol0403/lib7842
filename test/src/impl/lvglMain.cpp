@@ -5,10 +5,10 @@
 void lvglTest() {
   GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
 
-  scr.makePage<GUI::Odom>().attachOdom(nullptr).attachResetter(nullptr);
+  scr.makePage<GUI::Odom>("Odom").attachOdom(nullptr).attachResetter(nullptr);
 
-  scr.makePage<GUI::Graph>().withRange(0, 100).withSeries("Test", LV_COLOR_RED,
-                                                          []() { return 50; });
+  scr.makePage<GUI::Graph>("Graph").withRange(0, 100).withSeries("Test", LV_COLOR_RED,
+                                                                 []() { return 50; });
 
   scr.makePage<GUI::Actions>("Buttons")
     .button("Claw", [&]() { std::cout << "help" << std::endl; })
@@ -20,6 +20,20 @@ void lvglTest() {
     .button("Arm", [&]() { std::cout << "a" << std::endl; })
     .button("Yeet", [&]() { std::cout << "y" << std::endl; })
     .build();
+
+  auto& vision = scr.makePage<GUI::VisionPage>("Vision");
+
+  Vision::Container container;
+  container.add({1, 20, 20, 50, 50, 100, 100});
+
+  vision.makeLayer().draw(container);
+
+  Vision::Container container2;
+  container2.add({2, 30, 30, 50, 50, 100, 100});
+  vision.makeLayer()
+    .withColor(LV_COLOR_YELLOW)
+    .withColor(LV_COLOR_WHITE, LV_COLOR_GREEN, 2)
+    .draw(container2);
 
   // .button(
   //   "Test",

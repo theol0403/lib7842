@@ -8,7 +8,6 @@ public:
   using Actions::Actions;
 
   void initialize() override;
-  static std::string getName();
 
   void run();
 
