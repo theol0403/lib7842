@@ -16,7 +16,7 @@ class OdomController;
 using Settler = std::function<bool(const OdomController& odom)>;
 
 /**
- * Function that accepts a turning velocity and controls excecution to the chassis. Used to implement
+ * Function that accepts a turning velocity and controls execution to the chassis. Used to implement
  * a point or pivot turn.
  */
 using Turner = std::function<void(ChassisModel& model, double vel)>;
@@ -63,7 +63,7 @@ public:
                     const Settler& settler = defaultTurnSettler);
 
   /**
-   * Turn the chassis to face an absolue angle
+   * Turn the chassis to face an absolute angle
    *
    * @param angle   The angle
    * @param turner  The turner
@@ -149,36 +149,36 @@ public:
   static bool defaultDriveAngleSettler(const OdomController& odom);
 
   /**
-   * A Turner that excecutes a point turn which turns in place. Used as default for turn functions
+   * A Turner that executes a point turn which turns in place. Used as default for turn functions
    */
   static void pointTurn(ChassisModel& model, double vel);
 
   /**
-   * A Turner that excecutes a left pivot, meaning it only moves the left motors.
+   * A Turner that executes a left pivot, meaning it only moves the left motors.
    */
   static void leftPivot(ChassisModel& model, double vel);
 
   /**
-   * A Turner that excecutes a right pivot, meaning it only moves the right motors.
+   * A Turner that executes a right pivot, meaning it only moves the right motors.
    */
   static void rightPivot(ChassisModel& model, double vel);
 
   /**
    * Make a Settler that exits when angle error is within given range
-   * @param angle The angle error theshold
+   * @param angle The angle error threshold
    */
   static Settler makeSettler(const QAngle& angle);
 
   /**
    * Make a Settler that exits when distance error is within given range
-   * @param distance The distance error theshold
+   * @param distance The distance error threshold
    */
   static Settler makeSettler(const QLength& distance);
 
   /**
    * Make a Settler that exits when both angle and distance error is within given range.
-   * @param angle The angle error theshold
-   * @param distance The distance error theshold
+   * @param angle The angle error threshold
+   * @param distance The distance error threshold
    */
   static Settler makeSettler(const QLength& distance, const QAngle& angle);
 

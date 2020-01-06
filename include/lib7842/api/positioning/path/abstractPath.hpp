@@ -31,7 +31,7 @@ public:
   virtual SimplePath generate(int isteps = 1) const = 0;
 
   /**
-   * Implictly convert path to a shared pointer
+   * Implicitly convert path to a shared pointer
    */
   virtual operator std::shared_ptr<AbstractPath>() & = 0;
   virtual operator std::shared_ptr<AbstractPath>() && = 0;

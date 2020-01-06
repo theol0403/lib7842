@@ -22,10 +22,6 @@ void Odom::render() {
   }
 }
 
-std::string Odom::getName() {
-  return "Odom";
-}
-
 Odom& Odom::attachOdom(const std::shared_ptr<Odometry>& iodom) {
   odom = iodom;
   return *this;
