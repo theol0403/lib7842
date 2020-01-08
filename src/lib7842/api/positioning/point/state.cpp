@@ -14,6 +14,7 @@ State::State(const QLength& ix, const QLength& iy, const QAngle& itheta) :
  * Upcast Vector 
  */
 State::State(const Vector& ipoint) : Vector(ipoint) {};
+State::State(const Vector& ipoint, const QAngle& itheta) : Vector(ipoint), theta(itheta) {};
 
 /**
  * State Constructor 
