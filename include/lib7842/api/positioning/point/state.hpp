@@ -34,6 +34,14 @@ public:
   explicit State(const Vector& ipoint);
 
   /**
+   * Convert a Vector to a State with an angle
+   *
+   * @param ipoint The point
+   * @param itheta The angle
+   */
+  State(const Vector& ipoint, const QAngle& itheta);
+
+  /**
    * Convert a OdomState to a State
    *
    * @param ipoint The point
