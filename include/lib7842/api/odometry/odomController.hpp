@@ -101,7 +101,8 @@ public:
    * @param settler         The settler
    */
   virtual void moveDistanceAtAngle(const QLength& distance, const AngleCalculator& angleCalculator,
-                                   double turnScale, const Settler& settler = defaultDriveSettler);
+                                   double turnScale,
+                                   const Settler& settler = defaultDriveAngleSettler);
 
   /**
    * Drive a distance while maintaining starting angle
@@ -109,7 +110,8 @@ public:
    * @param distance The distance
    * @param settler  The settler
    */
-  virtual void moveDistance(const QLength& distance, const Settler& settler = defaultDriveSettler);
+  virtual void moveDistance(const QLength& distance,
+                            const Settler& settler = defaultDriveAngleSettler);
 
   /**
    * Drive to a point using custom point seeking
@@ -120,7 +122,7 @@ public:
    * @param settler     The settler
    */
   virtual void driveToPoint(const Vector& targetPoint, double turnScale = 1,
-                            const Settler& settler = defaultDriveSettler);
+                            const Settler& settler = defaultDriveAngleSettler);
 
   /**
    * Drive to a point using simple point seeking
@@ -131,7 +133,7 @@ public:
    * @param settler     The settler
    */
   virtual void driveToPoint2(const Vector& targetPoint, double turnScale = 1,
-                             const Settler& settler = defaultDriveSettler);
+                             const Settler& settler = defaultDriveAngleSettler);
 
   /**
    * A Settler that is used for turning which uses the turning pid's isSettled() method
@@ -197,9 +199,11 @@ public:
   static AngleCalculator makeAngleCalculator(const Vector& point);
 
   /**
-   * Make an AngleCaclulator that returns a constant error.
+   * Make an AngleCaclulator that returns a constant error. The default settler needs to be changed
+   * for a command using this calculator to settle.
    *
-   * @param error The error
+   * @param  error The error
+   * @return The angle calculator.
    */
   static AngleCalculator makeAngleCalculator(double error);
 
