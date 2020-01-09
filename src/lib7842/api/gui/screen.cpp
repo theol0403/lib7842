@@ -90,7 +90,7 @@ lv_obj_t* Screen::newPage(const std::string& iname) {
 
 void Screen::render() {
   for (auto&& page : pages) {
-    page->render();
+    page.second->render();
   }
 }
 

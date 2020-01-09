@@ -1,6 +1,7 @@
 #pragma once
 #include "lib7842/api/other/taskWrapper.hpp"
 #include "page.hpp"
+#include <map>
 #include <string>
 
 namespace lib7842::GUI {
@@ -52,9 +53,14 @@ public:
    */
   template <typename T> T& makePage(const std::string& iname) {
     static_assert(std::is_base_of<Page, T>::value, "T is not a Page");
+    if (pages.find(iname) == pages.end()) {
+      std::string msg("The page '" + iname + "' must have a unique name");
+      Page::LOG_ERROR(msg);
+      throw std::runtime_error(msg);
+    }
     auto ptr = std::make_shared<T>(newPage(iname), themeColor, Page::logger);
     ptr->initialize();
-    pages.emplace_back(ptr);
+    pages[iname] = ptr;
     return *ptr;
   }
 
@@ -70,7 +76,7 @@ public:
 
 private:
   lv_obj_t* tabview {nullptr};
-  std::vector<std::shared_ptr<Page>> pages {};
+  std::map<std::string, std::shared_ptr<Page>> pages {};
 
   lv_style_t style_bg;
   lv_style_t style_indic;
