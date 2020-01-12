@@ -167,15 +167,15 @@ bool OdomController::defaultDriveAngleSettler(const OdomController& odom) {
  * Default Turners
  */
 void OdomController::pointTurn(ChassisModel& model, double vel) {
-  model.rotate(vel);
+  model.tank(vel, -vel);
 }
 
 void OdomController::leftPivot(ChassisModel& model, double vel) {
-  model.left(vel * 2);
+  model.tank(vel * 2, 0);
 }
 
 void OdomController::rightPivot(ChassisModel& model, double vel) {
-  model.right(-vel * 2);
+  model.tank(0, -vel * 2);
 }
 
 /**
