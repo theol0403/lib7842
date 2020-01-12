@@ -205,8 +205,8 @@ void Odom::updateOdom() {
 
   auto sensors = odom->getModel()->getSensorVals();
 
-  std::string text = "X_in: " + std::to_string(state.x.convert(foot)) + "\n" +
-                     "Y_in: " + std::to_string(state.y.convert(foot)) + "\n" +
+  std::string text = "X_in: " + std::to_string(state.x.convert(inch)) + "\n" +
+                     "Y_in: " + std::to_string(state.y.convert(inch)) + "\n" +
                      "Theta_deg: " + std::to_string(state.theta.convert(degree)) + "\n" +
                      "Left: " + std::to_string(sensors[0]) + "\n" +
                      "Right: " + std::to_string(sensors[1]);
