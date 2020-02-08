@@ -14,6 +14,7 @@ public:
    * Requirements
    */
   void distanceTo(const Vector& point, const QLength& trigger);
+  void angleTo(const Vector& point, const QAngle& trigger);
   void angleTo(const QAngle& angle, const QAngle& trigger);
 
   void distanceErr(const QLength& trigger);
@@ -23,9 +24,9 @@ public:
   void turnSettled();
   void angleSettled();
 
-  void distanceSettledUtil(const TimeUtil& timeUtil);
-  void angleSettledUtil(const TimeUtil& timeUtil);
-  void turnSettledUtil(const TimeUtil& timeUtil);
+  // void distanceSettledUtil(const TimeUtil& timeUtil);
+  // void angleSettledUtil(const TimeUtil& timeUtil);
+  // void turnSettledUtil(const TimeUtil& timeUtil);
 
   void isTrue(const std::function<bool()>& function);
 
