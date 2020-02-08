@@ -4,44 +4,60 @@ namespace lib7842 {
 
 Trigger::Trigger(const OdomController* icontroller) : controller(icontroller) {}
 
-void Trigger::isTrue(const std::function<bool()>& function) {
+void Trigger::requirement(std::function<bool()>&& function) {
   requirements.emplace_back(function);
 }
 
+void Trigger::exception(std::function<bool()>&& function) {
+  exceptions.emplace_back(function);
+}
+
 void Trigger::distanceTo(const Vector& point, const QLength& trigger) {
-  isTrue([=] { return controller->distanceToPoint(point) < trigger; });
+  requirement([=] { return controller->distanceToPoint(point) < trigger; });
 }
 
 void Trigger::angleTo(const Vector& point, const QAngle& trigger) {
-  isTrue([=] { return controller->angleToPoint(point) < trigger; });
+  requirement([=] { return controller->angleToPoint(point) < trigger; });
 }
 
 void Trigger::angleTo(const QAngle& angle, const QAngle& trigger) {
-  isTrue([=] { return (controller->getState().theta - angle).abs() < trigger; });
+  requirement([=] { return (controller->getState().theta - angle).abs() < trigger; });
 }
 
 void Trigger::distanceErr(const QLength& trigger) {
-  isTrue([=] { return controller->getDistanceError() < trigger; });
+  requirement([=] { return controller->getDistanceError() < trigger; });
 }
 
 void Trigger::angleErr(const QAngle& trigger) {
-  isTrue([=] { return controller->getAngleError() < trigger; });
+  requirement([=] { return controller->getAngleError() < trigger; });
 }
 
 void Trigger::distanceSettled() {
-  isTrue([=] { return controller->isDistanceSettled(); });
+  requirement([=] { return controller->isDistanceSettled(); });
 }
 
 void Trigger::turnSettled() {
-  isTrue([=] { return controller->isTurnSettled(); });
+  requirement([=] { return controller->isTurnSettled(); });
 }
 
 void Trigger::angleSettled() {
-  isTrue([=] { return controller->isAngleSettled(); });
+  requirement([=] { return controller->isAngleSettled(); });
+}
+
+void Trigger::distanceSettledUtil(const TimeUtil& timeUtil) {
+  requirement([=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil().release())] {
+    return settledUtil->isSettled(controller->getDistanceError().convert(millimeter));
+  });
+}
+
+void Trigger::angleSettledUtil(const TimeUtil& timeUtil) {
+  requirement([=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil().release())] {
+    return settledUtil->isSettled(controller->getAngleError().convert(degree));
+  });
 }
 
 void Trigger::maxTime(const QTime& time, const TimeUtil& timeUtil) {
-  exeptions.emplace_back([=, timer = timeUtil.getTimer()]() mutable {
+  exception([=, timer = std::shared_ptr<AbstractTimer>(timeUtil.getTimer().release())]() mutable {
     timer->placeHardMark();
     return timer->getDtFromHardMark() > time;
   });

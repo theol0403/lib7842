@@ -15,7 +15,8 @@ public:
    * Requirements
    * The trigger will only fire if all requirements are met.
    */
-  virtual void isTrue(const std::function<bool()>& function);
+  virtual void requirement(std::function<bool()>&& function);
+  virtual void exception(std::function<bool()>&& function);
 
   virtual void distanceTo(const Vector& point, const QLength& trigger);
   virtual void angleTo(const Vector& point, const QAngle& trigger);
@@ -28,9 +29,8 @@ public:
   virtual void turnSettled();
   virtual void angleSettled();
 
-  // void distanceSettledUtil(const TimeUtil& timeUtil);
-  // void angleSettledUtil(const TimeUtil& timeUtil);
-  // void turnSettledUtil(const TimeUtil& timeUtil);
+  virtual void distanceSettledUtil(const TimeUtil& timeUtil);
+  virtual void angleSettledUtil(const TimeUtil& timeUtil);
 
   /**
    * Exceptions
@@ -57,6 +57,6 @@ protected:
   const OdomController* controller {nullptr};
 
   std::vector<std::function<bool()>> requirements;
-  std::vector<std::function<bool()>> exeptions;
+  std::vector<std::function<bool()>> exceptions;
 };
 } // namespace lib7842
