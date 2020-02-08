@@ -27,7 +27,7 @@ public:
    * Exceptions
    * The trigger will fire if any of the exceptions are met.
    */
-  virtual void maxTime(const QTime& time, const TimeUtil& itimeUtil);
+  virtual void maxTime(const QTime& time, const AbstractTimer& timer);
 
   /**
    * Run all the requirements and exceptions
