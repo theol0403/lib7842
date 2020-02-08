@@ -227,6 +227,41 @@ public:
    */
   QAngle angleToPoint(const Vector& point) const;
 
+  /**
+   * Get the error of the distance PID controller.
+   *
+   * @return The distance error.
+   */
+  QLength getDistanceError() const;
+
+  /**
+   * Get the error of the angle or turn PID controller.
+   *
+   * @return The angle error.
+   */
+  QAngle getAngleError() const;
+
+  /**
+   * Determines if the distance PID controller is settled.
+   *
+   * @return true if settled, false otherwise.
+   */
+  bool isDistanceSettled() const;
+
+  /**
+   * Determines if the angle PID controller is settled.
+   *
+   * @return true if settled, false otherwise.
+   */
+  bool isAngleSettled() const;
+
+  /**
+   * Determines if the turn PID controller is settled.
+   *
+   * @return true if settled, false otherwise.
+   */
+  bool isTurnSettled() const;
+
 protected:
   /**
    * Reset the pid controllers, used before every motion
@@ -241,7 +276,7 @@ protected:
   const QLength settleRadius;
   TimeUtil timeUtil;
 
-  QAngle angleErr = 0_deg;
   QLength distanceErr = 0_in;
+  QAngle angleErr = 0_deg;
 };
 } // namespace lib7842
