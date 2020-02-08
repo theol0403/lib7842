@@ -1,53 +1,43 @@
 #pragma once
-#include "odomController.hpp"
-#include "okapi/api/units/QSpeed.hpp"
+#include "lib7842/api/positioning/point/vector.hpp"
+#include "okapi/api/units/QAngle.hpp"
+#include "okapi/api/units/QLength.hpp"
+#include "okapi/api/units/QTime.hpp"
+#include "okapi/api/util/timeUtil.hpp"
+#include <functional>
 
 namespace lib7842 {
 
 class Trigger {
 public:
-  using Abort = std::function<bool(const OdomController*)>;
-
-  Trigger(const OdomController* icontroller);
+  Trigger() = default;
+  virtual ~Trigger() = default;
 
   /**
    * Requirements
+   * The trigger will only fire if all requirements are met.
    */
-  void distanceTo(const Vector& point, const QLength& trigger);
-  void angleTo(const Vector& point, const QAngle& trigger);
-  void angleTo(const QAngle& angle, const QAngle& trigger);
+  virtual void isTrue(const std::function<bool()>& function);
 
-  void distanceErr(const QLength& trigger);
-  void angleErr(const QAngle& trigger);
-
-  void distanceSettled();
-  void turnSettled();
-  void angleSettled();
-
-  // void distanceSettledUtil(const TimeUtil& timeUtil);
-  // void angleSettledUtil(const TimeUtil& timeUtil);
-  // void turnSettledUtil(const TimeUtil& timeUtil);
-
-  void isTrue(const std::function<bool()>& function);
+  virtual void distanceTo(const Vector& point, const QLength& trigger);
+  virtual void angleTo(const Vector& point, const QAngle& trigger);
+  virtual void angleTo(const QAngle& angle, const QAngle& trigger);
 
   /**
    * Exceptions
+   * The trigger will fire if any of the exceptions are met.
    */
-  void maxTime(const QTime& time);
+  virtual void maxTime(const QTime& time, const TimeUtil& itimeUtil);
 
   /**
-   * Abort
+   * Run all the requirements and exceptions
+   *
+   * @return Whether the trigger has been fired
    */
-  void withAbort(const QSpeed& threshold, const QTime& time);
-  void noAbort();
+  virtual bool operator()();
 
 protected:
-  const OdomController* controller {nullptr};
-
   std::vector<std::function<bool()>> requirements;
   std::vector<std::function<bool()>> exeptions;
-  Abort abort {defaultAbort};
-
-  static Abort defaultAbort;
 };
 } // namespace lib7842
