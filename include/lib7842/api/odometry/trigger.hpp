@@ -1,9 +1,14 @@
 #pragma once
-#include "lib7842/api/odometry/odomController.hpp"
+#include "lib7842/api/positioning/point/vector.hpp"
+#include "okapi/api/units/QAngle.hpp"
+#include "okapi/api/units/QLength.hpp"
 #include "okapi/api/util/timeUtil.hpp"
 #include <functional>
 
 namespace lib7842 {
+
+class OdomController; // forward declare
+using namespace okapi;
 
 class Trigger {
 public:
