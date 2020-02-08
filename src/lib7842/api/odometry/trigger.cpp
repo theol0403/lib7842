@@ -65,4 +65,20 @@ void Trigger::maxTime(const QTime& time, const TimeUtil& timeUtil) {
   });
 }
 
+bool Trigger::operator()() {
+  if (std::any_of(exceptions.begin(), exceptions.end(),
+                  [](const auto& function) { return function(); })) {
+    return true;
+  } else if (std::all_of(requirements.begin(), requirements.end(),
+                         [](const auto& function) { return function(); })) {
+    return true;
+  }
+  return false;
+}
+
+bool Trigger::operator()(const OdomController* icontroller) {
+  controller = icontroller;
+  return (*this)();
+}
+
 } // namespace lib7842

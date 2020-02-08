@@ -8,8 +8,8 @@ namespace lib7842 {
 class Trigger {
 public:
   Trigger() = default;
-  Trigger(const OdomController* icontroller);
   virtual ~Trigger() = default;
+  Trigger(const OdomController* icontroller);
 
   /**
    * Requirements
