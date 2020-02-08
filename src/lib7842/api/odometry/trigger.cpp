@@ -45,15 +45,17 @@ void Trigger::angleSettled() {
 }
 
 void Trigger::distanceSettledUtil(const TimeUtil& timeUtil) {
-  requirement([=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil().release())] {
-    return settledUtil->isSettled(controller->getDistanceError().convert(millimeter));
-  });
+  requirement(
+    [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil().release())]() mutable {
+      return settledUtil->isSettled(controller->getDistanceError().convert(millimeter));
+    });
 }
 
 void Trigger::angleSettledUtil(const TimeUtil& timeUtil) {
-  requirement([=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil().release())] {
-    return settledUtil->isSettled(controller->getAngleError().convert(degree));
-  });
+  requirement(
+    [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil().release())]() mutable {
+      return settledUtil->isSettled(controller->getAngleError().convert(degree));
+    });
 }
 
 void Trigger::maxTime(const QTime& time, const TimeUtil& timeUtil) {
