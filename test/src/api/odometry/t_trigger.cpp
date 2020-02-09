@@ -12,4 +12,51 @@ TEST_CASE("Trigger test") {
   SUBCASE("nothing should return false") {
     REQUIRE(!trigger());
   }
+
+  SUBCASE("requirements") {
+    SUBCASE("adding true") {
+      trigger.requirement([] { return true; });
+      REQUIRE(trigger());
+
+      SUBCASE("adding exception") {
+        trigger.exception([] { return true; });
+        REQUIRE(trigger());
+      }
+
+      SUBCASE("adding true again") {
+        trigger.requirement([] { return true; });
+        REQUIRE(trigger());
+
+        SUBCASE("adding false") {
+          trigger.requirement([] { return false; });
+          REQUIRE(!trigger());
+
+          SUBCASE("adding exception") {
+            trigger.exception([] { return true; });
+            REQUIRE(trigger());
+          }
+        }
+      }
+    }
+
+    SUBCASE("adding false") {
+      trigger.requirement([] { return false; });
+      REQUIRE(!trigger());
+
+      SUBCASE("adding true") {
+        trigger.requirement([] { return true; });
+        REQUIRE(!trigger());
+
+        SUBCASE("adding exception") {
+          trigger.exception([] { return true; });
+          REQUIRE(trigger());
+        }
+      }
+    }
+
+    SUBCASE("adding exception") {
+      trigger.exception([] { return true; });
+      REQUIRE(trigger());
+    }
+  }
 }
