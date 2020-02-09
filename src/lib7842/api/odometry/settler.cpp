@@ -14,7 +14,11 @@ void Settler::noAbort() {
 }
 
 bool Settler::operator()() {
-  if (driveAbort->isSettled(controller->getDistanceError().convert(millimeter))) {
+  auto error = controller->getDistanceError();
+  auto change = error - lastError;
+  lastError = error;
+
+  if (driveAbort->isSettled(change.convert(millimeter))) {
     return true;
   } else {
     return Trigger::operator()();

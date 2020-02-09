@@ -18,5 +18,7 @@ public:
 protected:
   std::shared_ptr<SettledUtil> driveAbort {defaultAbort};
   static std::shared_ptr<SettledUtil> defaultAbort;
+
+  QLength lastError {0_m};
 };
 } // namespace lib7842

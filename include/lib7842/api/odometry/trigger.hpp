@@ -52,7 +52,8 @@ public:
   virtual bool operator()(const OdomController* icontroller);
 
   /**
-   * Run all the requirements and exceptions
+   * Run all the requirements and exceptions. The controller is assumed to be provided by the
+   * constructor.
    *
    * @return Whether the trigger has been fired
    */
