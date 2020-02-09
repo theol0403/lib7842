@@ -1,11 +1,17 @@
 #include "test.hpp"
 
+class MockOdomController : public OdomController {
+public:
+  using OdomController::OdomController;
+  using OdomController::distanceErr;
+};
+
 TEST_CASE("Trigger test") {
   auto model = std::make_shared<MockThreeEncoderXDriveModel>();
   auto odom = std::make_shared<CustomOdometry>(
     model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}), createTimeUtil());
-  auto chassis = std::make_shared<OdomController>(model, odom, nullptr, nullptr, nullptr, 0_in,
-                                                  createTimeUtil());
+  auto chassis = std::make_shared<MockOdomController>(model, odom, nullptr, nullptr, nullptr, 0_in,
+                                                      createTimeUtil());
 
   auto trigger = chassis->trigger();
 
@@ -23,7 +29,7 @@ TEST_CASE("Trigger test") {
         REQUIRE(trigger());
       }
 
-      SUBCASE("adding true again") {
+      SUBCASE("adding true") {
         trigger.requirement([] { return true; });
         REQUIRE(trigger());
 
@@ -55,8 +61,35 @@ TEST_CASE("Trigger test") {
     }
 
     SUBCASE("adding exception") {
-      trigger.exception([] { return true; });
-      REQUIRE(trigger());
+      trigger.exception([] { return false; });
+      REQUIRE(!trigger());
+
+      SUBCASE("adding exception") {
+        trigger.exception([] { return true; });
+        REQUIRE(trigger());
+      }
     }
+  }
+
+  SUBCASE("settledUtil") {
+    trigger.distanceSettledUtil(createTimeUtil(
+      Supplier<std::unique_ptr<SettledUtil>>([]() { return createSettledUtilPtr(5, 0, 20_ms); })));
+    chassis->distanceErr = 10_mm;
+    REQUIRE(!trigger());
+    pros::delay(30);
+    REQUIRE(!trigger());
+    chassis->distanceErr = 1_mm;
+    REQUIRE(!trigger());
+    REQUIRE(!trigger()); // clear the derivative
+    pros::delay(30);
+    REQUIRE(trigger());
+  }
+
+  SUBCASE("max time") {
+    trigger.maxTime(20_ms, createTimeUtil());
+    pros::delay(30);
+    REQUIRE(!trigger());
+    pros::delay(30);
+    REQUIRE(trigger());
   }
 }
