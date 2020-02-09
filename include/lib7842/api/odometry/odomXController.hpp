@@ -25,8 +25,6 @@ public:
                   std::unique_ptr<IterativePosPIDController> iangleController,
                   const TimeUtil& itimeUtil);
 
-  virtual ~OdomXController() = default;
-
   /**
    * Strafe a distance in a relative direction while correcting angle using an AngleCalculator
    *

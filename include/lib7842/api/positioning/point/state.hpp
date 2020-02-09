@@ -14,8 +14,6 @@ public:
   QAngle theta {0_rad};
 
   using Vector::Vector;
-  State(const State& istate) = default;
-  virtual ~State() = default;
 
   /**
    * Create a new state
