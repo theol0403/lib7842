@@ -22,7 +22,7 @@ bool Settler::run() {
   auto change = error - lastError;
   lastError = error;
 
-  if (driveAbort->isSettled(change.convert(millimeter))) {
+  if (driveAbort && driveAbort->isSettled(change.convert(millimeter))) {
     return true;
   } else {
     return Trigger::run();

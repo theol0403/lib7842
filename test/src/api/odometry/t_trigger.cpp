@@ -71,6 +71,14 @@ TEST_CASE("Trigger test") {
     }
   }
 
+  SUBCASE("distanceErr") {
+    trigger.distanceErr(5_mm);
+    chassis->distanceErr = 10_mm;
+    REQUIRE(!trigger());
+    chassis->distanceErr = 1_mm;
+    REQUIRE(trigger());
+  }
+
   SUBCASE("settledUtil") {
     trigger.distanceSettledUtil(createTimeUtil(
       Supplier<std::unique_ptr<SettledUtil>>([]() { return createSettledUtilPtr(5, 0, 20_ms); })));
