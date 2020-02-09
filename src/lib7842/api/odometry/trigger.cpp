@@ -46,24 +46,27 @@ void Trigger::angleSettled() {
 }
 
 void Trigger::distanceSettledUtil(const TimeUtil& timeUtil) {
-  requirement(
-    [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil().release())]() mutable {
-      return settledUtil->isSettled(controller->getDistanceError().convert(millimeter));
-    });
+  requirement([=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
+    return settledUtil->isSettled(controller->getDistanceError().convert(millimeter));
+  });
 }
 
 void Trigger::angleSettledUtil(const TimeUtil& timeUtil) {
-  requirement(
-    [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil().release())]() mutable {
-      return settledUtil->isSettled(controller->getAngleError().convert(degree));
-    });
+  requirement([=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
+    return settledUtil->isSettled(controller->getAngleError().convert(degree));
+  });
 }
 
 void Trigger::maxTime(const QTime& time, const TimeUtil& timeUtil) {
-  exception([=, timer = std::shared_ptr<AbstractTimer>(timeUtil.getTimer().release())]() mutable {
+  exception([=, timer = std::shared_ptr<AbstractTimer>(timeUtil.getTimer())]() mutable {
     timer->placeHardMark();
     return timer->getDtFromHardMark() > time;
   });
+}
+
+bool Trigger::operator()(const OdomController* icontroller) {
+  controller = icontroller;
+  return operator()();
 }
 
 bool Trigger::operator()() {
@@ -75,11 +78,6 @@ bool Trigger::operator()() {
     return true;
   }
   return false;
-}
-
-bool Trigger::operator()(const OdomController* icontroller) {
-  controller = icontroller;
-  return (*this)();
 }
 
 } // namespace lib7842

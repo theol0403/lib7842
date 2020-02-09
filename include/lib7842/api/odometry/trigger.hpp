@@ -44,19 +44,19 @@ public:
   virtual void maxTime(const QTime& time, const TimeUtil& timeUtil);
 
   /**
-   * Run all the requirements and exceptions
-   *
-   * @return Whether the trigger has been fired
-   */
-  virtual bool operator()();
-
-  /**
    * Run all the requirements and exceptions, while providing a controller
    *
    * @param  icontroller The controller
    * @return Whether the trigger has been fired
    */
   virtual bool operator()(const OdomController* icontroller);
+
+  /**
+   * Run all the requirements and exceptions
+   *
+   * @return Whether the trigger has been fired
+   */
+  virtual bool operator()();
 
 protected:
   const OdomController* controller {nullptr};

@@ -3,21 +3,26 @@
 
 namespace lib7842 {
 
-std::function<bool()> Settler::defaultAbort = []() {
-  return false;
-};
+std::shared_ptr<SettledUtil> Settler::defaultAbort {nullptr};
 
 void Settler::abort(const TimeUtil& itimeUtil) {
-  driveAbort = [=, settledUtil =
-                     std::shared_ptr<SettledUtil>(itimeUtil.getSettledUtil().release())]() mutable {
-    return settledUtil->isSettled(controller->getDistanceError().convert(millimeter));
-  };
+  driveAbort = std::shared_ptr<SettledUtil>(itimeUtil.getSettledUtil());
 }
 
 void Settler::noAbort() {
-  driveAbort = []() {
-    return false;
-  };
+  driveAbort = nullptr;
+}
+
+bool Settler::operator()() {
+  if (driveAbort->isSettled(controller->getDistanceError().convert(millimeter))) {
+    return true;
+  } else {
+    return Trigger::operator()();
+  }
+}
+
+void Settler::setDefaultAbort(const TimeUtil& itimeUtil) {
+  defaultAbort = std::shared_ptr<SettledUtil>(itimeUtil.getSettledUtil());
 }
 
 } // namespace lib7842

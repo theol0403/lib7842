@@ -11,10 +11,12 @@ public:
   void abort(const TimeUtil& itimeUtil);
   void noAbort();
 
+  bool operator()() override;
+
   static void setDefaultAbort(const TimeUtil& itimeUtil);
 
 protected:
-  std::function<bool()> driveAbort {defaultAbort};
-  static std::function<bool()> defaultAbort;
+  std::shared_ptr<SettledUtil> driveAbort {defaultAbort};
+  static std::shared_ptr<SettledUtil> defaultAbort;
 };
 } // namespace lib7842
