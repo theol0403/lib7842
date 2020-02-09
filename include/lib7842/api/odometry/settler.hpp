@@ -12,7 +12,7 @@ public:
   Settler&& abort(const TimeUtil& itimeUtil);
   Settler&& noAbort();
 
-  bool operator()() override;
+  bool run() override;
 
   static void setDefaultAbort(const TimeUtil& itimeUtil);
 

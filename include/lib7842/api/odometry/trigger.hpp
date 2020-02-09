@@ -13,8 +13,10 @@ using namespace okapi;
 class Trigger {
 public:
   Trigger() = default;
-  virtual ~Trigger() = default;
+  Trigger(const Trigger&) = delete;
+  Trigger(Trigger&&) = default;
   explicit Trigger(const OdomController* icontroller);
+  virtual ~Trigger() = default;
 
   /**
    * Requirements
@@ -44,20 +46,22 @@ public:
   virtual Trigger&& maxTime(const QTime& time, const TimeUtil& timeUtil);
 
   /**
-   * Run all the requirements and exceptions, while providing a controller
-   *
-   * @param  icontroller The controller
-   * @return Whether the trigger has been fired
-   */
-  virtual bool operator()(const OdomController* icontroller);
-
-  /**
    * Run all the requirements and exceptions. The controller is assumed to be provided by the
    * constructor.
    *
    * @return Whether the trigger has been fired
    */
+  virtual bool run();
   virtual bool operator()();
+
+  /**
+   * Run all the requirements and exceptions, while providing a controller
+   *
+   * @param  icontroller The controller
+   * @return Whether the trigger has been fired
+   */
+  virtual bool run(const OdomController* icontroller);
+  virtual bool operator()(const OdomController* icontroller);
 
 protected:
   const OdomController* controller {nullptr};

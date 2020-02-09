@@ -17,23 +17,24 @@ OdomXController::OdomXController(const std::shared_ptr<XDriveModel>& imodel,
 
 void OdomXController::strafeRelativeDirection(const QLength& distance, const QAngle& direction,
                                               const AngleCalculator& angleCalculator,
-                                              double turnScale, const Settler& settler) {
+                                              double turnScale, Settler&& settler) {
   QAngle absoluteDirection = direction + getState().theta;
-  strafeAbsoluteDirection(distance, absoluteDirection, angleCalculator, turnScale, settler);
+  strafeAbsoluteDirection(distance, absoluteDirection, angleCalculator, turnScale,
+                          std::move(settler));
 }
 
 void OdomXController::strafeAbsoluteDirection(const QLength& distance, const QAngle& direction,
                                               const AngleCalculator& angleCalculator,
-                                              double turnScale, const Settler& settler) {
+                                              double turnScale, Settler&& settler) {
   QLength x = sin(direction.convert(radian)) * distance;
   QLength y = cos(direction.convert(radian)) * distance;
   Vector target = Vector(State(getState())) + Vector(x, y);
-  strafeToPoint(target, angleCalculator, turnScale, settler);
+  strafeToPoint(target, angleCalculator, turnScale, std::move(settler));
 }
 
 void OdomXController::strafeToPoint(const Vector& targetPoint,
                                     const AngleCalculator& angleCalculator, double turnScale,
-                                    const Settler& settler) {
+                                    Settler&& settler) {
   resetPid();
   auto rate = timeUtil.getRate();
   do {
@@ -48,7 +49,7 @@ void OdomXController::strafeToPoint(const Vector& targetPoint,
 
     strafeVector(xModel, distanceVel, angleVel * turnScale, angleToTarget);
     rate->delayUntil(10_ms);
-  } while (!settler(*this));
+  } while (!settler(this));
 
   driveVector(xModel, 0, 0);
 }
