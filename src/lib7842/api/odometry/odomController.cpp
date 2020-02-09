@@ -223,6 +223,10 @@ bool OdomController::isTurnSettled() const {
   return turnController->isSettled();
 }
 
+Trigger OdomController::trigger() const {
+  return Trigger(this);
+}
+
 void OdomController::resetPid() {
   distanceController->reset();
   turnController->reset();

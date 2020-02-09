@@ -224,6 +224,11 @@ public:
    */
   bool isTurnSettled() const;
 
+  /**
+   * Return a trigger that points to this chassis
+   */
+  Trigger trigger() const;
+
 protected:
   /**
    * Reset the pid controllers, used before every motion
