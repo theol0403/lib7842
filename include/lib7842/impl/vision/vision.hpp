@@ -8,7 +8,7 @@ namespace lib7842::Vision {
 class Vision : public pros::Vision {
 
 public:
-  Vision(std::uint8_t iport);
+  explicit Vision(std::uint8_t iport);
 
   Container getAll();
 

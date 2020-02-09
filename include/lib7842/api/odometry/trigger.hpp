@@ -14,7 +14,7 @@ class Trigger {
 public:
   Trigger() = default;
   virtual ~Trigger() = default;
-  Trigger(const OdomController* icontroller);
+  explicit Trigger(const OdomController* icontroller);
 
   /**
    * Requirements
