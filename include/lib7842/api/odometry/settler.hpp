@@ -7,9 +7,10 @@ namespace lib7842 {
 class Settler : public Trigger {
 public:
   using Trigger::Trigger;
+  Settler(Trigger&& trigger);
 
-  void abort(const TimeUtil& itimeUtil);
-  void noAbort();
+  Settler&& abort(const TimeUtil& itimeUtil);
+  Settler&& noAbort();
 
   bool operator()() override;
 

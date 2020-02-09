@@ -5,12 +5,16 @@ namespace lib7842 {
 
 std::shared_ptr<SettledUtil> Settler::defaultAbort {nullptr};
 
-void Settler::abort(const TimeUtil& itimeUtil) {
+Settler::Settler(Trigger&& trigger) : Trigger(std::move(trigger)) {}
+
+Settler&& Settler::abort(const TimeUtil& itimeUtil) {
   driveAbort = std::shared_ptr<SettledUtil>(itimeUtil.getSettledUtil());
+  return std::move(*this);
 }
 
-void Settler::noAbort() {
+Settler&& Settler::noAbort() {
   driveAbort = nullptr;
+  return std::move(*this);
 }
 
 bool Settler::operator()() {

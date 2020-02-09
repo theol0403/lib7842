@@ -20,28 +20,28 @@ public:
    * Requirements
    * The trigger will only fire if all requirements are met.
    */
-  virtual void requirement(std::function<bool()>&& function);
-  virtual void exception(std::function<bool()>&& function);
+  virtual Trigger&& requirement(std::function<bool()>&& function);
+  virtual Trigger&& exception(std::function<bool()>&& function);
 
-  virtual void distanceTo(const Vector& point, const QLength& trigger);
-  virtual void angleTo(const Vector& point, const QAngle& trigger);
-  virtual void angleTo(const QAngle& angle, const QAngle& trigger);
+  virtual Trigger&& distanceTo(const Vector& point, const QLength& trigger);
+  virtual Trigger&& angleTo(const Vector& point, const QAngle& trigger);
+  virtual Trigger&& angleTo(const QAngle& angle, const QAngle& trigger);
 
-  virtual void distanceErr(const QLength& trigger);
-  virtual void angleErr(const QAngle& trigger);
+  virtual Trigger&& distanceErr(const QLength& trigger);
+  virtual Trigger&& angleErr(const QAngle& trigger);
 
-  virtual void distanceSettled();
-  virtual void turnSettled();
-  virtual void angleSettled();
+  virtual Trigger&& distanceSettled();
+  virtual Trigger&& turnSettled();
+  virtual Trigger&& angleSettled();
 
-  virtual void distanceSettledUtil(const TimeUtil& timeUtil);
-  virtual void angleSettledUtil(const TimeUtil& timeUtil);
+  virtual Trigger&& distanceSettledUtil(const TimeUtil& timeUtil);
+  virtual Trigger&& angleSettledUtil(const TimeUtil& timeUtil);
 
   /**
    * Exceptions
    * The trigger will fire if any of the exceptions are met.
    */
-  virtual void maxTime(const QTime& time, const TimeUtil& timeUtil);
+  virtual Trigger&& maxTime(const QTime& time, const TimeUtil& timeUtil);
 
   /**
    * Run all the requirements and exceptions, while providing a controller

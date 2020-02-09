@@ -5,63 +5,68 @@ namespace lib7842 {
 
 Trigger::Trigger(const OdomController* icontroller) : controller(icontroller) {}
 
-void Trigger::requirement(std::function<bool()>&& function) {
+Trigger&& Trigger::requirement(std::function<bool()>&& function) {
   requirements.emplace_back(function);
+  return std::move(*this);
 }
 
-void Trigger::exception(std::function<bool()>&& function) {
+Trigger&& Trigger::exception(std::function<bool()>&& function) {
   exceptions.emplace_back(function);
+  return std::move(*this);
 }
 
-void Trigger::distanceTo(const Vector& point, const QLength& trigger) {
-  requirement([=] { return controller->distanceToPoint(point) < trigger; });
+Trigger&& Trigger::distanceTo(const Vector& point, const QLength& trigger) {
+  return requirement([=] { return controller->distanceToPoint(point) < trigger; });
 }
 
-void Trigger::angleTo(const Vector& point, const QAngle& trigger) {
-  requirement([=] { return controller->angleToPoint(point) < trigger; });
+Trigger&& Trigger::angleTo(const Vector& point, const QAngle& trigger) {
+  return requirement([=] { return controller->angleToPoint(point) < trigger; });
 }
 
-void Trigger::angleTo(const QAngle& angle, const QAngle& trigger) {
-  requirement([=] { return (controller->getState().theta - angle).abs() < trigger; });
+Trigger&& Trigger::angleTo(const QAngle& angle, const QAngle& trigger) {
+  return requirement([=] { return (controller->getState().theta - angle).abs() < trigger; });
 }
 
-void Trigger::distanceErr(const QLength& trigger) {
-  requirement([=] { return controller->getDistanceError() < trigger; });
+Trigger&& Trigger::distanceErr(const QLength& trigger) {
+  return requirement([=] { return controller->getDistanceError() < trigger; });
 }
 
-void Trigger::angleErr(const QAngle& trigger) {
-  requirement([=] { return controller->getAngleError() < trigger; });
+Trigger&& Trigger::angleErr(const QAngle& trigger) {
+  return requirement([=] { return controller->getAngleError() < trigger; });
 }
 
-void Trigger::distanceSettled() {
-  requirement([=] { return controller->isDistanceSettled(); });
+Trigger&& Trigger::distanceSettled() {
+  return requirement([=] { return controller->isDistanceSettled(); });
 }
 
-void Trigger::turnSettled() {
-  requirement([=] { return controller->isTurnSettled(); });
+Trigger&& Trigger::turnSettled() {
+  return requirement([=] { return controller->isTurnSettled(); });
 }
 
-void Trigger::angleSettled() {
-  requirement([=] { return controller->isAngleSettled(); });
+Trigger&& Trigger::angleSettled() {
+  return requirement([=] { return controller->isAngleSettled(); });
 }
 
-void Trigger::distanceSettledUtil(const TimeUtil& timeUtil) {
-  requirement([=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
-    return settledUtil->isSettled(controller->getDistanceError().convert(millimeter));
-  });
+Trigger&& Trigger::distanceSettledUtil(const TimeUtil& timeUtil) {
+  return requirement(
+    [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
+      return settledUtil->isSettled(controller->getDistanceError().convert(millimeter));
+    });
 }
 
-void Trigger::angleSettledUtil(const TimeUtil& timeUtil) {
-  requirement([=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
-    return settledUtil->isSettled(controller->getAngleError().convert(degree));
-  });
+Trigger&& Trigger::angleSettledUtil(const TimeUtil& timeUtil) {
+  return requirement(
+    [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
+      return settledUtil->isSettled(controller->getAngleError().convert(degree));
+    });
 }
 
-void Trigger::maxTime(const QTime& time, const TimeUtil& timeUtil) {
+Trigger&& Trigger::maxTime(const QTime& time, const TimeUtil& timeUtil) {
   exception([=, timer = std::shared_ptr<AbstractTimer>(timeUtil.getTimer())]() mutable {
     timer->placeHardMark();
     return timer->getDtFromHardMark() > time;
   });
+  return std::move(*this);
 }
 
 bool Trigger::operator()(const OdomController* icontroller) {
