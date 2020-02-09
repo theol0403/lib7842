@@ -242,6 +242,26 @@ QAngle OdomController::angleToPoint(const Vector& point) const {
   return getState().angleTo(point);
 }
 
+QLength OdomController::getDistanceError() const {
+  return distanceErr;
+}
+
+QAngle OdomController::getAngleError() const {
+  return angleErr;
+}
+
+bool OdomController::isDistanceSettled() const {
+  return distanceController->isSettled();
+}
+
+bool OdomController::isAngleSettled() const {
+  return angleController->isSettled();
+}
+
+bool OdomController::isTurnSettled() const {
+  return turnController->isSettled();
+}
+
 void OdomController::resetPid() {
   distanceController->reset();
   turnController->reset();
