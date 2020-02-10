@@ -208,6 +208,19 @@ class ChassisControllerPID : public ChassisController {
   void stop() override;
 
   /**
+   * Sets a new maximum velocity in RPM [0-600]. In voltage mode, the max velocity is ignored and a
+   * max voltage should be set on the underlying ChassisModel instead.
+   *
+   * @param imaxVelocity The new maximum velocity.
+   */
+  void setMaxVelocity(double imaxVelocity) override;
+
+  /**
+   * @return The maximum velocity in RPM [0-600].
+   */
+  double getMaxVelocity() const override;
+
+  /**
    * @return The internal ChassisModel.
    */
   std::shared_ptr<ChassisModel> getModel() override;
@@ -237,8 +250,23 @@ class ChassisControllerPID : public ChassisController {
   static void trampoline(void *context);
   void loop();
 
+  /**
+   * Wait for the distance setup (distancePid and anglePid) to settle.
+   *
+   * @return true if done settling; false if settling should be tried again
+   */
   bool waitForDistanceSettled();
+
+  /**
+   * Wait for the angle setup (anglePid) to settle.
+   *
+   * @return true if done settling; false if settling should be tried again
+   */
   bool waitForAngleSettled();
+
+  /**
+   * Stops all the controllers and the ChassisModel.
+   */
   void stopAfterSettled();
 
   typedef enum { distance, angle, none } modeType;

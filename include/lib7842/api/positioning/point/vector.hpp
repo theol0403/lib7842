@@ -14,7 +14,6 @@ public:
   QLength y {0_in};
 
   Vector() = default;
-  Vector(const Vector& ipoint) = default;
   virtual ~Vector() = default;
 
   /**

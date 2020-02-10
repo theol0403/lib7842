@@ -1,5 +1,14 @@
-#define protected public
 #include "test.hpp"
+
+class MockPathFollower : public PathFollower {
+public:
+  using PathFollower::PathFollower;
+  using PathFollower::lastLookIndex;
+  using PathFollower::findClosest;
+  using PathFollower::findLookaheadPoint;
+  using PathFollower::calculateCurvature;
+  using PathFollower::calculateVelocity;
+};
 
 TEST_CASE("PathFollower test") {
 
@@ -9,8 +18,8 @@ TEST_CASE("PathFollower test") {
     auto odom = std::make_shared<CustomOdometry>(
       model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}), createTimeUtil());
 
-    auto follower = std::make_shared<PathFollower>(model, odom, ChassisScales({{4_in, 10_in}, 360}),
-                                                   6_in, createTimeUtil());
+    auto follower = std::make_shared<MockPathFollower>(
+      model, odom, ChassisScales({{4_in, 10_in}, 360}), 6_in, createTimeUtil());
 
     PursuitLimits limits {0_mps, 0.5_mps2, 1_mps, 1_mps};
 
@@ -64,41 +73,41 @@ TEST_CASE("PathFollower test") {
     }
 
     SUBCASE("TestCurvature") {
-      auto curvature = PathFollower::calculateCurvature({0_in, 0_in, 0_deg}, {0_in, 5_in});
+      auto curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 0_deg}, {0_in, 5_in});
       CHECK(std::abs(curvature) < 1e-4);
 
-      curvature = PathFollower::calculateCurvature({0_in, 0_in, 90_deg}, {5_in, 0_in});
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 90_deg}, {5_in, 0_in});
       CHECK(std::abs(curvature) < 1e-4);
 
-      curvature = PathFollower::calculateCurvature({0_in, 0_in, 90_deg}, {-5_in, 0_in});
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 90_deg}, {-5_in, 0_in});
       CHECK(std::abs(curvature) < 1e-4);
 
-      curvature = PathFollower::calculateCurvature({0_in, 0_in, 45_deg}, {5_in, 5_in});
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 45_deg}, {5_in, 5_in});
       CHECK(std::abs(curvature) < 1e-4);
 
-      curvature = PathFollower::calculateCurvature({0_in, 0_in, 45_deg}, {-5_in, -5_in});
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 45_deg}, {-5_in, -5_in});
       CHECK(std::abs(curvature) < 1e-4);
 
-      curvature = PathFollower::calculateCurvature({0_in, 0_in, 45_deg}, {10_in, 5_in});
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 45_deg}, {10_in, 5_in});
       CHECK(std::abs(curvature) > 2);
 
-      curvature = PathFollower::calculateCurvature({0_in, 0_in, -45_deg}, {-5_in, 5_in});
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, -45_deg}, {-5_in, 5_in});
       CHECK(std::abs(curvature) < 1e-4);
 
-      curvature = PathFollower::calculateCurvature({0_in, 0_in, 200_deg}, {10_in, 5_in});
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 200_deg}, {10_in, 5_in});
       CHECK(std::abs(curvature) > 4);
     }
 
     SUBCASE("TestVelocityStraight") {
-      auto vel = PathFollower::calculateVelocity(1_mps, 0, ChassisScales({{1_m / 1_pi, 10_m}, 360}),
-                                                 {0_mps, 1_mps2, 10_mps, 1_mps});
+      auto vel = MockPathFollower::calculateVelocity(
+        1_mps, 0, ChassisScales({{1_m / 1_pi, 10_m}, 360}), {0_mps, 1_mps2, 10_mps, 1_mps});
       CHECK(vel[0] == 60_rpm);
       CHECK(vel[1] == 60_rpm);
     }
 
     SUBCASE("TestVelocityCurved") {
-      auto vel = PathFollower::calculateVelocity(1_mps, 1, ChassisScales({{1_m / 1_pi, 10_m}, 360}),
-                                                 {0_mps, 1_mps2, 10_mps, 1_mps});
+      auto vel = MockPathFollower::calculateVelocity(
+        1_mps, 1, ChassisScales({{1_m / 1_pi, 10_m}, 360}), {0_mps, 1_mps2, 10_mps, 1_mps});
       CHECK(vel[0] > 60_rpm);
       CHECK(vel[1] < 60_rpm);
     }

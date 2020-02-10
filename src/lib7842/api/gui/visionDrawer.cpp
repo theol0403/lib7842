@@ -58,7 +58,8 @@ VisionLayer VisionPage::makeLayer() {
 
 VisionPage::ScreenObject& VisionPage::addObject() {
   auto attempt = iterator;
-  if (++attempt == objects.end()) {
+  ++attempt;
+  if (attempt == objects.end()) {
     auto object = std::make_pair(lv_obj_create(container, NULL), lv_style_t());
     auto& [obj, style] = object;
     lv_obj_set_hidden(obj, true);

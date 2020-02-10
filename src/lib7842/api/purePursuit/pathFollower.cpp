@@ -171,8 +171,8 @@ Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& 
     }
   }
 
-  auto& start = *ipath()[lastLookIndex];
-  auto& end = *ipath()[lastLookIndex + 1];
+  const auto& start = *ipath()[lastLookIndex];
+  const auto& end = *ipath()[lastLookIndex + 1];
   return start + ((end - start) * lastLookT);
 }
 
