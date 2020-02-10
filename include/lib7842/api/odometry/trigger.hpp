@@ -10,6 +10,10 @@ namespace lib7842 {
 class OdomController; // forward declare
 using namespace okapi;
 
+/**
+ * A Trigger that returns true when certain requirements and exceptions are met. Used for settling
+ * and async actions.
+ */
 class Trigger {
 public:
   Trigger() = default;
