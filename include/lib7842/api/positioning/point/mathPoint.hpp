@@ -12,7 +12,6 @@ public:
   double y {0}; // in meters
 
   MathPoint() = default;
-  MathPoint(const MathPoint& ipoint) = default;
   virtual ~MathPoint() = default;
 
   /**

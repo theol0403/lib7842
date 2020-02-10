@@ -83,7 +83,7 @@ public:
    *
    * @param idrawer The vision page
    */
-  VisionLayer(VisionPage& idrawer);
+  explicit VisionLayer(VisionPage& idrawer);
 
   /**
    * Set a color for all objects drawn by this layer.

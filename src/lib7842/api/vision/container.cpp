@@ -72,7 +72,8 @@ Container& Container::reset() {
 }
 
 Container& Container::remove(const Query& query, const Compare& comp, double value) {
-  return remove([&](const Object& obj) { return comp(query(obj), value); });
+  remove([&](const Object& obj) { return comp(query(obj), value); });
+  return *this;
 }
 
 Container& Container::remove(const std::function<bool(const Object&)>& comp) {
