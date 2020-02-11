@@ -11,6 +11,8 @@
 #include "lib7842/api/odometry/customOdometry.hpp"
 #include "lib7842/api/odometry/odomController.hpp"
 #include "lib7842/api/odometry/odomXController.hpp"
+#include "lib7842/api/odometry/settler.hpp"
+#include "lib7842/api/odometry/trigger.hpp"
 
 #include "lib7842/api/other/taskWrapper.hpp"
 #include "lib7842/api/other/units.hpp"
