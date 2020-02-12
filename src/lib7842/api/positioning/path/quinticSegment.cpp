@@ -6,7 +6,7 @@ namespace lib7842 {
 QuinticSegment::QuinticSegment(const DataState& istart, const DataState& iend) :
   start(istart), end(iend) {}
 
-SimplePath QuinticSegment::generate(int isteps = 1) {
+SimplePath QuinticSegment::generate(int isteps) const {
 
   double startI = start.getData<double>("importance");
   double endI = end.getData<double>("importance");
@@ -22,7 +22,7 @@ SimplePath QuinticSegment::generate(int isteps = 1) {
   double dt = 1.0 / isteps;
 
   SimplePath temp;
-  temp().reserve(steps);
+  temp().reserve(isteps);
 
   for (double t = 0.0; t <= 1.0; t += dt) {
     temp().emplace_back(

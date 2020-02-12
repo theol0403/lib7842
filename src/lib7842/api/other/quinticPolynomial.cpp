@@ -1,4 +1,6 @@
 #include "quinticPolynomial.hpp"
+#include <cmath>
+#include <cstddef>
 
 namespace lib7842 {
 
