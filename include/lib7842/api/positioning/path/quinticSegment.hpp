@@ -1,7 +1,7 @@
 #pragma once
 #include "abstractPath.hpp"
 #include "discretePath.hpp"
-#include "lib7842/api/positioning/point/dataState.hpp"
+#include "lib7842/api/positioning/point/data.hpp"
 
 namespace lib7842 {
 

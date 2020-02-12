@@ -1,7 +1,7 @@
 #pragma once
 #include "abstractPath.hpp"
 
-#include "lib7842/api/positioning/point/dataPoint.hpp"
+#include "lib7842/api/positioning/point/data.hpp"
 #include "lib7842/api/positioning/point/mathPoint.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
