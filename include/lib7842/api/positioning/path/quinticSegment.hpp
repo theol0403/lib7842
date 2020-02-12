@@ -1,5 +1,6 @@
 #pragma once
 #include "abstractPath.hpp"
+#include "lib7842/api/other/utility.hpp"
 #include "lib7842/api/positioning/point/dataState.hpp"
 #include <vector>
 
@@ -11,11 +12,12 @@ namespace lib7842 {
 class QuinticSegment : public AbstractPath {
 public:
   /**
-   * Create a spline from an array of points, containing a position, heading, and velocity.
+   * Create a spline from two points, containing a position, heading, and heading importance.
    *
-   * @param ipoints The points
+   * @param istart The start point
+   * @param iend   The end point
    */
-  explicit QuinticSegment(const std::vector<DataState>& ipoints);
+  QuinticSegment(const DataState& istart, const DataState& iend);
 
   /**
    * Interpolate the path
@@ -27,7 +29,8 @@ public:
   SimplePath generate(int isteps = 1) const override;
 
 protected:
-  std::vector<DataState> points {};
+  DataState start {};
+  DataState end {};
 };
 
 } // namespace lib7842
