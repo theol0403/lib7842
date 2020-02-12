@@ -11,7 +11,7 @@ namespace lib7842 {
 class QuinticSegment : public AbstractPath {
 public:
   /**
-   * Create a spline from two points, containing a position, heading, and heading importance.
+   * Create a spline from two points, containing a position, heading, and slope.
    *
    * @param istart The start point
    * @param iend   The end point
