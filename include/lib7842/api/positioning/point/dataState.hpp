@@ -9,7 +9,7 @@
 namespace lib7842 {
 
 /**
- * A point that contains extra information of any type.
+ * A state that contains extra information of any type.
  */
 class DataState : public State {
 public:
@@ -18,12 +18,12 @@ public:
   /**
    * Convert a State into a DataState
    *
-   * @param ipoint The point
+   * @param istate The state
    */
-  explicit DataState(const State& ipoint);
+  explicit DataState(const State& istate);
 
   /**
-   * Set the point data.
+   * Set the data.
    *
    * @param iid   The data name
    * @param idata The data
@@ -31,7 +31,7 @@ public:
   void setData(const std::string& iid, const std::any& idata);
 
   /**
-   * Get the point data.
+   * Get the data.
    *
    * @param  iid The data name
    * @tparam T   The data type
