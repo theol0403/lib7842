@@ -22,6 +22,7 @@
 #include "lib7842/api/positioning/path/compoundPath.hpp"
 #include "lib7842/api/positioning/path/discretePath.hpp"
 #include "lib7842/api/positioning/point/dataPoint.hpp"
+#include "lib7842/api/positioning/point/dataState.hpp"
 #include "lib7842/api/positioning/point/mathPoint.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
