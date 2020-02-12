@@ -103,4 +103,10 @@ QAngle rollAngle180(const QAngle& angle);
  */
 QAngle rotateAngle90(const QAngle& angle);
 
+/**
+ * Calculates the step in a 1d quintic polynomial.
+ */
+double calculateQuinticPolynomial(double start, double startSlope, double end, double endSlope,
+                                  double t);
+
 } // namespace lib7842::util
