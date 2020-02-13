@@ -10,7 +10,7 @@ namespace lib7842 {
 /**
  * A path that represents a quintic spline.
  */
-class QuinticPath : public AbstractPath<QuinticPath> {
+class QuinticPath : public PathTemplate<QuinticPath> {
 public:
   /**
    * Create a spline from an array of points, containing a position and a heading.

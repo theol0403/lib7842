@@ -7,7 +7,7 @@ namespace lib7842 {
 /**
  * A path that represents a combination of segments that can be interpolated into a SimplePath.
  */
-class CompoundPath : public AbstractPath<CompoundPath> {
+class CompoundPath : public PathTemplate<CompoundPath> {
 public:
   CompoundPath() = default;
 

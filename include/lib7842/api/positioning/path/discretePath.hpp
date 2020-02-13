@@ -26,7 +26,7 @@ using StatePath = DiscretePath<State>;
  *
  * @tparam T The point type.
  */
-template <typename T> class DiscretePath : public AbstractPath<DiscretePath<T>> {
+template <typename T> class DiscretePath : public PathTemplate<DiscretePath<T>> {
 public:
   DiscretePath() = default;
 
