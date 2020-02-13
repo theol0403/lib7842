@@ -29,11 +29,11 @@ public:
    * Implicitly convert path to a shared pointer
    */
   virtual operator std::shared_ptr<AbstractPath>() & {
-    return std::make_shared<Derived>(*this);
+    return std::make_shared<Derived>(*static_cast<Derived*>(this));
   }
 
   virtual operator std::shared_ptr<AbstractPath>() && {
-    return std::make_shared<Derived>(std::move(*this));
+    return std::make_shared<Derived>(std::move(*static_cast<Derived*>(this)));
   }
 };
 } // namespace lib7842
