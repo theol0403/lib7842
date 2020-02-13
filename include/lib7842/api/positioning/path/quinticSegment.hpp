@@ -8,7 +8,7 @@ namespace lib7842 {
 /**
  * A path that represents a quintic spline.
  */
-class QuinticSegment : public AbstractPath {
+class QuinticSegment : public AbstractPath<QuinticSegment> {
 public:
   /**
    * Create a spline from two points, containing a position, heading, and slope.

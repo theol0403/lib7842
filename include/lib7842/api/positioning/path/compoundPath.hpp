@@ -7,7 +7,7 @@ namespace lib7842 {
 /**
  * A path that represents a combination of segments that can be interpolated into a SimplePath.
  */
-class CompoundPath : public AbstractPath {
+class CompoundPath : public AbstractPath<CompoundPath> {
 public:
   CompoundPath() = default;
 
@@ -35,12 +35,6 @@ public:
    * @return generated path
    */
   SimplePath generate(int isteps = 1) const override;
-
-  /**
-   * Implicitly convert path to a shared pointer
-   */
-  operator std::shared_ptr<AbstractPath>() & override;
-  operator std::shared_ptr<AbstractPath>() && override;
 
 protected:
   std::vector<std::shared_ptr<AbstractPath>> segments {};

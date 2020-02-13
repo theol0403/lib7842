@@ -11,15 +11,10 @@ using SimplePath = DiscretePath<Vector>;
 /**
  * A generic path representation that can be interpolated into a SimplePath.
  */
-class AbstractPath {
+template <typename Derived> class AbstractPath {
 public:
   AbstractPath() = default;
-  AbstractPath(const AbstractPath& ipath) = default;
-  AbstractPath(AbstractPath&& ipath) = default;
   virtual ~AbstractPath() = default;
-
-  AbstractPath& operator=(const AbstractPath& ipath) = default;
-  AbstractPath& operator=(AbstractPath&& ipath) = default;
 
   /**
    * Interpolate the path
@@ -33,7 +28,12 @@ public:
   /**
    * Implicitly convert path to a shared pointer
    */
-  virtual operator std::shared_ptr<AbstractPath>() & = 0;
-  virtual operator std::shared_ptr<AbstractPath>() && = 0;
+  virtual operator std::shared_ptr<AbstractPath>() & {
+    return std::make_shared<Derived>(*this);
+  }
+
+  virtual operator std::shared_ptr<AbstractPath>() && {
+    return std::make_shared<Derived>(std::move(*this));
+  }
 };
 } // namespace lib7842

@@ -33,12 +33,4 @@ SimplePath CompoundPath::generate(int isteps) const {
   return temp;
 }
 
-CompoundPath::operator std::shared_ptr<AbstractPath>() & {
-  return std::make_shared<CompoundPath>(*this);
-}
-
-CompoundPath::operator std::shared_ptr<AbstractPath>() && {
-  return std::make_shared<CompoundPath>(std::move(*this));
-}
-
 } // namespace lib7842

@@ -26,7 +26,7 @@ using StatePath = DiscretePath<State>;
  *
  * @tparam T The point type.
  */
-template <typename T> class DiscretePath : public AbstractPath {
+template <typename T> class DiscretePath : public AbstractPath<DiscretePath<T>> {
 public:
   DiscretePath() = default;
 
@@ -206,17 +206,6 @@ public:
     // if path is more than 1 point - return last point
     if (path.size() > 0) temp().emplace_back(std::make_shared<Vector>(*path.back()));
     return temp;
-  }
-
-  /**
-   * Implicitly convert path to a shared pointer
-   */
-  operator std::shared_ptr<AbstractPath>() & override {
-    return std::make_shared<DiscretePath<T>>(*this);
-  }
-
-  operator std::shared_ptr<AbstractPath>() && override {
-    return std::make_shared<DiscretePath<T>>(std::move(*this));
   }
 
 protected:
