@@ -34,10 +34,10 @@ public:
   virtual operator std::shared_ptr<AbstractPath>() const&& = 0;
 };
 
-template <typename Derived> class PathTemplate : public AbstractPath {
+template <typename Derived> class TemplatePath : public AbstractPath {
 public:
-  PathTemplate() = default;
-  virtual ~PathTemplate() = default;
+  TemplatePath() = default;
+  virtual ~TemplatePath() = default;
 
   /**
    * Interpolate the path

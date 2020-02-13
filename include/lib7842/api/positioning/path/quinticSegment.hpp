@@ -38,7 +38,7 @@ protected:
 /**
  * A path that represents a quintic spline.
  */
-class QuinticSegment : public PathTemplate<QuinticSegment> {
+class QuinticSegment : public TemplatePath<QuinticSegment> {
 public:
   /**
    * Create a spline from two points, containing a position, heading, and slope.
