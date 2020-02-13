@@ -6,6 +6,36 @@
 namespace lib7842 {
 
 /**
+ * A 1d quintic polynomial
+ */
+class QuinticPolynomial {
+public:
+  /**
+   * Create a new polynomial
+   *
+   * @param istart      The start value
+   * @param istartSlope The start slope
+   * @param iend        The end value
+   * @param iendSlope   The end slope
+   */
+  QuinticPolynomial(double istart, double istartSlope, double iend, double iendSlope);
+
+  /**
+   * Calculate the value of the polynomial at t
+   *
+   * @param  t
+   * @return the value
+   */
+  double calculate(double t) const;
+
+protected:
+  double start {};
+  double startSlope {};
+  double end {};
+  double endSlope {};
+};
+
+/**
  * A path that represents a quintic spline.
  */
 class QuinticSegment : public AbstractPath<QuinticSegment> {
