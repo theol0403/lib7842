@@ -30,10 +30,15 @@ public:
    */
   virtual operator std::shared_ptr<AbstractPath>() & = 0;
   virtual operator std::shared_ptr<AbstractPath>() && = 0;
-  virtual operator std::shared_ptr<AbstractPath>() const& = 0;
-  virtual operator std::shared_ptr<AbstractPath>() const&& = 0;
 };
 
+/**
+ * A helper class to automatically generate the required pointer conversions for each path
+ * implementation. Uses CRTP to generate the conversions. To use, inherit from this class while
+ * passing the derived class as the template parameter.
+ *
+ * @tparam Derived The derived class
+ */
 template <typename Derived> class TemplatePath : public AbstractPath {
 public:
   TemplatePath() = default;
@@ -57,14 +62,6 @@ public:
 
   operator std::shared_ptr<AbstractPath>() && override {
     return std::make_shared<Derived>(std::move(*static_cast<Derived*>(this)));
-  }
-
-  operator std::shared_ptr<AbstractPath>() const& override {
-    return std::make_shared<Derived>(*static_cast<const Derived*>(this));
-  }
-
-  operator std::shared_ptr<AbstractPath>() const&& override {
-    return std::make_shared<Derived>(std::move(*static_cast<const Derived*>(this)));
   }
 };
 } // namespace lib7842
