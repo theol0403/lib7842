@@ -21,6 +21,8 @@
 #include "lib7842/api/positioning/path/abstractPath.hpp"
 #include "lib7842/api/positioning/path/compoundPath.hpp"
 #include "lib7842/api/positioning/path/discretePath.hpp"
+#include "lib7842/api/positioning/path/quinticPath.hpp"
+#include "lib7842/api/positioning/path/quinticSegment.hpp"
 #include "lib7842/api/positioning/point/data.hpp"
 #include "lib7842/api/positioning/point/mathPoint.hpp"
 #include "lib7842/api/positioning/point/state.hpp"

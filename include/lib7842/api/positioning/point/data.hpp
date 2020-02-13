@@ -67,7 +67,7 @@ protected:
     try {
       return data.at(iid);
     } catch (const std::out_of_range& e) {
-      throw std::runtime_error("Data::getID:: \"" + iid + "\" does not exist in point");
+      throw std::runtime_error("Data::getID:: \"" + iid + "\" does not exist in data");
     }
   }
 
