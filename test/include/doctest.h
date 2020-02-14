@@ -48,8 +48,8 @@
 
 #define DOCTEST_VERSION_MAJOR 2
 #define DOCTEST_VERSION_MINOR 3
-#define DOCTEST_VERSION_PATCH 5
-#define DOCTEST_VERSION_STR "2.3.5"
+#define DOCTEST_VERSION_PATCH 6
+#define DOCTEST_VERSION_STR "2.3.6"
 
 #define DOCTEST_VERSION                                                                            \
     (DOCTEST_VERSION_MAJOR * 10000 + DOCTEST_VERSION_MINOR * 100 + DOCTEST_VERSION_PATCH)
@@ -181,6 +181,7 @@ DOCTEST_MSVC_SUPPRESS_WARNING(26439) // This kind of function may not throw. Dec
 DOCTEST_MSVC_SUPPRESS_WARNING(26495) // Always initialize a member variable
 DOCTEST_MSVC_SUPPRESS_WARNING(26451) // Arithmetic overflow ...
 DOCTEST_MSVC_SUPPRESS_WARNING(26444) // Avoid unnamed objects with custom construction and dtr...
+DOCTEST_MSVC_SUPPRESS_WARNING(26812) // Prefer 'enum class' over 'enum'
 
 // 4548 - expression before comma has no effect; expected expression with side - effect
 // 4265 - class has virtual functions, but destructor is not virtual
@@ -368,10 +369,7 @@ DOCTEST_GCC_SUPPRESS_WARNING_POP
 #ifdef DOCTEST_CONFIG_USE_STD_HEADERS
 #include <iosfwd>
 #include <cstddef>
-#if DOCTEST_MSVC >= DOCTEST_COMPILER(19, 20, 0)
-// see this issue on why this is needed: https://github.com/onqtam/doctest/issues/183
 #include <ostream>
-#endif // VS 2019
 #else // DOCTEST_CONFIG_USE_STD_HEADERS
 
 #if DOCTEST_CLANG
@@ -1491,7 +1489,7 @@ namespace detail {
         void destroy();
     };
 
-    template <typename L> class DOCTEST_INTERFACE ContextScope : public ContextScopeBase
+    template <typename L> class ContextScope : public ContextScopeBase
     {
         const L &lambda_;
 
@@ -1647,9 +1645,9 @@ struct DOCTEST_INTERFACE TestRunStats
 
 struct QueryData
 {
-    const TestRunStats* run_stats = nullptr;
-    String*             data      = nullptr;
-    unsigned            num_data  = 0;
+    const TestRunStats*  run_stats = nullptr;
+    const TestCaseData** data      = nullptr;
+    unsigned             num_data  = 0;
 };
 
 struct DOCTEST_INTERFACE IReporter
@@ -2696,6 +2694,7 @@ DOCTEST_MSVC_SUPPRESS_WARNING(26439) // This kind of function may not throw. Dec
 DOCTEST_MSVC_SUPPRESS_WARNING(26495) // Always initialize a member variable
 DOCTEST_MSVC_SUPPRESS_WARNING(26451) // Arithmetic overflow ...
 DOCTEST_MSVC_SUPPRESS_WARNING(26444) // Avoid unnamed objects with custom construction and dtor...
+DOCTEST_MSVC_SUPPRESS_WARNING(26812) // Prefer 'enum class' over 'enum'
 
 DOCTEST_MAKE_STD_HEADERS_CLEAN_FROM_WARNINGS_ON_WALL_BEGIN
 
@@ -2752,7 +2751,7 @@ DOCTEST_MAKE_STD_HEADERS_CLEAN_FROM_WARNINGS_ON_WALL_BEGIN
 #ifdef __AFXDLL
 #include <AfxWin.h>
 #else
-#include <Windows.h>
+#include <windows.h>
 #endif
 #include <io.h>
 
@@ -4692,13 +4691,17 @@ namespace {
                             .writeAttribute("priority", curr.first.first)
                             .writeAttribute("name", curr.first.second);
             } else if(opt.count || opt.list_test_cases) {
-                for(unsigned i = 0; i < in.num_data; ++i)
-                    xml.scopedElement("TestCase").writeAttribute("name", in.data[i]);
+                for(unsigned i = 0; i < in.num_data; ++i) {
+                    xml.scopedElement("TestCase").writeAttribute("name", in.data[i]->m_name)
+                        .writeAttribute("testsuite", in.data[i]->m_test_suite)
+                        .writeAttribute("filename", skipPathFromFilename(in.data[i]->m_file))
+                        .writeAttribute("line", line(in.data[i]->m_line));
+                }
                 xml.scopedElement("OverallResultsTestCases")
                         .writeAttribute("unskipped", in.run_stats->numTestCasesPassingFilters);
             } else if(opt.list_test_suites) {
                 for(unsigned i = 0; i < in.num_data; ++i)
-                    xml.scopedElement("TestSuite").writeAttribute("name", in.data[i]);
+                    xml.scopedElement("TestSuite").writeAttribute("name", in.data[i]->m_test_suite);
                 xml.scopedElement("OverallResultsTestCases")
                         .writeAttribute("unskipped", in.run_stats->numTestCasesPassingFilters);
                 xml.scopedElement("OverallResultsTestSuites")
@@ -5118,7 +5121,7 @@ namespace {
                 }
 
                 for(unsigned i = 0; i < in.num_data; ++i)
-                    s << Color::None << in.data[i] << "\n";
+                    s << Color::None << in.data[i]->m_name << "\n";
 
                 separator_to_stream();
 
@@ -5131,7 +5134,7 @@ namespace {
                 separator_to_stream();
 
                 for(unsigned i = 0; i < in.num_data; ++i)
-                    s << Color::None << in.data[i] << "\n";
+                    s << Color::None << in.data[i]->m_test_suite << "\n";
 
                 separator_to_stream();
 
@@ -5747,8 +5750,8 @@ int Context::run() {
 
     std::set<String> testSuitesPassingFilt;
 
-    bool                query_mode = p->count || p->list_test_cases || p->list_test_suites;
-    std::vector<String> queryResults;
+    bool                             query_mode = p->count || p->list_test_cases || p->list_test_suites;
+    std::vector<const TestCaseData*> queryResults;
 
     if(!query_mode)
         DOCTEST_ITERATE_THROUGH_REPORTERS(test_run_start, DOCTEST_EMPTY);
@@ -5794,14 +5797,14 @@ int Context::run() {
 
         // print the name of the test and don't execute it
         if(p->list_test_cases) {
-            queryResults.push_back(tc.m_name);
+            queryResults.push_back(&tc);
             continue;
         }
 
         // print the name of the test suite if not done already and don't execute it
         if(p->list_test_suites) {
             if((testSuitesPassingFilt.count(tc.m_test_suite) == 0) && tc.m_test_suite[0] != '\0') {
-                queryResults.push_back(tc.m_test_suite);
+                queryResults.push_back(&tc);
                 testSuitesPassingFilt.insert(tc.m_test_suite);
                 p->numTestSuitesPassingFilters++;
             }
@@ -5937,3 +5940,4 @@ DOCTEST_GCC_SUPPRESS_WARNING_POP
 
 #endif // DOCTEST_LIBRARY_IMPLEMENTATION
 #endif // DOCTEST_CONFIG_IMPLEMENT
+
