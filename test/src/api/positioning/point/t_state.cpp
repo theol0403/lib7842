@@ -14,7 +14,7 @@ SCENARIO("State test") {
     Vector point {5_in, 2_in};
 
     THEN("all the constructors should work") {
-      State(5_in, 2_in);
+      State(5_in, 2_in, 90_deg);
       State();
 
       State pointCopy(point);
