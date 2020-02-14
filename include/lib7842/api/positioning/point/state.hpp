@@ -13,8 +13,6 @@ class State : public Vector {
 public:
   QAngle theta {0_rad};
 
-  using Vector::Vector;
-
   /**
    * Create a new state
    *
