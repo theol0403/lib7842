@@ -11,14 +11,14 @@ SCENARIO("QuinticSegment test") {
 
     THEN("generating one step should return both points") {
       auto path = segment.generate(1);
-      CHECK(path().size() == 2);
+      REQUIRE(path().size() == 2);
       CHECK(*path()[0] == start);
       CHECK(path()[1]->y.convert(inch) == Approx(1));
     }
 
     THEN("generating two steps should return interpolated points") {
       auto path = segment.generate(2);
-      CHECK(path().size() == 3);
+      REQUIRE(path().size() == 3);
       CHECK(*path()[0] == start);
       CHECK(path()[1]->y.convert(inch) == Approx(0.5));
       CHECK(path()[2]->y.convert(inch) == Approx(1));
@@ -34,7 +34,7 @@ SCENARIO("QuinticSegment test") {
 
     THEN("generating one step should return both points") {
       auto path = segment.generate(1);
-      CHECK(path().size() == 2);
+      REQUIRE(path().size() == 2);
       CHECK(*path()[0] == start);
       CHECK(path()[1]->x.convert(inch) == Approx(2));
       CHECK(path()[1]->y.convert(inch) == Approx(4));
@@ -42,7 +42,7 @@ SCENARIO("QuinticSegment test") {
 
     THEN("generating two steps should return interpolated points") {
       auto path = segment.generate(2);
-      CHECK(path().size() == 3);
+      REQUIRE(path().size() == 3);
       CHECK(*path()[0] == start);
       CHECK(path()[1]->x.convert(inch) == Approx(1));
       CHECK(path()[1]->y.convert(inch) == Approx(2));
