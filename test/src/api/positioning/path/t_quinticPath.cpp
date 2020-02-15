@@ -78,4 +78,28 @@ TEST_CASE("QuinticPath test") {
       }
     }
   }
+
+  SUBCASE("many points") {
+    QuinticPath path(
+      {{0_in, 0_in, 0_deg}, {0_in, 1_in, 0_deg}, {0_in, 2_in, 90_deg}, {2_in, 2_in, 90_deg}}, 1);
+
+    THEN("generating one step should return 4 points") {
+      auto ipath = path.generate(1);
+      REQUIRE(ipath().size() == 4);
+    }
+
+    THEN("generating two steps should return 7 points") {
+      auto ipath = path.generate(2);
+      REQUIRE(ipath().size() == 7);
+    }
+
+    THEN("generating 10 steps should return 31 points") {
+      auto ipath = path.generate(10);
+      std::string str;
+      for (auto&& point : ipath()) {
+        // MESSAGE(*point);
+      }
+      REQUIRE(ipath().size() == 31);
+    }
+  }
 }
