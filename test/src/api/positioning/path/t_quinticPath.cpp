@@ -18,6 +18,10 @@ TEST_CASE("QuinticPath test") {
         REQUIRE(ipath().size() == 2);
         CHECK(*ipath()[0] == start);
         CHECK(ipath()[1]->y.convert(inch) == Approx(1));
+
+        for (auto&& point : ipath()) {
+          CHECK(point->x.convert(inch) == Approx(0));
+        }
       }
 
       THEN("generating two steps should return interpolated points") {
@@ -26,6 +30,20 @@ TEST_CASE("QuinticPath test") {
         CHECK(*ipath()[0] == start);
         CHECK(ipath()[1]->y.convert(inch) == Approx(0.5));
         CHECK(ipath()[2]->y.convert(inch) == Approx(1));
+
+        for (auto&& point : ipath()) {
+          CHECK(point->x.convert(inch) == Approx(0));
+        }
+      }
+
+      THEN("generating 10 steps should return interpolated points") {
+        auto ipath = path.generate(10);
+        REQUIRE(ipath().size() == 11);
+
+        for (size_t i = 0; i < ipath().size(); i++) {
+          // CHECK(ipath()[i]->y.convert(inch) == Approx(i * (1.0 / 11.0)));
+          CHECK(ipath()[i]->x.convert(inch) == Approx(0));
+        }
       }
     }
 
@@ -65,6 +83,10 @@ TEST_CASE("QuinticPath test") {
         CHECK(*ipath()[0] == start);
         CHECK(ipath()[1]->y.convert(inch) == Approx(1));
         CHECK(ipath()[2]->y.convert(inch) == Approx(2));
+
+        for (auto&& point : ipath()) {
+          CHECK(point->x.convert(inch) == Approx(0));
+        }
       }
 
       THEN("generating two steps should return 5 points") {
@@ -75,6 +97,10 @@ TEST_CASE("QuinticPath test") {
         CHECK(ipath()[2]->y.convert(inch) == Approx(1));
         CHECK(ipath()[3]->y.convert(inch) == Approx(1.5));
         CHECK(ipath()[4]->y.convert(inch) == Approx(2));
+
+        for (auto&& point : ipath()) {
+          CHECK(point->x.convert(inch) == Approx(0));
+        }
       }
     }
   }
@@ -96,9 +122,6 @@ TEST_CASE("QuinticPath test") {
     THEN("generating 10 steps should return 31 points") {
       auto ipath = path.generate(10);
       std::string str;
-      for (auto&& point : ipath()) {
-        // MESSAGE(*point);
-      }
       REQUIRE(ipath().size() == 31);
     }
   }

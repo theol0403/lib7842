@@ -135,12 +135,9 @@ void opcontrol() {
 
     if (controller.getDigital(ControllerDigital::A)) {
 
-      auto path =
-        SimplePath({odom->getState(), {0_ft, 0_ft}, {0_ft, 2_ft}, {2_ft, 2_ft}, {2_ft, 4_ft}})
-          .generate(1_cm)
-          .smoothen(.001, 1e-10 * meter);
+      auto path = QuinticPath({{0_ft, 0_ft, 0_deg}, {0_ft, 2_ft, 0_deg}}, 1).generate(5);
 
-      follower.followPath(PathGenerator::generate(path, limits), false);
+      // follower.followPath(PathGenerator::generate(path, limits), false);
     }
 
     pros::delay(10);
