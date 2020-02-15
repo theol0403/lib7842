@@ -28,6 +28,14 @@ public:
   CompoundPath&& operator+(const std::shared_ptr<AbstractPath>& isegment) &&;
 
   /**
+   * Combine the segments each with a step of 1. Does not skip the endpoints of segments. Note that
+   * if one of the segments are a nested compound path, end point skipping will occur.
+   *
+   * @return generated path
+   */
+  SimplePath combine() const;
+
+  /**
    * Interpolate the path
    *
    * @param  isteps How many points to interpolate per segment, counting from the start to just

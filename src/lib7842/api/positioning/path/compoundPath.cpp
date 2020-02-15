@@ -21,6 +21,18 @@ CompoundPath&& CompoundPath::operator+(const std::shared_ptr<AbstractPath>& iseg
   return std::move(*this);
 }
 
+SimplePath CompoundPath::combine() const {
+  SimplePath temp;
+  for (auto&& segment : segments) {
+    SimplePath isegment = segment->generate();
+    temp().reserve(temp().size() + isegment().size());
+    for (auto&& point : isegment()) {
+      temp().emplace_back(point);
+    }
+  }
+  return temp;
+}
+
 SimplePath CompoundPath::generate(int isteps, bool iend) const {
   SimplePath temp;
   for (size_t i = 0; i < segments.size(); i++) {
