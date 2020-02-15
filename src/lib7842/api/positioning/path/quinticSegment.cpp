@@ -42,11 +42,9 @@ SimplePath QuinticSegment::generate(int isteps, bool iend) const {
   SimplePath temp;
   temp().reserve(isteps);
 
-  double dt = 1.0 / isteps;
-  for (double t = 0.0; (iend ? t <= 1.0 : t < 1.0 - std::numeric_limits<double>::epsilon());
-       t += dt) {
-    temp().emplace_back(
-      std::make_shared<Vector>(xPoly.calculate(t) * meter, yPoly.calculate(t) * meter));
+  for (size_t i = 0; i <= (iend ? isteps : isteps - 1); i++) {
+    temp().emplace_back(std::make_shared<Vector>(xPoly.calculate(i / (double)isteps) * meter,
+                                                 yPoly.calculate(i / (double)isteps) * meter));
   }
 
   return temp;
