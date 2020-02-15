@@ -51,11 +51,15 @@ public:
   /**
    * Interpolate the path
    *
-   * @param  isteps how many points to interpolate per segment, from start (inclusive) to end
-   *                (exclusive) of segment.
+   * @param  isteps How many points to interpolate per segment, counting from the start to just
+   *                before the end of the segment. This means is 1 step will return the first point
+   *                and 2 steps will return the first point as well as a midway point. The end point
+   *                is not included in the count.
+   * @param  iend   Whether to return the end of the segment. This can be turned off to prevent the
+   *                start of the next segment from being redundant.
    * @return generated path
    */
-  SimplePath generate(int isteps = 1) const override;
+  SimplePath generate(int isteps = 1, bool iend = true) const override;
 
 protected:
   DataState start {};

@@ -170,12 +170,15 @@ public:
   /**
    * Interpolate the path
    *
-   * @param  isteps The number of points to interpolate per segment. In the case of DiscretePath, a
-   *                segment is defined as the section between two control points, starting from the
-   *                first point.
-   * @return The generated path
+   * @param  isteps How many points to interpolate per segment, counting from the start to just
+   *                before the end of the segment. This means is 1 step will return the first point
+   *                and 2 steps will return the first point as well as a midway point. The end point
+   *                is not included in the count.
+   * @param  iend   Whether to return the end of the segment. This can be turned off to prevent the
+   *                start of the next segment from being redundant.
+   * @return generated path
    */
-  SimplePath generate(const int isteps = 1) const override {
+  SimplePath generate(int isteps = 1, bool iend = true) const override {
     if (isteps < 1) throw std::runtime_error("SimplePath::generate: isteps is less than 1");
 
     SimplePath temp;
@@ -205,7 +208,7 @@ public:
     }
 
     // if path is more than 1 point - return last point
-    if (path.size() > 0) temp().emplace_back(std::make_shared<Vector>(*path.back()));
+    if (iend && path.size() > 0) temp().emplace_back(std::make_shared<Vector>(*path.back()));
     return temp;
   }
 

@@ -10,7 +10,7 @@ QuinticPath::QuinticPath(const StatePath& ipath, double islopeScalar) :
 
 using DataStatePath = DiscretePath<DataState>;
 
-SimplePath QuinticPath::generate(int isteps) const {
+SimplePath QuinticPath::generate(int isteps, bool iend) const {
   DataStatePath temp(path);
 
   for (size_t i = 0; i < temp().size() - 1; i++) {
@@ -30,7 +30,7 @@ SimplePath QuinticPath::generate(int isteps) const {
     compound.add(QuinticSegment(*p1, *p2));
   }
 
-  return compound.generate(isteps);
+  return compound.generate(isteps, iend);
 }
 
 } // namespace lib7842

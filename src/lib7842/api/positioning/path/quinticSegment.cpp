@@ -27,7 +27,7 @@ double QuinticPolynomial::calculate(double t) const {
 QuinticSegment::QuinticSegment(const DataState& istart, const DataState& iend) :
   start(istart), end(iend) {}
 
-SimplePath QuinticSegment::generate(int isteps) const {
+SimplePath QuinticSegment::generate(int isteps, bool iend) const {
   double startSlope = start.getData<double>("slope");
   double endSlope = end.getData<double>("slope");
 
@@ -43,7 +43,7 @@ SimplePath QuinticSegment::generate(int isteps) const {
   temp().reserve(isteps);
 
   double dt = 1.0 / isteps;
-  for (double t = 0.0; t <= 1.0; t += dt) {
+  for (double t = 0.0; (iend ? t <= 1.0 : t < 1.0); t += dt) {
     temp().emplace_back(
       std::make_shared<Vector>(xPoly.calculate(t) * meter, yPoly.calculate(t) * meter));
   }
