@@ -11,11 +11,11 @@ QuinticPath::QuinticPath(const StatePath& ipath, double islopeScalar) :
 QuinticPath::QuinticPath(const SimplePath& ipath, double islopeScalar) :
   path(ipath), slopeScalar(islopeScalar) {
   if (path().size() > 1) {
-    path()[0]->theta = State(*path()[0]).angleTo(*path()[1]);
+    path()[0]->theta = Vector::angle(*path()[0], *path()[1]);
     for (size_t i = 1; i < path().size() - 1; i++) {
-      path()[i]->theta = State(*path()[i - 1]).angleTo(*path()[i + 1]);
+      path()[i]->theta = Vector::angle(*path()[i - 1], *path()[i + 1]);
     }
-    path().back()->theta = State(*path()[path().size() - 2]).angleTo(*path().back());
+    path().back()->theta = Vector::angle(*path()[path().size() - 2], *path().back());
   }
 }
 

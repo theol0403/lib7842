@@ -163,5 +163,36 @@ TEST_CASE("QuinticPath test") {
         CHECK(path.path()[2]->theta == 0_deg);
       }
     }
+
+    GIVEN("a sideways path") {
+      MockQuinticPath path({{0_in, 0_in}, {1_in, 0_in}, {2_in, 0_in}}, 1);
+
+      THEN("the points should be facing the proper way") {
+        CHECK(path.path()[0]->theta == 90_deg);
+        CHECK(path.path()[1]->theta == 90_deg);
+        CHECK(path.path()[2]->theta == 90_deg);
+      }
+    }
+
+    GIVEN("an angled path") {
+      MockQuinticPath path({{0_in, 0_in}, {1_in, 1_in}, {2_in, 2_in}}, 1);
+
+      THEN("the points should be facing the proper way") {
+        CHECK(path.path()[0]->theta == 45_deg);
+        CHECK(path.path()[1]->theta == 45_deg);
+        CHECK(path.path()[2]->theta == 45_deg);
+      }
+    }
+
+    GIVEN("a curved path") {
+      MockQuinticPath path({{0_in, 0_in}, {1_in, 0_in}, {1_in, 1_in}, {2_in, 0_in}}, 1);
+
+      THEN("the points should be facing the proper way") {
+        CHECK(path.path()[0]->theta == 90_deg);
+        CHECK(path.path()[1]->theta == 45_deg);
+        CHECK(path.path()[2]->theta == 90_deg);
+        CHECK(path.path()[3]->theta == 135_deg);
+      }
+    }
   }
 }
