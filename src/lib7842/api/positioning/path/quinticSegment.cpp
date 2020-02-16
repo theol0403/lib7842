@@ -31,10 +31,10 @@ SimplePath QuinticSegment::generate(int isteps, bool iend) const {
   double startSlope = start.getData<double>("slope");
   double endSlope = end.getData<double>("slope");
 
-  double xStartSlope = startSlope * std::cos(start.theta.convert(radian));
-  double yStartSlope = startSlope * std::sin(start.theta.convert(radian));
-  double xEndSlope = endSlope * std::cos(end.theta.convert(radian));
-  double yEndSlope = endSlope * std::sin(end.theta.convert(radian));
+  double xStartSlope = startSlope * std::sin(start.theta.convert(radian));
+  double yStartSlope = startSlope * std::cos(start.theta.convert(radian));
+  double xEndSlope = endSlope * std::sin(end.theta.convert(radian));
+  double yEndSlope = endSlope * std::cos(end.theta.convert(radian));
 
   QuinticPolynomial xPoly(start.x.convert(meter), xStartSlope, end.x.convert(meter), xEndSlope);
   QuinticPolynomial yPoly(start.y.convert(meter), yStartSlope, end.y.convert(meter), yEndSlope);
