@@ -182,6 +182,15 @@ TEST_CASE("QuinticPath test") {
         CHECK(path.path()[1]->theta == 45_deg);
         CHECK(path.path()[2]->theta == 45_deg);
       }
+
+      THEN("generating should work") {
+        auto ipath = path.generate(10);
+        REQUIRE(ipath().size() == 21);
+        for (size_t i = 0; i < ipath().size(); i++) {
+          CHECK(ipath()[i]->y.convert(inch) == Approx(i * 0.1));
+          CHECK(ipath()[i]->x.convert(inch) == Approx(i * 0.1));
+        }
+      }
     }
 
     GIVEN("a curved path") {
