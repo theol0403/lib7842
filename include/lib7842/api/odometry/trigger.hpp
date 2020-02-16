@@ -34,7 +34,7 @@ public:
    *
    * @param  function The requirement
    */
-  virtual Trigger&& requirement(std::function<bool()>&& function);
+  virtual Trigger&& requirement(std::function<bool(const OdomController* icontroller)>&& function);
 
   /**
    * Add an exception
@@ -42,7 +42,7 @@ public:
    *
    * @param  function The exception
    */
-  virtual Trigger&& exception(std::function<bool()>&& function);
+  virtual Trigger&& exception(std::function<bool(const OdomController* icontroller)>&& function);
 
   /**
    * Require that the distance to a point is within a value.
@@ -141,7 +141,7 @@ public:
 protected:
   const OdomController* controller {nullptr};
 
-  std::vector<std::function<bool()>> requirements;
-  std::vector<std::function<bool()>> exceptions;
+  std::vector<std::function<bool(const OdomController* icontroller)>> requirements;
+  std::vector<std::function<bool(const OdomController* icontroller)>> exceptions;
 };
 } // namespace lib7842
