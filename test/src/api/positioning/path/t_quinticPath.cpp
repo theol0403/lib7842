@@ -41,7 +41,7 @@ TEST_CASE("QuinticPath test") {
         REQUIRE(ipath().size() == 11);
 
         for (size_t i = 0; i < ipath().size(); i++) {
-          // CHECK(ipath()[i]->y.convert(inch) == Approx(i * (1.0 / 11.0)));
+          CHECK(ipath()[i]->y.convert(inch) == Approx(i * 0.1));
           CHECK(ipath()[i]->x.convert(inch) == Approx(0));
         }
       }
@@ -67,6 +67,16 @@ TEST_CASE("QuinticPath test") {
         CHECK(ipath()[1]->y.convert(inch) == Approx(2));
         CHECK(ipath()[2]->x.convert(inch) == Approx(2));
         CHECK(ipath()[2]->y.convert(inch) == Approx(4));
+      }
+
+      THEN("generating 4 steps should return interpolated points") {
+        auto ipath = path.generate(4);
+        REQUIRE(ipath().size() == 5);
+        CHECK(*ipath()[0] == start);
+        CHECK(ipath()[2]->x.convert(inch) == Approx(1));
+        CHECK(ipath()[2]->y.convert(inch) == Approx(2));
+        CHECK(ipath()[4]->x.convert(inch) == Approx(2));
+        CHECK(ipath()[4]->y.convert(inch) == Approx(4));
       }
     }
   }
@@ -100,6 +110,16 @@ TEST_CASE("QuinticPath test") {
 
         for (auto&& point : ipath()) {
           CHECK(point->x.convert(inch) == Approx(0));
+        }
+      }
+
+      THEN("generating 10 steps should return interpolated points") {
+        auto ipath = path.generate(10);
+        REQUIRE(ipath().size() == 21);
+
+        for (size_t i = 0; i < ipath().size(); i++) {
+          CHECK(ipath()[i]->y.convert(inch) == Approx(i * 0.1));
+          CHECK(ipath()[i]->x.convert(inch) == Approx(0));
         }
       }
     }
