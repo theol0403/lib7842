@@ -1,5 +1,11 @@
 #include "test.hpp"
 
+class MockQuinticPath : public QuinticPath {
+public:
+  using QuinticPath::QuinticPath;
+  using QuinticPath::path;
+};
+
 TEST_CASE("QuinticPath test") {
 
   SUBCASE("one point") {
@@ -143,6 +149,19 @@ TEST_CASE("QuinticPath test") {
       auto ipath = path.generate(10);
       std::string str;
       REQUIRE(ipath().size() == 31);
+    }
+  }
+
+  SUBCASE("automatic angle calculation") {
+
+    GIVEN("a simple path") {
+      MockQuinticPath path({{0_in, 0_in}, {0_in, 1_in}, {0_in, 2_in}}, 1);
+
+      THEN("the points should be facing the proper way") {
+        CHECK(path.path()[0]->theta == 0_deg);
+        CHECK(path.path()[1]->theta == 0_deg);
+        CHECK(path.path()[2]->theta == 0_deg);
+      }
     }
   }
 }
