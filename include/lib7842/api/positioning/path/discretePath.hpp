@@ -76,7 +76,7 @@ public:
   }
 
   /**
-   * Get the underlying array.
+   * Get the underlying array of pointers.
    */
   array_t& get() {
     return path;
@@ -87,7 +87,7 @@ public:
   }
 
   /**
-   * Get the underlying array using the () operator.
+   * Get the underlying array of pointers using the () operator.
    */
   array_t& operator()() {
     return path;
@@ -112,10 +112,15 @@ public:
   }
 
   /**
-   * Smoothen the path
+   * Smoothen the path. This is a very expensive operation that smooths the points in the path. The
+   * first parameter is how important each point is - a lower value means more smoothing. The second
+   * parameter is how much variance between the distances of the points is allowed. A smaller value
+   * will stretch the points out and make a more even path. Instead of using this function, use this
+   * path as the input to QuinticSpline, which does a better job of smoothing.
    *
-   * @param iweight    The smooth weight
-   * @param itolerance The smooth tolerance
+   * @param  iweight    The smooth weight
+   * @param  itolerance The smooth tolerance
+   * @return itself, which has been smoothed.
    */
   DiscretePath<T>& smoothen(double iweight, const QLength& itolerance) {
     auto temp = copy();
@@ -139,10 +144,12 @@ public:
   }
 
   /**
-   * Interpolate the path using distance sampling.
+   * Interpolate the path using distance-based sampling.
    *
-   * @param  iresolution The distance between each point
-   * @return The generated path
+   * @param  iresolution How far apart to make each point.
+   * @param  iend        Whether to return the end of the segment. This can be turned off to prevent
+   *                     the start of the next segment from being redundant.
+   * @return generated path
    */
   SimplePath generate(const QLength& iresolution, bool iend = true) const {
     SimplePath temp;
