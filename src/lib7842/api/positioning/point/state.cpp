@@ -45,9 +45,7 @@ bool State::operator!=(const State& rhs) const {
 }
 
 QAngle State::angleTo(const Vector& ipoint) const {
-  Vector diff = ipoint - *this;
-  QAngle angle = (std::atan2(diff.x.convert(meter), diff.y.convert(meter)) * radian) - theta;
-  return util::rollAngle180(angle);
+  return util::rollAngle180(Vector::angleTo(ipoint) - theta);
 }
 
 } // namespace lib7842
