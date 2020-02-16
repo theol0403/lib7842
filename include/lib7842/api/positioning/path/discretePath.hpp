@@ -144,7 +144,7 @@ public:
    * @param  iresolution The distance between each point
    * @return The generated path
    */
-  SimplePath generate(const QLength& iresolution) const {
+  SimplePath generate(const QLength& iresolution, bool iend = true) const {
     SimplePath temp;
 
     for (size_t i = 0; i < path.size() - 1; i++) {
@@ -161,8 +161,10 @@ public:
       }
     }
 
-    // if path is more than 1 point - return last point
-    if (path.size() > 0) temp().emplace_back(std::make_shared<Vector>(*path.back()));
+    // if the path is more than 1 point and the end point is required - return last point
+    // if there is only one point, always return it
+    if ((iend && path.size() > 0) || path.size() == 1)
+      temp().emplace_back(std::make_shared<Vector>(*path.back()));
 
     return temp;
   }
