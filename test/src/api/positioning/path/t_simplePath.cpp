@@ -170,56 +170,11 @@ SCENARIO("SimpePath test") {
     }
   }
 
-  GIVEN("a path with three segments") {
-    SimplePath path({{0_in, 0_in}, {2.5_in, 4_in}, {5_in, 0_in}});
-
-    WHEN("the path is smoothed") {
-      path.smoothen(0.25, 0.0001_in);
-
-      THEN("the starting point should not move") {
-        CHECK(*path()[0] == (Vector {0_in, 0_in}));
-      }
-
-      THEN("the ending point should not move") {
-        CHECK(*path()[2] == (Vector {5_in, 0_in}));
-      }
-
-      THEN("the middle point x should not move") {
-        CHECK(path()[1]->x == 2.5_in);
-      }
-
-      THEN("the middle point y should move") {
-        CHECK(path()[1]->y != 4_in);
-      }
-    }
-  }
-
-  GIVEN("a path with many segments") {
-    SimplePath ipath({{0_in, 0_in}, {5_in, 4_in}, {5_in, 0_in}, {3_in, 5_in}, {0_in, 10_in}});
-
-    WHEN("the path is smoothed") {
-      SimplePath path = ipath.copy().smoothen(0.25, 0.0001_in);
-
-      THEN("none of the middle points should be the same") {
-        for (size_t i = 1; i < path().size() - 1; i++) {
-          CHECK(path()[i]->x != ipath()[i]->x);
-        }
-      }
-    }
-  }
-
   GIVEN("a generated and interpolated path") {
-    SimplePath path = SimplePath({{1_in, 1_in}, {5_in, 4_in}, {9_in, 1_in}})
-                        .generate(10)
-                        .smoothen(0.25, 1e-10 * inch);
+    SimplePath path = SimplePath({{1_in, 1_in}, {5_in, 4_in}, {9_in, 1_in}}).generate(10);
 
     THEN("the size of the path should be 21") {
       REQUIRE(path().size() == 21);
-    }
-
-    THEN("the 10th point should be in a certain position") {
-      CHECK(path()[10]->x.convert(inch) == Approx(5));
-      CHECK(path()[10]->y.convert(inch) == Approx(3.5).epsilon(0.001));
     }
   }
 
