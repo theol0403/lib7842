@@ -59,6 +59,6 @@ public:
    *
    * @param  ipoint The point
    */
-  QAngle angleTo(const Vector& ipoint) const;
+  QAngle angleTo(const Vector& ipoint) const override;
 };
 } // namespace lib7842
