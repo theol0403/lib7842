@@ -8,6 +8,17 @@ namespace lib7842 {
 QuinticPath::QuinticPath(const StatePath& ipath, double islopeScalar) :
   path(ipath), slopeScalar(islopeScalar) {}
 
+QuinticPath::QuinticPath(const SimplePath& ipath, double islopeScalar) :
+  path(ipath), slopeScalar(islopeScalar) {
+  if (path().size() > 1) {
+    path()[0]->theta = State(*path()[1]).angleTo(*path()[0]);
+    for (size_t i = 1; i < path().size() - 1; i++) {
+      path()[i]->theta = State(*path()[i + 1]).angleTo(*path()[i - 1]);
+    }
+    path().back()->theta = State(*path().back()).angleTo(*path()[path().size() - 2]);
+  }
+}
+
 using DataStatePath = DiscretePath<DataState>;
 
 SimplePath QuinticPath::generate(int isteps, bool iend) const {
@@ -16,7 +27,6 @@ SimplePath QuinticPath::generate(int isteps, bool iend) const {
   for (size_t i = 0; i < temp().size() - 1; i++) {
     auto& p1 = temp()[i];
     auto& p2 = temp()[i + 1];
-
     double slope = slopeScalar * MathPoint::dist(*p1, *p2);
     p1->setData("slope", slope);
     if (i == temp().size() - 2) p2->setData("slope", slope);

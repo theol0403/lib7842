@@ -13,12 +13,21 @@ namespace lib7842 {
 class QuinticPath : public TemplatePath<QuinticPath> {
 public:
   /**
-   * Create a spline from an array of points, containing a position and a heading.
+   * Create a spline from an array of points, each containing a position and an angle.
    *
    * @param ipath        The path
-   * @param islopeScalar The tuning constant for how much to smooth the corners.
+   * @param islopeScalar The importance of each point's angle.
    */
   explicit QuinticPath(const StatePath& ipath, double islopeScalar);
+
+  /**
+   * Create a spline from an array of points containing only positions. The angle of each point is
+   * guessed from the positioning of nearby points.
+   *
+   * @param ipath        The path
+   * @param islopeScalar The importance of each point's angle.
+   */
+  explicit QuinticPath(const SimplePath& ipath, double islopeScalar);
 
   /**
    * Interpolate the path

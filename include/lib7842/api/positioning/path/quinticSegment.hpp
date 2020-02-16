@@ -41,7 +41,8 @@ protected:
 class QuinticSegment : public TemplatePath<QuinticSegment> {
 public:
   /**
-   * Create a spline from two points, containing a position, heading, and slope.
+   * Create a spline from two points, both containing a position, angle, and slope. Slope, which is
+   * the importance of a point's angle, must be provided as data named "slope".
    *
    * @param istart The start point
    * @param iend   The end point
