@@ -7,7 +7,7 @@ namespace lib7842 {
 /**
  * A path that represents a combination of segments that can be interpolated into a SimplePath.
  */
-class CompoundPath : public AbstractPath {
+class CompoundPath : public TemplatePath<CompoundPath> {
 public:
   CompoundPath() = default;
 
@@ -28,19 +28,25 @@ public:
   CompoundPath&& operator+(const std::shared_ptr<AbstractPath>& isegment) &&;
 
   /**
-   * Interpolate the path
+   * Combine the segments each with a step of 1. Does not skip the endpoints of segments. Note that
+   * if one of the segments are a nested compound path, end point skipping will occur.
    *
-   * @param  isteps how many points to interpolate per segment, from start (inclusive) to end
-   *                (exclusive) of segment.
    * @return generated path
    */
-  SimplePath generate(int isteps = 1) const override;
+  SimplePath combine() const;
 
   /**
-   * Implicitly convert path to a shared pointer
+   * Interpolate the path
+   *
+   * @param  isteps How many points to interpolate per segment, counting from the start to just
+   *                before the end of the segment. This means is 1 step will return the first point
+   *                and 2 steps will return the first point as well as a midway point. The end point
+   *                is not included in the count.
+   * @param  iend   Whether to return the end of the segment. This can be turned off to prevent the
+   *                start of the next segment from being redundant.
+   * @return generated path
    */
-  operator std::shared_ptr<AbstractPath>() & override;
-  operator std::shared_ptr<AbstractPath>() && override;
+  SimplePath generate(int isteps = 1, bool iend = true) const override;
 
 protected:
   std::vector<std::shared_ptr<AbstractPath>> segments {};

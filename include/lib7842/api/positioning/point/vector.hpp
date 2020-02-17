@@ -1,5 +1,6 @@
 #pragma once
 #include "okapi/api/odometry/point.hpp"
+#include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
 
 namespace lib7842 {
@@ -55,9 +56,15 @@ public:
   Vector operator/(const double scalar) const;
 
   /**
-   * Utility functions
+   * Calculate distance between points
    */
   static QLength dist(const Vector& lhs, const Vector& rhs);
-  QLength distTo(const Vector& ipoint);
+  QLength distTo(const Vector& ipoint) const;
+
+  /**
+   * Calculate angle between points
+   */
+  static QAngle angle(const Vector& istart, const Vector& iend);
+  virtual QAngle angleTo(const Vector& ipoint) const;
 };
 } // namespace lib7842

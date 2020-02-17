@@ -1,4 +1,5 @@
 #include "vector.hpp"
+#include "lib7842/api/other/utility.hpp"
 #include "okapi/api/units/QArea.hpp"
 #include <stdexcept>
 #include <string>
@@ -54,8 +55,18 @@ QLength Vector::dist(const Vector& lhs, const Vector& rhs) {
            ((lhs.x - rhs.x) * (lhs.x - rhs.x) + (lhs.y - rhs.y) * (lhs.y - rhs.y)).convert(meter2));
 }
 
-QLength Vector::distTo(const Vector& ipoint) {
+QLength Vector::distTo(const Vector& ipoint) const {
   return dist(*this, ipoint);
+}
+
+QAngle Vector::angle(const Vector& istart, const Vector& iend) {
+  Vector diff = iend - istart;
+  QAngle angle = (std::atan2(diff.x.convert(meter), diff.y.convert(meter)) * radian);
+  return util::rollAngle180(angle);
+}
+
+QAngle Vector::angleTo(const Vector& ipoint) const {
+  return angle(*this, ipoint);
 }
 
 } // namespace lib7842
