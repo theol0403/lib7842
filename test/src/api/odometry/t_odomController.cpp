@@ -17,6 +17,10 @@ TEST_CASE("OdomController test") {
     createTimeUtil());
 
   SUBCASE("moving with default settler should not segfault") {
-    chassis->driveToPoint({0_in, 0_in}, 1, Trigger().distanceSettled().angleSettled());
+    chassis->driveToPoint({0_in, 0_in});
+  }
+
+  SUBCASE("turning with default settler should not segfault") {
+    chassis->turnAngle(0_deg);
   }
 }
