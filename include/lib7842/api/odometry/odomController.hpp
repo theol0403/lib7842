@@ -36,7 +36,8 @@ public:
    * @param idistanceController The distance pid controller
    * @param iturnController     The turning pid controller
    * @param iangleController    The angle pid controller, used to keep distance driving straight
-   * @param isettleRadius       The radius from the target point to give up angle correction
+   * @param isettleRadius       The radius from the target point to turn off angle correction when
+   *                            driving to a point
    * @param itimeUtil           The time utility
    */
   OdomController(const std::shared_ptr<ChassisModel>& imodel,
