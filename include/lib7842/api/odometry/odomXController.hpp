@@ -17,7 +17,7 @@ public:
    * @param idistanceController The distance pid controller
    * @param iturnController     The turning pid controller
    * @param iangleController    The angle pid controller, used to keep distance driving straight
-   * @param isettleRadius       The radius from the target point to turn off angle correction when
+   * @param idriveRadius        The radius from the target point to turn off angle correction when
    *                            driving to a point. Used by OdomController's driveToPoint, which is
    *                            not used with an X drive.
    * @param itimeUtil           The time utility
@@ -27,7 +27,7 @@ public:
                   std::unique_ptr<IterativePosPIDController> idistanceController,
                   std::unique_ptr<IterativePosPIDController> iturnController,
                   std::unique_ptr<IterativePosPIDController> iangleController,
-                  const QLength& isettleRadius, const TimeUtil& itimeUtil);
+                  const QLength& idriveRadius, const TimeUtil& itimeUtil);
 
   /**
    * Strafe a distance in a relative direction while correcting angle using an AngleCalculator
