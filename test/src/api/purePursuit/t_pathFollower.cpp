@@ -19,7 +19,7 @@ TEST_CASE("PathFollower test") {
       model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}), createTimeUtil());
 
     auto follower = std::make_shared<MockPathFollower>(
-      model, odom, ChassisScales({{4_in, 10_in}, 360}), 6_in, createTimeUtil());
+      model, odom, ChassisScales({{4_in, 10_in}, 360}), 6_in, 6_in, createTimeUtil());
 
     PursuitLimits limits {0_mps, 0.5_mps2, 1_mps, 1_mps};
 
