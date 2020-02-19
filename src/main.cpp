@@ -98,7 +98,7 @@ void opcontrol() {
     //Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
       0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)),
-    TimeUtilFactory().create());
+    0.5_ft, TimeUtilFactory().create());
 
   /**
    * Screen
@@ -110,7 +110,7 @@ void opcontrol() {
   /**
    * Follower
    */
-  PathFollower follower(model, odom, ChassisScales({2.75_in, 14_in}, imev5GreenTPR), 1_ft,
+  PathFollower follower(model, odom, ChassisScales({2.75_in, 14_in}, imev5GreenTPR), 1_ft, 0.5_ft,
                         TimeUtilFactory().create());
   PursuitLimits limits {0.2_mps, 1.1_mps2, 0.75_mps, 0.4_mps2, 0_mps, 40_mps};
 
