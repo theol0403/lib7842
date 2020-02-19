@@ -10,13 +10,13 @@ OdomController::OdomController(const std::shared_ptr<ChassisModel>& imodel,
                                std::unique_ptr<IterativePosPIDController> idistanceController,
                                std::unique_ptr<IterativePosPIDController> iturnController,
                                std::unique_ptr<IterativePosPIDController> iangleController,
-                               const QLength& isettleRadius, const TimeUtil& itimeUtil) :
+                               const QLength& idriveRadius, const TimeUtil& itimeUtil) :
   model(std::move(imodel)),
   odometry(std::move(iodometry)),
   distanceController(std::move(idistanceController)),
   angleController(std::move(iangleController)),
   turnController(std::move(iturnController)),
-  settleRadius(isettleRadius),
+  driveRadius(idriveRadius),
   timeUtil(itimeUtil) {};
 
 /**
@@ -98,7 +98,7 @@ void OdomController::driveToPoint(const Vector& targetPoint, double turnScale, S
     // go backwards
     if (angleToClose.abs() >= 90_deg) distanceToClose = -distanceToClose;
 
-    if (distanceToTarget.abs() < settleRadius) {
+    if (distanceToTarget.abs() < driveRadius) {
       angleErr = 0_deg;
       // used for settling
       distanceErr = distanceToClose;
@@ -124,7 +124,7 @@ void OdomController::driveToPoint(const Vector& targetPoint, double turnScale, S
 void OdomController::driveToPoint2(const Vector& targetPoint, double turnScale, Settler&& settler) {
   resetPid();
   auto rate = timeUtil.getRate();
-  Settler exitFunc = Trigger().distanceErr(settleRadius);
+  Settler exitFunc = Trigger().distanceErr(driveRadius);
   do {
     State state = getState();
     angleErr = state.angleTo(targetPoint);
