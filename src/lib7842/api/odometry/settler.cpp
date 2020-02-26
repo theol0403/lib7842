@@ -23,6 +23,7 @@ bool Settler::run() {
   lastError = error;
 
   if (driveAbort && driveAbort->isSettled(change.convert(millimeter))) {
+    std::cerr << "Settler::run: ERROR: Aborting drive command" << std::endl;
     return true;
   } else {
     return Trigger::run();
