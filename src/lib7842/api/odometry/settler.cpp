@@ -1,5 +1,6 @@
 #include "settler.hpp"
 #include "lib7842/api/odometry/odomController.hpp"
+#include <iostream>
 
 namespace lib7842 {
 
