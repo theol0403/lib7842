@@ -12,7 +12,6 @@ public:
   double y {0}; // in meters
 
   MathPoint() = default;
-  virtual ~MathPoint() = default;
 
   /**
    * Create a new point

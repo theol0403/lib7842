@@ -9,7 +9,7 @@
 namespace lib7842 {
 
 /**
- * Odometry algorithm that directly uses 5225A's tracking algorithm. Statemode is assumed to be cartesian.
+ * Odometry algorithm that directly uses 5225A's tracking algorithm. Uses the cartesian stateMode.
  */
 class CustomOdometry : public Odometry, public TaskWrapper {
 public:
@@ -25,32 +25,6 @@ public:
                  const TimeUtil& itimeUtil,
                  const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
-  virtual ~CustomOdometry() = default;
-
-  /**
-   * Return the current state.
-   *
-   * @return The state.
-   */
-  virtual const State& getState() const;
-
-  /**
-   * Set a new state to be the current state.
-   *
-   * @param istate The state
-   */
-  virtual void setState(const State& istate);
-
-  /**
-   * Reset state to {0, 0, 0}
-   */
-  virtual void resetState();
-
-  /**
-   * Reset sensors and state
-   */
-  virtual void reset();
-
   /**
    * Set the drive and turn scales.
    *
@@ -62,6 +36,46 @@ public:
    * Do one odometry step.
    */
   void step() override;
+
+  /**
+   * Return the current state.
+   *
+   * @return The state.
+   */
+  virtual const State& getState() const;
+
+  /**
+   * Return the current state.
+   *
+   * @param imode The mode to return the state in.
+   * @return The current state in the given format.
+   */
+  OdomState getState(const StateMode& imode) const override;
+
+  /**
+   * Set a new state.
+   *
+   * @param istate The state
+   */
+  virtual void setState(const State& istate);
+
+  /**
+   * Set a new state to be the current state.
+   *
+   * @param istate The new state in the given format.
+   * @param imode The mode to treat the input state as.
+   */
+  void setState(const OdomState& istate, const StateMode& imode) override;
+
+  /**
+   * Reset state to {0, 0, 0}
+   */
+  virtual void resetState();
+
+  /**
+   * Reset sensors and state
+   */
+  virtual void reset();
 
   /**
    * Get the chassis model.
@@ -82,22 +96,13 @@ public:
    */
   void loop() override;
 
-private:
-  // bass class overrides for polymorphism
-  OdomState getState(const StateMode& imode) const override;
-  void setState(const OdomState& istate, const StateMode& imode) override;
-
 protected:
   std::shared_ptr<ChassisModel> model {nullptr};
-
   ChassisScales chassisScales;
-  double chassisWidth;
-  double middleDistance;
-
   TimeUtil timeUtil;
   std::shared_ptr<Logger> logger {nullptr};
 
-  State state;
+  State state {};
   std::valarray<std::int32_t> lastTicks {0, 0, 0};
 };
 } // namespace lib7842

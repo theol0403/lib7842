@@ -18,33 +18,6 @@ void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, dou
 }
 
 void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
-                  double strafe) {
-  forward = std::clamp(forward, -1.0, 1.0);
-  strafe = std::clamp(strafe, -1.0, 1.0);
-  double leftOutput = forward + yaw;
-  double rightOutput = forward - yaw;
-  double maxInputMag = std::max({std::abs(leftOutput), std::abs(rightOutput), std::abs(strafe)});
-  if (maxInputMag > 1.0) {
-    leftOutput /= maxInputMag;
-    rightOutput /= maxInputMag;
-    strafe /= maxInputMag;
-  }
-
-  leftOutput = std::clamp(leftOutput, -1.0, 1.0);
-  rightOutput = std::clamp(rightOutput, -1.0, 1.0);
-  strafe = std::clamp(strafe, -1.0, 1.0);
-
-  model->getTopLeftMotor()->moveVoltage(
-    static_cast<int16_t>(std::clamp(leftOutput + strafe, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getTopRightMotor()->moveVoltage(
-    static_cast<int16_t>(std::clamp(rightOutput - strafe, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getBottomRightMotor()->moveVoltage(
-    static_cast<int16_t>(std::clamp(rightOutput + strafe, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getBottomLeftMotor()->moveVoltage(
-    static_cast<int16_t>(std::clamp(leftOutput - strafe, -1.0, 1.0) * model->getMaxVoltage()));
-}
-
-void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
                   const QAngle& direction) {
   forward = std::clamp(forward, -1.0, 1.0);
 
@@ -97,7 +70,7 @@ QAngle rollAngle180(const QAngle& angle) {
   return angle - 360.0_deg * std::floor((angle.convert(degree) + 180.0) / 360.0);
 }
 
-QAngle rotateAngle90(const QAngle& angle) {
+QAngle wrapAngle90(const QAngle& angle) {
   QAngle iangle = rollAngle180(angle);
   if (iangle.abs() > 90_deg) {
     iangle += 180_deg;

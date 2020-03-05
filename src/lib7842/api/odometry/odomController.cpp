@@ -109,7 +109,7 @@ void OdomController::driveToPoint(const Vector& targetPoint, double turnScale, S
     }
 
     // rotate angle to be +- 90
-    angleErr = rotateAngle90(angleErr);
+    angleErr = wrapAngle90(angleErr);
 
     double angleVel = angleController->step(-angleErr.convert(degree));
     double distanceVel = distanceController->step(-distanceToClose.convert(millimeter));
@@ -131,7 +131,7 @@ void OdomController::driveToPoint2(const Vector& targetPoint, double turnScale, 
     distanceErr = state.distTo(targetPoint);
 
     if (angleErr.abs() > 90_deg) distanceErr = -distanceErr;
-    angleErr = rotateAngle90(angleErr);
+    angleErr = wrapAngle90(angleErr);
 
     double angleVel = angleController->step(-angleErr.convert(degree));
     double distanceVel = distanceController->step(-distanceErr.convert(millimeter));

@@ -31,19 +31,6 @@ template <typename T> int sgn(T val) {
 void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, double yaw);
 
 /**
- * Control the chassis movement for an XDrive using voltage. Applies magnitude control to prioritize
- * turning. Range of forward, yaw, and strafe is +-1, but yaw may be outside of the range which
- * prioritizes turning.
- *
- * @param model   The chassis model
- * @param forward The forward voltage
- * @param yaw     The yaw voltage
- * @param strafe  The strafe voltage
- */
-void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
-                  double strafe);
-
-/**
  * Control the chassis movement for an XDrive using voltage. Strafes at the given voltage in the
  * given direction. Applies magnitude control to prioritize turning. Range of forward, yaw, and
  * strafe is +-1, but yaw may be outside of the range which prioritizes turning.
@@ -101,6 +88,6 @@ QAngle rollAngle180(const QAngle& angle);
  * @param  angle The input angle
  * @return The rotated angle
  */
-QAngle rotateAngle90(const QAngle& angle);
+QAngle wrapAngle90(const QAngle& angle);
 
 } // namespace lib7842::util

@@ -10,8 +10,6 @@ Trigger&& Trigger::requirement(std::function<bool(const OdomController* icontrol
   return std::move(*this);
 }
 
-using namespace std::placeholders; // for _1, _2, _3...
-
 Trigger&& Trigger::requirement(std::function<bool()>&& function) {
   return requirement(
     [function = std::move(function)](const OdomController*) { return function(); });
