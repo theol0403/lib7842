@@ -6,7 +6,13 @@ namespace lib7842 {
 
 std::shared_ptr<SettledUtil> Settler::defaultAbort {nullptr};
 
-Settler::Settler(Trigger&& trigger) : Trigger(std::move(trigger)) {}
+Settler::Settler(Trigger&& trigger) : Trigger(std::move(trigger)) {
+  if (!exceptions.empty() || !requirements.empty()) {
+    std::cerr << "Settler::Settler: WARNING: Trigger being converted to settler, will cause "
+                 "segfault if any requirements or exceptions point to the Trigger"
+              << std::endl;
+  }
+}
 
 Settler&& Settler::abort(const TimeUtil& itimeUtil) {
   driveAbort = std::shared_ptr<SettledUtil>(itimeUtil.getSettledUtil());
