@@ -57,7 +57,7 @@ public:
    * @param settler         The settler
    */
   virtual void turn(const AngleCalculator& angleCalculator, const Turner& turner = pointTurn,
-                    Settler&& settler = Trigger().turnSettled());
+                    Trigger&& settler = Trigger().turnSettled());
 
   /**
    * Turn the chassis to face an absolute angle
@@ -67,7 +67,7 @@ public:
    * @param settler The settler
    */
   virtual void turnToAngle(const QAngle& angle, const Turner& turner = pointTurn,
-                           Settler&& settler = Trigger().turnSettled());
+                           Trigger&& settler = Trigger().turnSettled());
 
   /**
    * Turn the chassis to face a relative angle
@@ -77,7 +77,7 @@ public:
    * @param settler The settler
    */
   virtual void turnAngle(const QAngle& angle, const Turner& turner = pointTurn,
-                         Settler&& settler = Trigger().turnSettled());
+                         Trigger&& settler = Trigger().turnSettled());
 
   /**
    * Turn the chassis to face a point
@@ -87,7 +87,7 @@ public:
    * @param settler The settler
    */
   virtual void turnToPoint(const Vector& point, const Turner& turner = pointTurn,
-                           Settler&& settler = Trigger().turnSettled());
+                           Trigger&& settler = Trigger().turnSettled());
 
   /**
    * Drive a distance while correcting angle using an AngleCalculator
@@ -99,7 +99,7 @@ public:
    */
   virtual void moveDistanceAtAngle(const QLength& distance, const AngleCalculator& angleCalculator,
                                    double turnScale,
-                                   Settler&& settler = Settler().distanceSettled().angleSettled());
+                                   Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
    * Drive a distance while maintaining starting angle
@@ -108,7 +108,7 @@ public:
    * @param settler  The settler
    */
   virtual void moveDistance(const QLength& distance,
-                            Settler&& settler = Settler().distanceSettled().angleSettled());
+                            Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
    * Drive to a point using custom point seeking
@@ -119,7 +119,7 @@ public:
    * @param settler     The settler
    */
   virtual void driveToPoint(const Vector& targetPoint, double turnScale = 1,
-                            Settler&& settler = Settler().distanceSettled().angleSettled());
+                            Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
    * Drive to a point using simple point seeking
@@ -130,7 +130,7 @@ public:
    * @param settler     The settler
    */
   virtual void driveToPoint2(const Vector& targetPoint, double turnScale = 1,
-                             Settler&& settler = Settler().distanceSettled().angleSettled());
+                             Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
    * A Turner that executes a point turn which turns in place. Used as default for turn functions
@@ -229,6 +229,11 @@ public:
    * Return a trigger that points to this chassis
    */
   Trigger trigger() const;
+
+  /**
+   * Return a settler that points to this chassis
+   */
+  Settler settler() const;
 
 protected:
   /**

@@ -87,6 +87,10 @@ Trigger&& Trigger::maxTime(const QTime& time, const TimeUtil& timeUtil) {
   });
 }
 
+Trigger&& Trigger::noAbort() {
+  return std::move(*this);
+};
+
 bool Trigger::run() {
   if (std::any_of(exceptions.begin(), exceptions.end(),
                   [=](const auto& function) { return function(controller); })) {

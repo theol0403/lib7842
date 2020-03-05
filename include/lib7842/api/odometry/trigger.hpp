@@ -123,6 +123,11 @@ public:
   virtual Trigger&& maxTime(const QTime& time, const TimeUtil& timeUtil);
 
   /**
+   * Remove any abort that has been set by a Settler. Automatically gets called by turn commands.
+   */
+  virtual Trigger&& noAbort();
+
+  /**
    * Run all the requirements and exceptions. The controller is assumed to be provided by the
    * constructor.
    *

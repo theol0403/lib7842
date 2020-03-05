@@ -42,7 +42,7 @@ public:
     strafeRelativeDirection(const QLength& distance, const QAngle& direction,
                             const AngleCalculator& angleCalculator = makeAngleCalculator(),
                             double turnScale = 1,
-                            Settler&& settler = Settler().distanceSettled().angleSettled());
+                            Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
    * Strafe a distance in an absolute direction while correcting angle using an AngleCalculator
@@ -57,7 +57,7 @@ public:
     strafeAbsoluteDirection(const QLength& distance, const QAngle& direction,
                             const AngleCalculator& angleCalculator = makeAngleCalculator(),
                             double turnScale = 1,
-                            Settler&& settler = Settler().distanceSettled().angleSettled());
+                            Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
    * Strafe to a point using field-centric math and an AngleCalculator
@@ -70,7 +70,7 @@ public:
   virtual void strafeToPoint(const Vector& targetPoint,
                              const AngleCalculator& angleCalculator = makeAngleCalculator(),
                              double turnScale = 1,
-                             Settler&& settler = Settler().distanceSettled().angleSettled());
+                             Trigger&& settler = Settler().distanceSettled().angleSettled());
 
 protected:
   std::shared_ptr<XDriveModel> xModel {nullptr};

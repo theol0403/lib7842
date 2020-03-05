@@ -13,7 +13,7 @@ TEST_CASE("Settler test") {
   auto chassis = std::make_shared<MockOdomController>(model, odom, nullptr, nullptr, nullptr, 0_in,
                                                       createTimeUtil());
 
-  Settler trigger = chassis->trigger();
+  Settler trigger = chassis->settler();
 
   SUBCASE("nothing should return false") {
     REQUIRE(!trigger());
