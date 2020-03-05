@@ -14,7 +14,6 @@ namespace lib7842 {
 class Settler : public Trigger {
 public:
   using Trigger::Trigger;
-  explicit Settler(Trigger&& trigger);
 
   /**
    * Make an exception if the derivative of the distance error is within the ranges of a settled
