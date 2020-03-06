@@ -18,9 +18,8 @@ void CustomOdometry::step() {
   auto newTicks = model->getSensorVals();
 
   if (newTicks.size() < 3) {
-    auto logger = global::getLogger();
     std::string msg("CustomOdometry::step: The model does not contain three encoders");
-    LOG_ERROR(msg);
+    LIB7842_ERROR(msg);
     throw std::runtime_error(msg);
   }
 
