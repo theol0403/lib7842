@@ -8,6 +8,11 @@ int main(int argc, char** argv) {
   Logger::setDefaultLogger(
     std::make_shared<Logger>(std::make_unique<MockTimer>(), "/dev/stdout", Logger::LogLevel::warn));
 
+  global::setLogger(std::make_shared<Logger>(std::make_unique<MockTimer>(), "/dev/stdout",
+                                             Logger::LogLevel::debug));
+
+  global::setTimeUtil(std::make_shared<TimeUtil>(createTimeUtil()));
+
   if (argc > 1 && std::string(argv[1]) == "lvgl") {
     std::cout << "Running lvgl:" << std::endl;
     return lvglMain();
