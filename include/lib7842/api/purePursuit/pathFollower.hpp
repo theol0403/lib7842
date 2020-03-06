@@ -23,11 +23,10 @@ public:
    * @param ichassisScales The chassis scales
    * @param ilookahead     The lookahead distance
    * @param idriveRadius   The radius from the end of the path to turn off angle correction.
-   * @param itimeUtil      The time utility
    */
   PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                const std::shared_ptr<Odometry>& iodometry, const ChassisScales& ichassisScales,
-               const QLength& ilookahead, const QLength& idriveRadius, const TimeUtil& itimeUtil);
+               const QLength& ilookahead, const QLength& idriveRadius);
 
   /**
    * Follow a pre-generated PursuitPath.
@@ -110,7 +109,6 @@ protected:
 
   const QLength lookahead {0_in};
   const QLength driveRadius {0_in};
-  TimeUtil timeUtil;
 
   std::optional<pathIterator_t> lastClosest {std::nullopt};
   size_t lastLookIndex {0};

@@ -18,12 +18,8 @@ public:
    *
    * @param imodel         The chassis model for reading sensors.
    * @param ichassisScales The chassis dimensions.
-   * @param itimeUtil      The time utility
-   * @param ilogger        The logger
    */
-  CustomOdometry(const std::shared_ptr<ChassisModel>& imodel, const ChassisScales& ichassisScales,
-                 const TimeUtil& itimeUtil,
-                 const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  CustomOdometry(const std::shared_ptr<ChassisModel>& imodel, const ChassisScales& ichassisScales);
 
   /**
    * Set the drive and turn scales.
@@ -99,8 +95,6 @@ public:
 protected:
   std::shared_ptr<ChassisModel> model {nullptr};
   ChassisScales chassisScales;
-  TimeUtil timeUtil;
-  std::shared_ptr<Logger> logger {nullptr};
 
   State state {};
   std::valarray<std::int32_t> lastTicks {0, 0, 0};

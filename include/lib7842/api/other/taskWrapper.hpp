@@ -14,16 +14,10 @@ using namespace okapi;
  */
 class TaskWrapper {
 protected:
+  TaskWrapper() = default;
   TaskWrapper(const TaskWrapper& itask) = delete;
   TaskWrapper(TaskWrapper&& itask) = default;
   virtual ~TaskWrapper() = default;
-
-  /**
-   * Construct a TaskWrapper
-   *
-   * @param ilogger The logger
-   */
-  explicit TaskWrapper(const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   /**
    * Override this function to implement a custom task loop.
@@ -42,7 +36,7 @@ public:
   /**
    * Kill the task.
    */
-  virtual void killTask();
+  virtual void stopTask();
 
   /**
    * Get the task name.
@@ -50,9 +44,6 @@ public:
    * @return The name.
    */
   virtual std::string getName();
-
-protected:
-  std::shared_ptr<Logger> logger {nullptr};
 
 private:
   static void trampoline(void* iparam);

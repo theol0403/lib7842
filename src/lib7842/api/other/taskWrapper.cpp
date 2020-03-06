@@ -15,7 +15,7 @@ void TaskWrapper::startTask(const std::string& iname) {
   task = std::make_unique<CrossplatformThread>(trampoline, this, iname.c_str());
 }
 
-void TaskWrapper::killTask() {
+void TaskWrapper::stopTask() {
   task = nullptr;
 }
 

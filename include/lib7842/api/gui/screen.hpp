@@ -15,20 +15,16 @@ public:
    * Create a new screen. Theme color is inherited from the parent.
    *
    * @param iparent The LVGL parent, typically `lv_scr_act()`
-   * @param ilogger The logger
    */
-  explicit Screen(lv_obj_t* iparent,
-                  const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  explicit Screen(lv_obj_t* iparent);
 
   /**
    * Create a new screen.
    *
    * @param iparent The LVGL parent, typically `lv_scr_act()`
    * @param icolor  The theme color
-   * @param ilogger The logger
    */
-  explicit Screen(lv_obj_t* iparent, lv_color_t icolor,
-                  const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  explicit Screen(lv_obj_t* iparent, lv_color_t icolor);
 
   Screen(const Screen& iscreen) = delete;
   Screen(Screen&& iscreen) = default;

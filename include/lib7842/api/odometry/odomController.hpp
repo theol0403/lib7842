@@ -38,14 +38,13 @@ public:
    * @param iangleController    The angle pid controller, used to keep distance driving straight
    * @param idriveRadius        The radius from the target point to turn off angle correction when
    *                            driving to a point
-   * @param itimeUtil           The time utility
    */
   OdomController(const std::shared_ptr<ChassisModel>& imodel,
                  const std::shared_ptr<Odometry>& iodometry,
                  std::unique_ptr<IterativePosPIDController> idistanceController,
                  std::unique_ptr<IterativePosPIDController> iturnController,
                  std::unique_ptr<IterativePosPIDController> iangleController,
-                 const QLength& idriveRadius, const TimeUtil& itimeUtil);
+                 const QLength& idriveRadius);
 
   virtual ~OdomController() = default;
 
@@ -247,7 +246,6 @@ protected:
   std::unique_ptr<IterativePosPIDController> angleController {nullptr};
   std::unique_ptr<IterativePosPIDController> turnController {nullptr};
   const QLength driveRadius;
-  TimeUtil timeUtil;
 
   QLength distanceErr = 0_in;
   QAngle angleErr = 0_deg;

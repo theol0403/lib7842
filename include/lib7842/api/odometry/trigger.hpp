@@ -101,24 +101,23 @@ public:
    * Require that the distance error is settled according to a settled util. The error is in
    * millimeters.
    *
-   * @param  timeUtil The timeUtil containing a settled util.
+   * @param  settleUtil The settle utility
    */
-  virtual Trigger&& distanceSettledUtil(const TimeUtil& timeUtil);
+  virtual Trigger&& distanceSettledUtil(const SettledUtil& settleUtil);
 
   /**
    * Require that the angle error is settled according to a settled util. The error is in degrees.
    *
-   * @param  timeUtil The timeUtil containing a settled util.
+   * @param  settleUtil The settle utility
    */
-  virtual Trigger&& angleSettledUtil(const TimeUtil& timeUtil);
+  virtual Trigger&& angleSettledUtil(const SettledUtil& settleUtil);
 
   /**
    * Make an exception if the time from the first call of the trigger is greater than a value.
    *
-   * @param  time     The time
-   * @param  timeUtil The timeUtil for keeping track of time.
+   * @param  time The time
    */
-  virtual Trigger&& maxTime(const QTime& time, const TimeUtil& timeUtil);
+  virtual Trigger&& maxTime(const QTime& time);
 
   /**
    * Remove any abort that has been set by a Settler. Automatically gets called by turn commands.
