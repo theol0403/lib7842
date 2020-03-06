@@ -15,8 +15,8 @@ TEST_CASE("CustomOdometry test") {
 
   SUBCASE("Common Odometry Tests") {
 
-    auto odom = std::make_shared<CustomOdometry>(
-      model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}), createTimeUtil());
+    auto odom =
+      std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}));
 
     auto assertState = [&](const State& istate) {
       assertOdomState(istate, odom);
@@ -106,8 +106,7 @@ TEST_CASE("CustomOdometry test") {
 
   SUBCASE("SmallSwingTurnOnRightWheels") {
     auto smallOdom = std::make_shared<CustomOdometry>(
-      model, ChassisScales({{2.75_in, 12.9_in, 0.5_in, 2.75_in}, quadEncoderTPR}),
-      createTimeUtil());
+      model, ChassisScales({{2.75_in, 12.9_in, 0.5_in, 2.75_in}, quadEncoderTPR}));
 
     model->setSensorVals(0, 0, 0);
     smallOdom->step();
@@ -119,8 +118,8 @@ TEST_CASE("CustomOdometry test") {
   }
 
   SUBCASE("NinetyDegreePivotTurn") {
-    auto straightOdom = std::make_shared<CustomOdometry>(
-      model, ChassisScales({{4_in, 10_in, 0_in, 4_in}, 360}), createTimeUtil());
+    auto straightOdom =
+      std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 0_in, 4_in}, 360}));
 
     assertOdomState({0_m, 0_m, 0_deg}, straightOdom);
 
@@ -130,8 +129,8 @@ TEST_CASE("CustomOdometry test") {
   }
 
   SUBCASE("FullPivotRotation") {
-    auto straightOdom = std::make_shared<CustomOdometry>(
-      model, ChassisScales({{4_in, 10_in, 0_in, 4_in}, 360}), createTimeUtil());
+    auto straightOdom =
+      std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 0_in, 4_in}, 360}));
 
     assertOdomState({0_m, 0_m, 0_deg}, straightOdom);
 
@@ -141,8 +140,8 @@ TEST_CASE("CustomOdometry test") {
   }
 
   SUBCASE("FullPointRotation") {
-    auto straightOdom = std::make_shared<CustomOdometry>(
-      model, ChassisScales({{4_in, 10_in, 0_in, 4_in}, 360}), createTimeUtil());
+    auto straightOdom =
+      std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 0_in, 4_in}, 360}));
 
     assertOdomState({0_m, 0_m, 0_deg}, straightOdom);
 

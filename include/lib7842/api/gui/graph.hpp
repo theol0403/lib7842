@@ -26,7 +26,7 @@ public:
    */
   Graph& withRange(int imin, int imax);
 
-  /**
+  /** 
    * Set the graph resolution (number of data points on the graph)
    *
    * @param  iresolution The resolution of the graph.

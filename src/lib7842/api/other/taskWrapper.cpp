@@ -2,15 +2,15 @@
 
 namespace lib7842 {
 
-TaskWrapper::TaskWrapper(const std::shared_ptr<Logger>& ilogger) : logger(ilogger) {}
-
 void TaskWrapper::loop() {
+  auto logger = global::getLogger();
   std::string msg("TaskWrapper::loop: loop is not overridden");
   LOG_ERROR(msg);
   throw std::runtime_error(msg);
 }
 
 void TaskWrapper::startTask(const std::string& iname) {
+  auto logger = global::getLogger();
   if (task) LOG_INFO("TaskWrapper::startTask: restarting task: " + iname);
   task = std::make_unique<CrossplatformThread>(trampoline, this, iname.c_str());
 }

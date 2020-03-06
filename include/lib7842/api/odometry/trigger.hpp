@@ -1,8 +1,8 @@
 #pragma once
+#include "lib7842/api/other/global.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
-#include "okapi/api/util/timeUtil.hpp"
 #include <functional>
 
 namespace lib7842 {
@@ -101,16 +101,16 @@ public:
    * Require that the distance error is settled according to a settled util. The error is in
    * millimeters.
    *
-   * @param  settleUtil The settle utility
+   * @param  timeUtil The timeUtil containing a settled util.
    */
-  virtual Trigger&& distanceSettledUtil(const SettledUtil& settleUtil);
+  virtual Trigger&& distanceSettledUtil(const TimeUtil& timeUtil);
 
   /**
    * Require that the angle error is settled according to a settled util. The error is in degrees.
    *
-   * @param  settleUtil The settle utility
+   * @param  timeUtil The timeUtil containing a settled util.
    */
-  virtual Trigger&& angleSettledUtil(const SettledUtil& settleUtil);
+  virtual Trigger&& angleSettledUtil(const TimeUtil& timeUtil);
 
   /**
    * Make an exception if the time from the first call of the trigger is greater than a value.

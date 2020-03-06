@@ -1,6 +1,6 @@
 #pragma once
+#include "lib7842/api/other/global.hpp"
 #include "okapi/api/coreProsAPI.hpp"
-#include "okapi/api/util/logging.hpp"
 #include "pros/rtos.hpp"
 #include <memory>
 

@@ -10,19 +10,18 @@ namespace lib7842 {
 PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                            const std::shared_ptr<Odometry>& iodometry,
                            const ChassisScales& ichassisScales, const QLength& ilookahead,
-                           const QLength& idriveRadius, const TimeUtil& itimeUtil) :
+                           const QLength& idriveRadius) :
   model(imodel),
   odometry(iodometry),
   chassisScales(ichassisScales),
   lookahead(ilookahead),
-  driveRadius(idriveRadius),
-  timeUtil(itimeUtil) {}
+  driveRadius(idriveRadius) {}
 
 void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
   resetPursuit();
 
-  auto rate = timeUtil.getRate();
-  auto timer = timeUtil.getTimer();
+  auto rate = global::getTimeUtil()->getRate();
+  auto timer = global::getTimeUtil()->getTimer();
 
   PursuitLimits limits = ipath.getLimits();
   QSpeed lastVelocity = limits.minVel; // assume the robot starts at minimum velocity

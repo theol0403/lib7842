@@ -3,13 +3,9 @@
 namespace lib7842 {
 
 CustomOdometry::CustomOdometry(const std::shared_ptr<ChassisModel>& imodel,
-                               const ChassisScales& ichassisScales, const TimeUtil& itimeUtil,
-                               const std::shared_ptr<Logger>& ilogger) :
-  TaskWrapper(ilogger),
-  model(imodel),
-  chassisScales(ichassisScales),
-  timeUtil(itimeUtil),
-  logger(ilogger) {}
+                               const ChassisScales& ichassisScales) :
+
+  model(imodel), chassisScales(ichassisScales) {}
 
 void CustomOdometry::setScales(const ChassisScales& ichassisScales) {
   chassisScales = ichassisScales;
@@ -22,6 +18,7 @@ void CustomOdometry::step() {
   auto newTicks = model->getSensorVals();
 
   if (newTicks.size() < 3) {
+    auto logger = global::getLogger();
     std::string msg("CustomOdometry::step: The model does not contain three encoders");
     LOG_ERROR(msg);
     throw std::runtime_error(msg);
@@ -43,13 +40,13 @@ void CustomOdometry::step() {
   double h2; // The same as h but using the back instead of the side wheels
   double a = (L - R) / chassisScales.wheelTrack.convert(meter); // The angle that I've traveled
   if (a) {
-    // The radius of the circle the robot travel's around with the right side of the robot
+    // The radius of the circle the robot travels around with the right side of the robot
     double r = R / a;
     i = a / 2.0;
     double sinI = std::sin(i);
     h = ((r + (chassisScales.wheelTrack.convert(meter) / 2)) * sinI) * 2.0;
 
-    // The radius of the circle the robot travel's around with the back of the robot
+    // The radius of the circle the robot travels around with the back of the robot
     double r2 = S / a;
     h2 = ((r2 + chassisScales.middleWheelDistance.convert(meter)) * sinI) * 2.0;
   } else {
@@ -113,7 +110,7 @@ ChassisScales CustomOdometry::getScales() {
 }
 
 void CustomOdometry::loop() {
-  auto rate = timeUtil.getRate();
+  auto rate = global::getTimeUtil()->getRate();
   while (true) {
     step();
     rate->delayUntil(5_ms);

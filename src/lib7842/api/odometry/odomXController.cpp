@@ -10,9 +10,9 @@ OdomXController::OdomXController(const std::shared_ptr<XDriveModel>& imodel,
                                  std::unique_ptr<IterativePosPIDController> idistanceController,
                                  std::unique_ptr<IterativePosPIDController> iturnController,
                                  std::unique_ptr<IterativePosPIDController> iangleController,
-                                 const QLength& idriveRadius, const TimeUtil& itimeUtil) :
+                                 const QLength& idriveRadius) :
   OdomController(imodel, iodometry, std::move(idistanceController), std::move(iturnController),
-                 std::move(iangleController), idriveRadius, itimeUtil),
+                 std::move(iangleController), idriveRadius),
   xModel(imodel) {};
 
 void OdomXController::strafeRelativeDirection(const QLength& distance, const QAngle& direction,
@@ -36,7 +36,7 @@ void OdomXController::strafeToPoint(const Vector& targetPoint,
                                     const AngleCalculator& angleCalculator, double turnScale,
                                     Trigger&& settler) {
   resetPid();
-  auto rate = timeUtil.getRate();
+  auto rate = global::getTimeUtil()->getRate();
   do {
     State state = getState();
     distanceErr = state.distTo(targetPoint);

@@ -2,12 +2,11 @@
 
 namespace lib7842::GUI {
 
-Screen::Screen(lv_obj_t* iparent, const std::shared_ptr<Logger>& ilogger) :
-  Screen(iparent, lv_obj_get_style(iparent)->body.main_color, ilogger) {}
+Screen::Screen(lv_obj_t* iparent) : Screen(iparent, lv_obj_get_style(iparent)->body.main_color) {}
 
-Screen::Screen(lv_obj_t* iparent, lv_color_t icolor, const std::shared_ptr<Logger>& ilogger) :
-  Page(iparent, icolor, ilogger),
-  TaskWrapper(ilogger),
+Screen::Screen(lv_obj_t* iparent, lv_color_t icolor) :
+  Page(iparent, icolor),
+
   tabview(lv_tabview_create(container, NULL)) {
   lv_obj_set_size(tabview, lv_obj_get_width(container), lv_obj_get_height(container));
   lv_obj_align(tabview, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);

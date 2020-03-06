@@ -61,11 +61,12 @@ Trigger&& Trigger::angleSettledUtil(const TimeUtil& timeUtil) {
     });
 }
 
-Trigger&& Trigger::maxTime(const QTime& time, const TimeUtil& timeUtil) {
-  return exception([=, timer = std::shared_ptr<AbstractTimer>(timeUtil.getTimer())]() mutable {
-    timer->placeHardMark();
-    return timer->getDtFromHardMark() >= time;
-  });
+Trigger&& Trigger::maxTime(const QTime& time) {
+  return exception(
+    [=, timer = std::shared_ptr<AbstractTimer>(global::getTimeUtil()->getTimer())]() mutable {
+      timer->placeHardMark();
+      return timer->getDtFromHardMark() >= time;
+    });
 }
 
 Trigger&& Trigger::noAbort() {

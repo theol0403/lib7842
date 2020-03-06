@@ -1,4 +1,7 @@
 #pragma once
+#include <functional>
+#include <memory>
+#include <string>
 
 #ifndef THREADS_STD
   #include "display/lvgl.h"
@@ -7,7 +10,6 @@
 #endif
 
 namespace lib7842::GUI {
-using namespace okapi;
 
 /**
  * An LVGL container. This class can be extended to implement pages.
@@ -54,7 +56,5 @@ protected:
   lv_obj_t* container;
   lv_style_t cStyle;
   const lv_color_t themeColor;
-
-  std::shared_ptr<Logger> logger {nullptr};
 };
 } // namespace lib7842::GUI

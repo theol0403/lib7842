@@ -10,14 +10,13 @@ OdomController::OdomController(const std::shared_ptr<ChassisModel>& imodel,
                                std::unique_ptr<IterativePosPIDController> idistanceController,
                                std::unique_ptr<IterativePosPIDController> iturnController,
                                std::unique_ptr<IterativePosPIDController> iangleController,
-                               const QLength& idriveRadius, const TimeUtil& itimeUtil) :
+                               const QLength& idriveRadius) :
   model(std::move(imodel)),
   odometry(std::move(iodometry)),
   distanceController(std::move(idistanceController)),
   angleController(std::move(iangleController)),
   turnController(std::move(iturnController)),
-  driveRadius(idriveRadius),
-  timeUtil(itimeUtil) {};
+  driveRadius(idriveRadius) {};
 
 /**
  * Turning API
@@ -26,7 +25,7 @@ void OdomController::turn(const AngleCalculator& angleCalculator, const Turner& 
                           Trigger&& settler) {
   settler.noAbort(); // distance pid does not output with this algorithm
   resetPid();
-  auto rate = timeUtil.getRate();
+  auto rate = global::getTimeUtil()->getRate();
   do {
     angleErr = angleCalculator(*this);
     double vel = turnController->step(-angleErr.convert(degree));
@@ -55,7 +54,7 @@ void OdomController::moveDistanceAtAngle(const QLength& distance,
                                          const AngleCalculator& angleCalculator, double turnScale,
                                          Trigger&& settler) {
   resetPid();
-  auto rate = timeUtil.getRate();
+  auto rate = global::getTimeUtil()->getRate();
   auto lastTicks = model->getSensorVals();
   do {
     auto newTicks = model->getSensorVals();
@@ -84,7 +83,7 @@ void OdomController::moveDistance(const QLength& distance, Trigger&& settler) {
  */
 void OdomController::driveToPoint(const Vector& targetPoint, double turnScale, Trigger&& settler) {
   resetPid();
-  auto rate = timeUtil.getRate();
+  auto rate = global::getTimeUtil()->getRate();
   do {
     State state = getState();
     Vector closestPoint = closest(state, targetPoint);
@@ -123,7 +122,7 @@ void OdomController::driveToPoint(const Vector& targetPoint, double turnScale, T
 
 void OdomController::driveToPoint2(const Vector& targetPoint, double turnScale, Trigger&& settler) {
   resetPid();
-  auto rate = timeUtil.getRate();
+  auto rate = global::getTimeUtil()->getRate();
   Trigger&& exitFunc = Trigger().distanceErr(driveRadius);
   do {
     State state = getState();

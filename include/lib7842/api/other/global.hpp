@@ -14,9 +14,11 @@ using namespace okapi;
 void setLogger(const std::shared_ptr<Logger>& ilogger);
 
 /**
- * The global logger for use in all lib7842 classes
+ * Get the global logger.
+ *
+ * @return The logger.
  */
-extern std::shared_ptr<Logger> logger;
+std::shared_ptr<Logger> getLogger();
 
 /**
  * Set a new global timeUtil. lib7842 classes will all use this timeUtil.
@@ -26,8 +28,10 @@ extern std::shared_ptr<Logger> logger;
 void setTimeUtil(const std::shared_ptr<TimeUtil>& itimeUtil);
 
 /**
- * The global timeUtil for use in all lib7842 classes
+ * Get the global timeUtil.
+ *
+ * @return The timeUtil.
  */
-extern std::shared_ptr<TimeUtil> timeUtil;
+std::shared_ptr<TimeUtil> getTimeUtil();
 
 } // namespace lib7842::global
