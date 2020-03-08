@@ -155,23 +155,23 @@ public:
     SimplePath temp;
 
     for (size_t i = 0; i < path.size() - 1; i++) {
-      Vector& start = *path[i];
-      Vector& end = *path[i + 1];
+      T& start = *path[i];
+      T& end = *path[i + 1];
 
-      Vector diff = end - start;
+      T diff = end - start;
       size_t steps = std::ceil(MathPoint::mag(diff) / iresolution.convert(meter));
-      Vector step = diff / steps;
+      T step = diff / steps;
 
       temp().reserve(temp().size() + steps);
       for (size_t j = 0; j < steps; j++) {
-        temp().emplace_back(std::make_shared<Vector>(start + (step * j)));
+        temp().emplace_back(std::make_shared<T>(start + (step * j)));
       }
     }
 
     // if the path is more than 1 point and the end point is required - return last point
     // if there is only one point, always return it
     if ((iend && path.size() > 0) || path.size() == 1)
-      temp().emplace_back(std::make_shared<Vector>(*path.back()));
+      temp().emplace_back(std::make_shared<T>(*path.back()));
 
     return temp;
   }
