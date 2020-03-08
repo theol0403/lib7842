@@ -51,6 +51,8 @@ public:
    */
   State operator+(const State& rhs) const;
   State operator-(const State& rhs) const;
+  State operator*(const double scalar) const;
+  State operator/(const double scalar) const;
   bool operator==(const State& rhs) const;
   bool operator!=(const State& rhs) const;
 
