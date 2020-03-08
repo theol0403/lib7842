@@ -51,7 +51,7 @@ public:
    *
    * @param ipath The array of points
    */
-  DiscretePath(const std::initializer_list<T>& ipath) : DiscretePath(std::vector<T>(ipath)) {};
+  DiscretePath(const std::initializer_list<T>& ipath) : DiscretePath(std::vector<T>(ipath)) {}
 
   /**
    * Create a path using an array of shared pointers.

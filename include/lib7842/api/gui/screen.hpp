@@ -28,7 +28,7 @@ public:
 
   Screen(const Screen& iscreen) = delete;
   Screen(Screen&& iscreen) = default;
-  virtual ~Screen();
+  ~Screen() override;
 
   /**
    * Create a new tab and return the LVGL pointer.

@@ -63,7 +63,7 @@ public:
   /**
    * Require that the angle to an absolute angle is within a value.
    *
-   * @param  point   The absolute angle
+   * @param  angle   The absolute angle
    * @param  trigger The angle
    */
   virtual Trigger&& angleTo(const QAngle& angle, const QAngle& trigger);

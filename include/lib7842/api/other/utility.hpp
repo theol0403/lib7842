@@ -58,7 +58,6 @@ Vector closest(const Vector& current, const QAngle& heading, const Vector& targe
  *
  * @param  state  The current state with heading
  * @param  target The target point
- * @param current The current point
  * @return the closest point
  */
 Vector closest(const State& state, const Vector& target);

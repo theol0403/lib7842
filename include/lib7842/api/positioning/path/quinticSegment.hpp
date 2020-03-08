@@ -23,7 +23,7 @@ public:
   /**
    * Calculate the value of the polynomial at t
    *
-   * @param  t
+   * @param  t the polynomial input
    * @return the value
    */
   double calculate(double t) const;

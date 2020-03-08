@@ -154,14 +154,14 @@ public:
   static AngleCalculator makeAngleCalculator(const QAngle& angle);
 
   /**
-   * Make an AngleCaclulator that seeks a given point.
+   * Make an AngleCalculator that seeks a given point.
    *
    * @param point The point
    */
   static AngleCalculator makeAngleCalculator(const Vector& point);
 
   /**
-   * Make an AngleCaclulator that returns a constant error. The default settler needs to be changed
+   * Make an AngleCalculator that returns a constant error. The default settler needs to be changed
    * for a command using this calculator to settle.
    *
    * @param  error The error

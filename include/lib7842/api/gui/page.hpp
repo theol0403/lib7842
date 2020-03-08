@@ -38,12 +38,12 @@ public:
   /**
    * Initialize the page. Override this method to implement custom initialization.
    */
-  virtual void initialize() {};
+  virtual void initialize() {}
 
   /**
    * Render the page. Override this method to implement custom rendering.
    */
-  virtual void render() {};
+  virtual void render() {}
 
   /**
    * Get the lv_obj_t* to the page.
