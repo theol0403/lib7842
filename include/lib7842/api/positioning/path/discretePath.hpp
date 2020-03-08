@@ -130,7 +130,7 @@ public:
       change = 0.0_m;
       for (size_t i = 1; i < path.size() - 1; i++) {
         for (size_t j = 0; j < 2; j++) {
-          auto& aux = temp()[i]->at(j);
+          auto aux = temp()[i]->at(j);
           auto dataFac = iweight * (path[i]->at(j) - aux);
           auto smoothFac =
             smoothWeight * (temp()[i - 1]->at(j) + temp()[i + 1]->at(j) - (2.0 * aux));
