@@ -155,23 +155,23 @@ public:
     SimplePath temp;
 
     for (size_t i = 0; i < path.size() - 1; i++) {
-      T& start = *path[i];
-      T& end = *path[i + 1];
+      auto& start = *path[i];
+      auto& end = *path[i + 1];
 
-      T diff = end - start;
+      auto diff = end - start;
       size_t steps = std::ceil(MathPoint::mag(diff) / iresolution.convert(meter));
-      T step = diff / steps;
+      auto step = diff / steps;
 
       temp().reserve(temp().size() + steps);
       for (size_t j = 0; j < steps; j++) {
-        temp().emplace_back(std::make_shared<T>(start + (step * j)));
+        temp().emplace_back(std::make_shared<Vector>(start + (step * j)));
       }
     }
 
     // if the path is more than 1 point and the end point is required - return last point
     // if there is only one point, always return it
     if ((iend && path.size() > 0) || path.size() == 1)
-      temp().emplace_back(std::make_shared<T>(*path.back()));
+      temp().emplace_back(std::make_shared<Vector>(*path.back()));
 
     return temp;
   }
@@ -199,11 +199,11 @@ public:
       for (size_t i = 0; i < path.size() - 1; i++) {
         // if interpolation needed
         if (isteps > 1) {
-          Vector& start = *path[i];
-          Vector& end = *path[i + 1];
+          auto& start = *path[i];
+          auto& end = *path[i + 1];
 
-          Vector diff = end - start;
-          Vector step = diff / isteps;
+          auto diff = end - start;
+          auto step = diff / isteps;
 
           temp().reserve(temp().size() + isteps);
           for (size_t j = 0; j < isteps; j++) {
