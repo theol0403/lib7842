@@ -12,6 +12,15 @@ PursuitPath PathGenerator::generate(const SimplePath& ipath, const PursuitLimits
   return path;
 }
 
+PursuitPath PathGenerator::generateX(const StatePath& ipath, const PursuitLimits& limits) {
+  auto path = generate(SimplePath(ipath), limits);
+  setVelocity(path, limits);
+  for (size_t i = 0; i < ipath().size(); i++) {
+    path().at(i)->setData("theta", ipath().at(i)->theta);
+  }
+  return path;
+}
+
 void PathGenerator::setCurvatures(PursuitPath& ipath) {
   ipath().at(0)->setData("curvature", 0.0);
   for (size_t i = 1; i < ipath().size() - 1; i++) {
