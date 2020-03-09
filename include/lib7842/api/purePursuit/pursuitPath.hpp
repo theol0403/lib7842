@@ -5,49 +5,34 @@
 
 namespace lib7842 {
 
-// forward declaration
-template <typename T> class PursuitPathHelper;
-using PursuitPath = PursuitPathHelper<DataPoint>;
-using PursuitStatePath = PursuitPathHelper<DataState>;
-
 /**
- * A Path that contains PursuitLimits.
+ * A DataPath that contains PursuitLimits.
  */
-template <typename T> class PursuitPathHelper : public DiscretePath<T> {
+class PursuitPath : public DataPath {
 public:
   /**
-   * A PursuitPath is treated like a Path
+   * A PursuitPath is treated like a DataPath
    */
-  using DiscretePath<T>::DiscretePath;
+  using DataPath::DataPath;
 
   /**
    * Set the limits.
    *
    * @param ilimits The pursuit limits
    */
-  void setLimits(const PursuitLimits& ilimits) {
-    limits = ilimits;
-  }
+  void setLimits(const PursuitLimits& ilimits);
 
   /**
    * Get the limits. Will throw an exception if no limits are set.
    *
    * @return The limits.
    */
-  PursuitLimits getLimits() const {
-    if (limits) {
-      return limits.value();
-    } else {
-      throw std::runtime_error("PursuitPath::getLimits: no limits set");
-    }
-  }
+  PursuitLimits getLimits() const;
 
   /**
    * @return true if limits have been set.
    */
-  bool hasLimits() const {
-    return limits.has_value();
-  }
+  bool hasLimits() const;
 
 protected:
   std::optional<PursuitLimits> limits {std::nullopt};
