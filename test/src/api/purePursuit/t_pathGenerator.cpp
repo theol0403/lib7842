@@ -5,7 +5,7 @@ public:
   using PathGenerator::PathGenerator;
   using PathGenerator::calculateCurvature;
   using PathGenerator::setCurvatures;
-  using PathGenerator::setMaxVelocity;
+  using PathGenerator::setVelocity;
 };
 
 TEST_CASE("PathGenerator test") {
@@ -49,7 +49,7 @@ TEST_CASE("PathGenerator test") {
   SUBCASE("SetMaxVelocity") {
     PursuitPath path({{0_m, 0_m}, {0_m, 5_m}, {0_m, 10_m}});
     MockPathGenerator::setCurvatures(path);
-    MockPathGenerator::setMaxVelocity(path, limits);
+    MockPathGenerator::setVelocity(path, limits);
 
     CHECK(path()[0]->getData<QSpeed>("velocity") == 8_mps);
     CHECK(path()[1]->getData<QSpeed>("velocity") == 8_mps);
@@ -59,7 +59,7 @@ TEST_CASE("PathGenerator test") {
   SUBCASE("SetMaxVelocityTurn") {
     PursuitPath path({{0_m, 0_m}, {3_m, 4_m}, {6_m, 10_m}, {5_m, 12_m}});
     MockPathGenerator::setCurvatures(path);
-    MockPathGenerator::setMaxVelocity(path, limits);
+    MockPathGenerator::setVelocity(path, limits);
 
     CHECK(path()[0]->getData<QSpeed>("velocity") == 8_mps);
     CHECK(path()[1]->getData<QSpeed>("velocity") < 8_mps);

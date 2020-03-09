@@ -31,7 +31,7 @@ protected:
    * @param ipath  The path
    * @param limits The pure pursuit limits
    */
-  static void setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limits);
+  static void setVelocity(PursuitPath& ipath, const PursuitLimits& limits);
 
   /**
    * Gets the curvature of a given segment.
