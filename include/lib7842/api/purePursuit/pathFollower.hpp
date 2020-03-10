@@ -33,7 +33,9 @@ public:
    * Follow a pre-generated PursuitPath.
    *
    * @param ipath      The path
-   * @param ibackwards Whether to drive the path going backwards
+   * @param ibackwards Whether to follow the path while driving backwards. The robot follows the
+   *                   exact same path as when driving forward, except it faces 180 degrees and
+   *                   drives backwards.
    */
   void followPath(const PursuitPath& ipath, bool ibackwards = false);
 
