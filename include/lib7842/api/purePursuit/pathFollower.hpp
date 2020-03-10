@@ -22,10 +22,12 @@ public:
    * @param ichassisScales The chassis scales
    * @param ilookahead     The lookahead distance
    * @param idriveRadius   The radius from the end of the path to turn off angle correction.
+   *                       Defaults to lookahead distance.
    */
   PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                const std::shared_ptr<Odometry>& iodometry, const ChassisScales& ichassisScales,
-               const QLength& ilookahead, const QLength& idriveRadius);
+               const QLength& ilookahead,
+               const std::optional<QLength>& idriveRadius = std::nullopt);
 
   /**
    * Follow a pre-generated PursuitPath.
