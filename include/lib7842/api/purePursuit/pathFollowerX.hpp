@@ -12,7 +12,7 @@ public:
    * @param ichassisScales The chassis scales
    * @param ilookahead     The lookahead distance
    */
-  PathFollowerX(const std::shared_ptr<ChassisModel>& imodel,
+  PathFollowerX(const std::shared_ptr<XDriveModel>& imodel,
                 const std::shared_ptr<Odometry>& iodometry, const ChassisScales& ichassisScales,
                 const QLength& ilookahead);
 
@@ -22,6 +22,9 @@ public:
    * @param ipath      The path
    */
   void followPath(const PursuitPath& ipath);
+
+protected:
+  std::shared_ptr<XDriveModel> xModel {nullptr};
 };
 
 } // namespace lib7842

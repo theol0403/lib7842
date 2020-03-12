@@ -2,10 +2,12 @@
 
 namespace lib7842 {
 
-PathFollowerX::PathFollowerX(const std::shared_ptr<ChassisModel>& imodel,
+using namespace util;
+
+PathFollowerX::PathFollowerX(const std::shared_ptr<XDriveModel>& imodel,
                              const std::shared_ptr<Odometry>& iodometry,
                              const ChassisScales& ichassisScales, const QLength& ilookahead) :
-  PathFollower(imodel, iodometry, ichassisScales, ilookahead) {};
+  PathFollower(imodel, iodometry, ichassisScales, ilookahead), xModel(imodel) {};
 
 void PathFollowerX::followPath(const PursuitPath& ipath) {
   resetPursuit();
@@ -22,11 +24,12 @@ void PathFollowerX::followPath(const PursuitPath& ipath) {
     State pos = State(odometry->getState(StateMode::CARTESIAN));
 
     auto closest = findClosest(ipath, pos); // get an iterator to the closest point
-    Vector lookPoint = findLookaheadPoint(ipath, pos);
+    Vector lookPoint = findLookaheadPoint(ipath, pos); // get the lookahead
 
     // the robot is considered finished if it has passed the end
-    isFinished = false;
+    isFinished = closest >= ipath().end() - 1;
 
+    // get the velocity from the closest point
     QSpeed targetVel = closest->get()->getData<QSpeed>("velocity");
 
     // add an upwards rate limiter to the robot velocity using the formula vf=vi+at
@@ -39,23 +42,14 @@ void PathFollowerX::followPath(const PursuitPath& ipath) {
     lastVelocity = targetVel;
 
     // calculate robot wheel velocities
-    // auto wheelVel = calculateVelocity(targetVel, curvature, chassisScales, limits);
+    QAngularSpeed wheelVel = (targetVel / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
+    double power = wheelVel.convert(rpm) / 200.0;
 
-    // double left = wheelVel[0].convert(rpm) / 200.0;
-    // double right = wheelVel[1].convert(rpm) / 200.0;
+    // calculate angle to lookahead
+    QAngle angleToLook = pos.angleTo(lookPoint);
 
-    // // take any speed that is clipped from one side and move it to the other
-    // double maxMag = std::abs(left) > std::abs(right) ? left : right;
-    // if (std::abs(maxMag) > 1) {
-    //   left -= (std::abs(maxMag) - 1) * util::sgn(maxMag);
-    //   right -= (std::abs(maxMag) - 1) * util::sgn(maxMag);
-    // }
-
-    // if (!ibackwards) {
-    //   model->tank(left, right);
-    // } else {
-    //   model->tank(-left, -right);
-    // }
+    // drive toward the lookahead
+    strafeVector(xModel, power, 0, angleToLook);
 
     rate->delayUntil(10_ms);
   }
