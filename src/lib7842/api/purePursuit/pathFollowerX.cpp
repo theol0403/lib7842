@@ -30,7 +30,7 @@ void PathFollowerX::followPath(const PursuitPath& ipath) {
     isFinished = closest >= ipath().end() - 1;
 
     // get the velocity from the closest point
-    QSpeed targetVel = closest->get()->getData<QSpeed>("velocity");
+    auto targetVel = closest->get()->getData<QSpeed>("velocity");
 
     // add an upwards rate limiter to the robot velocity using the formula vf=vi+at
     targetVel = std::max(targetVel, limits.minVel); // add minimum velocity
@@ -48,8 +48,20 @@ void PathFollowerX::followPath(const PursuitPath& ipath) {
     // calculate angle to lookahead
     QAngle angleToLook = pos.angleTo(lookPoint);
 
+    auto next = closest + 1;
+    double turnPower = 0;
+    if (next < ipath().end()) {
+      QAngle error = next->get()->getData<QAngle>("angle") - pos.theta;
+      QLength dist = Vector::dist(pos, **next);
+      QTime time = dist / targetVel;
+      QAngularSpeed rotation = error / time;
+      QSpeed outerSpeed = rotation / 360_deg * chassisScales.wheelTrack * 1_pi;
+      QAngularSpeed turnVel = (outerSpeed / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
+      turnPower = turnVel.convert(rpm) / 200.0;
+    }
+
     // drive toward the lookahead
-    strafeVector(xModel, power, 0, angleToLook);
+    strafeVector(xModel, power, turnPower, angleToLook);
 
     rate->delayUntil(10_ms);
   }
