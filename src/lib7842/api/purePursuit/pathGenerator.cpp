@@ -16,7 +16,7 @@ PursuitPath PathGenerator::generateX(const StatePath& ipath, const PursuitLimits
   auto path = generate(SimplePath(ipath), limits);
   setVelocity(path, limits);
   for (size_t i = 0; i < ipath().size(); i++) {
-    path().at(i)->setData("theta", ipath().at(i)->theta);
+    path().at(i)->setData("angle", ipath().at(i)->theta);
   }
   return path;
 }
