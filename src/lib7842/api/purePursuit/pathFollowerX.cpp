@@ -59,9 +59,8 @@ void PathFollowerX::followPath(const PursuitPath& ipath) {
     // calculate angular velocity to reach the lookahead angle given the time
     QAngularSpeed rotation = error / time;
     // calculate what speed the wheels need to be moving at
-    QSpeed outerSpeed = rotation / 360_deg * chassisScales.wheelTrack * 1_pi;
-    // calculate the wheel rotation speed
-    QAngularSpeed turnVel = (outerSpeed / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
+    QAngularSpeed turnVel = rotation * chassisScales.wheelTrack / chassisScales.wheelDiameter;
+
     // get the voltage
     double turnPower = turnVel.convert(rpm) / 200.0;
 
