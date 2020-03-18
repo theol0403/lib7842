@@ -23,6 +23,16 @@ void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, dou
   }
 }
 
+static void motorVoltage(AbstractMotor* motor, double pct,
+                         const std::shared_ptr<XDriveModel>& imodel) {
+  motor->moveVoltage(static_cast<int16_t>(std::clamp(pct, -1.0, 1.0) * imodel->getMaxVoltage()));
+}
+
+static void motorVelocity(AbstractMotor* motor, double pct,
+                          const std::shared_ptr<XDriveModel>& imodel) {
+  motor->moveVelocity(static_cast<int16_t>(std::clamp(pct, -1.0, 1.0) * imodel->getMaxVelocity()));
+}
+
 void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
                   const QAngle& direction, motorMode mode) {
   static const double sin45 = sin((45_deg).convert(radian));
@@ -46,23 +56,12 @@ void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, dou
     bottomRight /= maxInputMag;
   }
 
-  std::function<void(AbstractMotor*, double)> modeFnc;
+  auto modeFnc = mode == motorMode::voltage ? motorVoltage : motorVelocity;
 
-  if (mode == motorMode::voltage) {
-    modeFnc = [&](AbstractMotor* motor, double pct) {
-      motor->moveVoltage(static_cast<int16_t>(std::clamp(pct, -1.0, 1.0) * model->getMaxVoltage()));
-    };
-  } else {
-    modeFnc = [&](AbstractMotor* motor, double pct) {
-      motor->moveVelocity(
-        static_cast<int16_t>(std::clamp(pct, -1.0, 1.0) * model->getMaxVelocity()));
-    };
-  }
-
-  modeFnc(model->getTopLeftMotor().get(), topLeft);
-  modeFnc(model->getTopRightMotor().get(), topRight);
-  modeFnc(model->getBottomRightMotor().get(), bottomRight);
-  modeFnc(model->getBottomLeftMotor().get(), bottomLeft);
+  modeFnc(model->getTopLeftMotor().get(), topLeft, model);
+  modeFnc(model->getTopRightMotor().get(), topRight, model);
+  modeFnc(model->getBottomRightMotor().get(), bottomRight, model);
+  modeFnc(model->getBottomLeftMotor().get(), bottomLeft, model);
 }
 
 Vector closest(const Vector& current, const QAngle& heading, const Vector& target) {
