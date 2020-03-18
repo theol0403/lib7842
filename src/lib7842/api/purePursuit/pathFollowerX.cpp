@@ -45,20 +45,28 @@ void PathFollowerX::followPath(const PursuitPath& ipath) {
     QAngularSpeed wheelVel = (targetVel / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
     double power = wheelVel.convert(rpm) / 200.0;
 
-    // calculate angle to lookahead
-    QAngle angleToLook = pos.angleTo(lookPoint);
-
+    // calculate target angle at lookahead
     QAngle start = ipath()[lastLookIndex]->getData<QAngle>("angle");
     QAngle end = ipath()[lastLookIndex + 1]->getData<QAngle>("angle");
-    QAngle wantedAngle = start + ((end - start) * lastLookT);
+    QAngle angle = start + ((end - start) * lastLookT);
 
-    QAngle error = wantedAngle - pos.theta;
+    // get angle error from robot to lookahead
+    QAngle error = angle - pos.theta;
+    // get distance to lookahead
     QLength dist = Vector::dist(pos, lookPoint);
+    // given robot velocity, approximate time to get to lookahead
     QTime time = dist / targetVel;
+    // calculate angular velocity to reach the lookahead angle given the time
     QAngularSpeed rotation = error / time;
+    // calculate what speed the wheels need to be moving at
     QSpeed outerSpeed = rotation / 360_deg * chassisScales.wheelTrack * 1_pi;
+    // calculate the wheel rotation speed
     QAngularSpeed turnVel = (outerSpeed / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
+    // get the voltage
     double turnPower = turnVel.convert(rpm) / 200.0;
+
+    // calculate angle to lookahead
+    QAngle angleToLook = pos.angleTo(lookPoint);
 
     // drive toward the lookahead
     strafeVector(xModel, power, turnPower, angleToLook);
