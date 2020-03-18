@@ -20,6 +20,9 @@ template <typename T> int sgn(T val) {
   return (T(0) < val) - (val < T(0));
 }
 
+/**
+ * Motor movement modes, voltage or velocity.
+ */
 enum class motorMode { voltage, velocity };
 
 /**
@@ -29,6 +32,8 @@ enum class motorMode { voltage, velocity };
  * @param model   The chassis model
  * @param forward The forward voltage
  * @param yaw     The yaw voltage
+ * @param mode    The movement mode, voltage or velocity. Scales according to the chassis model
+ *                maximums.
  */
 void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, double yaw,
                  motorMode mode = motorMode::voltage);
@@ -42,6 +47,8 @@ void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, dou
  * @param forward   The forward voltage
  * @param yaw       The yaw voltage
  * @param direction The direction
+ * @param mode      The movement mode, voltage or velocity. Scales according to the chassis model
+ *                  maximums.
  */
 void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
                   const QAngle& direction, motorMode mode = motorMode::voltage);

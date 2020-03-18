@@ -61,15 +61,22 @@ void autonomous() {}
 void opcontrol() {
   Controller controller(ControllerId::master);
 
+  auto topLeft = std::make_shared<Motor>(1); // top left
+  auto topRight = std::make_shared<Motor>(-8); // top right
+  auto bottomRight = std::make_shared<Motor>(-3); // bottom right
+  auto bottomLeft = std::make_shared<Motor>(6); // bottom left
+
+  topLeft->setBrakeMode(AbstractMotor::brakeMode::brake);
+  topRight->setBrakeMode(AbstractMotor::brakeMode::brake);
+  bottomRight->setBrakeMode(AbstractMotor::brakeMode::brake);
+  bottomLeft->setBrakeMode(AbstractMotor::brakeMode::brake);
+
   /**
    * Model
    */
   auto model = std::make_shared<ThreeEncoderXDriveModel>(
     // motors
-    std::make_shared<Motor>(1), // top left
-    std::make_shared<Motor>(-8), // top right
-    std::make_shared<Motor>(-3), // bottom right
-    std::make_shared<Motor>(6), // bottom left
+    topLeft, topRight, bottomRight, bottomLeft,
     // sensors
     std::make_shared<ADIEncoder>(1, 2, true), //
     std::make_shared<ADIEncoder>(5, 6, true), //
@@ -111,7 +118,7 @@ void opcontrol() {
    * Follower
    */
   PathFollowerX follower(model, odom, ChassisScales({2.75_in, 14_in}, imev5GreenTPR), 0.5_ft);
-  PursuitLimits limits {0.3_mps, 1.5_mps2, 1.3_mps, 40_mps};
+  PursuitLimits limits {0.1_mps, 1.9_mps2, 1.2_mps, 40_mps};
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -120,9 +127,13 @@ void opcontrol() {
 
     if (controller.getDigital(ControllerDigital::A)) {
 
-      auto path = StatePath({{0_ft, 0_ft, 0_deg}, {0_ft, 2_ft, 0_deg}}).generateT(1_cm);
+      auto path = StatePath({{0_ft, 0_ft, 0_deg}, {0_ft, 2_ft, 90_deg}}).generateT(1_cm);
 
       follower.followPath(PathGenerator::generateX(path, limits));
+
+      auto path2 = StatePath({{0_ft, 2_ft, 90_deg}, {0_ft, 0_ft, 0_deg}}).generateT(1_cm);
+
+      follower.followPath(PathGenerator::generateX(path2, limits));
     }
 
     pros::delay(10);
