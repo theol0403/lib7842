@@ -48,17 +48,17 @@ void PathFollowerX::followPath(const PursuitPath& ipath) {
     // calculate angle to lookahead
     QAngle angleToLook = pos.angleTo(lookPoint);
 
-    auto next = closest + 1;
-    double turnPower = 0;
-    if (next < ipath().end()) {
-      QAngle error = next->get()->getData<QAngle>("angle") - pos.theta;
-      QLength dist = Vector::dist(pos, **next);
-      QTime time = dist / targetVel;
-      QAngularSpeed rotation = error / time;
-      QSpeed outerSpeed = rotation / 360_deg * chassisScales.wheelTrack * 1_pi;
-      QAngularSpeed turnVel = (outerSpeed / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
-      turnPower = turnVel.convert(rpm) / 200.0;
-    }
+    QAngle start = ipath()[lastLookIndex]->getData<QAngle>("angle");
+    QAngle end = ipath()[lastLookIndex + 1]->getData<QAngle>("angle");
+    QAngle wantedAngle = start + ((end - start) * lastLookT);
+
+    QAngle error = wantedAngle - pos.theta;
+    QLength dist = Vector::dist(pos, lookPoint);
+    QTime time = dist / targetVel;
+    QAngularSpeed rotation = error / time;
+    QSpeed outerSpeed = rotation / 360_deg * chassisScales.wheelTrack * 1_pi;
+    QAngularSpeed turnVel = (outerSpeed / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
+    double turnPower = turnVel.convert(rpm) / 200.0;
 
     // drive toward the lookahead
     strafeVector(xModel, power, turnPower, angleToLook);
