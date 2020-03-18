@@ -20,6 +20,8 @@ template <typename T> int sgn(T val) {
   return (T(0) < val) - (val < T(0));
 }
 
+enum class motorMode { voltage, velocity };
+
 /**
  * Control the chassis movement using voltage. Applies magnitude control to prioritize turning.
  * Range of forward and yaw is +-1, but yaw may be outside of the range which prioritizes turning.
@@ -28,7 +30,8 @@ template <typename T> int sgn(T val) {
  * @param forward The forward voltage
  * @param yaw     The yaw voltage
  */
-void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, double yaw);
+void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, double yaw,
+                 motorMode mode = motorMode::voltage);
 
 /**
  * Control the chassis movement for an XDrive using voltage. Strafes at the given voltage in the
@@ -41,7 +44,7 @@ void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, dou
  * @param direction The direction
  */
 void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
-                  const QAngle& direction);
+                  const QAngle& direction, motorMode mode = motorMode::voltage);
 
 /**
  * Calculate the point along a given heading that is closest to a target point.
