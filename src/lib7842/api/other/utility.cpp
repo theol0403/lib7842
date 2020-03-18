@@ -19,12 +19,12 @@ void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, dou
 
 void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
                   const QAngle& direction) {
-  forward = std::clamp(forward, -1.0, 1.0);
+  static const double sin45 = sin((45_deg).convert(radian));
 
-  double scaleTopLeft = remapRange(std::sin((direction + 45_deg).convert(radian)), -0.70710678118,
-                                   0.70710678118, -1.0, 1.0);
-  double scaleTopRight = remapRange(std::cos((direction + 45_deg).convert(radian)), -0.70710678118,
-                                    0.70710678118, -1.0, 1.0);
+  forward = std::clamp(forward, -1.0, 1.0);
+  double wheelDirection = (direction + 45_deg).convert(radian);
+  double scaleTopLeft = remapRange(std::sin(wheelDirection), -sin45, sin45, -1.0, 1.0);
+  double scaleTopRight = remapRange(std::cos(wheelDirection), -sin45, sin45, -1.0, 1.0);
 
   double topLeft = forward * scaleTopLeft + yaw;
   double topRight = forward * scaleTopRight - yaw;
