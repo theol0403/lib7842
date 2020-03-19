@@ -8,12 +8,12 @@ namespace lib7842 {
 using namespace okapi;
 
 /**
- * Describes the kinematic limits of the robot. Used to customize the speeds of the robot when
- * following a path.
+ * Pure Pursuit limits. Describes the kinematic limits of the robot. Used to customize the speeds of
+ * the robot when following a path.
  */
 struct PursuitLimits {
   /**
-   * Pure Pursuit limits.
+   * Full limits.
    *
    * @param iminVel   The minimum velocity through the entire path.
    * @param iaccel    The acceleration from min velocity to max velocity.
@@ -27,12 +27,9 @@ struct PursuitLimits {
    */
   PursuitLimits(const QSpeed& iminVel, const QAcceleration& iaccel, const QSpeed& imaxVel,
                 const QAcceleration& idecel, const QSpeed& ifinalVel,
-                const std::optional<QSpeed>& ik = std::nullopt) :
-    minVel(iminVel), accel(iaccel), maxVel(imaxVel), decel(idecel), finalVel(ifinalVel), k(ik) {}
-
+                const std::optional<QSpeed>& ik = std::nullopt);
   /**
-   * Pure Pursuit limits. Deceleration and final velocity is inferred from acceleration and minimum
-   * velocity.
+   * Deceleration and final velocity is inferred from acceleration and minimum velocity.
    *
    * @param iminVel The minimum velocity through the entire path.
    * @param iaccel  The acceleration from min velocity to max velocity.
@@ -42,11 +39,9 @@ struct PursuitLimits {
    *                lower velocity.
    */
   PursuitLimits(const QSpeed& iminVel, const QAcceleration& iaccel, const QSpeed& imaxVel,
-                const std::optional<QSpeed>& ik = std::nullopt) :
-    PursuitLimits(iminVel, iaccel, imaxVel, iaccel, iminVel, ik) {}
-
+                const std::optional<QSpeed>& ik = std::nullopt);
   /**
-   * Pure Pursuit limits. Time is used for acceleration and deceleration.
+   * Time is used for acceleration and deceleration.
    *
    * @param iminVel   The minimum velocity through the entire path.
    * @param iaccel    The time to accelerate from min velocity to max velocity.
@@ -60,13 +55,11 @@ struct PursuitLimits {
    */
   PursuitLimits(const QSpeed& iminVel, const QTime& iaccel, const QSpeed& imaxVel,
                 const QTime& idecel, const QSpeed& ifinalVel,
-                const std::optional<QSpeed>& ik = std::nullopt) :
-    PursuitLimits(iminVel, (imaxVel - iminVel) / iaccel, imaxVel, (imaxVel - iminVel) / idecel,
-                  ifinalVel, ik) {}
+                const std::optional<QSpeed>& ik = std::nullopt);
 
   /**
-   * Pure Pursuit limits. Deceleration and final velocity is inferred from acceleration and minimum
-   * velocity. Time is used for acceleration and deceleration.
+   * Time is used for acceleration and deceleration. Deceleration and final velocity is inferred
+   * from acceleration and minimum velocity.
    *
    * @param iminVel The minimum velocity through the entire path.
    * @param iaccel  The time to accelerate from min velocity to max velocity.
@@ -76,15 +69,83 @@ struct PursuitLimits {
    *                lower velocity.
    */
   PursuitLimits(const QSpeed& iminVel, const QTime& iaccel, const QSpeed& imaxVel,
-                const std::optional<QSpeed>& ik = std::nullopt) :
-    PursuitLimits(iminVel, (imaxVel - iminVel) / iaccel, imaxVel, ik) {}
+                const std::optional<QSpeed>& ik = std::nullopt);
 
-  PursuitLimits(const QLength& iwheelDiam, const AbstractMotor::GearsetRatioPair& igearset,
-                double imin, const QTime& iaccel, double imax, const QTime& idecel, double ifinal,
-                const std::optional<QSpeed>& ik = std::nullopt) :
-    PursuitLimits(iwheelDiam * (toUnderlyingType(igearset.internalGearset) * igearset.ratio * rpm) /
-                    360_deg,
-                  imin, iaccel, imax, idecel, ifinal, ik) {}
+  /**
+   * Shorthand. GearsetRatioPair contains a gearset (rpm) and a ratio.
+   */
+  using Gearset = AbstractMotor::GearsetRatioPair;
+
+  /**
+   * Scales and motor percentages are used to determine the limits. Time is used for acceleration
+   * and deceleration.
+   *
+   * @param iwheelDiam The wheel diameter.
+   * @param igearset   The wheel gearset and ratio.
+   * @param imin       The minimum motor percentage through the entire path.
+   * @param iaccel     The time to accelerate from min speed to max speed.
+   * @param imax       The maximum motor percentage.
+   * @param idecel     The time to decelerate from max speed to min speed.
+   * @param ifinal     The final motor percentage at the end of the path. If lower than min speed,
+   *                   the robot will decelerate sooner but will not go slower than the min speed.
+   * @param ik         Optional. How much to slow down around turns. The velocity of the robot is
+   *                   limited by this value divided by the path curvature. A higher curvature means
+   *                   a lower velocity.
+   */
+  PursuitLimits(const QLength& iwheelDiam, const Gearset& igearset, double imin,
+                const QTime& iaccel, double imax, const QTime& idecel, double ifinal,
+                const std::optional<QSpeed>& ik = std::nullopt);
+
+  /**
+   * Scales and motor percentages are used to determine the limits. Time is used for acceleration
+   * and deceleration. Deceleration and final speed is inferred from acceleration and minimum speed.
+   * This is the easiest constructor to use.
+   *
+   * @param iwheelDiam The wheel diameter.
+   * @param igearset   The wheel gearset and ratio.
+   * @param imin       The minimum motor percentage through the entire path.
+   * @param iaccel     The time to accelerate from min speed to max speed.
+   * @param imax       The maximum motor percentage.
+   * @param ik         Optional. How much to slow down around turns. The velocity of the robot is
+   *                   limited by this value divided by the path curvature. A higher curvature means
+   *                   a lower velocity.
+   */
+  PursuitLimits(const QLength& iwheelDiam, const Gearset& igearset, double imin,
+                const QTime& iaccel, double imax, const std::optional<QSpeed>& ik = std::nullopt);
+
+  /**
+   * The robot's top speed and motor percentages are used to determine the limits. Time is used for
+   * acceleration and deceleration.
+   *
+   * @param itopSpeed The robot's top velocity at 100% motor speed.
+   * @param imin      The minimum motor percentage through the entire path.
+   * @param iaccel    The time to accelerate from min speed to max speed.
+   * @param imax      The maximum motor percentage.
+   * @param idecel    The time to decelerate from max speed to min speed.
+   * @param ifinal    The final motor percentage at the end of the path. If lower than min speed,
+   *                  the robot will decelerate sooner but will not go slower than the min speed.
+   * @param ik        Optional. How much to slow down around turns. The velocity of the robot is
+   *                  limited by this value divided by the path curvature. A higher curvature means
+   *                  a lower velocity.
+   */
+  PursuitLimits(const QSpeed& itopSpeed, double imin, const QTime& iaccel, double imax,
+                const QTime& idecel, double ifinal, const std::optional<QSpeed>& ik = std::nullopt);
+
+  /**
+   * The robot's top speed and motor percentages are used to determine the limits. Time is used for
+   * acceleration and deceleration. Deceleration and final speed is inferred from acceleration and
+   * minimum speed.
+   *
+   * @param itopSpeed The robot's top velocity at 100% motor speed.
+   * @param imin      The minimum motor percentage through the entire path.
+   * @param iaccel    The time to accelerate from min speed to max speed.
+   * @param imax      The maximum motor percentage.
+   * @param ik        Optional. How much to slow down around turns. The velocity of the robot is
+   *                  limited by this value divided by the path curvature. A higher curvature means
+   *                  a lower velocity.
+   */
+  PursuitLimits(const QSpeed& itopSpeed, double imin, const QTime& iaccel, double imax,
+                const std::optional<QSpeed>& ik = std::nullopt);
 
   /**
    * The minimum velocity through the entire path.
@@ -117,10 +178,5 @@ struct PursuitLimits {
    * by the path curvature. A higher curvature means a lower velocity.
    */
   std::optional<QSpeed> k {std::nullopt};
-
-private:
-  PursuitLimits(const QSpeed& itopSpeed, double imin, const QTime& iaccel, double imax,
-                const QTime& idecel, double ifinal, const std::optional<QSpeed>& ik) :
-    PursuitLimits(itopSpeed * imin, iaccel, itopSpeed * imax, idecel, itopSpeed * ifinal, ik) {}
 };
 } // namespace lib7842
