@@ -1,6 +1,8 @@
 #pragma once
 #include "okapi/api/units/QAcceleration.hpp"
+#include "okapi/api/units/QAngularSpeed.hpp"
 #include "okapi/api/units/QSpeed.hpp"
+#include "okapi/api/util/mathUtil.hpp"
 
 namespace lib7842 {
 using namespace okapi;
@@ -77,6 +79,13 @@ struct PursuitLimits {
                 const std::optional<QSpeed>& ik = std::nullopt) :
     PursuitLimits(iminVel, (imaxVel - iminVel) / iaccel, imaxVel, ik) {}
 
+  PursuitLimits(const QLength& iwheelDiam, const AbstractMotor::GearsetRatioPair& igearset,
+                double imin, const QTime& iaccel, double imax, const QTime& idecel, double ifinal,
+                const std::optional<QSpeed>& ik = std::nullopt) :
+    PursuitLimits(iwheelDiam * (toUnderlyingType(igearset.internalGearset) * igearset.ratio * rpm) /
+                    360_deg,
+                  imin, iaccel, imax, idecel, ifinal, ik) {}
+
   /**
    * The minimum velocity through the entire path.
    */
@@ -108,5 +117,10 @@ struct PursuitLimits {
    * by the path curvature. A higher curvature means a lower velocity.
    */
   std::optional<QSpeed> k {std::nullopt};
+
+private:
+  PursuitLimits(const QSpeed& itopSpeed, double imin, const QTime& iaccel, double imax,
+                const QTime& idecel, double ifinal, const std::optional<QSpeed>& ik) :
+    PursuitLimits(itopSpeed * imin, iaccel, itopSpeed * imax, idecel, itopSpeed * ifinal, ik) {}
 };
 } // namespace lib7842
