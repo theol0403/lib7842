@@ -18,7 +18,7 @@ struct PursuitLimits {
    * @param iminVel   The minimum velocity through the entire path.
    * @param iaccel    The acceleration from min velocity to max velocity.
    * @param imaxVel   The maximum velocity.
-   * @param idecel    The deceleration from max velocity to min velocity. Should be positive.
+   * @param idecel    The deceleration from max velocity to final velocity. Should be positive.
    * @param ifinalVel The final velocity at the end of the path. If lower than min velocity, the
    *                  robot will decelerate sooner but will not go slower than the min velocity.
    * @param ik        Optional. How much to slow down around turns. The velocity of the robot is
@@ -46,7 +46,7 @@ struct PursuitLimits {
    * @param iminVel   The minimum velocity through the entire path.
    * @param iaccel    The time to accelerate from min velocity to max velocity.
    * @param imaxVel   The maximum velocity.
-   * @param idecel    The time to decelerate from max velocity to min velocity.
+   * @param idecel    The time to decelerate from max velocity to final velocity.
    * @param ifinalVel The final velocity at the end of the path. If lower than min velocity, the
    *                  robot will decelerate sooner but will not go slower than the min velocity.
    * @param ik        Optional. How much to slow down around turns. The velocity of the robot is
@@ -85,7 +85,7 @@ struct PursuitLimits {
    * @param imin       The minimum motor percentage through the entire path.
    * @param iaccel     The time to accelerate from min speed to max speed.
    * @param imax       The maximum motor percentage.
-   * @param idecel     The time to decelerate from max speed to min speed.
+   * @param idecel     The time to decelerate from max speed to final speed.
    * @param ifinal     The final motor percentage at the end of the path. If lower than min speed,
    *                   the robot will decelerate sooner but will not go slower than the min speed.
    * @param ik         Optional. How much to slow down around turns. The velocity of the robot is
@@ -121,7 +121,7 @@ struct PursuitLimits {
    * @param imin      The minimum motor percentage through the entire path.
    * @param iaccel    The time to accelerate from min speed to max speed.
    * @param imax      The maximum motor percentage.
-   * @param idecel    The time to decelerate from max speed to min speed.
+   * @param idecel    The time to decelerate from max speed to final speed.
    * @param ifinal    The final motor percentage at the end of the path. If lower than min speed,
    *                  the robot will decelerate sooner but will not go slower than the min speed.
    * @param ik        Optional. How much to slow down around turns. The velocity of the robot is
