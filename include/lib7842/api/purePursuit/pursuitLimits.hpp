@@ -37,7 +37,7 @@ struct PursuitLimits {
    */
   PursuitLimits(const QSpeed& iminVel, const QAcceleration& iaccel, const QSpeed& imaxVel,
                 const QSpeed& ik) :
-    minVel(iminVel), accel(iaccel), maxVel(imaxVel), decel(iaccel), finalVel(iminVel), k(ik) {}
+    PursuitLimits(iminVel, iaccel, imaxVel, iaccel, iminVel, ik) {}
 
   /**
    * Pure Pursuit limits. Time is used for acceleration and deceleration.
@@ -55,12 +55,8 @@ struct PursuitLimits {
    */
   PursuitLimits(const QSpeed& iminVel, const QTime& iaccel, const QSpeed& imaxVel,
                 const QTime& idecel, const QSpeed& ifinalVel, const QSpeed& ik) :
-    minVel(iminVel),
-    accel((imaxVel - iminVel) / iaccel),
-    maxVel(imaxVel),
-    decel((imaxVel - iminVel) / idecel),
-    finalVel(ifinalVel),
-    k(ik) {}
+    PursuitLimits(iminVel, (imaxVel - iminVel) / iaccel, imaxVel, (imaxVel - iminVel) / idecel,
+                  ifinalVel, ik) {}
 
   /**
    * Pure Pursuit limits. Deceleration and final velocity is inferred from acceleration and minimum
@@ -75,12 +71,7 @@ struct PursuitLimits {
    */
   PursuitLimits(const QSpeed& iminVel, const QTime& iaccel, const QSpeed& imaxVel,
                 const QSpeed& ik) :
-    minVel(iminVel),
-    accel((imaxVel - iminVel) / iaccel),
-    maxVel(imaxVel),
-    decel(accel),
-    finalVel(iminVel),
-    k(ik) {}
+    PursuitLimits(iminVel, (imaxVel - iminVel) / iaccel, imaxVel, ik) {}
 
   /**
    * The minimum velocity of the robot throughout the entire path
