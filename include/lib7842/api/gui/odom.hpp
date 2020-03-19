@@ -1,10 +1,10 @@
 #pragma once
 #include "okapi/api/odometry/odometry.hpp"
 #include "page.hpp"
-#include <functional>
-#include <string>
 
 namespace lib7842::GUI {
+
+using namespace okapi;
 
 class Odom : public Page {
 public:

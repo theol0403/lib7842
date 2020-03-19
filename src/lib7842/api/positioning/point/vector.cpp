@@ -33,20 +33,20 @@ Vector Vector::operator-(const Vector& rhs) const {
   return {x - rhs.x, y - rhs.y};
 }
 
-bool Vector::operator==(const Vector& rhs) const {
-  return x == rhs.x && y == rhs.y;
-}
-
-bool Vector::operator!=(const Vector& rhs) const {
-  return !(rhs == *this);
-}
-
 Vector Vector::operator*(const double scalar) const {
   return {x * scalar, y * scalar};
 }
 
 Vector Vector::operator/(const double scalar) const {
   return {x / scalar, y / scalar};
+}
+
+bool Vector::operator==(const Vector& rhs) const {
+  return x == rhs.x && y == rhs.y;
+}
+
+bool Vector::operator!=(const Vector& rhs) const {
+  return !(rhs == *this);
 }
 
 QLength Vector::dist(const Vector& lhs, const Vector& rhs) {

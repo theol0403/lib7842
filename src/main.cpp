@@ -61,27 +61,35 @@ void autonomous() {}
 void opcontrol() {
   Controller controller(ControllerId::master);
 
+  auto topLeft = std::make_shared<Motor>(1); // top left
+  auto topRight = std::make_shared<Motor>(-8); // top right
+  auto bottomRight = std::make_shared<Motor>(-3); // bottom right
+  auto bottomLeft = std::make_shared<Motor>(6); // bottom left
+
+  topLeft->setBrakeMode(AbstractMotor::brakeMode::brake);
+  topRight->setBrakeMode(AbstractMotor::brakeMode::brake);
+  bottomRight->setBrakeMode(AbstractMotor::brakeMode::brake);
+  bottomLeft->setBrakeMode(AbstractMotor::brakeMode::brake);
+
   /**
    * Model
    */
   auto model = std::make_shared<ThreeEncoderXDriveModel>(
     // motors
-    std::make_shared<Motor>(1), //
-    std::make_shared<Motor>(-2), //
-    std::make_shared<Motor>(-3), //
-    std::make_shared<Motor>(4), //
+    topLeft, topRight, bottomRight, bottomLeft,
     // sensors
-    std::make_shared<ADIEncoder>(3, 4, true), //
-    std::make_shared<ADIEncoder>(5, 6), //
     std::make_shared<ADIEncoder>(1, 2, true), //
+    std::make_shared<ADIEncoder>(5, 6, true), //
+    std::make_shared<ADIEncoder>(3, 4, true), //
     // limits
     200, 12000);
+
+  ChassisScales scales({2.75_in, 11.39_in, 0_in, 2.75_in}, 360);
 
   /**
    * Odom
    */
-  auto odom = std::make_shared<CustomOdometry>(
-    model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360), TimeUtilFactory().create());
+  auto odom = std::make_shared<CustomOdometry>(model, scales);
   odom->startTask("Odometry");
 
   /**
@@ -91,53 +99,41 @@ void opcontrol() {
     model, odom,
     //Distance PID - To mm
     std::make_unique<IterativePosPIDController>(
-      0.015, 0.0002, 0.0002, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 100_ms)),
+      0.0165, 0.00026, 0.00033, 0, TimeUtilFactory::withSettledUtilParams(10, 5, 150_ms)),
     //Turn PID - To Degree
     std::make_unique<IterativePosPIDController>(
-      0.03, 0.00, 0.0003, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
+      0.045, 0.002, 0.0006, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
     //Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
-      0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)),
-    0.5_ft, TimeUtilFactory().create());
+      0.043, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(2, 1, 150_ms)),
+    0_ft);
 
   /**
    * Screen
    */
   GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
-  scr.startTask("Screen");
   scr.makePage<GUI::Odom>("Odom").attachOdom(odom).attachResetter([&] { odom->reset(); });
 
   /**
    * Follower
    */
-  PathFollower follower(model, odom, ChassisScales({2.75_in, 14_in}, imev5GreenTPR), 1_ft, 0.5_ft,
-                        TimeUtilFactory().create());
-  PursuitLimits limits {0.2_mps, 1.1_mps2, 0.75_mps, 0.4_mps2, 0_mps, 40_mps};
-
-  /**
-   * Vision
-   */
-  Vision::Vision vision(16);
-  auto& drawer = scr.makePage<GUI::VisionPage>("Vision");
+  PathFollowerX follower(model, odom, ChassisScales({2.75_in, 14_in}, imev5GreenTPR), 0.5_ft);
+  PursuitLimits limits {0.1_mps, 1.9_mps2, 1.2_mps, 40_mps};
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
                    controller.getAnalog(ControllerAnalog::rightY),
                    controller.getAnalog(ControllerAnalog::leftX));
 
-    auto container = vision.getAll();
-    container.remove(Vision::Query::area, std::less<double>(), 200);
-    drawer.clear()
-      .makeLayer()
-      .withColor(LV_COLOR_RED, 1)
-      .withColor(LV_COLOR_YELLOW, 2)
-      .draw(container);
-
     if (controller.getDigital(ControllerDigital::A)) {
 
-      auto path = QuinticPath({{0_ft, 0_ft, 0_deg}, {0_ft, 2_ft, 0_deg}}, 1).generate(5);
+      auto path = StatePath({{0_ft, 0_ft, 0_deg}, {0_ft, 2_ft, 90_deg}}).generateT(1_cm);
 
-      // follower.followPath(PathGenerator::generate(path, limits), false);
+      follower.followPath(PathGenerator::generateX(path, limits));
+
+      auto path2 = StatePath({{0_ft, 2_ft, 90_deg}, {0_ft, 0_ft, 0_deg}}).generateT(1_cm);
+
+      follower.followPath(PathGenerator::generateX(path2, limits));
     }
 
     pros::delay(10);

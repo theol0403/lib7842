@@ -26,7 +26,7 @@ using StatePath = DiscretePath<State>;
  *
  * @tparam T The point type.
  */
-template <typename T> class DiscretePath : public TemplatePath<DiscretePath<T>> {
+template <typename T> class DiscretePath : public PathHelper<DiscretePath<T>> {
 public:
   DiscretePath() = default;
 
@@ -51,7 +51,7 @@ public:
    *
    * @param ipath The array of points
    */
-  DiscretePath(const std::initializer_list<T>& ipath) : DiscretePath(std::vector<T>(ipath)) {};
+  DiscretePath(const std::initializer_list<T>& ipath) : DiscretePath(std::vector<T>(ipath)) {}
 
   /**
    * Create a path using an array of shared pointers.
@@ -144,34 +144,83 @@ public:
   }
 
   /**
-   * Interpolate the path using distance-based sampling.
+   * Interpolate the path, using arithmetic operators. If T implements custom operators, then
+   * any extra information will be preserved and interpolated.
    *
-   * @param  iresolution How far apart to make each point.
-   * @param  iend        Whether to return the end of the segment. This can be turned off to prevent
-   *                     the start of the next segment from being redundant.
+   * @param  isteps How many points to interpolate per segment, counting from the start to just
+   *                before the end of the segment. This means is 1 step will return the first point
+   *                and 2 steps will return the first point as well as a midway point. The end point
+   *                is not included in the count.
+   * @param  iend   Whether to return the end of the segment. This can be turned off to prevent the
+   *                start of the next segment from being redundant.
    * @return generated path
    */
-  SimplePath generate(const QLength& iresolution, bool iend = true) const {
-    SimplePath temp;
+  DiscretePath<T> generateT(int isteps = 1, bool iend = true) const {
+    if (isteps < 1) throw std::runtime_error("DiscretePath<T>::generate: isteps is less than 1");
 
-    for (size_t i = 0; i < path.size() - 1; i++) {
-      Vector& start = *path[i];
-      Vector& end = *path[i + 1];
+    DiscretePath<T> temp;
+    if (path.size() > 0) temp().reserve((isteps * (path.size() - 1)) + 1);
 
-      Vector diff = end - start;
-      size_t steps = std::ceil(MathPoint::mag(diff) / iresolution.convert(meter));
-      Vector step = diff / steps;
+    // if path is more than 2 points - interpolation needed
+    if (path.size() > 1) {
+      // for each segment
+      for (size_t i = 0; i < path.size() - 1; i++) {
+        // if interpolation needed
+        if (isteps > 1) {
+          auto& start = *path[i];
+          auto& end = *path[i + 1];
 
-      temp().reserve(temp().size() + steps);
-      for (size_t j = 0; j < steps; j++) {
-        temp().emplace_back(std::make_shared<Vector>(start + (step * j)));
+          auto diff = end - start;
+          auto step = diff / isteps;
+
+          temp().reserve(temp().size() + isteps);
+          for (size_t j = 0; j < isteps; j++) {
+            temp().emplace_back(std::make_shared<T>(start + (step * j)));
+          }
+        } else {
+          // interpolation not needed
+          temp().emplace_back(std::make_shared<T>(*path[i]));
+        }
       }
     }
 
     // if the path is more than 1 point and the end point is required - return last point
     // if there is only one point, always return it
     if ((iend && path.size() > 0) || path.size() == 1)
-      temp().emplace_back(std::make_shared<Vector>(*path.back()));
+      temp().emplace_back(std::make_shared<T>(*path.back()));
+    return temp;
+  }
+
+  /**
+   * Interpolate the path using distance-based sampling. Uses arithmetic operators, so if T
+   * implements custom operators any extra information will be preserved and interpolated.
+   *
+   * @param  iresolution How far apart to make each point.
+   * @param  iend        Whether to return the end of the segment. This can be turned off to prevent
+   *                     the start of the next segment from being redundant.
+   * @return generated path
+   */
+  DiscretePath<T> generateT(const QLength& iresolution, bool iend = true) const {
+    DiscretePath<T> temp;
+
+    for (size_t i = 0; i < path.size() - 1; i++) {
+      auto& start = *path[i];
+      auto& end = *path[i + 1];
+
+      auto diff = end - start;
+      size_t steps = std::ceil(MathPoint::mag(diff) / iresolution.convert(meter));
+      auto step = diff / steps;
+
+      temp().reserve(temp().size() + steps);
+      for (size_t j = 0; j < steps; j++) {
+        temp().emplace_back(std::make_shared<T>(start + (step * j)));
+      }
+    }
+
+    // if the path is more than 1 point and the end point is required - return last point
+    // if there is only one point, always return it
+    if ((iend && path.size() > 0) || path.size() == 1)
+      temp().emplace_back(std::make_shared<T>(*path.back()));
 
     return temp;
   }
@@ -188,39 +237,19 @@ public:
    * @return generated path
    */
   SimplePath generate(int isteps = 1, bool iend = true) const override {
-    if (isteps < 1) throw std::runtime_error("SimplePath::generate: isteps is less than 1");
+    return SimplePath(generateT(isteps, iend));
+  }
 
-    SimplePath temp;
-    if (path.size() > 0) temp().reserve((isteps * (path.size() - 1)) + 1);
-
-    // if path is more than 2 points - interpolation needed
-    if (path.size() > 1) {
-      // for each segment
-      for (size_t i = 0; i < path.size() - 1; i++) {
-        // if interpolation needed
-        if (isteps > 1) {
-          Vector& start = *path[i];
-          Vector& end = *path[i + 1];
-
-          Vector diff = end - start;
-          Vector step = diff / isteps;
-
-          temp().reserve(temp().size() + isteps);
-          for (size_t j = 0; j < isteps; j++) {
-            temp().emplace_back(std::make_shared<Vector>(start + (step * j)));
-          }
-        } else {
-          // interpolation not needed
-          temp().emplace_back(std::make_shared<Vector>(*path[i]));
-        }
-      }
-    }
-
-    // if the path is more than 1 point and the end point is required - return last point
-    // if there is only one point, always return it
-    if ((iend && path.size() > 0) || path.size() == 1)
-      temp().emplace_back(std::make_shared<Vector>(*path.back()));
-    return temp;
+  /**
+   * Interpolate the path using distance-based sampling.
+   *
+   * @param  iresolution How far apart to make each point.
+   * @param  iend        Whether to return the end of the segment. This can be turned off to prevent
+   *                     the start of the next segment from being redundant.
+   * @return generated path
+   */
+  SimplePath generate(const QLength& iresolution, bool iend = true) const {
+    return SimplePath(generateT(iresolution, iend));
   }
 
 protected:

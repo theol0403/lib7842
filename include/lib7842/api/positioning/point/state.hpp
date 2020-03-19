@@ -9,8 +9,7 @@ namespace lib7842 {
 /**
  * A 2D point with a third theta member
  */
-class State : public Vector {
-public:
+struct State : public Vector {
   QAngle theta {0_rad};
 
   State() = default;
@@ -51,6 +50,8 @@ public:
    */
   State operator+(const State& rhs) const;
   State operator-(const State& rhs) const;
+  State operator*(const double scalar) const;
+  State operator/(const double scalar) const;
   bool operator==(const State& rhs) const;
   bool operator!=(const State& rhs) const;
 

@@ -22,9 +22,6 @@ State::State(const Vector& ipoint, const QAngle& itheta) : Vector(ipoint), theta
  */
 State::State(const OdomState& ipoint) : State(ipoint.x, ipoint.y, ipoint.theta) {};
 
-/**
- * State Math Operators
- */
 State State::operator+(const State& rhs) const {
   return {x + rhs.x, y + rhs.y, theta + rhs.theta};
 }
@@ -33,9 +30,14 @@ State State::operator-(const State& rhs) const {
   return {x - rhs.x, y - rhs.y, theta - rhs.theta};
 }
 
-/**
- * State Equality Operators
- */
+State State::operator*(const double scalar) const {
+  return {x * scalar, y * scalar, theta * scalar};
+}
+
+State State::operator/(const double scalar) const {
+  return {x / scalar, y / scalar, theta / scalar};
+}
+
 bool State::operator==(const State& rhs) const {
   return x == rhs.x && y == rhs.y && theta == rhs.theta;
 }

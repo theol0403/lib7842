@@ -50,7 +50,7 @@ public:
     const std::any& idata = getID(iid);
     try {
       return std::any_cast<U>(idata);
-    } catch (const std::bad_any_cast& e) {
+    } catch (const std::bad_any_cast&) {
       throw std::runtime_error("Data::getData:: \"" + iid + "\" contains wrong type \"" +
                                idata.type().name() + "\"");
     }
@@ -66,7 +66,7 @@ protected:
   const std::any& getID(const std::string& iid) const {
     try {
       return data.at(iid);
-    } catch (const std::out_of_range& e) {
+    } catch (const std::out_of_range&) {
       throw std::runtime_error("Data::getID:: \"" + iid + "\" does not exist in data");
     }
   }

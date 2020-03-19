@@ -3,8 +3,7 @@
 
 namespace lib7842::Vision {
 
-class Object {
-public:
+struct Object {
   double get(const Query& iquery) const;
 
   uint16_t sig {0};

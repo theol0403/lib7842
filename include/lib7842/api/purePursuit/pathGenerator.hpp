@@ -16,6 +16,15 @@ public:
    */
   static PursuitPath generate(const SimplePath& ipath, const PursuitLimits& limits);
 
+  /**
+   * Generate a PursuitPath containing waypoint information for pure pursuit and heading information.
+   *
+   * @param  ipath  The path
+   * @param  limits The pure pursuit limits
+   * @return the generated path
+   */
+  static PursuitPath generateX(const StatePath& ipath, const PursuitLimits& limits);
+
 protected:
   /**
    * Sets the waypoint curvatures.
@@ -31,7 +40,7 @@ protected:
    * @param ipath  The path
    * @param limits The pure pursuit limits
    */
-  static void setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limits);
+  static void setVelocity(PursuitPath& ipath, const PursuitLimits& limits);
 
   /**
    * Gets the curvature of a given segment.

@@ -20,14 +20,13 @@ public:
    * @param idriveRadius        The radius from the target point to turn off angle correction when
    *                            driving to a point. Used by OdomController's driveToPoint, which is
    *                            not used with an X drive.
-   * @param itimeUtil           The time utility
    */
   OdomXController(const std::shared_ptr<XDriveModel>& imodel,
                   const std::shared_ptr<Odometry>& iodometry,
                   std::unique_ptr<IterativePosPIDController> idistanceController,
                   std::unique_ptr<IterativePosPIDController> iturnController,
                   std::unique_ptr<IterativePosPIDController> iangleController,
-                  const QLength& idriveRadius, const TimeUtil& itimeUtil);
+                  const QLength& idriveRadius);
 
   /**
    * Strafe a distance in a relative direction while correcting angle using an AngleCalculator
@@ -42,7 +41,7 @@ public:
     strafeRelativeDirection(const QLength& distance, const QAngle& direction,
                             const AngleCalculator& angleCalculator = makeAngleCalculator(),
                             double turnScale = 1,
-                            Settler&& settler = Settler().distanceSettled().angleSettled());
+                            Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
    * Strafe a distance in an absolute direction while correcting angle using an AngleCalculator
@@ -57,7 +56,7 @@ public:
     strafeAbsoluteDirection(const QLength& distance, const QAngle& direction,
                             const AngleCalculator& angleCalculator = makeAngleCalculator(),
                             double turnScale = 1,
-                            Settler&& settler = Settler().distanceSettled().angleSettled());
+                            Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
    * Strafe to a point using field-centric math and an AngleCalculator
@@ -70,7 +69,7 @@ public:
   virtual void strafeToPoint(const Vector& targetPoint,
                              const AngleCalculator& angleCalculator = makeAngleCalculator(),
                              double turnScale = 1,
-                             Settler&& settler = Settler().distanceSettled().angleSettled());
+                             Trigger&& settler = Settler().distanceSettled().angleSettled());
 
 protected:
   std::shared_ptr<XDriveModel> xModel {nullptr};

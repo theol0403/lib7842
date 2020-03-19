@@ -95,7 +95,8 @@ public:
   /**
    * Set a color and border for all objects drawn by this layer.
    *
-   * @param  color The color
+   * @param  main   The main color
+   * @param  border The border color
    */
   VisionLayer& withColor(const lv_color_t& main, const lv_color_t& border);
 
@@ -110,8 +111,9 @@ public:
   /**
    * Set a color and border for all objects of a specific signature drawn by this layer.
    *
-   * @param  color The color
-   * @param  sig   The signature
+   * @param  main   The main color
+   * @param  border The border color
+   * @param  sig    The signature
    */
   VisionLayer& withColor(const lv_color_t& main, const lv_color_t& border, uint16_t sig);
 

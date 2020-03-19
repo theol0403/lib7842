@@ -15,11 +15,11 @@ TEST_CASE("PathFollower test") {
   SUBCASE("given a model, odom, follower, and limits") {
 
     auto model = std::make_shared<MockThreeEncoderXDriveModel>();
-    auto odom = std::make_shared<CustomOdometry>(
-      model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}), createTimeUtil());
+    auto odom =
+      std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}));
 
     auto follower = std::make_shared<MockPathFollower>(
-      model, odom, ChassisScales({{4_in, 10_in}, 360}), 6_in, 6_in, createTimeUtil());
+      model, odom, ChassisScales({{4_in, 10_in}, 360}), 6_in, 6_in);
 
     PursuitLimits limits {0_mps, 0.5_mps2, 1_mps, 1_mps};
 

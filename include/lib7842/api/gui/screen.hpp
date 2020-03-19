@@ -15,24 +15,20 @@ public:
    * Create a new screen. Theme color is inherited from the parent.
    *
    * @param iparent The LVGL parent, typically `lv_scr_act()`
-   * @param ilogger The logger
    */
-  explicit Screen(lv_obj_t* iparent,
-                  const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  explicit Screen(lv_obj_t* iparent);
 
   /**
    * Create a new screen.
    *
    * @param iparent The LVGL parent, typically `lv_scr_act()`
    * @param icolor  The theme color
-   * @param ilogger The logger
    */
-  explicit Screen(lv_obj_t* iparent, lv_color_t icolor,
-                  const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  explicit Screen(lv_obj_t* iparent, lv_color_t icolor);
 
   Screen(const Screen& iscreen) = delete;
   Screen(Screen&& iscreen) = default;
-  virtual ~Screen();
+  ~Screen() override;
 
   /**
    * Create a new tab and return the LVGL pointer.
@@ -52,7 +48,7 @@ public:
    */
   template <typename T> T& makePage(const std::string& iname) {
     static_assert(std::is_base_of<Page, T>::value, "T is not a Page");
-    auto ptr = std::make_shared<T>(newPage(iname), themeColor, Page::logger);
+    auto ptr = std::make_shared<T>(newPage(iname), themeColor);
     ptr->initialize();
     pages.emplace_back(ptr);
     return *ptr;

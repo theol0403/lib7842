@@ -14,7 +14,6 @@ namespace lib7842 {
 class Settler : public Trigger {
 public:
   using Trigger::Trigger;
-  Settler(Trigger&& trigger);
 
   /**
    * Make an exception if the derivative of the distance error is within the ranges of a settled
@@ -27,7 +26,7 @@ public:
   /**
    * Remove any abort that has been set. Automatically gets called by turn commands.
    */
-  Settler&& noAbort();
+  Settler&& noAbort() override;
 
   /**
    * Check the abort, then run all the requirements and exceptions.

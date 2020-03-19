@@ -23,7 +23,7 @@ public:
   /**
    * Calculate the value of the polynomial at t
    *
-   * @param  t
+   * @param  t the polynomial input
    * @return the value
    */
   double calculate(double t) const;
@@ -38,7 +38,7 @@ protected:
 /**
  * A path that represents a quintic spline.
  */
-class QuinticSegment : public TemplatePath<QuinticSegment> {
+class QuinticSegment : public PathHelper<QuinticSegment> {
 public:
   /**
    * Create a spline from two points, both containing a position, angle, and slope. Slope, which is

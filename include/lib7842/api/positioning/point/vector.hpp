@@ -9,8 +9,7 @@ using namespace okapi;
 /**
  * A 2D Point
  */
-class Vector {
-public:
+struct Vector {
   QLength x {0_in};
   QLength y {0_in};
 
@@ -42,18 +41,14 @@ public:
   const QLength& at(size_t iindex) const;
 
   /**
-   * Binary operators
+   * Operators
    */
   Vector operator+(const Vector& rhs) const;
   Vector operator-(const Vector& rhs) const;
-  bool operator==(const Vector& rhs) const;
-  bool operator!=(const Vector& rhs) const;
-
-  /**
-   * Scale operators
-   */
   Vector operator*(const double scalar) const;
   Vector operator/(const double scalar) const;
+  bool operator==(const Vector& rhs) const;
+  bool operator!=(const Vector& rhs) const;
 
   /**
    * Calculate distance between points

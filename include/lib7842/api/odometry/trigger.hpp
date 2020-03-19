@@ -1,8 +1,8 @@
 #pragma once
+#include "lib7842/api/other/global.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
-#include "okapi/api/util/timeUtil.hpp"
 #include <functional>
 
 namespace lib7842 {
@@ -34,7 +34,6 @@ public:
    *
    * @param  function The requirement
    */
-  virtual Trigger&& requirement(std::function<bool(const OdomController* icontroller)>&& function);
   virtual Trigger&& requirement(std::function<bool()>&& function);
 
   /**
@@ -43,7 +42,6 @@ public:
    *
    * @param  function The exception
    */
-  virtual Trigger&& exception(std::function<bool(const OdomController* icontroller)>&& function);
   virtual Trigger&& exception(std::function<bool()>&& function);
 
   /**
@@ -65,7 +63,7 @@ public:
   /**
    * Require that the angle to an absolute angle is within a value.
    *
-   * @param  point   The absolute angle
+   * @param  angle   The absolute angle
    * @param  trigger The angle
    */
   virtual Trigger&& angleTo(const QAngle& angle, const QAngle& trigger);
@@ -117,10 +115,14 @@ public:
   /**
    * Make an exception if the time from the first call of the trigger is greater than a value.
    *
-   * @param  time     The time
-   * @param  timeUtil The timeUtil for keeping track of time.
+   * @param  time The time
    */
-  virtual Trigger&& maxTime(const QTime& time, const TimeUtil& timeUtil);
+  virtual Trigger&& maxTime(const QTime& time);
+
+  /**
+   * Remove any abort that has been set by a Settler. Automatically gets called by turn commands.
+   */
+  virtual Trigger&& noAbort();
 
   /**
    * Run all the requirements and exceptions. The controller is assumed to be provided by the
@@ -143,7 +145,7 @@ public:
 protected:
   const OdomController* controller {nullptr};
 
-  std::vector<std::function<bool(const OdomController* icontroller)>> requirements;
-  std::vector<std::function<bool(const OdomController* icontroller)>> exceptions;
+  std::vector<std::function<bool()>> requirements;
+  std::vector<std::function<bool()>> exceptions;
 };
 } // namespace lib7842
