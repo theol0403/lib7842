@@ -9,8 +9,7 @@ using namespace okapi;
 /**
  * A 2D Point
  */
-class Vector {
-public:
+struct Vector {
   QLength x {0_in};
   QLength y {0_in};
 
