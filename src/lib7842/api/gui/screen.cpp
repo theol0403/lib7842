@@ -75,10 +75,6 @@ Screen::Screen(lv_obj_t* iparent, lv_color_t icolor) :
   startTask("Screen");
 }
 
-Screen::~Screen() {
-  lv_obj_del(tabview);
-}
-
 lv_obj_t* Screen::newPage(const std::string& iname) {
   lv_obj_t* page = lv_tabview_add_tab(tabview, iname.c_str());
   lv_page_set_sb_mode(page, LV_SB_MODE_OFF);
