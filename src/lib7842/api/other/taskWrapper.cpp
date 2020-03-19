@@ -4,12 +4,12 @@ namespace lib7842 {
 
 void TaskWrapper::loop() {
   std::string msg("TaskWrapper::loop: loop is not overridden");
-  LIB7842_ERROR(msg);
+  GLOBAL_ERROR(msg);
   throw std::runtime_error(msg);
 }
 
 void TaskWrapper::startTask(const std::string& iname) {
-  if (task) LIB7842_INFO("TaskWrapper::startTask: restarting task: " + iname);
+  if (task) GLOBAL_INFO("TaskWrapper::startTask: restarting task: " + iname);
   task = std::make_unique<CrossplatformThread>(trampoline, this, iname.c_str());
 }
 

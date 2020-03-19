@@ -34,14 +34,14 @@ void setTimeUtil(const std::shared_ptr<TimeUtil>& itimeUtil);
  */
 std::shared_ptr<TimeUtil> getTimeUtil();
 
-#define LIB7842_DEBUG(msg) global::getLogger()->debug([=]() { return msg; })
-#define LIB7842_INFO(msg) global::getLogger()->info([=]() { return msg; })
-#define LIB7842_WARN(msg) global::getLogger()->warn([=]() { return msg; })
-#define LIB7842_ERROR(msg) global::getLogger()->error([=]() { return msg; })
+#define GLOBAL_DEBUG(msg) lib7842::global::getLogger()->debug([=]() { return msg; })
+#define GLOBAL_INFO(msg) lib7842::global::getLogger()->info([=]() { return msg; })
+#define GLOBAL_WARN(msg) lib7842::global::getLogger()->warn([=]() { return msg; })
+#define GLOBAL_ERROR(msg) lib7842::global::getLogger()->error([=]() { return msg; })
 
-#define LIB7842_DEBUG_S(msg) LIB7842_DEBUG(std::string(msg))
-#define LIB7842_INFO_S(msg) LIB7842_INFO(std::string(msg))
-#define LIB7842_WARN_S(msg) LIB7842_WARN(std::string(msg))
-#define LIB7842_ERROR_S(msg) LIB7842_ERROR(std::string(msg))
+#define GLOBAL_DEBUG_S(msg) GLOBAL_DEBUG(std::string(msg))
+#define GLOBAL_INFO_S(msg) GLOBAL_INFO(std::string(msg))
+#define GLOBAL_WARN_S(msg) GLOBAL_WARN(std::string(msg))
+#define GLOBAL_ERROR_S(msg) GLOBAL_ERROR(std::string(msg))
 
 } // namespace lib7842::global

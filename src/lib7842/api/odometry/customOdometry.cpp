@@ -19,7 +19,7 @@ void CustomOdometry::step() {
 
   if (newTicks.size() < 3) {
     std::string msg("CustomOdometry::step: The model does not contain three encoders");
-    LIB7842_ERROR(msg);
+    GLOBAL_ERROR(msg);
     throw std::runtime_error(msg);
   }
 

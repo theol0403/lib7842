@@ -18,7 +18,7 @@ void Odom::render() {
   } else {
     if (!hasWarnedRender) {
       hasWarnedRender = true;
-      LIB7842_WARN_S("Odom::render: odom not attached");
+      GLOBAL_WARN_S("Odom::render: odom not attached");
     }
   }
 }
@@ -234,7 +234,7 @@ lv_res_t Odom::tileAction(lv_obj_t* tileObj) {
     that->odom->setState({x * tile + 0.5_tile, 1_court - y * tile - 0.5_tile, 0_deg},
                          StateMode::CARTESIAN);
   } else {
-    LIB7842_WARN_S("Odom::tileAction: odom not attached");
+    GLOBAL_WARN_S("Odom::tileAction: odom not attached");
   }
   return LV_RES_OK;
 }
@@ -248,10 +248,10 @@ lv_res_t Odom::resetAction(lv_obj_t* btn) {
     that->resetter();
   } else {
     if (that->odom) {
-      LIB7842_INFO_S("Odom::resetAction: using default resetter");
+      GLOBAL_INFO_S("Odom::resetAction: using default resetter");
       that->odom->setState({0_in, 0_in, 0_deg});
     } else {
-      LIB7842_WARN_S("Odom::resetAction: odom not attached");
+      GLOBAL_WARN_S("Odom::resetAction: odom not attached");
     }
   }
   return LV_RES_OK;
