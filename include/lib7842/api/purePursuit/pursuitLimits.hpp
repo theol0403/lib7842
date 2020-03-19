@@ -15,8 +15,7 @@ struct PursuitLimits {
    * @param imaxVel The maximum velocity of the robot
    * @param ik      Used to control how much to slow down around turns. The velocity of the robot is
    *                limited by this value divided by the path curvature. A higher curvature means a
-   *                lower velocity. This value is usually best around 1, 0.5 slows down at any
-   *                curvature in the path and 2 slows down around only a very sharp curvature.
+   *                lower velocity.
    */
   PursuitLimits(const QSpeed& iminVel, const QAcceleration& iaccel, const QSpeed& imaxVel,
                 const QSpeed& ik) :
@@ -34,8 +33,7 @@ struct PursuitLimits {
    *                  velocity.
    * @param ik        Used to control how much to slow down around turns. The velocity of the robot
    *                  is limited by this value divided by the path curvature. A higher curvature
-   *                  means a lower velocity. This value is usually best around 1, 0.5 slows down at
-   *                  any curvature in the path and 2 slows down around only a very sharp curvature.
+   *                  means a lower velocity.
    */
   PursuitLimits(const QSpeed& iminVel, const QAcceleration& iaccel, const QSpeed& imaxVel,
                 const QAcceleration& idecel, const QSpeed& ifinalVel, const QSpeed& ik) :
@@ -69,9 +67,7 @@ struct PursuitLimits {
 
   /**
    * Used to control how much to slow down around turns. The velocity of the robot is limited by
-   * this value divided by the path curvature. A higher curvature means a lower velocity. This value
-   * is usually best around 1, 0.5 slows down at any curvature in the path and 2 slows down around
-   * only a very sharp curvature.
+   * this value divided by the path curvature. A higher curvature means a lower velocity.
    */
   QSpeed k {0_mps};
 };
