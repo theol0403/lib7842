@@ -68,10 +68,12 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
     // the max velocity or the curvature-based speed reduction.
     QSpeed targetVel = 0_mps;
     if (onPath) {
+      auto pathSpeed = closest->get()->getData<QSpeed>("velocity");
       targetVel =
-        std::min(closest->get()->getData<QSpeed>("velocity"), limits.k / std::abs(curvature));
+        limits.k ? std::min(pathSpeed, limits.k.value() / std::abs(curvature)) : pathSpeed;
     } else {
-      targetVel = std::min(limits.maxVel, limits.k / std::abs(curvature));
+      targetVel =
+        limits.k ? std::min(limits.maxVel, limits.k.value() / std::abs(curvature)) : limits.maxVel;
     }
 
     // add an upwards rate limiter to the robot velocity using the formula vf=vi+at
