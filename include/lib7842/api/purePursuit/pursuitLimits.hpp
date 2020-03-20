@@ -10,10 +10,20 @@ using namespace okapi;
 /**
  * Pure Pursuit limits. Describes the kinematic limits of the robot. Used to customize the speeds of
  * the robot when following a path.
+ *
+ * There are four different kinds of constructors. Each kind has two versions, one with all 6 limits
+ * and one with only 4 limits. K is optional in each constructor. The kinds are as follows:
+ *  - Real-world units.
+ *  - Real-world units but acceleration and deceleration are specified by time.
+ *  - Motor percentages, where wheel dimensions and gearing are used for the calculation.
+ *  - Motor percentages, where robot top speed is used for the calculation.
+ *
+ * The easiest constructor to use is the 4-parameter version of the motor percentages with wheel
+ * dimensions and gearing.
  */
 struct PursuitLimits {
   /**
-   * Full limits.
+   * Real-world units.
    *
    * @param iminVel   The minimum velocity through the entire path.
    * @param iaccel    The acceleration from min velocity to max velocity.
@@ -29,7 +39,7 @@ struct PursuitLimits {
                 const QAcceleration& idecel, const QSpeed& ifinalVel,
                 const std::optional<QSpeed>& ik = std::nullopt);
   /**
-   * Deceleration and final velocity is inferred from acceleration and minimum velocity.
+   * Real-world units. Deceleration and final velocity is inferred from acceleration and minimum velocity.
    *
    * @param iminVel The minimum velocity through the entire path.
    * @param iaccel  The acceleration from min velocity to max velocity.
@@ -41,7 +51,7 @@ struct PursuitLimits {
   PursuitLimits(const QSpeed& iminVel, const QAcceleration& iaccel, const QSpeed& imaxVel,
                 const std::optional<QSpeed>& ik = std::nullopt);
   /**
-   * Time is used for acceleration and deceleration.
+   * Real-world units. Time is used for acceleration and deceleration.
    *
    * @param iminVel   The minimum velocity through the entire path.
    * @param iaccel    The time to accelerate from min velocity to max velocity.
@@ -58,7 +68,7 @@ struct PursuitLimits {
                 const std::optional<QSpeed>& ik = std::nullopt);
 
   /**
-   * Time is used for acceleration and deceleration. Deceleration and final velocity is inferred
+   * Real-world units. Time is used for acceleration. Deceleration and final velocity is inferred
    * from acceleration and minimum velocity.
    *
    * @param iminVel The minimum velocity through the entire path.
@@ -77,8 +87,8 @@ struct PursuitLimits {
   using Gearset = AbstractMotor::GearsetRatioPair;
 
   /**
-   * Scales and motor percentages are used to determine the limits. Time is used for acceleration
-   * and deceleration.
+   * Motor percentages. Wheel dimensions and gearing are used to determine the limits. Time is used
+   * for acceleration and deceleration. Motor percentages are in the range (0, 1).
    *
    * @param iwheelDiam The wheel diameter.
    * @param igearset   The wheel gearset and ratio.
@@ -97,9 +107,10 @@ struct PursuitLimits {
                 const std::optional<QSpeed>& ik = std::nullopt);
 
   /**
-   * Scales and motor percentages are used to determine the limits. Time is used for acceleration
-   * and deceleration. Deceleration and final speed is inferred from acceleration and minimum speed.
-   * This is the easiest constructor to use.
+   * Motor percentages. Wheel dimensions and gearing are used to determine the limits. Time is used
+   * for acceleration and deceleration. Deceleration and final speed is inferred from acceleration
+   * and minimum speed. Motor percentages are in the range (0, 1). This is the easiest constructor
+   * to use.
    *
    * @param iwheelDiam The wheel diameter.
    * @param igearset   The wheel gearset and ratio.
@@ -114,8 +125,8 @@ struct PursuitLimits {
                 const QTime& iaccel, double imax, const std::optional<QSpeed>& ik = std::nullopt);
 
   /**
-   * The robot's top speed and motor percentages are used to determine the limits. Time is used for
-   * acceleration and deceleration.
+   * Motor percentages. The robot's top speed is used to determine the limits. Time is used for
+   * acceleration and deceleration. Motor percentages are in the range (0, 1).
    *
    * @param itopSpeed The robot's top velocity at 100% motor speed.
    * @param imin      The minimum motor percentage through the entire path.
@@ -132,9 +143,9 @@ struct PursuitLimits {
                 const QTime& idecel, double ifinal, const std::optional<QSpeed>& ik = std::nullopt);
 
   /**
-   * The robot's top speed and motor percentages are used to determine the limits. Time is used for
+   * Motor percentages. The robot's top speed is used to determine the limits. Time is used for
    * acceleration and deceleration. Deceleration and final speed is inferred from acceleration and
-   * minimum speed.
+   * minimum speed. Motor percentages are in the range (0, 1).
    *
    * @param itopSpeed The robot's top velocity at 100% motor speed.
    * @param imin      The minimum motor percentage through the entire path.
