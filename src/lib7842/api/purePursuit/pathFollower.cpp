@@ -91,11 +91,11 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
     double left = wheelVel[0].convert(rpm) / 200.0;
     double right = wheelVel[1].convert(rpm) / 200.0;
 
-    // take any speed that is clipped from one side and move it to the other
-    double maxMag = std::abs(left) > std::abs(right) ? left : right;
-    if (std::abs(maxMag) > 1) {
-      left -= (std::abs(maxMag) - 1) * util::sgn(maxMag);
-      right -= (std::abs(maxMag) - 1) * util::sgn(maxMag);
+    // normalize the sides
+    double maxMag = std::max(std::abs(left), std::abs(right));
+    if (maxMag > 1.0) {
+      left /= maxMag;
+      right /= maxMag;
     }
 
     if (!ibackwards) {
