@@ -9,11 +9,12 @@ namespace lib7842 {
 
 PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                            const std::shared_ptr<Odometry>& iodometry,
-                           const ChassisScales& ichassisScales, const QLength& ilookahead,
-                           const std::optional<QLength>& idriveRadius) :
+                           const ChassisScales& ichassisScales, const QAngularSpeed& igearset,
+                           const QLength& ilookahead, const std::optional<QLength>& idriveRadius) :
   model(imodel),
   odometry(iodometry),
   chassisScales(ichassisScales),
+  gearset(igearset),
   lookahead(ilookahead),
   driveRadius(idriveRadius.value_or(ilookahead)) {}
 
@@ -88,8 +89,8 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
     // calculate robot wheel velocities
     auto wheelVel = calculateVelocity(targetVel, curvature, chassisScales, limits);
 
-    double left = wheelVel[0].convert(rpm) / 200.0;
-    double right = wheelVel[1].convert(rpm) / 200.0;
+    double left = (wheelVel[0] / gearset).convert(number);
+    double right = (wheelVel[1] / gearset).convert(number);
 
     // normalize the sides
     double maxMag = std::max(std::abs(left), std::abs(right));

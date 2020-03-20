@@ -6,8 +6,9 @@ using namespace util;
 
 PathFollowerX::PathFollowerX(const std::shared_ptr<XDriveModel>& imodel,
                              const std::shared_ptr<Odometry>& iodometry,
-                             const ChassisScales& ichassisScales, const QLength& ilookahead) :
-  PathFollower(imodel, iodometry, ichassisScales, ilookahead), xModel(imodel) {};
+                             const ChassisScales& ichassisScales, const QAngularSpeed& igearset,
+                             const QLength& ilookahead) :
+  PathFollower(imodel, iodometry, ichassisScales, igearset, ilookahead), xModel(imodel) {};
 
 void PathFollowerX::followPath(const PursuitPath& ipath) {
   resetPursuit();
@@ -43,7 +44,7 @@ void PathFollowerX::followPath(const PursuitPath& ipath) {
 
     // calculate robot wheel velocities
     QAngularSpeed wheelVel = (targetVel / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
-    double power = wheelVel.convert(rpm) / 200.0;
+    double power = (wheelVel / gearset).convert(number);
 
     // calculate target angle at lookahead
     QAngle start = ipath()[lastLookIndex]->getData<QAngle>("angle");
@@ -62,7 +63,7 @@ void PathFollowerX::followPath(const PursuitPath& ipath) {
     QAngularSpeed turnVel = rotation * chassisScales.wheelTrack / chassisScales.wheelDiameter;
 
     // get the voltage
-    double turnPower = turnVel.convert(rpm) / 200.0;
+    double turnPower = (turnVel / gearset).convert(number);
 
     // calculate angle to lookahead
     QAngle angleToLook = pos.angleTo(lookPoint);
