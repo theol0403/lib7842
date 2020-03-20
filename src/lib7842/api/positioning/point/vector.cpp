@@ -12,12 +12,11 @@ Vector::Vector(const Point& ipoint) : Vector(ipoint.x, ipoint.y) {}
 
 QLength& Vector::at(size_t iindex) {
   switch (iindex) {
-    case 0: return x; break;
-    case 1: return y; break;
+    case 0: return x;
+    case 1: return y;
     default:
       throw std::runtime_error("Vector::at():: \"" + std::to_string(iindex) +
                                "\" is invalid index");
-      break;
   }
 }
 
