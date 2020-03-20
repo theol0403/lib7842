@@ -45,8 +45,8 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
 
     // whether the robot is within the driveRadius of the end of the path. If it is, disable angle
     // correction.
-    bool withinDriveRadius = Vector::dist(**closest, *ipath().back()) < lookahead &&
-                             Vector::dist(pos, *ipath().back()) < lookahead;
+    bool withinDriveRadius = Vector::dist(**closest, *ipath().back()) < driveRadius &&
+                             Vector::dist(pos, *ipath().back()) < driveRadius;
 
     // calculate the arc curvature for the robot to travel to the lookahead
     double curvature = withinDriveRadius ? 0 : calculateCurvature(pos, projectedLook);
