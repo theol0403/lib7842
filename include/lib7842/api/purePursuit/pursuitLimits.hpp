@@ -82,16 +82,11 @@ struct PursuitLimits {
                 const std::optional<QSpeed>& ik = std::nullopt);
 
   /**
-   * Shorthand. GearsetRatioPair contains a gearset (rpm) and a ratio.
-   */
-  using Gearset = AbstractMotor::GearsetRatioPair;
-
-  /**
    * Motor percentages. Wheel dimensions and gearing are used to determine the limits. Time is used
    * for acceleration and deceleration. Motor percentages are in the range (0, 1).
    *
    * @param iwheelDiam The wheel diameter.
-   * @param igearset   The wheel gearset and ratio.
+   * @param igearset   The wheel gearset (top speed in RPM) multiplied by any external gear ratio.
    * @param imin       The minimum motor percentage through the entire path.
    * @param iaccel     The time to accelerate from min speed to max speed.
    * @param imax       The maximum motor percentage.
@@ -102,8 +97,8 @@ struct PursuitLimits {
    *                   limited by this value divided by the path curvature. A higher curvature means
    *                   a lower velocity.
    */
-  PursuitLimits(const QLength& iwheelDiam, const Gearset& igearset, double imin,
-                const QTime& iaccel, double imax, const QTime& idecel, double ifinal,
+  PursuitLimits(const QLength& iwheelDiam, double igearset, double imin, const QTime& iaccel,
+                double imax, const QTime& idecel, double ifinal,
                 const std::optional<QSpeed>& ik = std::nullopt);
 
   /**
@@ -113,7 +108,7 @@ struct PursuitLimits {
    * to use.
    *
    * @param iwheelDiam The wheel diameter.
-   * @param igearset   The wheel gearset and ratio.
+   * @param igearset   The wheel gearset (top speed in RPM) multiplied by any external gear ratio.
    * @param imin       The minimum motor percentage through the entire path.
    * @param iaccel     The time to accelerate from min speed to max speed.
    * @param imax       The maximum motor percentage.
@@ -121,8 +116,8 @@ struct PursuitLimits {
    *                   limited by this value divided by the path curvature. A higher curvature means
    *                   a lower velocity.
    */
-  PursuitLimits(const QLength& iwheelDiam, const Gearset& igearset, double imin,
-                const QTime& iaccel, double imax, const std::optional<QSpeed>& ik = std::nullopt);
+  PursuitLimits(const QLength& iwheelDiam, double igearset, double imin, const QTime& iaccel,
+                double imax, const std::optional<QSpeed>& ik = std::nullopt);
 
   /**
    * Motor percentages. The robot's top speed is used to determine the limits. Time is used for
