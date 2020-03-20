@@ -3,7 +3,7 @@
 
 namespace lib7842::Vision {
 
-class Object;
+struct Object;
 
 class Query : public std::function<double(const Object& obj)> {
 public:
