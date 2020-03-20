@@ -1,7 +1,7 @@
-#include "quinticPath.hpp"
-#include "compoundPath.hpp"
+#include "lib7842/api/positioning/path/quinticPath.hpp"
+#include "lib7842/api/positioning/path/compoundPath.hpp"
+#include "lib7842/api/positioning/path/quinticSegment.hpp"
 #include "lib7842/api/positioning/point/mathPoint.hpp"
-#include "quinticSegment.hpp"
 
 namespace lib7842 {
 

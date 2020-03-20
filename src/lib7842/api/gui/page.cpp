@@ -1,4 +1,4 @@
-#include "page.hpp"
+#include "lib7842/api/gui/page.hpp"
 
 namespace lib7842::GUI {
 

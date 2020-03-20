@@ -1,4 +1,4 @@
-#include "quinticSegment.hpp"
+#include "lib7842/api/positioning/path/quinticSegment.hpp"
 
 namespace lib7842 {
 

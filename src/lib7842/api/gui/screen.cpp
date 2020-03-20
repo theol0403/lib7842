@@ -1,4 +1,4 @@
-#include "screen.hpp"
+#include "lib7842/api/gui/screen.hpp"
 
 namespace lib7842::GUI {
 

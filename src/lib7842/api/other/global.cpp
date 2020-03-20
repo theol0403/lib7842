@@ -1,4 +1,4 @@
-#include "global.hpp"
+#include "lib7842/api/other/global.hpp"
 
 #if defined(THREADS_STD)
 #else

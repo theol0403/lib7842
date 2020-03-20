@@ -1,4 +1,4 @@
-#include "vector.hpp"
+#include "lib7842/api/positioning/point/vector.hpp"
 #include "lib7842/api/other/utility.hpp"
 #include "okapi/api/units/QArea.hpp"
 #include <stdexcept>

@@ -1,4 +1,4 @@
-#include "state.hpp"
+#include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/other/utility.hpp"
 
 namespace lib7842 {

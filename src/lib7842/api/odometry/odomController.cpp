@@ -1,4 +1,4 @@
-#include "odomController.hpp"
+#include "lib7842/api/odometry/odomController.hpp"
 #include "pros/rtos.hpp"
 
 namespace lib7842 {

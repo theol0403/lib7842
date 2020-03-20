@@ -1,4 +1,4 @@
-#include "pathGenerator.hpp"
+#include "lib7842/api/purePursuit/pathGenerator.hpp"
 
 namespace lib7842 {
 

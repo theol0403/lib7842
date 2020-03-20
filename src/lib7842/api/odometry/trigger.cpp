@@ -1,4 +1,4 @@
-#include "trigger.hpp"
+#include "lib7842/api/odometry/trigger.hpp"
 #include "lib7842/api/odometry/odomController.hpp"
 
 namespace lib7842 {

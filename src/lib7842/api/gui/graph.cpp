@@ -1,4 +1,4 @@
-#include "graph.hpp"
+#include "lib7842/api/gui/graph.hpp"
 
 namespace lib7842::GUI {
 

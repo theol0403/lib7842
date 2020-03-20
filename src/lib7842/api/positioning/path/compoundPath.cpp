@@ -1,4 +1,4 @@
-#include "compoundPath.hpp"
+#include "lib7842/api/positioning/path/compoundPath.hpp"
 
 namespace lib7842 {
 

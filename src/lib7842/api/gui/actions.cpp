@@ -1,4 +1,4 @@
-#include "actions.hpp"
+#include "lib7842/api/gui/actions.hpp"
 
 namespace lib7842::GUI {
 
