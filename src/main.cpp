@@ -117,7 +117,8 @@ void opcontrol() {
   /**
    * Follower
    */
-  PathFollowerX follower(model, odom, ChassisScales({2.75_in, 14_in}, imev5GreenTPR), 0.5_ft);
+  PathFollowerX follower(model, odom, ChassisScales({2.75_in, 14_in}, imev5GreenTPR), 200_rpm,
+                         0.5_ft);
   PursuitLimits limits {0.1_mps, 1.9_mps2, 1.2_mps, 40_mps};
 
   while (true) {
