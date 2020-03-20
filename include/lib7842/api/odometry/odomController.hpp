@@ -29,7 +29,7 @@ using AngleCalculator = std::function<QAngle(const OdomController& odom)>;
 class OdomController {
 public:
   /**
-   * OdomController. Implements chassis movement algorithms
+   * OdomController. Implements chassis movement algorithms.
    *
    * @param imodel              The chassis model
    * @param iodometry           The chassis odometry
@@ -49,7 +49,7 @@ public:
   virtual ~OdomController() = default;
 
   /**
-   * Turn the chassis using the given AngleCalculator 
+   * Turn the chassis using the given AngleCalculator.
    *
    * @param angleCalculator The angle calculator
    * @param turner          The turner
@@ -59,7 +59,7 @@ public:
                     Trigger&& settler = Trigger().turnSettled());
 
   /**
-   * Turn the chassis to face an absolute angle
+   * Turn the chassis to face an absolute angle.
    *
    * @param angle   The angle
    * @param turner  The turner
@@ -69,7 +69,7 @@ public:
                            Trigger&& settler = Trigger().turnSettled());
 
   /**
-   * Turn the chassis to face a relative angle
+   * Turn the chassis to face a relative angle.
    *
    * @param angle   The angle
    * @param turner  The turner
@@ -79,7 +79,7 @@ public:
                          Trigger&& settler = Trigger().turnSettled());
 
   /**
-   * Turn the chassis to face a point
+   * Turn the chassis to face a point.
    *
    * @param point   The point
    * @param turner  The turner
@@ -89,7 +89,7 @@ public:
                            Trigger&& settler = Trigger().turnSettled());
 
   /**
-   * Drive a distance while correcting angle using an AngleCalculator
+   * Drive a distance while correcting angle using an AngleCalculator.
    *
    * @param distance        The distance
    * @param angleCalculator The angle calculator
@@ -101,7 +101,7 @@ public:
                                    Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
-   * Drive a distance while maintaining starting angle
+   * Drive a distance while maintaining starting angle.
    *
    * @param distance The distance
    * @param settler  The settler
@@ -110,7 +110,7 @@ public:
                             Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
-   * Drive to a point using custom point seeking
+   * Drive to a point using custom point seeking.
    *
    * @param targetPoint The target point
    * @param turnScale   The turn scale used to control the priority of turning over driving. A
@@ -121,7 +121,7 @@ public:
                             Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
-   * Drive to a point using simple point seeking
+   * Drive to a point using simple point seeking.
    *
    * @param targetPoint The target point
    * @param turnScale   The turn scale used to control the priority of turning over driving. A
@@ -132,7 +132,7 @@ public:
                              Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
-   * A Turner that executes a point turn which turns in place. Used as default for turn functions
+   * A Turner that executes a point turn which turns in place. Used as default for turn functions.
    */
   static void pointTurn(ChassisModel& model, double vel);
 
@@ -147,7 +147,7 @@ public:
   static void rightPivot(ChassisModel& model, double vel);
 
   /**
-   * Make an AngleCalculator that seeks a given absolute angle
+   * Make an AngleCalculator that seeks a given absolute angle.
    *
    * @param angle The angle
    */
@@ -165,12 +165,12 @@ public:
    * for a command using this calculator to settle.
    *
    * @param  error The error
-   * @return The angle calculator.
+   * @return The angle calculator
    */
   static AngleCalculator makeAngleCalculator(double error);
 
   /**
-   * Make an AngleCalculator that does nothing
+   * Make an AngleCalculator that does nothing.
    */
   static AngleCalculator makeAngleCalculator();
 
@@ -180,7 +180,7 @@ public:
   State getState() const;
 
   /**
-   * Calculate distance from the chassis to the point
+   * Calculate distance from the chassis to the point.
    */
   QLength distanceToPoint(const Vector& point) const;
 
@@ -192,45 +192,45 @@ public:
   /**
    * Get the error of the distance PID controller.
    *
-   * @return The distance error.
+   * @return The distance error
    */
   QLength getDistanceError() const;
 
   /**
    * Get the error of the angle or turn PID controller.
    *
-   * @return The angle error.
+   * @return The angle error
    */
   QAngle getAngleError() const;
 
   /**
    * Determines if the distance PID controller is settled.
    *
-   * @return true if settled, false otherwise.
+   * @return true if settled, false otherwise
    */
   bool isDistanceSettled() const;
 
   /**
    * Determines if the angle PID controller is settled.
    *
-   * @return true if settled, false otherwise.
+   * @return true if settled, false otherwise
    */
   bool isAngleSettled() const;
 
   /**
    * Determines if the turn PID controller is settled.
    *
-   * @return true if settled, false otherwise.
+   * @return true if settled, false otherwise
    */
   bool isTurnSettled() const;
 
   /**
-   * Return a trigger that points to this chassis
+   * Return a trigger that points to this chassis.
    */
   Trigger trigger() const;
 
   /**
-   * Return a settler that points to this chassis
+   * Return a settler that points to this chassis.
    */
   Settler settler() const;
 

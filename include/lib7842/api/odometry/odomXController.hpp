@@ -29,7 +29,7 @@ public:
                   const QLength& idriveRadius);
 
   /**
-   * Strafe a distance in a relative direction while correcting angle using an AngleCalculator
+   * Strafe a distance in a relative direction while correcting angle using an AngleCalculator.
    *
    * @param distance        The distance
    * @param direction       The relative direction of the strafing
@@ -44,7 +44,7 @@ public:
                             Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
-   * Strafe a distance in an absolute direction while correcting angle using an AngleCalculator
+   * Strafe a distance in an absolute direction while correcting angle using an AngleCalculator.
    *
    * @param distance        The distance
    * @param direction       The absolute direction of the strafing
@@ -59,7 +59,7 @@ public:
                             Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
-   * Strafe to a point using field-centric math and an AngleCalculator
+   * Strafe to a point using field-centric math and an AngleCalculator.
    *
    * @param targetPoint     The target point
    * @param angleCalculator The angle calculator
