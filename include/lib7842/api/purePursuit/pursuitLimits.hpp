@@ -2,7 +2,7 @@
 #include "okapi/api/units/QAcceleration.hpp"
 #include "okapi/api/units/QAngularSpeed.hpp"
 #include "okapi/api/units/QSpeed.hpp"
-#include "okapi/api/util/mathUtil.hpp"
+#include <optional>
 
 namespace lib7842 {
 using namespace okapi;
@@ -97,8 +97,8 @@ struct PursuitLimits {
    *                   limited by this value divided by the path curvature. A higher curvature means
    *                   a lower velocity.
    */
-  PursuitLimits(const QLength& iwheelDiam, double igearset, double imin, const QTime& iaccel,
-                double imax, const QTime& idecel, double ifinal,
+  PursuitLimits(const QLength& iwheelDiam, const QAngularSpeed& igearset, double imin,
+                const QTime& iaccel, double imax, const QTime& idecel, double ifinal,
                 const std::optional<QSpeed>& ik = std::nullopt);
 
   /**
@@ -116,8 +116,8 @@ struct PursuitLimits {
    *                   limited by this value divided by the path curvature. A higher curvature means
    *                   a lower velocity.
    */
-  PursuitLimits(const QLength& iwheelDiam, double igearset, double imin, const QTime& iaccel,
-                double imax, const std::optional<QSpeed>& ik = std::nullopt);
+  PursuitLimits(const QLength& iwheelDiam, const QAngularSpeed& igearset, double imin,
+                const QTime& iaccel, double imax, const std::optional<QSpeed>& ik = std::nullopt);
 
   /**
    * Motor percentages. The robot's top speed is used to determine the limits. Time is used for

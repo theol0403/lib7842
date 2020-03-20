@@ -21,14 +21,12 @@ PursuitLimits::PursuitLimits(const QSpeed& iminVel, const QTime& iaccel, const Q
                              const std::optional<QSpeed>& ik) :
   PursuitLimits(iminVel, (imaxVel - iminVel) / iaccel, imaxVel, ik) {}
 
-PursuitLimits::PursuitLimits(const QLength& iwheelDiam, const Gearset& igearset, double imin,
+PursuitLimits::PursuitLimits(const QLength& iwheelDiam, const QAngularSpeed& igearset, double imin,
                              const QTime& iaccel, double imax, const QTime& idecel, double ifinal,
                              const std::optional<QSpeed>& ik) :
-  PursuitLimits(iwheelDiam * (toUnderlyingType(igearset.internalGearset) * igearset.ratio * rpm) /
-                  360_deg,
-                imin, iaccel, imax, idecel, ifinal, ik) {}
+  PursuitLimits(iwheelDiam * igearset / radian, imin, iaccel, imax, idecel, ifinal, ik) {}
 
-PursuitLimits::PursuitLimits(const QLength& iwheelDiam, const Gearset& igearset, double imin,
+PursuitLimits::PursuitLimits(const QLength& iwheelDiam, const QAngularSpeed& igearset, double imin,
                              const QTime& iaccel, double imax, const std::optional<QSpeed>& ik) :
   PursuitLimits(iwheelDiam, igearset, imin, iaccel, imax, iaccel, imin, ik) {}
 
