@@ -224,16 +224,6 @@ public:
    */
   bool isTurnSettled() const;
 
-  /**
-   * Return a trigger that points to this chassis.
-   */
-  Trigger trigger() const;
-
-  /**
-   * Return a settler that points to this chassis.
-   */
-  Settler settler() const;
-
 protected:
   /**
    * Reset the pid controllers, used before every motion

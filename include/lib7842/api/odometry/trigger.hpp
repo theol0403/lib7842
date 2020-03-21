@@ -11,8 +11,12 @@ class OdomController; // forward declare
 using namespace okapi;
 
 /**
- * A Trigger that returns true when certain requirements and exceptions are met. Used for settling
- * and async actions.
+ * A Trigger is a collection of functions that act as triggers. When all requirements are met, or
+ * any exceptions are met, then the Trigger will return true. Used for determining when to settle
+ * for PID movements and used for triggering async actions.
+ *
+ * A Trigger must point to a OdomController when the run() method is called. This pointer is passed
+ * when calling run().
  */
 class Trigger {
 public:
@@ -20,13 +24,6 @@ public:
   Trigger(const Trigger&) = delete;
   Trigger(Trigger&&) = default;
   virtual ~Trigger() = default;
-
-  /**
-   * Create a new Trigger object. Provides the controller pointer for later use.
-   *
-   * @param icontroller The icontroller
-   */
-  explicit Trigger(const OdomController* icontroller);
 
   /**
    * Add a requirement
@@ -125,24 +122,22 @@ public:
   virtual Trigger&& noAbort();
 
   /**
-   * Run all the requirements and exceptions. The controller is assumed to be provided by the
-   * constructor.
+   * Run all the requirements and exceptions.
    *
-   * @return Whether the trigger has been fired
-   */
-  virtual bool run();
-  virtual bool operator()();
-
-  /**
-   * Run all the requirements and exceptions, while providing a controller
-   *
-   * @param  icontroller The controller
+   * @param  icontroller The controller to run the requirements on.
    * @return Whether the trigger has been fired
    */
   virtual bool run(const OdomController* icontroller);
   virtual bool operator()(const OdomController* icontroller);
 
 protected:
+  /**
+   * Run all the requirements and exceptions. Assumes the controller has already been passed.
+   *
+   * @return Whether the trigger has been fired
+   */
+  virtual bool run();
+
   const OdomController* controller {nullptr};
 
   std::vector<std::function<bool()>> requirements;

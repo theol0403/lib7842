@@ -3,8 +3,6 @@
 
 namespace lib7842 {
 
-Trigger::Trigger(const OdomController* icontroller) : controller(icontroller) {}
-
 Trigger&& Trigger::requirement(std::function<bool()>&& function) {
   requirements.emplace_back(function);
   return std::move(*this);
@@ -85,17 +83,13 @@ bool Trigger::run() {
   return false;
 }
 
-bool Trigger::operator()() {
-  return run();
+bool Trigger::operator()(const OdomController* icontroller) {
+  return run(icontroller);
 }
 
 bool Trigger::run(const OdomController* icontroller) {
   controller = icontroller;
   return run();
-}
-
-bool Trigger::operator()(const OdomController* icontroller) {
-  return run(icontroller);
 }
 
 } // namespace lib7842
