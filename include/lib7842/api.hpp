@@ -14,8 +14,8 @@
 #include "lib7842/api/odometry/settler.hpp"
 #include "lib7842/api/odometry/trigger.hpp"
 
+#include "lib7842/api/async/taskWrapper.hpp"
 #include "lib7842/api/other/global.hpp"
-#include "lib7842/api/other/taskWrapper.hpp"
 #include "lib7842/api/other/units.hpp"
 #include "lib7842/api/other/utility.hpp"
 
