@@ -39,13 +39,13 @@ void OdomXController::strafeToPoint(const Vector& targetPoint,
   auto rate = global::getTimeUtil()->getRate();
   do {
     State state = getState();
-    distanceErr = state.distTo(targetPoint);
-    angleErr = angleCalculator(*this);
+    _distanceErr = state.distTo(targetPoint);
+    _angleErr = angleCalculator(*this);
 
     QAngle angleToTarget = angleToPoint(targetPoint);
 
-    double distanceVel = distanceController->step(-distanceErr.convert(millimeter));
-    double angleVel = angleController->step(-angleErr.convert(degree));
+    double distanceVel = distanceController->step(-_distanceErr.convert(millimeter));
+    double angleVel = angleController->step(-_angleErr.convert(degree));
 
     strafeVector(xModel, distanceVel, angleVel * turnScale, angleToTarget);
     rate->delayUntil(10_ms);

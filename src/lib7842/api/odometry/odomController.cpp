@@ -27,8 +27,8 @@ void OdomController::turn(const AngleCalculator& angleCalculator, const Turner& 
   resetPid();
   auto rate = global::getTimeUtil()->getRate();
   do {
-    angleErr = angleCalculator(*this);
-    double vel = turnController->step(-angleErr.convert(degree));
+    _angleErr = angleCalculator(*this);
+    double vel = turnController->step(-_angleErr.convert(degree));
     turner(*model, vel);
     rate->delayUntil(10_ms);
   } while (!settler(this));
@@ -61,11 +61,11 @@ void OdomController::moveDistanceAtAngle(const QLength& distance,
     QLength leftDistance = ((newTicks[0] - lastTicks[0]) / odometry->getScales().straight) * meter;
     QLength rightDistance = ((newTicks[1] - lastTicks[1]) / odometry->getScales().straight) * meter;
 
-    distanceErr = distance - ((leftDistance + rightDistance) / 2);
-    angleErr = angleCalculator(*this);
+    _distanceErr = distance - ((leftDistance + rightDistance) / 2);
+    _angleErr = angleCalculator(*this);
 
-    double distanceVel = distanceController->step(-distanceErr.convert(millimeter));
-    double angleVel = angleController->step(-angleErr.convert(degree));
+    double distanceVel = distanceController->step(-_distanceErr.convert(millimeter));
+    double angleVel = angleController->step(-_angleErr.convert(degree));
 
     driveVector(model, distanceVel, angleVel * turnScale);
     rate->delayUntil(10_ms);
@@ -98,19 +98,19 @@ void OdomController::driveToPoint(const Vector& targetPoint, double turnScale, T
     if (angleToClose.abs() >= 90_deg) distanceToClose = -distanceToClose;
 
     if (distanceToTarget.abs() < driveRadius) {
-      angleErr = 0_deg;
+      _angleErr = 0_deg;
       // used for settling
-      distanceErr = distanceToClose;
+      _distanceErr = distanceToClose;
     } else {
-      angleErr = angleToTarget;
+      _angleErr = angleToTarget;
       // used for settling
-      distanceErr = distanceToTarget;
+      _distanceErr = distanceToTarget;
     }
 
     // rotate angle to be +- 90
-    angleErr = wrapAngle90(angleErr);
+    _angleErr = wrapAngle90(_angleErr);
 
-    double angleVel = angleController->step(-angleErr.convert(degree));
+    double angleVel = angleController->step(-_angleErr.convert(degree));
     double distanceVel = distanceController->step(-distanceToClose.convert(millimeter));
 
     driveVector(model, distanceVel, angleVel * turnScale);
@@ -120,76 +120,6 @@ void OdomController::driveToPoint(const Vector& targetPoint, double turnScale, T
   driveVector(model, 0, 0);
 }
 
-void OdomController::driveToPoint2(const Vector& targetPoint, double turnScale, Trigger&& settler) {
-  resetPid();
-  auto rate = global::getTimeUtil()->getRate();
-  Trigger&& exitFunc = Trigger().distanceErr(driveRadius);
-  do {
-    State state = getState();
-    angleErr = state.angleTo(targetPoint);
-    distanceErr = state.distTo(targetPoint);
-
-    if (angleErr.abs() > 90_deg) distanceErr = -distanceErr;
-    angleErr = wrapAngle90(angleErr);
-
-    double angleVel = angleController->step(-angleErr.convert(degree));
-    double distanceVel = distanceController->step(-distanceErr.convert(millimeter));
-
-    driveVector(model, distanceVel, angleVel * turnScale);
-    rate->delayUntil(10_ms);
-  } while (!(exitFunc(this) || settler(this)));
-
-  moveDistanceAtAngle(distanceToPoint(targetPoint), makeAngleCalculator(angleToPoint(targetPoint)),
-                      turnScale, std::move(settler));
-  driveVector(model, 0, 0);
-}
-
-/**
- * Default Turners
- */
-void OdomController::pointTurn(ChassisModel& model, double vel) {
-  model.tank(vel, -vel);
-}
-
-void OdomController::leftPivot(ChassisModel& model, double vel) {
-  model.tank(vel * 2, 0);
-}
-
-void OdomController::rightPivot(ChassisModel& model, double vel) {
-  model.tank(0, -vel * 2);
-}
-
-/**
- * AngleCalculator Generators
- */
-AngleCalculator OdomController::makeAngleCalculator(const QAngle& angle) {
-  QAngle iangle = rollAngle180(angle);
-  return [=](const OdomController& odom) {
-    return rollAngle180(iangle - odom.getState().theta);
-  };
-}
-
-AngleCalculator OdomController::makeAngleCalculator(const Vector& point) {
-  return [=](const OdomController& odom) {
-    return odom.angleToPoint(point);
-  };
-}
-
-AngleCalculator OdomController::makeAngleCalculator(double error) {
-  return [=](const OdomController&) {
-    return error * degree;
-  };
-}
-
-AngleCalculator OdomController::makeAngleCalculator() {
-  return [=](const OdomController&) {
-    return 0_deg;
-  };
-}
-
-/**
- * OdomController utilities
- */
 State OdomController::getState() const {
   return State(odometry->getState(StateMode::CARTESIAN));
 }
@@ -203,11 +133,11 @@ QAngle OdomController::angleToPoint(const Vector& point) const {
 }
 
 QLength OdomController::getDistanceError() const {
-  return distanceErr;
+  return _distanceErr;
 }
 
 QAngle OdomController::getAngleError() const {
-  return angleErr;
+  return _angleErr;
 }
 
 bool OdomController::isDistanceSettled() const {
@@ -222,12 +152,103 @@ bool OdomController::isTurnSettled() const {
   return turnController->isSettled();
 }
 
+void OdomController::pointTurn(ChassisModel& model, double vel) {
+  model.tank(vel, -vel);
+}
+
+void OdomController::leftPivot(ChassisModel& model, double vel) {
+  model.tank(vel * 2, 0);
+}
+
+void OdomController::rightPivot(ChassisModel& model, double vel) {
+  model.tank(0, -vel * 2);
+}
+
+AngleCalculator OdomController::makeAngleCalculator(const QAngle& angle) {
+  QAngle iangle = rollAngle180(angle);
+  return [=](const OdomController& odom) {
+    return rollAngle180(iangle - odom.getState().theta);
+  };
+}
+
+AngleCalculator OdomController::makeAngleCalculator(const Vector& point) {
+  return [=](const OdomController& odom) {
+    return odom.angleToPoint(point);
+  };
+}
+
+AngleCalculator OdomController::makeAngleCalculator() {
+  return [=](const OdomController&) {
+    return 0_deg;
+  };
+}
+
+std::function<bool()> OdomController::distanceTo(const Vector& point, const QLength& trigger) {
+  return [=] {
+    return distanceToPoint(point) < trigger;
+  };
+}
+
+std::function<bool()> OdomController::angleTo(const Vector& point, const QAngle& trigger) {
+  return [=] {
+    return angleToPoint(point) < trigger;
+  };
+}
+
+std::function<bool()> OdomController::angleTo(const QAngle& angle, const QAngle& trigger) {
+  return [=] {
+    return (getState().theta - angle).abs() < trigger;
+  };
+}
+
+std::function<bool()> OdomController::distanceErr(const QLength& trigger) {
+  return [=] {
+    return getDistanceError() < trigger;
+  };
+}
+
+std::function<bool()> OdomController::angleErr(const QAngle& trigger) {
+  return [=] {
+    return getAngleError() < trigger;
+  };
+}
+
+std::function<bool()> OdomController::distanceSettled() {
+  return [=] {
+    return isDistanceSettled();
+  };
+}
+
+std::function<bool()> OdomController::turnSettled() {
+  return [=] {
+    return isTurnSettled();
+  };
+}
+
+std::function<bool()> OdomController::angleSettled() {
+  return [=] {
+    return isAngleSettled();
+  };
+}
+
+std::function<bool()> OdomController::distanceSettledUtil(const TimeUtil& timeUtil) {
+  return [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
+    return settledUtil->isSettled(getDistanceError().convert(millimeter));
+  };
+}
+
+std::function<bool()> OdomController::angleSettledUtil(const TimeUtil& timeUtil) {
+  return [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
+    return settledUtil->isSettled(getAngleError().convert(degree));
+  };
+}
+
 void OdomController::resetPid() {
   distanceController->reset();
   turnController->reset();
   angleController->reset();
-  distanceErr = 0_in;
-  angleErr = 0_deg;
+  _distanceErr = 0_in;
+  _angleErr = 0_deg;
 }
 
 } // namespace lib7842

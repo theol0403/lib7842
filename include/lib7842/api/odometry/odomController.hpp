@@ -254,14 +254,14 @@ public:
    * Trigger if the distance error is settled according to a given settled util. The error is in
    * millimeters.
    *
-   * @param timeUtil The timeUtil containing a settled util.
+   * @param timeUtil A timeUtil containing a settled util.
    */
   std::function<bool()> distanceSettledUtil(const TimeUtil& timeUtil);
 
   /**
    * Trigger if the angle error is settled according to a given settled util. The error is in degrees.
    *
-   * @param timeUtil The timeUtil containing a settled util.
+   * @param timeUtil A timeUtil containing a settled util.
    */
   std::function<bool()> angleSettledUtil(const TimeUtil& timeUtil);
 
@@ -278,7 +278,7 @@ protected:
   std::unique_ptr<IterativePosPIDController> turnController {nullptr};
   const QLength driveRadius;
 
-  QLength distanceErr = 0_in;
-  QAngle angleErr = 0_deg;
+  QLength _distanceErr = 0_in;
+  QAngle _angleErr = 0_deg;
 };
 } // namespace lib7842

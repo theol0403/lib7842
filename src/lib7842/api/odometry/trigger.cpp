@@ -13,52 +13,6 @@ Trigger&& Trigger::exception(std::function<bool()>&& function) {
   return std::move(*this);
 }
 
-Trigger&& Trigger::distanceTo(const Vector& point, const QLength& trigger) {
-  return requirement([=] { return controller->distanceToPoint(point) < trigger; });
-}
-
-Trigger&& Trigger::angleTo(const Vector& point, const QAngle& trigger) {
-  return requirement([=] { return controller->angleToPoint(point) < trigger; });
-}
-
-Trigger&& Trigger::angleTo(const QAngle& angle, const QAngle& trigger) {
-  return requirement([=] { return (controller->getState().theta - angle).abs() < trigger; });
-}
-
-Trigger&& Trigger::distanceErr(const QLength& trigger) {
-  return requirement([=] { return controller->getDistanceError() < trigger; });
-}
-
-Trigger&& Trigger::angleErr(const QAngle& trigger) {
-  return requirement([=] { return controller->getAngleError() < trigger; });
-}
-
-Trigger&& Trigger::distanceSettled() {
-  return requirement([=] { return controller->isDistanceSettled(); });
-}
-
-Trigger&& Trigger::turnSettled() {
-  return requirement([=] { return controller->isTurnSettled(); });
-}
-
-Trigger&& Trigger::angleSettled() {
-  return requirement([=] { return controller->isAngleSettled(); });
-}
-
-Trigger&& Trigger::distanceSettledUtil(const TimeUtil& timeUtil) {
-  return requirement(
-    [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
-      return settledUtil->isSettled(controller->getDistanceError().convert(millimeter));
-    });
-}
-
-Trigger&& Trigger::angleSettledUtil(const TimeUtil& timeUtil) {
-  return requirement(
-    [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
-      return settledUtil->isSettled(controller->getAngleError().convert(degree));
-    });
-}
-
 Trigger&& Trigger::maxTime(const QTime& time) {
   return exception(
     [=, timer = std::shared_ptr<AbstractTimer>(global::getTimeUtil()->getTimer())]() mutable {
