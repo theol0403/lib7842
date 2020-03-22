@@ -1,5 +1,4 @@
 #include "lib7842/api/odometry/trigger.hpp"
-#include "lib7842/api/odometry/odomController.hpp"
 
 namespace lib7842 {
 
@@ -8,22 +7,18 @@ Trigger&& Trigger::requirement(std::function<bool()>&& function) {
   return std::move(*this);
 }
 
+Trigger&& Trigger::needs(std::function<bool()>&& function) {
+  return requirement(std::move(function));
+}
+
 Trigger&& Trigger::exception(std::function<bool()>&& function) {
   exceptions.emplace_back(function);
   return std::move(*this);
 }
 
-Trigger&& Trigger::maxTime(const QTime& time) {
-  return exception(
-    [=, timer = std::shared_ptr<AbstractTimer>(global::getTimeUtil()->getTimer())]() mutable {
-      timer->placeHardMark();
-      return timer->getDtFromHardMark() >= time;
-    });
+Trigger&& Trigger::unless(std::function<bool()>&& function) {
+  return exception(std::move(function));
 }
-
-Trigger&& Trigger::noAbort() {
-  return std::move(*this);
-};
 
 bool Trigger::run() {
   if (std::any_of(exceptions.begin(), exceptions.end(),
@@ -37,13 +32,11 @@ bool Trigger::run() {
   return false;
 }
 
-bool Trigger::operator()(const OdomController* icontroller) {
-  return run(icontroller);
-}
-
-bool Trigger::run(const OdomController* icontroller) {
-  controller = icontroller;
-  return run();
+std::function<bool()> Trigger::timePassed(const QTime& time) {
+  return [=, timer = std::shared_ptr<AbstractTimer>(global::getTimeUtil()->getTimer())]() mutable {
+    timer->placeHardMark();
+    return timer->getDtFromHardMark() >= time;
+  };
 }
 
 } // namespace lib7842
