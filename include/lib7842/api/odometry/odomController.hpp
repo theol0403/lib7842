@@ -89,7 +89,7 @@ public:
                            Trigger&& settler = Trigger().turnSettled());
 
   /**
-   * Drive a distance while correcting angle using an AngleCalculator.
+   * Drive a distance while mantaining angle using an AngleCalculator. This method should not be directly called, instead use moveDistance which creates an AngleCalculator to the current heading.
    *
    * @param distance        The distance
    * @param angleCalculator The angle calculator
@@ -110,7 +110,7 @@ public:
                             Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
-   * Drive to a point using custom point seeking.
+   * Drive to a point using custom point seeking. This method computes how much to turn and drive depending on how the robot is facing the point.
    *
    * @param targetPoint The target point
    * @param turnScale   The turn scale used to control the priority of turning over driving. A
@@ -121,112 +121,153 @@ public:
                             Trigger&& settler = Settler().distanceSettled().angleSettled());
 
   /**
-   * Drive to a point using simple point seeking.
-   *
-   * @param targetPoint The target point
-   * @param turnScale   The turn scale used to control the priority of turning over driving. A
-   *                    higher value will make the robot turn to face the point sooner
-   * @param settler     The settler
-   */
-  virtual void driveToPoint2(const Vector& targetPoint, double turnScale = 1,
-                             Trigger&& settler = Settler().distanceSettled().angleSettled());
-
-  /**
-   * A Turner that executes a point turn which turns in place. Used as default for turn functions.
-   */
-  static void pointTurn(ChassisModel& model, double vel);
-
-  /**
-   * A Turner that executes a left pivot, meaning it only moves the left motors.
-   */
-  static void leftPivot(ChassisModel& model, double vel);
-
-  /**
-   * A Turner that executes a right pivot, meaning it only moves the right motors.
-   */
-  static void rightPivot(ChassisModel& model, double vel);
-
-  /**
-   * Make an AngleCalculator that seeks a given absolute angle.
-   *
-   * @param angle The angle
-   */
-  static AngleCalculator makeAngleCalculator(const QAngle& angle);
-
-  /**
-   * Make an AngleCalculator that seeks a given point.
-   *
-   * @param point The point
-   */
-  static AngleCalculator makeAngleCalculator(const Vector& point);
-
-  /**
-   * Make an AngleCalculator that returns a constant error. The default settler needs to be changed
-   * for a command using this calculator to settle.
-   *
-   * @param  error The error
-   * @return The angle calculator
-   */
-  static AngleCalculator makeAngleCalculator(double error);
-
-  /**
-   * Make an AngleCalculator that does nothing.
-   */
-  static AngleCalculator makeAngleCalculator();
-
-  /**
    * Get the odometry state.
    */
   State getState() const;
 
   /**
-   * Calculate distance from the chassis to the point.
+   * Get distance from the chassis to the point.
    */
   QLength distanceToPoint(const Vector& point) const;
 
   /**
-   * Calculate angle from the chassis to the point
+   * Get angle from the chassis to the point
    */
   QAngle angleToPoint(const Vector& point) const;
 
   /**
    * Get the error of the distance PID controller.
-   *
-   * @return The distance error
    */
   QLength getDistanceError() const;
 
   /**
    * Get the error of the angle or turn PID controller.
-   *
-   * @return The angle error
    */
   QAngle getAngleError() const;
 
   /**
-   * Determines if the distance PID controller is settled.
-   *
+   * Determine if the distance PID controller is settled.
    * @return true if settled, false otherwise
    */
   bool isDistanceSettled() const;
 
   /**
-   * Determines if the angle PID controller is settled.
-   *
+   * Determine if the angle PID controller is settled.
    * @return true if settled, false otherwise
    */
   bool isAngleSettled() const;
 
   /**
-   * Determines if the turn PID controller is settled.
-   *
+   * Determine if the turn PID controller is settled.
    * @return true if settled, false otherwise
    */
   bool isTurnSettled() const;
 
+  /**
+   * Make a Turner that executes a point turn which turns in place. Used as default for turn functions.
+   */
+  static void pointTurn(ChassisModel& model, double vel);
+
+  /**
+   * Make a Turner that executes a left pivot, meaning it only moves the left motors.
+   */
+  static void leftPivot(ChassisModel& model, double vel);
+
+  /**
+   * Make a Turner that executes a right pivot, meaning it only moves the right motors.
+   */
+  static void rightPivot(ChassisModel& model, double vel);
+
+  /**
+   * Make an AngleCalculator that seeks an absolute angle.
+   *
+   * @param angle The angle to seek.
+   */
+  static AngleCalculator makeAngleCalculator(const QAngle& angle);
+
+  /**
+   * Make an AngleCalculator that seeks a point.
+   *
+   * @param point The point to seek.
+   */
+  static AngleCalculator makeAngleCalculator(const Vector& point);
+
+  /**
+   * Make an AngleCalculator that does nothing. This is the default AngleCalculator.
+   */
+  static AngleCalculator makeAngleCalculator();
+
+  /**
+   * Trigger if the distance to a point is within a value.
+   *
+   * @param point   The point
+   * @param trigger The distance to the point.
+   */
+  std::function<bool()> distanceTo(const Vector& point, const QLength& trigger);
+
+  /**
+   * Trigger if the angle to a point is within a value.
+   *
+   * @param point   The point
+   * @param trigger The angle to the point.
+   */
+  std::function<bool()> angleTo(const Vector& point, const QAngle& trigger);
+
+  /**
+   * Trigger if the angle to an absolute angle is within a value.
+   *
+   * @param angle   The absolute angle
+   * @param trigger The angle to the absolute angle.
+   */
+  std::function<bool()> angleTo(const QAngle& angle, const QAngle& trigger);
+
+  /**
+   * Trigger if the distance error of the controller is within a value.
+   *
+   * @param trigger The distance error.
+   */
+  std::function<bool()> distanceErr(const QLength& trigger);
+
+  /**
+   * Trigger if the angle error of the controller is within a value.
+   *
+   * @param trigger The angle error.
+   */
+  std::function<bool()> angleErr(const QAngle& trigger);
+
+  /**
+   * Trigger if the distance controller is settled.
+   */
+  std::function<bool()> distanceSettled();
+
+  /**
+   * Trigger if the turn controller is settled.
+   */
+  std::function<bool()> turnSettled();
+
+  /**
+   * Trigger if the angle controller is settled.
+   */
+  std::function<bool()> angleSettled();
+
+  /**
+   * Trigger if the distance error is settled according to a given settled util. The error is in
+   * millimeters.
+   *
+   * @param timeUtil The timeUtil containing a settled util.
+   */
+  std::function<bool()> distanceSettledUtil(const TimeUtil& timeUtil);
+
+  /**
+   * Trigger if the angle error is settled according to a given settled util. The error is in degrees.
+   *
+   * @param timeUtil The timeUtil containing a settled util.
+   */
+  std::function<bool()> angleSettledUtil(const TimeUtil& timeUtil);
+
 protected:
   /**
-   * Reset the pid controllers, used before every motion
+   * Reset the pid controllers, used before every motion.
    */
   virtual void resetPid();
 
