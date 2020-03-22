@@ -56,7 +56,7 @@ public:
    * @param settler         The settler
    */
   virtual void turn(const AngleCalculator& angleCalculator, const Turner& turner = pointTurn,
-                    Trigger&& settler = Trigger().turnSettled());
+                    Settler&& settler = Settler().turnSettled());
 
   /**
    * Turn the chassis to face an absolute angle.
@@ -66,7 +66,7 @@ public:
    * @param settler The settler
    */
   virtual void turnToAngle(const QAngle& angle, const Turner& turner = pointTurn,
-                           Trigger&& settler = Trigger().turnSettled());
+                           Settler&& settler = Settler().turnSettled());
 
   /**
    * Turn the chassis to face a relative angle.
@@ -76,7 +76,7 @@ public:
    * @param settler The settler
    */
   virtual void turnAngle(const QAngle& angle, const Turner& turner = pointTurn,
-                         Trigger&& settler = Trigger().turnSettled());
+                         Settler&& settler = Settler().turnSettled());
 
   /**
    * Turn the chassis to face a point.
@@ -86,7 +86,7 @@ public:
    * @param settler The settler
    */
   virtual void turnToPoint(const Vector& point, const Turner& turner = pointTurn,
-                           Trigger&& settler = Trigger().turnSettled());
+                           Settler&& settler = Settler().turnSettled());
 
   /**
    * Drive a distance while mantaining angle using an AngleCalculator. This method should not be directly called, instead use moveDistance which creates an AngleCalculator to the current heading.
@@ -98,7 +98,7 @@ public:
    */
   virtual void moveDistanceAtAngle(const QLength& distance, const AngleCalculator& angleCalculator,
                                    double turnScale,
-                                   Trigger&& settler = Settler().distanceSettled().angleSettled());
+                                   Settler&& settler = Settler().distanceSettled().angleSettled());
 
   /**
    * Drive a distance while maintaining starting angle.
@@ -107,7 +107,7 @@ public:
    * @param settler  The settler
    */
   virtual void moveDistance(const QLength& distance,
-                            Trigger&& settler = Settler().distanceSettled().angleSettled());
+                            Settler&& settler = Settler().distanceSettled().angleSettled());
 
   /**
    * Drive to a point using custom point seeking. This method computes how much to turn and drive depending on how the robot is facing the point.
@@ -118,7 +118,7 @@ public:
    * @param settler     The settler
    */
   virtual void driveToPoint(const Vector& targetPoint, double turnScale = 1,
-                            Trigger&& settler = Settler().distanceSettled().angleSettled());
+                            Settler&& settler = Settler().distanceSettled().angleSettled());
 
   /**
    * Get the odometry state.
@@ -198,60 +198,60 @@ public:
   static AngleCalculator makeAngleCalculator();
 
   /**
-   * Trigger if the distance to a point is within a value.
+   * Settler if the distance to a point is within a value.
    *
    * @param point   The point
-   * @param trigger The distance to the point.
+   * @param Settler The distance to the point.
    */
-  std::function<bool()> distanceTo(const Vector& point, const QLength& trigger);
+  std::function<bool()> distanceTo(const Vector& point, const QLength& Settler);
 
   /**
-   * Trigger if the angle to a point is within a value.
+   * Settler if the angle to a point is within a value.
    *
    * @param point   The point
-   * @param trigger The angle to the point.
+   * @param Settler The angle to the point.
    */
-  std::function<bool()> angleTo(const Vector& point, const QAngle& trigger);
+  std::function<bool()> angleTo(const Vector& point, const QAngle& Settler);
 
   /**
-   * Trigger if the angle to an absolute angle is within a value.
+   * Settler if the angle to an absolute angle is within a value.
    *
    * @param angle   The absolute angle
-   * @param trigger The angle to the absolute angle.
+   * @param Settler The angle to the absolute angle.
    */
-  std::function<bool()> angleTo(const QAngle& angle, const QAngle& trigger);
+  std::function<bool()> angleTo(const QAngle& angle, const QAngle& Settler);
 
   /**
-   * Trigger if the distance error of the controller is within a value.
+   * Settler if the distance error of the controller is within a value.
    *
-   * @param trigger The distance error.
+   * @param Settler The distance error.
    */
-  std::function<bool()> distanceErr(const QLength& trigger);
+  std::function<bool()> distanceErr(const QLength& Settler);
 
   /**
-   * Trigger if the angle error of the controller is within a value.
+   * Settler if the angle error of the controller is within a value.
    *
-   * @param trigger The angle error.
+   * @param Settler The angle error.
    */
-  std::function<bool()> angleErr(const QAngle& trigger);
+  std::function<bool()> angleErr(const QAngle& Settler);
 
   /**
-   * Trigger if the distance controller is settled.
+   * Settler if the distance controller is settled.
    */
   std::function<bool()> distanceSettled();
 
   /**
-   * Trigger if the turn controller is settled.
+   * Settler if the turn controller is settled.
    */
   std::function<bool()> turnSettled();
 
   /**
-   * Trigger if the angle controller is settled.
+   * Settler if the angle controller is settled.
    */
   std::function<bool()> angleSettled();
 
   /**
-   * Trigger if the distance error is settled according to a given settled util. The error is in
+   * Settler if the distance error is settled according to a given settled util. The error is in
    * millimeters.
    *
    * @param timeUtil A timeUtil containing a settled util.
@@ -259,7 +259,7 @@ public:
   std::function<bool()> distanceSettledUtil(const TimeUtil& timeUtil);
 
   /**
-   * Trigger if the angle error is settled according to a given settled util. The error is in degrees.
+   * Settler if the angle error is settled according to a given settled util. The error is in degrees.
    *
    * @param timeUtil A timeUtil containing a settled util.
    */

@@ -22,7 +22,7 @@ OdomController::OdomController(const std::shared_ptr<ChassisModel>& imodel,
  * Turning API
  */
 void OdomController::turn(const AngleCalculator& angleCalculator, const Turner& turner,
-                          Trigger&& settler) {
+                          Settler&& settler) {
   settler.noAbort(); // distance pid does not output with this algorithm
   resetPid();
   auto rate = global::getTimeUtil()->getRate();
@@ -35,15 +35,15 @@ void OdomController::turn(const AngleCalculator& angleCalculator, const Turner& 
   turner(*model, 0);
 }
 
-void OdomController::turnToAngle(const QAngle& angle, const Turner& turner, Trigger&& settler) {
+void OdomController::turnToAngle(const QAngle& angle, const Turner& turner, Settler&& settler) {
   turn(makeAngleCalculator(angle), turner, std::move(settler));
 }
 
-void OdomController::turnAngle(const QAngle& angle, const Turner& turner, Trigger&& settler) {
+void OdomController::turnAngle(const QAngle& angle, const Turner& turner, Settler&& settler) {
   turn(makeAngleCalculator(angle + getState().theta), turner, std::move(settler));
 }
 
-void OdomController::turnToPoint(const Vector& point, const Turner& turner, Trigger&& settler) {
+void OdomController::turnToPoint(const Vector& point, const Turner& turner, Settler&& settler) {
   turn(makeAngleCalculator(point), turner, std::move(settler));
 }
 
@@ -52,7 +52,7 @@ void OdomController::turnToPoint(const Vector& point, const Turner& turner, Trig
  */
 void OdomController::moveDistanceAtAngle(const QLength& distance,
                                          const AngleCalculator& angleCalculator, double turnScale,
-                                         Trigger&& settler) {
+                                         Settler&& settler) {
   resetPid();
   auto rate = global::getTimeUtil()->getRate();
   auto lastTicks = model->getSensorVals();
@@ -74,14 +74,14 @@ void OdomController::moveDistanceAtAngle(const QLength& distance,
   driveVector(model, 0, 0);
 }
 
-void OdomController::moveDistance(const QLength& distance, Trigger&& settler) {
+void OdomController::moveDistance(const QLength& distance, Settler&& settler) {
   moveDistanceAtAngle(distance, makeAngleCalculator(getState().theta), 1, std::move(settler));
 }
 
 /**
  * Point API
  */
-void OdomController::driveToPoint(const Vector& targetPoint, double turnScale, Trigger&& settler) {
+void OdomController::driveToPoint(const Vector& targetPoint, double turnScale, Settler&& settler) {
   resetPid();
   auto rate = global::getTimeUtil()->getRate();
   do {
@@ -183,33 +183,33 @@ AngleCalculator OdomController::makeAngleCalculator() {
   };
 }
 
-std::function<bool()> OdomController::distanceTo(const Vector& point, const QLength& trigger) {
+std::function<bool()> OdomController::distanceTo(const Vector& point, const QLength& Settler) {
   return [=] {
-    return distanceToPoint(point) < trigger;
+    return distanceToPoint(point) < Settler;
   };
 }
 
-std::function<bool()> OdomController::angleTo(const Vector& point, const QAngle& trigger) {
+std::function<bool()> OdomController::angleTo(const Vector& point, const QAngle& Settler) {
   return [=] {
-    return angleToPoint(point) < trigger;
+    return angleToPoint(point) < Settler;
   };
 }
 
-std::function<bool()> OdomController::angleTo(const QAngle& angle, const QAngle& trigger) {
+std::function<bool()> OdomController::angleTo(const QAngle& angle, const QAngle& Settler) {
   return [=] {
-    return (getState().theta - angle).abs() < trigger;
+    return (getState().theta - angle).abs() < Settler;
   };
 }
 
-std::function<bool()> OdomController::distanceErr(const QLength& trigger) {
+std::function<bool()> OdomController::distanceErr(const QLength& Settler) {
   return [=] {
-    return getDistanceError() < trigger;
+    return getDistanceError() < Settler;
   };
 }
 
-std::function<bool()> OdomController::angleErr(const QAngle& trigger) {
+std::function<bool()> OdomController::angleErr(const QAngle& Settler) {
   return [=] {
-    return getAngleError() < trigger;
+    return getAngleError() < Settler;
   };
 }
 
