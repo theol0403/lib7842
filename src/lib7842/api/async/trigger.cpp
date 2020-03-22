@@ -1,4 +1,4 @@
-#include "lib7842/api/odometry/trigger.hpp"
+#include "lib7842/api/async/trigger.hpp"
 
 namespace lib7842 {
 

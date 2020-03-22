@@ -1,5 +1,6 @@
 #pragma once
-#include "trigger.hpp"
+#include "lib7842/api/async/trigger.hpp"
+#include "okapi/api/units/QLength.hpp"
 
 namespace lib7842 {
 
@@ -26,7 +27,7 @@ public:
   /**
    * Remove any abort that has been set. Automatically gets called by turn commands.
    */
-  Settler&& noAbort() override;
+  Settler&& noAbort();
 
   /**
    * Check the abort, then run all the requirements and exceptions.
