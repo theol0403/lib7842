@@ -10,15 +10,15 @@ State::State(const QLength& ix, const QLength& iy, const QAngle& itheta) :
   Vector(ix, iy), theta(itheta) {}
 
 /**
- * State Constructor 
- * Upcast Vector 
+ * State Constructor
+ * Upcast Vector
  */
 State::State(const Vector& ipoint) : Vector(ipoint) {};
 State::State(const Vector& ipoint, const QAngle& itheta) : Vector(ipoint), theta(itheta) {};
 
 /**
- * State Constructor 
- * Upcast OdomState 
+ * State Constructor
+ * Upcast OdomState
  */
 State::State(const OdomState& ipoint) : State(ipoint.x, ipoint.y, ipoint.theta) {};
 

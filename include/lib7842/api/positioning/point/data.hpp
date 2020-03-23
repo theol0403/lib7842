@@ -16,7 +16,7 @@ using DataPoint = Data<Vector>;
 using DataState = Data<State>;
 
 /**
- * A class that contains information of any type. 
+ * A class that contains information of any type.
  */
 template <typename T> class Data : public T {
 public:

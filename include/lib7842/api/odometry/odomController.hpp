@@ -89,7 +89,9 @@ public:
                            Settler&& settler = Settler().turnSettled());
 
   /**
-   * Drive a distance while mantaining angle using an AngleCalculator. This method should not be directly called, instead use moveDistance which creates an AngleCalculator to the current heading.
+   * Drive a distance while mantaining angle using an AngleCalculator. This method should not be
+   * directly called, instead use moveDistance which creates an AngleCalculator to the current
+   * heading.
    *
    * @param distance        The distance
    * @param angleCalculator The angle calculator
@@ -110,7 +112,8 @@ public:
                             Settler&& settler = Settler().distanceSettled().angleSettled());
 
   /**
-   * Drive to a point using custom point seeking. This method computes how much to turn and drive depending on how the robot is facing the point.
+   * Drive to a point using custom point seeking. This method computes how much to turn and drive
+   * depending on how the robot is facing the point.
    *
    * @param targetPoint The target point
    * @param turnScale   The turn scale used to control the priority of turning over driving. A
@@ -164,7 +167,8 @@ public:
   bool isTurnSettled() const;
 
   /**
-   * Make a Turner that executes a point turn which turns in place. Used as default for turn functions.
+   * Make a Turner that executes a point turn which turns in place. Used as default for turn
+   * functions.
    */
   static void pointTurn(ChassisModel& model, double vel);
 
@@ -259,7 +263,8 @@ public:
   std::function<bool()> distanceSettledUtil(const TimeUtil& timeUtil);
 
   /**
-   * Settler if the angle error is settled according to a given settled util. The error is in degrees.
+   * Settler if the angle error is settled according to a given settled util. The error is in
+   * degrees.
    *
    * @param timeUtil A timeUtil containing a settled util.
    */

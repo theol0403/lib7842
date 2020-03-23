@@ -35,8 +35,8 @@ Odom& Odom::attachResetter(const std::function<void()>& iresetter) {
 
 void Odom::initializeField() {
   /**
-  * Field
-  */
+   * Field
+   */
   lv_obj_t* field = lv_obj_create(container, NULL);
   fieldDim = std::min(lv_obj_get_width(container), lv_obj_get_height(container));
   lv_obj_set_size(field, fieldDim, fieldDim);
@@ -145,8 +145,8 @@ void Odom::initializeText() {
 
 void Odom::initializeButton() {
   /**
-  * Button
-  */
+   * Button
+   */
   lv_obj_t* btn = lv_btn_create(container, NULL);
   lv_obj_set_size(btn, 100, 40);
   lv_obj_align(btn, NULL, LV_ALIGN_IN_TOP_MID,

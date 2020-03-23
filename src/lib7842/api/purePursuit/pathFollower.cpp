@@ -213,7 +213,7 @@ std::optional<double> PathFollower::findIntersectT(const Vector& start, const Ve
     }
   }
 
-  //no intersection on this interval
+  // no intersection on this interval
   return std::nullopt;
 }
 

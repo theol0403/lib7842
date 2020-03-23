@@ -33,7 +33,8 @@ void CustomOdometry::step() {
   // Update the last values
   lastTicks = newTicks;
 
-  // The hypotenuse of the triangle formed by the middle of the robot on the starting position and ending position and the middle of the circle it travels around
+  // The hypotenuse of the triangle formed by the middle of the robot on the starting position and
+  // ending position and the middle of the circle it travels around
   double h;
   double i; // Half on the angle that I've traveled
   double h2; // The same as h but using the back instead of the side wheels

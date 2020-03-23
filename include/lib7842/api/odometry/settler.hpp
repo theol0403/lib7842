@@ -9,9 +9,10 @@ namespace lib7842 {
 class OdomController;
 
 /**
- * Settler is a Trigger that has an emergency abort which can be added or removed. It uses a
- * SettledUtil on the derivative of an OdomController's distance error. Used to abort a movement
- * when the distance error does not change for a long time.
+ * Settler is a Trigger that is specific to driving. Methods can be passed that has an emergency
+ * abort which can be added or removed. It uses a SettledUtil on the derivative of an
+ * OdomController's distance error. Used to abort a movement when the distance error does not change
+ * for a long time.
  *
  * By default, Settlers have no abort. However, it is possible to specify the default abort
  * parameters, as well override individual aborts.
@@ -82,7 +83,8 @@ public:
   Settler&& distanceSettledUtil(const TimeUtil& timeUtil);
 
   /**
-   * Require that the angle error is settled according to a given settled util. The error is in degrees.
+   * Require that the angle error is settled according to a given settled util. The error is in
+   * degrees.
    *
    * @param timeUtil A timeUtil containing a settled util.
    */

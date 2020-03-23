@@ -17,7 +17,8 @@ public:
   static PursuitPath generate(const SimplePath& ipath, const PursuitLimits& limits);
 
   /**
-   * Generate a PursuitPath containing waypoint information for pure pursuit and heading information.
+   * Generate a PursuitPath containing waypoint information for pure pursuit and heading
+   * information.
    *
    * @param  ipath  The path
    * @param  limits The pure pursuit limits
