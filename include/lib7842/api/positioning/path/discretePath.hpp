@@ -1,7 +1,7 @@
 #pragma once
 #include "abstractPath.hpp"
 
-#include "lib7842/api/positioning/point/dataPoint.hpp"
+#include "lib7842/api/positioning/point/data.hpp"
 #include "lib7842/api/positioning/point/mathPoint.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
@@ -26,7 +26,7 @@ using StatePath = DiscretePath<State>;
  *
  * @tparam T The point type.
  */
-template <typename T> class DiscretePath : public AbstractPath {
+template <typename T> class DiscretePath : public PathHelper<DiscretePath<T>> {
 public:
   DiscretePath() = default;
 
@@ -40,24 +40,25 @@ public:
    *
    * @param ipath The array of points
    */
-  explicit DiscretePath(const std::vector<T>& ipath) {
+  DiscretePath(const std::vector<T>& ipath) {
     path.reserve(ipath.size());
     std::transform(ipath.begin(), ipath.end(), std::back_inserter(path),
-                   [](const auto& ipoint) { return std::make_shared<T>(ipoint); });
+                   [](auto&& ipoint) { return std::make_shared<T>(ipoint); });
   }
 
-  explicit DiscretePath(std::vector<T>&& ipath) {
-    path.reserve(ipath.size());
-    std::transform(ipath.begin(), ipath.end(), std::back_inserter(path),
-                   [](auto&& ipoint) { return std::make_shared<T>(std::move(ipoint)); });
-  }
+  /**
+   * Create a path using an array of points. The points will be reallocated as shared pointers.
+   *
+   * @param ipath The array of points
+   */
+  DiscretePath(const std::initializer_list<T>& ipath) : DiscretePath(std::vector<T>(ipath)) {}
 
   /**
    * Create a path using an array of shared pointers.
    *
    * @param ipath The array of shared pointers
    */
-  explicit DiscretePath(const array_t& ipath) : path(ipath) {}
+  DiscretePath(const array_t& ipath) : path(ipath) {}
 
   /**
    * Construct a DiscretePath from any other type of DiscretePath. It will only convert if C is
@@ -75,7 +76,7 @@ public:
   }
 
   /**
-   * Get the underlying array.
+   * Get the underlying array of pointers.
    */
   array_t& get() {
     return path;
@@ -86,7 +87,7 @@ public:
   }
 
   /**
-   * Get the underlying array using the () operator.
+   * Get the underlying array of pointers using the () operator.
    */
   array_t& operator()() {
     return path;
@@ -111,10 +112,15 @@ public:
   }
 
   /**
-   * Smoothen the path
+   * Smoothen the path. This is a very expensive operation that smooths the points in the path. The
+   * first parameter is how important each point is - a lower value means more smoothing. The second
+   * parameter is how much variance between the distances of the points is allowed. A smaller value
+   * will stretch the points out and make a more even path. Instead of using this function, use this
+   * path as the input to QuinticSpline, which does a better job of smoothing.
    *
-   * @param iweight    The smooth weight
-   * @param itolerance The smooth tolerance
+   * @param  iweight    The smooth weight
+   * @param  itolerance The smooth tolerance
+   * @return itself, which has been smoothed.
    */
   DiscretePath<T>& smoothen(double iweight, const QLength& itolerance) {
     auto temp = copy();
@@ -138,46 +144,21 @@ public:
   }
 
   /**
-   * Interpolate the path using distance sampling.
+   * Interpolate the path, using arithmetic operators. If T implements custom operators, then
+   * any extra information will be preserved and interpolated.
    *
-   * @param  iresolution The distance between each point
-   * @return The generated path
+   * @param  isteps How many points to interpolate per segment, counting from the start to just
+   *                before the end of the segment. This means is 1 step will return the first point
+   *                and 2 steps will return the first point as well as a midway point. The end point
+   *                is not included in the count.
+   * @param  iend   Whether to return the end of the segment. This can be turned off to prevent the
+   *                start of the next segment from being redundant.
+   * @return generated path
    */
-  SimplePath generate(const QLength& iresolution) const {
-    SimplePath temp;
+  DiscretePath<T> generateT(int isteps = 1, bool iend = true) const {
+    if (isteps < 1) throw std::runtime_error("DiscretePath<T>::generate: isteps is less than 1");
 
-    for (size_t i = 0; i < path.size() - 1; i++) {
-      Vector& start = *path[i];
-      Vector& end = *path[i + 1];
-
-      Vector diff = end - start;
-      size_t steps = std::ceil(MathPoint::mag(diff) / iresolution.convert(meter));
-      Vector step = diff / steps;
-
-      temp().reserve(temp().size() + steps);
-      for (size_t j = 0; j < steps; j++) {
-        temp().emplace_back(std::make_shared<Vector>(start + (step * j)));
-      }
-    }
-
-    // if path is more than 1 point - return last point
-    if (path.size() > 0) temp().emplace_back(std::make_shared<Vector>(*path.back()));
-
-    return temp;
-  }
-
-  /**
-   * Interpolate the path
-   *
-   * @param  isteps The number of points to interpolate per segment. In the case of DiscretePath, a
-   *                segment is defined as the section between two control points, starting from the
-   *                first point.
-   * @return The generated path
-   */
-  SimplePath generate(const int isteps = 1) const override {
-    if (isteps < 1) throw std::runtime_error("SimplePath::generate: isteps is less than 1");
-
-    SimplePath temp;
+    DiscretePath<T> temp;
     if (path.size() > 0) temp().reserve((isteps * (path.size() - 1)) + 1);
 
     // if path is more than 2 points - interpolation needed
@@ -186,37 +167,89 @@ public:
       for (size_t i = 0; i < path.size() - 1; i++) {
         // if interpolation needed
         if (isteps > 1) {
-          Vector& start = *path[i];
-          Vector& end = *path[i + 1];
+          auto& start = *path[i];
+          auto& end = *path[i + 1];
 
-          Vector diff = end - start;
-          Vector step = diff / isteps;
+          auto diff = end - start;
+          auto step = diff / isteps;
 
           temp().reserve(temp().size() + isteps);
           for (size_t j = 0; j < isteps; j++) {
-            temp().emplace_back(std::make_shared<Vector>(start + (step * j)));
+            temp().emplace_back(std::make_shared<T>(start + (step * j)));
           }
         } else {
           // interpolation not needed
-          temp().emplace_back(std::make_shared<Vector>(*path[i]));
+          temp().emplace_back(std::make_shared<T>(*path[i]));
         }
       }
     }
 
-    // if path is more than 1 point - return last point
-    if (path.size() > 0) temp().emplace_back(std::make_shared<Vector>(*path.back()));
+    // if the path is more than 1 point and the end point is required - return last point
+    // if there is only one point, always return it
+    if ((iend && path.size() > 0) || path.size() == 1)
+      temp().emplace_back(std::make_shared<T>(*path.back()));
     return temp;
   }
 
   /**
-   * Implictly convert path to a shared pointer
+   * Interpolate the path using distance-based sampling. Uses arithmetic operators, so if T
+   * implements custom operators any extra information will be preserved and interpolated.
+   *
+   * @param  iresolution How far apart to make each point.
+   * @param  iend        Whether to return the end of the segment. This can be turned off to prevent
+   *                     the start of the next segment from being redundant.
+   * @return generated path
    */
-  operator std::shared_ptr<AbstractPath>() & override {
-    return std::make_shared<DiscretePath<T>>(*this);
+  DiscretePath<T> generateT(const QLength& iresolution, bool iend = true) const {
+    DiscretePath<T> temp;
+
+    for (size_t i = 0; i < path.size() - 1; i++) {
+      auto& start = *path[i];
+      auto& end = *path[i + 1];
+
+      auto diff = end - start;
+      size_t steps = std::ceil(MathPoint::mag(diff) / iresolution.convert(meter));
+      auto step = diff / steps;
+
+      temp().reserve(temp().size() + steps);
+      for (size_t j = 0; j < steps; j++) {
+        temp().emplace_back(std::make_shared<T>(start + (step * j)));
+      }
+    }
+
+    // if the path is more than 1 point and the end point is required - return last point
+    // if there is only one point, always return it
+    if ((iend && path.size() > 0) || path.size() == 1)
+      temp().emplace_back(std::make_shared<T>(*path.back()));
+
+    return temp;
   }
 
-  operator std::shared_ptr<AbstractPath>() && override {
-    return std::make_shared<DiscretePath<T>>(std::move(*this));
+  /**
+   * Interpolate the path
+   *
+   * @param  isteps How many points to interpolate per segment, counting from the start to just
+   *                before the end of the segment. This means is 1 step will return the first point
+   *                and 2 steps will return the first point as well as a midway point. The end point
+   *                is not included in the count.
+   * @param  iend   Whether to return the end of the segment. This can be turned off to prevent the
+   *                start of the next segment from being redundant.
+   * @return generated path
+   */
+  SimplePath generate(int isteps = 1, bool iend = true) const override {
+    return SimplePath(generateT(isteps, iend));
+  }
+
+  /**
+   * Interpolate the path using distance-based sampling.
+   *
+   * @param  iresolution How far apart to make each point.
+   * @param  iend        Whether to return the end of the segment. This can be turned off to prevent
+   *                     the start of the next segment from being redundant.
+   * @return generated path
+   */
+  SimplePath generate(const QLength& iresolution, bool iend = true) const {
+    return SimplePath(generateT(iresolution, iend));
   }
 
 protected:

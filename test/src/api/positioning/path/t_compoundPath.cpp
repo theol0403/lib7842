@@ -21,7 +21,7 @@ SCENARIO("CompoundPath test") {
         path.add(SimplePath({point1}));
 
         GIVEN("a simple path generated from the compound path") {
-          SimplePath ipath = path.generate();
+          SimplePath ipath = path.combine();
 
           THEN("the size of the path should be four") {
             REQUIRE(ipath().size() == 4);
@@ -68,7 +68,7 @@ SCENARIO("CompoundPath test") {
               + segment5; // make copy
 
       GIVEN("a simple path generated from the compound path") {
-        SimplePath ipath = path.generate();
+        SimplePath ipath = path.combine();
 
         THEN("the size of the path should be eight") {
           REQUIRE(ipath().size() == 8);
@@ -84,10 +84,10 @@ SCENARIO("CompoundPath test") {
 
     GIVEN("a whole bunch of points and segments added concisely in increasing order") {
       path.add(SimplePath({{1_in, 2_in}}));
-      path.add(SimplePath({{2_in, 3_in}, {3_in, 4_in}}));
+      path.add(SimplePath({{2_in, 3_in}, {3_in, 4_in}, {4_in, 5_in}}));
 
-      CompoundPath segment1 = CompoundPath() + SimplePath({{4_in, 5_in}, {5_in, 6_in}});
-      CompoundPath segment2 = CompoundPath() + StatePath({{6_in, 7_in}});
+      CompoundPath segment1 = CompoundPath() + SimplePath({{5_in, 6_in}});
+      CompoundPath segment2 = CompoundPath() + StatePath({{6_in, 7_in, 90_deg}});
       CompoundPath segment3 = CompoundPath() + DataPath({{7_in, 8_in}});
       CompoundPath segment4 = segment2 + segment3;
       CompoundPath segment5 = CompoundPath() + SimplePath({{8_in, 9_in}});
@@ -95,7 +95,7 @@ SCENARIO("CompoundPath test") {
       path += (std::move(segment1) + std::move(segment4)) + segment5;
 
       GIVEN("a simple path generated from the compound path") {
-        SimplePath ipath = path.generate();
+        SimplePath ipath = path.combine();
 
         THEN("the size of the path should be eight") {
           REQUIRE(ipath().size() == 8);

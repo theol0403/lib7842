@@ -1,6 +1,6 @@
 #pragma once
+#include "lib7842/api/other/global.hpp"
 #include "okapi/api/coreProsAPI.hpp"
-#include "okapi/api/util/logging.hpp"
 #include "pros/rtos.hpp"
 #include <memory>
 
@@ -14,7 +14,7 @@ using namespace okapi;
  */
 class TaskWrapper {
 protected:
-  explicit TaskWrapper(const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  TaskWrapper() = default;
   TaskWrapper(const TaskWrapper& itask) = delete;
   TaskWrapper(TaskWrapper&& itask) = default;
   virtual ~TaskWrapper() = default;
@@ -36,7 +36,7 @@ public:
   /**
    * Kill the task.
    */
-  virtual void killTask();
+  virtual void stopTask();
 
   /**
    * Get the task name.
@@ -44,9 +44,6 @@ public:
    * @return The name.
    */
   virtual std::string getName();
-
-protected:
-  std::shared_ptr<Logger> logger {nullptr};
 
 private:
   static void trampoline(void* iparam);

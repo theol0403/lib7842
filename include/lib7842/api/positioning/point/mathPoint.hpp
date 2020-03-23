@@ -6,14 +6,11 @@ namespace lib7842 {
 /**
  * A 2D Point which is used for math operations
  */
-class MathPoint {
-public:
+struct MathPoint {
   double x {0}; // in meters
   double y {0}; // in meters
 
   MathPoint() = default;
-  MathPoint(const MathPoint& ipoint) = default;
-  virtual ~MathPoint() = default;
 
   /**
    * Create a new point

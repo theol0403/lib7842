@@ -14,6 +14,7 @@ State::State(const QLength& ix, const QLength& iy, const QAngle& itheta) :
  * Upcast Vector 
  */
 State::State(const Vector& ipoint) : Vector(ipoint) {};
+State::State(const Vector& ipoint, const QAngle& itheta) : Vector(ipoint), theta(itheta) {};
 
 /**
  * State Constructor 
@@ -21,9 +22,6 @@ State::State(const Vector& ipoint) : Vector(ipoint) {};
  */
 State::State(const OdomState& ipoint) : State(ipoint.x, ipoint.y, ipoint.theta) {};
 
-/**
- * State Math Operators
- */
 State State::operator+(const State& rhs) const {
   return {x + rhs.x, y + rhs.y, theta + rhs.theta};
 }
@@ -32,9 +30,14 @@ State State::operator-(const State& rhs) const {
   return {x - rhs.x, y - rhs.y, theta - rhs.theta};
 }
 
-/**
- * State Equality Operators
- */
+State State::operator*(const double scalar) const {
+  return {x * scalar, y * scalar, theta * scalar};
+}
+
+State State::operator/(const double scalar) const {
+  return {x / scalar, y / scalar, theta / scalar};
+}
+
 bool State::operator==(const State& rhs) const {
   return x == rhs.x && y == rhs.y && theta == rhs.theta;
 }
@@ -44,9 +47,7 @@ bool State::operator!=(const State& rhs) const {
 }
 
 QAngle State::angleTo(const Vector& ipoint) const {
-  Vector diff = ipoint - *this;
-  QAngle angle = (std::atan2(diff.x.convert(meter), diff.y.convert(meter)) * radian) - theta;
-  return util::rollAngle180(angle);
+  return util::rollAngle180(Vector::angleTo(ipoint) - theta);
 }
 
 } // namespace lib7842

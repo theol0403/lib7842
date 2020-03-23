@@ -236,4 +236,21 @@ SCENARIO("SimpePath test") {
       }
     }
   }
+
+  GIVEN("a path with angles") {
+    StatePath path =
+      StatePath({{0_in, 0_in, 0_deg}, {0_in, 1_ft, 90_deg}, {0_in, 2_ft, 180_deg}}).generateT(10);
+
+    THEN("the path should have 21 points") {
+      CHECK(path().size() == 21);
+    }
+
+    THEN("the angles should be interpolated") {
+      for (size_t i = 0; i < path().size(); i++) {
+        CHECK(path()[i]->y.convert(foot) == Approx(i / 10.0));
+        CHECK(path()[i]->x.convert(foot) == 0);
+        CHECK(path()[i]->theta.convert(degree) == Approx(i * (90.0 / 10.0)));
+      }
+    }
+  }
 }

@@ -1,12 +1,11 @@
 #pragma once
+#include "lib7842/api/other/global.hpp"
 #include "lib7842/api/other/utility.hpp"
 #include "lib7842/api/positioning/path/discretePath.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/odometry/odometry.hpp"
 #include "okapi/api/units/QAngularSpeed.hpp"
 #include "okapi/api/units/QSpeed.hpp"
-#include "okapi/api/util/logging.hpp"
-#include "okapi/api/util/timeUtil.hpp"
 #include "pursuitLimits.hpp"
 #include "pursuitPath.hpp"
 #include <optional>
@@ -22,17 +21,21 @@ public:
    * @param iodometry      The odometry
    * @param ichassisScales The chassis scales
    * @param ilookahead     The lookahead distance
-   * @param itimeUtil      The time utility
+   * @param idriveRadius   The radius from the end of the path to turn off angle correction.
+   *                       Defaults to lookahead distance.
    */
   PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                const std::shared_ptr<Odometry>& iodometry, const ChassisScales& ichassisScales,
-               const QLength& ilookahead, const TimeUtil& itimeUtil);
+               const QLength& ilookahead,
+               const std::optional<QLength>& idriveRadius = std::nullopt);
 
   /**
    * Follow a pre-generated PursuitPath.
    *
    * @param ipath      The path
-   * @param ibackwards Whether to drive the path going backwards
+   * @param ibackwards Whether to follow the path while driving backwards. The robot follows the
+   *                   exact same path as when driving forward, except it faces 180 degrees and
+   *                   drives backwards.
    */
   void followPath(const PursuitPath& ipath, bool ibackwards = false);
 
@@ -108,7 +111,7 @@ protected:
   ChassisScales chassisScales;
 
   const QLength lookahead {0_in};
-  TimeUtil timeUtil;
+  const QLength driveRadius {0_in};
 
   std::optional<pathIterator_t> lastClosest {std::nullopt};
   size_t lastLookIndex {0};

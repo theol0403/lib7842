@@ -19,13 +19,6 @@ public:
   void render() override;
 
   /**
-   * Get the default tab name.
-   *
-   * @return The name.
-   */
-  static std::string getName();
-
-  /**
    * Set the graph range.
    *
    * @param  imin The minimum value
@@ -33,7 +26,7 @@ public:
    */
   Graph& withRange(int imin, int imax);
 
-  /**
+  /** 
    * Set the graph resolution (number of data points on the graph)
    *
    * @param  iresolution The resolution of the graph.

@@ -7,8 +7,17 @@ PursuitPath PathGenerator::generate(const SimplePath& ipath, const PursuitLimits
   path.setLimits(limits);
 
   setCurvatures(path);
-  setMaxVelocity(path, limits);
+  setVelocity(path, limits);
 
+  return path;
+}
+
+PursuitPath PathGenerator::generateX(const StatePath& ipath, const PursuitLimits& limits) {
+  auto path = generate(SimplePath(ipath), limits);
+  setVelocity(path, limits);
+  for (size_t i = 0; i < ipath().size(); i++) {
+    path().at(i)->setData("angle", ipath().at(i)->theta);
+  }
   return path;
 }
 
@@ -21,7 +30,7 @@ void PathGenerator::setCurvatures(PursuitPath& ipath) {
   ipath().back()->setData("curvature", 0.0);
 }
 
-void PathGenerator::setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limits) {
+void PathGenerator::setVelocity(PursuitPath& ipath, const PursuitLimits& limits) {
   ipath().back()->setData("velocity", limits.finalVel);
   for (size_t i = ipath().size() - 1; i > 0; i--) {
     DataPoint& start = *ipath()[i];

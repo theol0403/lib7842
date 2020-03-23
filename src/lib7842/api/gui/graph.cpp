@@ -25,10 +25,6 @@ void Graph::render() {
   }
 }
 
-std::string Graph::getName() {
-  return "Graph";
-}
-
 Graph& Graph::withRange(int imin, int imax) {
   lv_chart_set_range(graph, imin, imax);
   return *this;

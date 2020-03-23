@@ -10,18 +10,18 @@ namespace lib7842 {
 PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
                            const std::shared_ptr<Odometry>& iodometry,
                            const ChassisScales& ichassisScales, const QLength& ilookahead,
-                           const TimeUtil& itimeUtil) :
+                           const std::optional<QLength>& idriveRadius) :
   model(imodel),
   odometry(iodometry),
   chassisScales(ichassisScales),
   lookahead(ilookahead),
-  timeUtil(itimeUtil) {}
+  driveRadius(idriveRadius.value_or(ilookahead)) {}
 
 void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
   resetPursuit();
 
-  auto rate = timeUtil.getRate();
-  auto timer = timeUtil.getTimer();
+  auto rate = global::getTimeUtil()->getRate();
+  auto timer = global::getTimeUtil()->getTimer();
 
   PursuitLimits limits = ipath.getLimits();
   QSpeed lastVelocity = limits.minVel; // assume the robot starts at minimum velocity
@@ -42,13 +42,13 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
     // The projected point will cause the robot to rotate more appropriately.
     Vector projectedLook = (MathPoint::normalize(lookPoint - pos) * lookahead.convert(meter)) + pos;
 
-    // whether the robot is within the lookahead distance of the end of the path. If it is, disable
-    // angle correction.
-    bool endInLookahead = Vector::dist(**closest, *ipath().back()) < lookahead &&
-                          Vector::dist(pos, *ipath().back()) < lookahead;
+    // whether the robot is within the driveRadius of the end of the path. If it is, disable angle
+    // correction.
+    bool withinDriveRadius = Vector::dist(**closest, *ipath().back()) < lookahead &&
+                             Vector::dist(pos, *ipath().back()) < lookahead;
 
     // calculate the arc curvature for the robot to travel to the lookahead
-    double curvature = endInLookahead ? 0 : calculateCurvature(pos, projectedLook);
+    double curvature = withinDriveRadius ? 0 : calculateCurvature(pos, projectedLook);
 
     // the angle to the end of the path
     QAngle angleToEnd = pos.angleTo(*ipath().back()).abs();
@@ -58,10 +58,10 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
 
     // if within the the of the path, ignore the default parameter and drive directly to the end. We
     // are past the end of the path if the angle is above 90, so drive backwards if so.
-    if (endInLookahead) ibackwards = angleToEnd > 90_deg;
+    if (withinDriveRadius) ibackwards = angleToEnd > 90_deg;
 
     // the robot is considered finished if it has passed the end
-    isFinished = pastEnd && endInLookahead;
+    isFinished = pastEnd && withinDriveRadius;
 
     // if the robot is on the path, choose the lowest of either the path velocity or the
     // curvature-based speed reduction. If the robot is not on the path, choose the lowest of either
@@ -86,10 +86,20 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
     // calculate robot wheel velocities
     auto wheelVel = calculateVelocity(targetVel, curvature, chassisScales, limits);
 
+    double left = wheelVel[0].convert(rpm) / 200.0;
+    double right = wheelVel[1].convert(rpm) / 200.0;
+
+    // take any speed that is clipped from one side and move it to the other
+    double maxMag = std::abs(left) > std::abs(right) ? left : right;
+    if (std::abs(maxMag) > 1) {
+      left -= (std::abs(maxMag) - 1) * util::sgn(maxMag);
+      right -= (std::abs(maxMag) - 1) * util::sgn(maxMag);
+    }
+
     if (!ibackwards) {
-      model->tank(wheelVel[0].convert(rpm) / 200, wheelVel[1].convert(rpm) / 200);
+      model->tank(left, right);
     } else {
-      model->tank(-wheelVel[0].convert(rpm) / 200, -wheelVel[1].convert(rpm) / 200);
+      model->tank(-left, -right);
     }
 
     rate->delayUntil(10_ms);
@@ -171,8 +181,8 @@ Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& 
     }
   }
 
-  auto& start = *ipath()[lastLookIndex];
-  auto& end = *ipath()[lastLookIndex + 1];
+  const auto& start = *ipath()[lastLookIndex];
+  const auto& end = *ipath()[lastLookIndex + 1];
   return start + ((end - start) * lastLookT);
 }
 

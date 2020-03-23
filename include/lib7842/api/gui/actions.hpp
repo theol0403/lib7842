@@ -8,7 +8,6 @@ public:
   using Page::Page;
 
   void initialize() override;
-  static std::string getName();
 
   Actions& button(const std::string& iname, const std::function<void()>& iaction);
   Actions& newRow();

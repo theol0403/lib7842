@@ -4,7 +4,8 @@
 
 namespace lib7842::util {
 
-void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, double yaw) {
+void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, double yaw,
+                 motorMode mode) {
   forward = std::clamp(forward, -1.0, 1.0);
   double leftOutput = forward + yaw;
   double rightOutput = forward - yaw;
@@ -14,44 +15,32 @@ void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, dou
     rightOutput /= maxInputMag;
   }
 
-  model->tank(leftOutput, rightOutput);
-}
-
-void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
-                  double strafe) {
-  forward = std::clamp(forward, -1.0, 1.0);
-  strafe = std::clamp(strafe, -1.0, 1.0);
-  double leftOutput = forward + yaw;
-  double rightOutput = forward - yaw;
-  double maxInputMag = std::max({std::abs(leftOutput), std::abs(rightOutput), std::abs(strafe)});
-  if (maxInputMag > 1.0) {
-    leftOutput /= maxInputMag;
-    rightOutput /= maxInputMag;
-    strafe /= maxInputMag;
+  if (mode == motorMode::voltage) {
+    model->tank(leftOutput, rightOutput);
+  } else {
+    model->left(leftOutput);
+    model->right(rightOutput);
   }
+}
 
-  leftOutput = std::clamp(leftOutput, -1.0, 1.0);
-  rightOutput = std::clamp(rightOutput, -1.0, 1.0);
-  strafe = std::clamp(strafe, -1.0, 1.0);
+static void motorVoltage(AbstractMotor* motor, double pct,
+                         const std::shared_ptr<XDriveModel>& imodel) {
+  motor->moveVoltage(static_cast<int16_t>(std::clamp(pct, -1.0, 1.0) * imodel->getMaxVoltage()));
+}
 
-  model->getTopLeftMotor()->moveVoltage(
-    static_cast<int16_t>(std::clamp(leftOutput + strafe, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getTopRightMotor()->moveVoltage(
-    static_cast<int16_t>(std::clamp(rightOutput - strafe, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getBottomRightMotor()->moveVoltage(
-    static_cast<int16_t>(std::clamp(rightOutput + strafe, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getBottomLeftMotor()->moveVoltage(
-    static_cast<int16_t>(std::clamp(leftOutput - strafe, -1.0, 1.0) * model->getMaxVoltage()));
+static void motorVelocity(AbstractMotor* motor, double pct,
+                          const std::shared_ptr<XDriveModel>& imodel) {
+  motor->moveVelocity(static_cast<int16_t>(std::clamp(pct, -1.0, 1.0) * imodel->getMaxVelocity()));
 }
 
 void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, double yaw,
-                  const QAngle& direction) {
-  forward = std::clamp(forward, -1.0, 1.0);
+                  const QAngle& direction, motorMode mode) {
+  static const double sin45 = sin((45_deg).convert(radian));
 
-  double scaleTopLeft = remapRange(std::sin((direction + 45_deg).convert(radian)), -0.70710678118,
-                                   0.70710678118, -1.0, 1.0);
-  double scaleTopRight = remapRange(std::cos((direction + 45_deg).convert(radian)), -0.70710678118,
-                                    0.70710678118, -1.0, 1.0);
+  forward = std::clamp(forward, -1.0, 1.0);
+  double wheelDirection = (direction + 45_deg).convert(radian);
+  double scaleTopLeft = remapRange(std::sin(wheelDirection), -sin45, sin45, -1.0, 1.0);
+  double scaleTopRight = remapRange(std::cos(wheelDirection), -sin45, sin45, -1.0, 1.0);
 
   double topLeft = forward * scaleTopLeft + yaw;
   double topRight = forward * scaleTopRight - yaw;
@@ -67,14 +56,12 @@ void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, dou
     bottomRight /= maxInputMag;
   }
 
-  model->getTopLeftMotor()->moveVoltage(
-    static_cast<int16_t>(std::clamp(topLeft, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getTopRightMotor()->moveVoltage(
-    static_cast<int16_t>(std::clamp(topRight, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getBottomRightMotor()->moveVoltage(
-    static_cast<int16_t>(std::clamp(bottomRight, -1.0, 1.0) * model->getMaxVoltage()));
-  model->getBottomLeftMotor()->moveVoltage(
-    static_cast<int16_t>(std::clamp(bottomLeft, -1.0, 1.0) * model->getMaxVoltage()));
+  auto modeFnc = mode == motorMode::voltage ? motorVoltage : motorVelocity;
+
+  modeFnc(model->getTopLeftMotor().get(), topLeft, model);
+  modeFnc(model->getTopRightMotor().get(), topRight, model);
+  modeFnc(model->getBottomRightMotor().get(), bottomRight, model);
+  modeFnc(model->getBottomLeftMotor().get(), bottomLeft, model);
 }
 
 Vector closest(const Vector& current, const QAngle& heading, const Vector& target) {
@@ -97,7 +84,7 @@ QAngle rollAngle180(const QAngle& angle) {
   return angle - 360.0_deg * std::floor((angle.convert(degree) + 180.0) / 360.0);
 }
 
-QAngle rotateAngle90(const QAngle& angle) {
+QAngle wrapAngle90(const QAngle& angle) {
   QAngle iangle = rollAngle180(angle);
   if (iangle.abs() > 90_deg) {
     iangle += 180_deg;

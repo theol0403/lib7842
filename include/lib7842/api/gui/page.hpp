@@ -1,6 +1,7 @@
 #pragma once
-#include "okapi/api/util/logging.hpp"
+#include <functional>
 #include <memory>
+#include <string>
 
 #ifndef THREADS_STD
   #include "display/lvgl.h"
@@ -9,45 +10,40 @@
 #endif
 
 namespace lib7842::GUI {
-using namespace okapi;
 
 /**
  * An LVGL container. This class can be extended to implement pages.
  */
 class Page {
 public:
+  Page(const Page& ipage) = delete;
+  Page(Page&& ipage) = default;
+  virtual ~Page();
+
   /**
    * Create a new page. Theme color is inherited from the parent.
    *
    * @param iparent The LVGL parent, typically `lv_scr_act()`
-   * @param ilogger The logger
    */
-  explicit Page(lv_obj_t* iparent,
-                const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  explicit Page(lv_obj_t* iparent);
 
   /**
    * Create a new page.
    *
    * @param iparent The LVGL parent, typically `lv_scr_act()`W
    * @param icolor  The theme color
-   * @param ilogger The logger
    */
-  explicit Page(lv_obj_t* iparent, lv_color_t icolor,
-                const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
-
-  Page(const Page& ipage) = delete;
-  Page(Page&& ipage) = default;
-  virtual ~Page();
+  explicit Page(lv_obj_t* iparent, lv_color_t icolor);
 
   /**
    * Initialize the page. Override this method to implement custom initialization.
    */
-  virtual void initialize() {};
+  virtual void initialize() {}
 
   /**
    * Render the page. Override this method to implement custom rendering.
    */
-  virtual void render() {};
+  virtual void render() {}
 
   /**
    * Get the lv_obj_t* to the page.
@@ -60,7 +56,5 @@ protected:
   lv_obj_t* container;
   lv_style_t cStyle;
   const lv_color_t themeColor;
-
-  std::shared_ptr<Logger> logger {nullptr};
 };
 } // namespace lib7842::GUI

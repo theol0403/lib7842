@@ -1,5 +1,6 @@
 #pragma once
 #include "okapi/api/odometry/point.hpp"
+#include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
 
 namespace lib7842 {
@@ -8,13 +9,11 @@ using namespace okapi;
 /**
  * A 2D Point
  */
-class Vector {
-public:
+struct Vector {
   QLength x {0_in};
   QLength y {0_in};
 
   Vector() = default;
-  Vector(const Vector& ipoint) = default;
   virtual ~Vector() = default;
 
   /**
@@ -42,23 +41,25 @@ public:
   const QLength& at(size_t iindex) const;
 
   /**
-   * Binary operators
+   * Operators
    */
   Vector operator+(const Vector& rhs) const;
   Vector operator-(const Vector& rhs) const;
+  Vector operator*(const double scalar) const;
+  Vector operator/(const double scalar) const;
   bool operator==(const Vector& rhs) const;
   bool operator!=(const Vector& rhs) const;
 
   /**
-   * Scale operators
-   */
-  Vector operator*(const double scalar) const;
-  Vector operator/(const double scalar) const;
-
-  /**
-   * Utility functions
+   * Calculate distance between points
    */
   static QLength dist(const Vector& lhs, const Vector& rhs);
-  QLength distTo(const Vector& ipoint);
+  QLength distTo(const Vector& ipoint) const;
+
+  /**
+   * Calculate angle between points
+   */
+  static QAngle angle(const Vector& istart, const Vector& iend);
+  virtual QAngle angleTo(const Vector& ipoint) const;
 };
 } // namespace lib7842

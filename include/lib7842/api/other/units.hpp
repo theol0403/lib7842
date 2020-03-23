@@ -8,7 +8,7 @@ using namespace okapi;
 
 /**
  * Units that represent a tile (2ft) and a court(12ft)
- * Literals are `_tile` and `_court`, respectivly
+ * Literals are `_tile` and `_court`, respectively
  */
 constexpr QLength tile = 2 * foot;
 constexpr QLength court = 12 * foot;
