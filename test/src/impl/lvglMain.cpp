@@ -3,51 +3,31 @@
 #include "test.hpp"
 
 void lvglTest() {
-  GUI::Screen scr(lv_scr_act(), LV_COLOR_MAKE(38,84,124));
-
-  scr.makePage<GUI::Selector>("Selector")
-    .button("Red Big", [&]() { std::cout <<   "Selecting Red Big" << std::endl; })
-    .button("Red Small", [&]() { std::cout << "Selecting Red Small" << std::endl; })
-    .newRow()
-    .button("Blue Big", [&]() { std::cout <<   "Selecting Blue Big" << std::endl; })
-    .button("Blue Small", [&]() { std::cout << "Selecting Blue Small" << std::endl; })
-    .build();
+  GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
 
   scr.makePage<GUI::Odom>().attachOdom(nullptr).attachResetter(nullptr);
 
-  scr.makePage<GUI::Graph>("Temp").withRange(0,100)
-    .withSeries("Intake", LV_COLOR_MAKE(6,214,160), []() { return 40; })
-    .withSeries("Tray", LV_COLOR_MAKE(239,71,111), []() { return 50; })
-    .withSeries("Drive", LV_COLOR_MAKE(255,209,102), []() { return 60; });
+  scr.makePage<GUI::Graph>("Graph")
+    .withRange(0, 100)
+    .withSeries("Series 1", LV_COLOR_RED, []() { return 40; })
+    .withSeries("Series 2", LV_COLOR_GREEN, []() { return 50; })
+    .withSeries("Series 3", LV_COLOR_PURPLE, []() { return 60; });
 
   scr.makePage<GUI::Actions>("Actions")
-    .button("Tray Up", [&]() { std::cout <<   "Moving Tray Up" << std::endl; })
-    .button("Tray Down", [&]() { std::cout << "Moving Tray Down" << std::endl; })
+    .button("Action 1", [&]() { std::cout << "Doing Action 1" << std::endl; })
+    .button("Action 2", [&]() { std::cout << "Doing Action 2" << std::endl; })
     .newRow()
-    .button("Intake Forward", [&]() { std::cout <<  "Intake Forward" << std::endl; })
-    .button("Intake Reverse", [&]() { std::cout <<  "Intake Reverse" << std::endl; })
-    .button("Intake Off", [&]() { std::cout << "Intake Off" << std::endl; })
+    .button("Action 3", [&]() { std::cout << "Doing Action 3" << std::endl; })
+    .button("Action 4", [&]() { std::cout << "Doing Action 4" << std::endl; })
     .build();
 
-  // .button(
-  //   "Test",
-  //   []() {
-  //     std::cout << "Test" << std::endl;
-  //   })
-  // .button(
-  //   "Test2",
-  //   []() {
-  //     std::cout << "Test" << std::endl;
-  //   })
-  // .newRow()
-  // .button(
-  //   "Test3",
-  //   []() {
-  //     std::cout << "Test" << std::endl;
-  //   })
-  // .button("Test4", []() {
-  //   std::cout << "Test" << std::endl;
-  // });
+  scr.makePage<GUI::Selector>("Selector")
+    .button("Option 1", [&]() { std::cout << "Running Option 1" << std::endl; })
+    .button("Option 2", [&]() { std::cout << "Running Option 2" << std::endl; })
+    .newRow()
+    .button("Option 3", [&]() { std::cout << "Running Option 3" << std::endl; })
+    .button("Option 4", [&]() { std::cout << "Running Option 4" << std::endl; })
+    .build();
 
   while (true) {
     pros::delay(100);
