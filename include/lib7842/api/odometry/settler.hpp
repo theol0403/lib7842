@@ -112,7 +112,8 @@ public:
    *
    * @return Whether the settler has been fired.
    */
-  bool run(const OdomController* icontroller);
+  virtual bool run(const OdomController* icontroller);
+  virtual bool operator()(const OdomController* icontroller);
 
   /**
    * Set the default abort parameters for all new Settler objects.
