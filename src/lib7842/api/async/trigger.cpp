@@ -32,6 +32,10 @@ bool Trigger::run() {
   return false;
 }
 
+bool Trigger::operator()() {
+  return run();
+}
+
 std::function<bool()> Trigger::timePassed(const QTime& time) {
   return [=, timer = std::shared_ptr<AbstractTimer>(global::getTimeUtil()->getTimer())]() mutable {
     timer->placeHardMark();
