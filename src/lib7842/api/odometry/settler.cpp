@@ -5,52 +5,52 @@
 namespace lib7842 {
 
 Settler&& Settler::distanceTo(const Vector& point, const QLength& trigger) {
-  assembly.emplace_back([=]() { return controller->distanceTo(point, trigger); });
+  assembly.emplace([=]() { requirement(controller->distanceTo(point, trigger)); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleTo(const Vector& point, const QAngle& trigger) {
-  assembly.emplace_back([=]() { return controller->angleTo(point, trigger); });
+  assembly.emplace([=]() { requirement(controller->angleTo(point, trigger)); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleTo(const QAngle& angle, const QAngle& trigger) {
-  assembly.emplace_back([=]() { return controller->angleTo(angle, trigger); });
+  assembly.emplace([=]() { requirement(controller->angleTo(angle, trigger)); });
   return std::move(*this);
 }
 
 Settler&& Settler::distanceErr(const QLength& trigger) {
-  assembly.emplace_back([=]() { return controller->distanceErr(trigger); });
+  assembly.emplace([=]() { requirement(controller->distanceErr(trigger)); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleErr(const QAngle& trigger) {
-  assembly.emplace_back([=]() { return controller->angleErr(trigger); });
+  assembly.emplace([=]() { requirement(controller->angleErr(trigger)); });
   return std::move(*this);
 }
 
 Settler&& Settler::distanceSettled() {
-  assembly.emplace_back([=]() { return controller->distanceSettled(); });
+  assembly.emplace([=]() { requirement(controller->distanceSettled()); });
   return std::move(*this);
 }
 
 Settler&& Settler::turnSettled() {
-  assembly.emplace_back([=]() { return controller->turnSettled(); });
+  assembly.emplace([=]() { requirement(controller->turnSettled()); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleSettled() {
-  assembly.emplace_back([=]() { return controller->angleSettled(); });
+  assembly.emplace([=]() { requirement(controller->angleSettled()); });
   return std::move(*this);
 }
 
 Settler&& Settler::distanceSettledUtil(const TimeUtil& timeUtil) {
-  assembly.emplace_back([=]() { return controller->distanceSettledUtil(timeUtil); });
+  assembly.emplace([=]() { requirement(controller->distanceSettledUtil(timeUtil)); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleSettledUtil(const TimeUtil& timeUtil) {
-  assembly.emplace_back([=]() { return controller->angleSettledUtil(timeUtil); });
+  assembly.emplace([=]() { requirement(controller->angleSettledUtil(timeUtil)); });
   return std::move(*this);
 }
 
@@ -64,17 +64,13 @@ Settler&& Settler::noAbort() {
   return std::move(*this);
 }
 
-void Settler::setDefaultAbort(const TimeUtil& itimeUtil) {
-  defaultAbort = std::shared_ptr<SettledUtil>(itimeUtil.getSettledUtil());
-}
-
-std::shared_ptr<SettledUtil> Settler::defaultAbort {nullptr};
-
 bool Settler::run(const OdomController* icontroller) {
   controller = icontroller;
 
-  std::for_each(assembly.begin(), assembly.end(),
-                [&](const auto& assembler) { requirements.emplace_back(assembler()); });
+  while (!assembly.empty()) {
+    assembly.top()();
+    assembly.pop();
+  }
 
   auto error = controller->getDistanceError();
   auto change = error - lastError;
@@ -87,5 +83,11 @@ bool Settler::run(const OdomController* icontroller) {
     return Trigger::run();
   }
 }
+
+void Settler::setDefaultAbort(const TimeUtil& itimeUtil) {
+  defaultAbort = std::shared_ptr<SettledUtil>(itimeUtil.getSettledUtil());
+}
+
+std::shared_ptr<SettledUtil> Settler::defaultAbort {nullptr};
 
 } // namespace lib7842

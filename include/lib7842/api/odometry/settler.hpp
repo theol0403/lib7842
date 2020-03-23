@@ -2,6 +2,7 @@
 #include "lib7842/api/async/trigger.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 #include "okapi/api/units/QLength.hpp"
+#include <stack>
 
 namespace lib7842 {
 
@@ -123,7 +124,7 @@ public:
 protected:
   using Trigger::run; // use the version with the controller
 
-  std::vector<std::function<std::function<bool()>()>> assembly {};
+  std::stack<std::function<void()>> assembly {};
 
   const OdomController* controller {nullptr};
   std::shared_ptr<SettledUtil> driveAbort {defaultAbort};

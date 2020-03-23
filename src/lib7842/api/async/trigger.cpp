@@ -3,7 +3,7 @@
 namespace lib7842 {
 
 Trigger&& Trigger::requirement(std::function<bool()>&& function) {
-  requirements.emplace_back(function);
+  requirements.emplace_back(std::move(function));
   return std::move(*this);
 }
 
@@ -12,7 +12,7 @@ Trigger&& Trigger::needs(std::function<bool()>&& function) {
 }
 
 Trigger&& Trigger::exception(std::function<bool()>&& function) {
-  exceptions.emplace_back(function);
+  exceptions.emplace_back(std::move(function));
   return std::move(*this);
 }
 
