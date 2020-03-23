@@ -207,7 +207,7 @@ public:
    * @param point   The point
    * @param Settler The distance to the point.
    */
-  std::function<bool()> distanceTo(const Vector& point, const QLength& Settler);
+  std::function<bool()> distanceTo(const Vector& point, const QLength& Settler) const;
 
   /**
    * Settler if the angle to a point is within a value.
@@ -215,7 +215,7 @@ public:
    * @param point   The point
    * @param Settler The angle to the point.
    */
-  std::function<bool()> angleTo(const Vector& point, const QAngle& Settler);
+  std::function<bool()> angleTo(const Vector& point, const QAngle& Settler) const;
 
   /**
    * Settler if the angle to an absolute angle is within a value.
@@ -223,36 +223,36 @@ public:
    * @param angle   The absolute angle
    * @param Settler The angle to the absolute angle.
    */
-  std::function<bool()> angleTo(const QAngle& angle, const QAngle& Settler);
+  std::function<bool()> angleTo(const QAngle& angle, const QAngle& Settler) const;
 
   /**
    * Settler if the distance error of the controller is within a value.
    *
    * @param Settler The distance error.
    */
-  std::function<bool()> distanceErr(const QLength& Settler);
+  std::function<bool()> distanceErr(const QLength& Settler) const;
 
   /**
    * Settler if the angle error of the controller is within a value.
    *
    * @param Settler The angle error.
    */
-  std::function<bool()> angleErr(const QAngle& Settler);
+  std::function<bool()> angleErr(const QAngle& Settler) const;
 
   /**
    * Settler if the distance controller is settled.
    */
-  std::function<bool()> distanceSettled();
+  std::function<bool()> distanceSettled() const;
 
   /**
    * Settler if the turn controller is settled.
    */
-  std::function<bool()> turnSettled();
+  std::function<bool()> turnSettled() const;
 
   /**
    * Settler if the angle controller is settled.
    */
-  std::function<bool()> angleSettled();
+  std::function<bool()> angleSettled() const;
 
   /**
    * Settler if the distance error is settled according to a given settled util. The error is in
@@ -260,7 +260,7 @@ public:
    *
    * @param timeUtil A timeUtil containing a settled util.
    */
-  std::function<bool()> distanceSettledUtil(const TimeUtil& timeUtil);
+  std::function<bool()> distanceSettledUtil(const TimeUtil& timeUtil) const;
 
   /**
    * Settler if the angle error is settled according to a given settled util. The error is in
@@ -268,7 +268,7 @@ public:
    *
    * @param timeUtil A timeUtil containing a settled util.
    */
-  std::function<bool()> angleSettledUtil(const TimeUtil& timeUtil);
+  std::function<bool()> angleSettledUtil(const TimeUtil& timeUtil) const;
 
 protected:
   /**

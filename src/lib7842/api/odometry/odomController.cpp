@@ -183,61 +183,62 @@ AngleCalculator OdomController::makeAngleCalculator() {
   };
 }
 
-std::function<bool()> OdomController::distanceTo(const Vector& point, const QLength& Settler) {
+std::function<bool()> OdomController::distanceTo(const Vector& point,
+                                                 const QLength& Settler) const {
   return [=] {
     return distanceToPoint(point) < Settler;
   };
 }
 
-std::function<bool()> OdomController::angleTo(const Vector& point, const QAngle& Settler) {
+std::function<bool()> OdomController::angleTo(const Vector& point, const QAngle& Settler) const {
   return [=] {
     return angleToPoint(point) < Settler;
   };
 }
 
-std::function<bool()> OdomController::angleTo(const QAngle& angle, const QAngle& Settler) {
+std::function<bool()> OdomController::angleTo(const QAngle& angle, const QAngle& Settler) const {
   return [=] {
     return (getState().theta - angle).abs() < Settler;
   };
 }
 
-std::function<bool()> OdomController::distanceErr(const QLength& Settler) {
+std::function<bool()> OdomController::distanceErr(const QLength& Settler) const {
   return [=] {
     return getDistanceError() < Settler;
   };
 }
 
-std::function<bool()> OdomController::angleErr(const QAngle& Settler) {
+std::function<bool()> OdomController::angleErr(const QAngle& Settler) const {
   return [=] {
     return getAngleError() < Settler;
   };
 }
 
-std::function<bool()> OdomController::distanceSettled() {
+std::function<bool()> OdomController::distanceSettled() const {
   return [=] {
     return isDistanceSettled();
   };
 }
 
-std::function<bool()> OdomController::turnSettled() {
+std::function<bool()> OdomController::turnSettled() const {
   return [=] {
     return isTurnSettled();
   };
 }
 
-std::function<bool()> OdomController::angleSettled() {
+std::function<bool()> OdomController::angleSettled() const {
   return [=] {
     return isAngleSettled();
   };
 }
 
-std::function<bool()> OdomController::distanceSettledUtil(const TimeUtil& timeUtil) {
+std::function<bool()> OdomController::distanceSettledUtil(const TimeUtil& timeUtil) const {
   return [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
     return settledUtil->isSettled(getDistanceError().convert(millimeter));
   };
 }
 
-std::function<bool()> OdomController::angleSettledUtil(const TimeUtil& timeUtil) {
+std::function<bool()> OdomController::angleSettledUtil(const TimeUtil& timeUtil) const {
   return [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
     return settledUtil->isSettled(getAngleError().convert(degree));
   };
