@@ -13,7 +13,8 @@ void Graph::initialize() {
   lv_style_copy(&gStyle, &lv_style_pretty);
   gStyle.body.main_color = themeColor;
   gStyle.body.grad_color = themeColor;
-  gStyle.line.color = LV_COLOR_HEX(0xFF7F00);
+  gStyle.line.color = LV_COLOR_WHITE;
+  gStyle.line.width = 1;
   lv_obj_set_style(graph, &gStyle);
 }
 
