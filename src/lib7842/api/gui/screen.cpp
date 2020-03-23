@@ -90,9 +90,10 @@ void Screen::render() {
 }
 
 void Screen::loop() {
+  auto rate = global::getTimeUtil()->getRate();
   while (true) {
     render();
-    pros::delay(100);
+    rate->delayUntil(50_ms);
   }
 }
 
