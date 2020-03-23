@@ -5,56 +5,52 @@
 namespace lib7842 {
 
 Settler&& Settler::distanceTo(const Vector& point, const QLength& trigger) {
-  requirement([=] { return controller->distanceToPoint(point) < trigger; });
+  assembly.emplace_back([=]() { return controller->distanceTo(point, trigger); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleTo(const Vector& point, const QAngle& trigger) {
-  requirement([=] { return controller->angleToPoint(point) < trigger; });
+  assembly.emplace_back([=]() { return controller->angleTo(point, trigger); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleTo(const QAngle& angle, const QAngle& trigger) {
-  requirement([=] { return (controller->getState().theta - angle).abs() < trigger; });
+  assembly.emplace_back([=]() { return controller->angleTo(angle, trigger); });
   return std::move(*this);
 }
 
 Settler&& Settler::distanceErr(const QLength& trigger) {
-  requirement([=] { return controller->getDistanceError() < trigger; });
+  assembly.emplace_back([=]() { return controller->distanceErr(trigger); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleErr(const QAngle& trigger) {
-  requirement([=] { return controller->getAngleError() < trigger; });
+  assembly.emplace_back([=]() { return controller->angleErr(trigger); });
   return std::move(*this);
 }
 
 Settler&& Settler::distanceSettled() {
-  requirement([=] { return controller->isDistanceSettled(); });
+  assembly.emplace_back([=]() { return controller->distanceSettled(); });
   return std::move(*this);
 }
 
 Settler&& Settler::turnSettled() {
-  requirement([=] { return controller->isTurnSettled(); });
+  assembly.emplace_back([=]() { return controller->turnSettled(); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleSettled() {
-  requirement([=] { return controller->isAngleSettled(); });
+  assembly.emplace_back([=]() { return controller->angleSettled(); });
   return std::move(*this);
 }
 
 Settler&& Settler::distanceSettledUtil(const TimeUtil& timeUtil) {
-  requirement([=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
-    return settledUtil->isSettled(controller->getDistanceError().convert(millimeter));
-  });
+  assembly.emplace_back([=]() { return controller->distanceSettledUtil(timeUtil); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleSettledUtil(const TimeUtil& timeUtil) {
-  requirement([=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
-    return settledUtil->isSettled(controller->getAngleError().convert(degree));
-  });
+  assembly.emplace_back([=]() { return controller->angleSettledUtil(timeUtil); });
   return std::move(*this);
 }
 
@@ -76,6 +72,9 @@ std::shared_ptr<SettledUtil> Settler::defaultAbort {nullptr};
 
 bool Settler::run(const OdomController* icontroller) {
   controller = icontroller;
+
+  std::for_each(assembly.begin(), assembly.end(),
+                [&](const auto& assembler) { requirements.emplace_back(assembler()); });
 
   auto error = controller->getDistanceError();
   auto change = error - lastError;

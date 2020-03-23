@@ -9,13 +9,15 @@ namespace lib7842 {
 class OdomController;
 
 /**
- * Settler is a Trigger that is specific to driving. Methods can be passed that has an emergency
- * abort which can be added or removed. It uses a SettledUtil on the derivative of an
- * OdomController's distance error. Used to abort a movement when the distance error does not change
- * for a long time.
+ * Settler is a Trigger that is specific to driving. The controller is passed when the trigger is
+ * run, to allow for static method chaining.
  *
- * By default, Settlers have no abort. However, it is possible to specify the default abort
- * parameters, as well override individual aborts.
+ * A Settler has an emergency abort which detects if the robot is stuck. It uses a SettledUtil on
+ * the derivative of an OdomController's distance error to abort when the distance error does not
+ * change for a long time.
+ *
+ * By default, Settlers have no abort. However, it is possible to change the default for all new
+ * Settlers or provide a one-time abort.
  */
 class Settler : public Trigger {
 public:
@@ -27,7 +29,7 @@ public:
    * @param point   The point
    * @param trigger The distance to the point.
    */
-  Settler&& distanceTo(const Vector& point, const QLength& trigger);
+  virtual Settler&& distanceTo(const Vector& point, const QLength& trigger);
 
   /**
    * Require that the angle to a point is within a value.
@@ -35,7 +37,7 @@ public:
    * @param point   The point
    * @param trigger The angle to the point.
    */
-  Settler&& angleTo(const Vector& point, const QAngle& trigger);
+  virtual Settler&& angleTo(const Vector& point, const QAngle& trigger);
 
   /**
    * Require that the angle to an absolute angle is within a value.
@@ -43,36 +45,36 @@ public:
    * @param angle   The absolute angle
    * @param trigger The angle to the absolute angle.
    */
-  Settler&& angleTo(const QAngle& angle, const QAngle& trigger);
+  virtual Settler&& angleTo(const QAngle& angle, const QAngle& trigger);
 
   /**
    * Require that the distance error of the controller is within a value.
    *
    * @param trigger The distance error.
    */
-  Settler&& distanceErr(const QLength& trigger);
+  virtual Settler&& distanceErr(const QLength& trigger);
 
   /**
    * Require that the angle error of the controller is within a value.
    *
    * @param trigger The angle error.
    */
-  Settler&& angleErr(const QAngle& trigger);
+  virtual Settler&& angleErr(const QAngle& trigger);
 
   /**
    * Require that the distance controller is settled.
    */
-  Settler&& distanceSettled();
+  virtual Settler&& distanceSettled();
 
   /**
    * Require that the turn controller is settled.
    */
-  Settler&& turnSettled();
+  virtual Settler&& turnSettled();
 
   /**
    * Require that the angle controller is settled.
    */
-  Settler&& angleSettled();
+  virtual Settler&& angleSettled();
 
   /**
    * Require that the distance error is settled according to a given settled util. The error is in
@@ -80,7 +82,7 @@ public:
    *
    * @param timeUtil A timeUtil containing a settled util.
    */
-  Settler&& distanceSettledUtil(const TimeUtil& timeUtil);
+  virtual Settler&& distanceSettledUtil(const TimeUtil& timeUtil);
 
   /**
    * Require that the angle error is settled according to a given settled util. The error is in
@@ -88,27 +90,21 @@ public:
    *
    * @param timeUtil A timeUtil containing a settled util.
    */
-  Settler&& angleSettledUtil(const TimeUtil& timeUtil);
+  virtual Settler&& angleSettledUtil(const TimeUtil& timeUtil);
 
   /**
-   * Make an exception if the derivative of the distance error is within the ranges of a settled
-   * util.
+   * Make an exception if the derivative of the distance error in millimeters is within the ranges
+   * of a settled util.
    *
    * @param itimeUtil The timeUtil containing a settled util.
    */
-  Settler&& abort(const TimeUtil& itimeUtil);
+  virtual Settler&& abort(const TimeUtil& itimeUtil);
 
   /**
-   * Remove any abort that has been set. Automatically gets called by turn commands.
+   * Remove any abort that has been set. Automatically gets called by turn commands, as aborts are
+   * only for the distance domain.
    */
-  Settler&& noAbort();
-
-  /**
-   * Set the default abort parameters for all new Settler objects.
-   *
-   * @param itimeUtil The timeUtil containing a settled util.
-   */
-  static void setDefaultAbort(const TimeUtil& itimeUtil);
+  virtual Settler&& noAbort();
 
   /**
    * Check the abort, then run all the requirements and exceptions.
@@ -117,13 +113,22 @@ public:
    */
   bool run(const OdomController* icontroller);
 
+  /**
+   * Set the default abort parameters for all new Settler objects.
+   *
+   * @param itimeUtil The timeUtil containing a settled util.
+   */
+  static void setDefaultAbort(const TimeUtil& itimeUtil);
+
 protected:
-  using Trigger::run;
+  using Trigger::run; // use the version with the controller
+
+  std::vector<std::function<std::function<bool()>()>> assembly {};
+
   const OdomController* controller {nullptr};
-
   std::shared_ptr<SettledUtil> driveAbort {defaultAbort};
-  static std::shared_ptr<SettledUtil> defaultAbort;
-
   QLength lastError {0_m};
+
+  static std::shared_ptr<SettledUtil> defaultAbort;
 };
 } // namespace lib7842
