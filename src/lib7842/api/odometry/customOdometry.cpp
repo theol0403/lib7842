@@ -4,7 +4,6 @@ namespace lib7842 {
 
 CustomOdometry::CustomOdometry(const std::shared_ptr<ChassisModel>& imodel,
                                const ChassisScales& ichassisScales) :
-
   model(imodel), chassisScales(ichassisScales) {}
 
 void CustomOdometry::setScales(const ChassisScales& ichassisScales) {

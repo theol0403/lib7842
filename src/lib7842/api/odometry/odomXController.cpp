@@ -17,7 +17,7 @@ OdomXController::OdomXController(const std::shared_ptr<XDriveModel>& imodel,
 
 void OdomXController::strafeRelativeDirection(const QLength& distance, const QAngle& direction,
                                               const AngleCalculator& angleCalculator,
-                                              double turnScale, Trigger&& settler) {
+                                              double turnScale, Settler&& settler) {
   QAngle absoluteDirection = direction + getState().theta;
   strafeAbsoluteDirection(distance, absoluteDirection, angleCalculator, turnScale,
                           std::move(settler));
@@ -25,7 +25,7 @@ void OdomXController::strafeRelativeDirection(const QLength& distance, const QAn
 
 void OdomXController::strafeAbsoluteDirection(const QLength& distance, const QAngle& direction,
                                               const AngleCalculator& angleCalculator,
-                                              double turnScale, Trigger&& settler) {
+                                              double turnScale, Settler&& settler) {
   QLength x = sin(direction.convert(radian)) * distance;
   QLength y = cos(direction.convert(radian)) * distance;
   Vector target = Vector(State(getState())) + Vector(x, y);
@@ -34,7 +34,7 @@ void OdomXController::strafeAbsoluteDirection(const QLength& distance, const QAn
 
 void OdomXController::strafeToPoint(const Vector& targetPoint,
                                     const AngleCalculator& angleCalculator, double turnScale,
-                                    Trigger&& settler) {
+                                    Settler&& settler) {
   resetPid();
   auto rate = global::getTimeUtil()->getRate();
   do {
