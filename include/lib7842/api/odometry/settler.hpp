@@ -108,8 +108,10 @@ public:
   virtual Settler&& noAbort();
 
   /**
-   * Check the abort, then run all the requirements and exceptions.
+   * Check the abort, then run all the requirements and exceptions. Binds the settlers to the
+   * controller.
    *
+   * @param  icontroller A pointer to the controller.
    * @return Whether the settler has been fired.
    */
   virtual bool run(const OdomController* icontroller);
