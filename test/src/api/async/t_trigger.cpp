@@ -100,7 +100,7 @@ TEST_CASE("Trigger test") {
   }
 
   SUBCASE("max time") {
-    trigger.require(Trigger::timePassed(20_ms));
+    trigger.require(Trigger::time(20_ms));
     pros::delay(30);
     REQUIRE(!trigger());
     pros::delay(30);
