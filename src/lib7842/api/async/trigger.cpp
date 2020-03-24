@@ -2,12 +2,16 @@
 
 namespace lib7842 {
 
+Trigger::Function Trigger::Function::operator!()&& {
+  return std::not_fn(std::move(*this));
+}
+
 Trigger&& Trigger::requirement(std::function<bool()>&& function) {
   requirements.emplace_back(std::move(function));
   return std::move(*this);
 }
 
-Trigger&& Trigger::needs(std::function<bool()>&& function) {
+Trigger&& Trigger::require(std::function<bool()>&& function) {
   return requirement(std::move(function));
 }
 
@@ -36,7 +40,7 @@ bool Trigger::operator()() {
   return run();
 }
 
-std::function<bool()> Trigger::timePassed(const QTime& time) {
+std::function<bool()> Trigger::time(const QTime& time) {
   return [=, timer = std::shared_ptr<AbstractTimer>(global::getTimeUtil()->getTimer())]() mutable {
     timer->placeHardMark();
     return timer->getDtFromHardMark() >= time;

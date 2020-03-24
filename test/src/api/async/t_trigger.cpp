@@ -76,7 +76,7 @@ TEST_CASE("Trigger test") {
       std::make_shared<MockOdomController>(model, odom, nullptr, nullptr, nullptr, 0_in);
 
     SUBCASE("distanceErr") {
-      trigger.needs(chassis->distanceErr(5_mm));
+      trigger.require(chassis->distanceErr(5_mm));
       chassis->_distanceErr = 10_mm;
       REQUIRE(!trigger());
       chassis->_distanceErr = 1_mm;
@@ -84,7 +84,7 @@ TEST_CASE("Trigger test") {
     }
 
     SUBCASE("settledUtil") {
-      trigger.needs(
+      trigger.require(
         chassis->distanceSettledUtil(createTimeUtil(Supplier<std::unique_ptr<SettledUtil>>(
           []() { return createSettledUtilPtr(5, 0, 20_ms); }))));
       chassis->_distanceErr = 10_mm;
@@ -100,7 +100,7 @@ TEST_CASE("Trigger test") {
   }
 
   SUBCASE("max time") {
-    trigger.needs(Trigger::timePassed(20_ms));
+    trigger.require(Trigger::timePassed(20_ms));
     pros::delay(30);
     REQUIRE(!trigger());
     pros::delay(30);
