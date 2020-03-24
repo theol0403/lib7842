@@ -6,21 +6,21 @@ Trigger::Function Trigger::Function::operator!()&& {
   return std::not_fn(std::move(*this));
 }
 
-Trigger&& Trigger::requirement(std::function<bool()>&& function) {
+Trigger&& Trigger::requirement(Trigger::Function&& function) {
   requirements.emplace_back(std::move(function));
   return std::move(*this);
 }
 
-Trigger&& Trigger::require(std::function<bool()>&& function) {
+Trigger&& Trigger::require(Trigger::Function&& function) {
   return requirement(std::move(function));
 }
 
-Trigger&& Trigger::exception(std::function<bool()>&& function) {
+Trigger&& Trigger::exception(Trigger::Function&& function) {
   exceptions.emplace_back(std::move(function));
   return std::move(*this);
 }
 
-Trigger&& Trigger::unless(std::function<bool()>&& function) {
+Trigger&& Trigger::unless(Trigger::Function&& function) {
   return exception(std::move(function));
 }
 
@@ -40,7 +40,7 @@ bool Trigger::operator()() {
   return run();
 }
 
-std::function<bool()> Trigger::time(const QTime& time) {
+Trigger::Function Trigger::time(const QTime& time) {
   return [=, timer = std::shared_ptr<AbstractTimer>(global::getTimeUtil()->getTimer())]() mutable {
     timer->placeHardMark();
     return timer->getDtFromHardMark() >= time;
