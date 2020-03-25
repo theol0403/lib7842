@@ -67,23 +67,16 @@ public:
    * A Turner is a function that accepts a chassis and a turning velocity. It controls the motor
    * distribution and execution of the turn, and is used to implement a point or pivot turn.
    */
-  using Turner = std::function<void(const std::shared_ptr<ChassisModel>& model, double vel)>;
+  using Turner = std::function<void(const std::shared_ptr<ChassisModel>& imodel, double vel)>;
 
   /**
-   * A Turner that executes a point turn which turns in place. Used as the default for all turn
-   * functions.
+   * The built-in default Turners.
+   *  - A Turner that executes a point turn which turns in place using both motors. Used as the
+   *    default for all turn functions.
+   *  - A Turner that executes a left pivot, meaning it only moves the left motors.
+   *  - A Turner that executes a right pivot, meaning it only moves the right motors.
    */
-  static Turner pointTurn;
-
-  /**
-   * A Turner that executes a left pivot, meaning it only moves the left motors.
-   */
-  static Turner leftPivot;
-
-  /**
-   * A Turner that executes a right pivot, meaning it only moves the right motors.
-   */
-  static Turner rightPivot;
+  static Turner pointTurn, leftPivot, rightPivot;
 
   /**
    * Turn the chassis using an Angler. Uses the the turn PID controller.

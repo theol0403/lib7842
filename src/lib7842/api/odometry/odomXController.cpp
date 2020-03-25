@@ -16,32 +16,31 @@ OdomXController::OdomXController(const std::shared_ptr<XDriveModel>& imodel,
   xModel(imodel) {};
 
 void OdomXController::strafeRelativeDirection(const QLength& distance, const QAngle& direction,
-                                              const Angler& angleCalculator, double turnScale,
+                                              const Angler& angler, double turnScale,
                                               Settler&& settler) {
   QAngle absoluteDirection = direction + getState().theta;
-  strafeAbsoluteDirection(distance, absoluteDirection, angleCalculator, turnScale,
-                          std::move(settler));
+  strafeAbsoluteDirection(distance, absoluteDirection, angler, turnScale, std::move(settler));
 }
 
 void OdomXController::strafeAbsoluteDirection(const QLength& distance, const QAngle& direction,
-                                              const Angler& angleCalculator, double turnScale,
+                                              const Angler& angler, double turnScale,
                                               Settler&& settler) {
   QLength x = sin(direction.convert(radian)) * distance;
   QLength y = cos(direction.convert(radian)) * distance;
   Vector target = Vector(State(getState())) + Vector(x, y);
-  strafeToPoint(target, angleCalculator, turnScale, std::move(settler));
+  strafeToPoint(target, angler, turnScale, std::move(settler));
 }
 
-void OdomXController::strafeToPoint(const Vector& targetPoint, const Angler& angleCalculator,
-                                    double turnScale, Settler&& settler) {
+void OdomXController::strafeToPoint(const Vector& point, const Angler& angler, double turnScale,
+                                    Settler&& settler) {
   resetPid();
   auto rate = global::getTimeUtil()->getRate();
   do {
     State state = getState();
-    _distanceErr = state.distTo(targetPoint);
-    _angleErr = angleCalculator(*this);
+    _distanceErr = state.distTo(point);
+    _angleErr = angler(*this);
 
-    QAngle angleToTarget = angleToPoint(targetPoint);
+    QAngle angleToTarget = angleToPoint(point);
 
     double distanceVel = distanceController->step(-_distanceErr.convert(millimeter));
     double angleVel = angleController->step(-_angleErr.convert(degree));
