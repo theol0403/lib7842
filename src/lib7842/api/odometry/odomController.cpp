@@ -35,7 +35,7 @@ OdomController::Angler OdomController::makeAngler(const QAngle& angle) {
 
 OdomController::Angler OdomController::makeAngler(const Vector& point) {
   return [=](const OdomController& odom) {
-    return odom.angleToPoint(point);
+    return odom.getState().angleTo(point);
   };
 }
 
@@ -150,14 +150,6 @@ State OdomController::getState() const {
   return State(odometry->getState(StateMode::CARTESIAN));
 }
 
-QLength OdomController::distanceToPoint(const Vector& point) const {
-  return getState().distTo(point);
-}
-
-QAngle OdomController::angleToPoint(const Vector& point) const {
-  return getState().angleTo(point);
-}
-
 QLength OdomController::getDistanceError() const {
   return _distanceErr;
 }
@@ -180,13 +172,13 @@ bool OdomController::isTurnSettled() const {
 
 Trigger::Function OdomController::distanceTo(const Vector& point, const QLength& trigger) const {
   return [=] {
-    return distanceToPoint(point) < trigger;
+    return getState().distTo(point) < trigger;
   };
 }
 
 Trigger::Function OdomController::angleTo(const Vector& point, const QAngle& trigger) const {
   return [=] {
-    return angleToPoint(point) < trigger;
+    return getState().angleTo(point) < trigger;
   };
 }
 

@@ -40,7 +40,7 @@ void OdomXController::strafeToPoint(const Vector& point, const Angler& angler, d
     _distanceErr = state.distTo(point);
     _angleErr = angler(*this);
 
-    QAngle angleToTarget = angleToPoint(point);
+    QAngle angleToTarget = state.angleTo(point);
 
     double distanceVel = distanceController->step(-_distanceErr.convert(millimeter));
     double angleVel = angleController->step(-_angleErr.convert(degree));

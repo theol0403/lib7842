@@ -161,22 +161,6 @@ public:
   State getState() const;
 
   /**
-   * Get the distance from the chassis to a point.
-   *
-   * @param  point The point.
-   * @return The distance to the point.
-   */
-  QLength distanceToPoint(const Vector& point) const;
-
-  /**
-   * Get the angle from the chassis to a point.
-   *
-   * @param  point The point.
-   * @return The angle to the point.
-   */
-  QAngle angleToPoint(const Vector& point) const;
-
-  /**
    * Get the error of the distance PID controller. Is valid when driving linearly or driving to a
    * point.
    *
