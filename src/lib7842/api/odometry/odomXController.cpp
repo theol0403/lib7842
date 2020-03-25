@@ -27,7 +27,8 @@ void OdomXController::strafeAbsoluteDirection(const QLength& distance, const QAn
                                               Settler&& settler) {
   QLength x = sin(direction.convert(radian)) * distance;
   QLength y = cos(direction.convert(radian)) * distance;
-  Vector target = Vector(State(getState())) + Vector(x, y);
+  Vector&& istate = State(getState());
+  Vector target = istate + Vector(x, y);
   strafeToPoint(target, angler, turnScale, std::move(settler));
 }
 
