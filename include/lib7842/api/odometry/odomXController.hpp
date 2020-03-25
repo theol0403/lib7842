@@ -12,11 +12,11 @@ public:
   /**
    * OdomXController. Implements chassis movement algorithms for the X drive.
    *
-   * @param imodel              The chassis model
-   * @param iodometry           The chassis odometry
-   * @param idistanceController The distance pid controller
-   * @param iturnController     The turning pid controller
-   * @param iangleController    The angle pid controller, used to keep distance driving straight
+   * @param imodel              The chassis model.
+   * @param iodometry           The chassis odometry.
+   * @param idistanceController The distance PID controller.
+   * @param iturnController     The turning PID controller, used for turn commands.
+   * @param iangleController    The angle PID controller, used to keep distance driving straight.
    * @param idriveRadius        The radius from the target point to turn off angle correction when
    *                            driving to a point. Used by OdomController's driveToPoint, which is
    *                            not used with an X drive.
@@ -29,43 +29,55 @@ public:
                   const QLength& idriveRadius);
 
   /**
-   * Strafe a distance in a relative direction while correcting angle using an Angler.
+   * Strafe a distance in a relative direction while correcting angle using an Angler. This method
+   * strafes directly to the point, and the Angler can control the heading of the robot along the
+   * way. This uses the distance and angle PID controller.
    *
-   * @param distance        The distance
-   * @param direction       The relative direction of the strafing
-   * @param angleCalculator The angle calculator
-   * @param turnScale       The turn scale
-   * @param settler         The settler
+   * @param distance  The linear distance to strafe.
+   * @param direction The relative direction to strafe
+   * @param angler    The angler that directs the heading of the robot.
+   * @param turnScale The turn scale is used to control the priority of turning over driving. A
+   *                  higher value will make the robot turn to face the point sooner, and a lower
+   *                  value will take longer.
+   * @param settler   The settler that tells the drive to stop.
    */
   virtual void
     strafeRelativeDirection(const QLength& distance, const QAngle& direction,
-                            const Angler& angleCalculator = makeAngler(), double turnScale = 1,
+                            const Angler& angler = makeAngler(), double turnScale = 1,
                             Settler&& settler = Settler().distanceSettled().angleSettled());
 
   /**
-   * Strafe a distance in an absolute direction while correcting angle using an Angler.
+   * Strafe a distance in an absolute direction while correcting angle using an Angler. This method
+   * strafes directly to the point, and the Angler can control the heading of the robot along the
+   * way. This uses the distance and angle PID controller.
    *
-   * @param distance        The distance
-   * @param direction       The absolute direction of the strafing
-   * @param angleCalculator The angle calculator
-   * @param turnScale       The turn scale
-   * @param settler         The settler
+   * @param distance  The linear distance to strafe.
+   * @param direction The absolute direction to strafe.
+   * @param angler    The angler that directs the heading of the robot.
+   * @param turnScale The turn scale is used to control the priority of turning over driving. A
+   *                  higher value will make the robot turn to face the point sooner, and a lower
+   *                  value will take longer.
+   * @param settler   The settler that tells the drive to stop.
    */
   virtual void
     strafeAbsoluteDirection(const QLength& distance, const QAngle& direction,
-                            const Angler& angleCalculator = makeAngler(), double turnScale = 1,
+                            const Angler& angler = makeAngler(), double turnScale = 1,
                             Settler&& settler = Settler().distanceSettled().angleSettled());
 
   /**
-   * Strafe to a point using field-centric math and an Angler.
+   * Strafe to a point using field-centric math and an Angler. This method strafes directly to the
+   * point, and the Angler can control the heading of the robot along the way. This uses the
+   * distance and angle PID controller.
    *
-   * @param targetPoint     The target point
-   * @param angleCalculator The angle calculator
-   * @param turnScale       The turn scale
-   * @param settler         The settler
+   * @param point     The target point to strafe to.
+   * @param angler    The angler that directs the heading of the robot.
+   * @param turnScale The turn scale is used to control the priority of turning over driving. A
+   *                  higher value will make the robot turn to face the point sooner, and a lower
+   *                  value will take longer.
+   * @param settler   The settler that tells the drive to stop.
    */
-  virtual void strafeToPoint(const Vector& targetPoint,
-                             const Angler& angleCalculator = makeAngler(), double turnScale = 1,
+  virtual void strafeToPoint(const Vector& point, const Angler& angler = makeAngler(),
+                             double turnScale = 1,
                              Settler&& settler = Settler().distanceSettled().angleSettled());
 
 protected:
