@@ -23,8 +23,7 @@ OdomController::OdomController(std::shared_ptr<ChassisModel> imodel,
 /**
  * Turning API
  */
-void OdomController::turn(const AngleCalculator& angleCalculator, const Turner& turner,
-                          Settler&& settler) {
+void OdomController::turn(const Angler& angleCalculator, const Turner& turner, Settler&& settler) {
   settler.noAbort(); // distance pid does not output with this algorithm
   resetPid();
   auto rate = global::getTimeUtil()->getRate();
@@ -38,23 +37,22 @@ void OdomController::turn(const AngleCalculator& angleCalculator, const Turner& 
 }
 
 void OdomController::turnToAngle(const QAngle& angle, const Turner& turner, Settler&& settler) {
-  turn(makeAngleCalculator(angle), turner, std::move(settler));
+  turn(makeAngler(angle), turner, std::move(settler));
 }
 
 void OdomController::turnAngle(const QAngle& angle, const Turner& turner, Settler&& settler) {
-  turn(makeAngleCalculator(angle + getState().theta), turner, std::move(settler));
+  turn(makeAngler(angle + getState().theta), turner, std::move(settler));
 }
 
 void OdomController::turnToPoint(const Vector& point, const Turner& turner, Settler&& settler) {
-  turn(makeAngleCalculator(point), turner, std::move(settler));
+  turn(makeAngler(point), turner, std::move(settler));
 }
 
 /**
  * Driving API
  */
-void OdomController::moveDistanceAtAngle(const QLength& distance,
-                                         const AngleCalculator& angleCalculator, double turnScale,
-                                         Settler&& settler) {
+void OdomController::moveDistanceAtAngle(const QLength& distance, const Angler& angleCalculator,
+                                         double turnScale, Settler&& settler) {
   resetPid();
   auto rate = global::getTimeUtil()->getRate();
   auto lastTicks = model->getSensorVals();
@@ -77,7 +75,7 @@ void OdomController::moveDistanceAtAngle(const QLength& distance,
 }
 
 void OdomController::moveDistance(const QLength& distance, Settler&& settler) {
-  moveDistanceAtAngle(distance, makeAngleCalculator(getState().theta), 1, std::move(settler));
+  moveDistanceAtAngle(distance, makeAngler(getState().theta), 1, std::move(settler));
 }
 
 /**
@@ -166,20 +164,20 @@ void OdomController::rightPivot(ChassisModel& model, double vel) {
   model.tank(0, -vel * 2);
 }
 
-AngleCalculator OdomController::makeAngleCalculator(const QAngle& angle) {
+Angler OdomController::makeAngler(const QAngle& angle) {
   QAngle iangle = rollAngle180(angle);
   return [=](const OdomController& odom) {
     return rollAngle180(iangle - odom.getState().theta);
   };
 }
 
-AngleCalculator OdomController::makeAngleCalculator(const Vector& point) {
+Angler OdomController::makeAngler(const Vector& point) {
   return [=](const OdomController& odom) {
     return odom.angleToPoint(point);
   };
 }
 
-AngleCalculator OdomController::makeAngleCalculator() {
+Angler OdomController::makeAngler() {
   return [=](const OdomController& /*unused*/) {
     return 0_deg;
   };

@@ -18,10 +18,10 @@ class OdomController;
 using Turner = std::function<void(ChassisModel& model, double vel)>;
 
 /**
- * Function that returns an angle for the chassis to seek. Examples can be an AngleCalculator that
+ * Function that returns an angle for the chassis to seek. Examples can be an Angler that
  * returns the angle to a point, or an angle to an absolute angle.
  */
-using AngleCalculator = std::function<QAngle(const OdomController& odom)>;
+using Angler = std::function<QAngle(const OdomController& odom)>;
 
 /**
  * Odometry motion controller for skid-steer chassis.
@@ -48,13 +48,13 @@ public:
   virtual ~OdomController() = default;
 
   /**
-   * Turn the chassis using the given AngleCalculator.
+   * Turn the chassis using the given Angler.
    *
    * @param angleCalculator The angle calculator
    * @param turner          The turner
    * @param settler         The settler
    */
-  virtual void turn(const AngleCalculator& angleCalculator, const Turner& turner = pointTurn,
+  virtual void turn(const Angler& angleCalculator, const Turner& turner = pointTurn,
                     Settler&& settler = Settler().turnSettled());
 
   /**
@@ -88,8 +88,8 @@ public:
                            Settler&& settler = Settler().turnSettled());
 
   /**
-   * Drive a distance while maintaining angle using an AngleCalculator. This method should not be
-   * directly called, instead use moveDistance which creates an AngleCalculator to the current
+   * Drive a distance while maintaining angle using an Angler. This method should not be
+   * directly called, instead use moveDistance which creates an Angler to the current
    * heading.
    *
    * @param distance        The distance
@@ -97,7 +97,7 @@ public:
    * @param turnScale       The turn scale
    * @param settler         The settler
    */
-  virtual void moveDistanceAtAngle(const QLength& distance, const AngleCalculator& angleCalculator,
+  virtual void moveDistanceAtAngle(const QLength& distance, const Angler& angleCalculator,
                                    double turnScale,
                                    Settler&& settler = Settler().distanceSettled().angleSettled());
 
@@ -200,26 +200,26 @@ public:
   static void rightPivot(ChassisModel& model, double vel);
 
   /**
-   * Make an AngleCalculator that seeks an absolute angle.
+   * Make an Angler that seeks an absolute angle.
    *
    * @param  angle The angle to seek.
    * @return The angle calculator.
    */
-  static AngleCalculator makeAngleCalculator(const QAngle& angle);
+  static Angler makeAngler(const QAngle& angle);
 
   /**
-   * Make an AngleCalculator that seeks a point.
+   * Make an Angler that seeks a point.
    *
    * @param  point The point to seek.
    * @return The angle calculator.
    */
-  static AngleCalculator makeAngleCalculator(const Vector& point);
+  static Angler makeAngler(const Vector& point);
 
   /**
-   * Make an AngleCalculator that does nothing. This is the default AngleCalculator.
+   * Make an Angler that does nothing. This is the default Angler.
    * @return The angle calculator.
    */
-  static AngleCalculator makeAngleCalculator();
+  static Angler makeAngler();
 
   /**
    * Trigger if the distance to a point is within a value.

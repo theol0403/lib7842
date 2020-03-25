@@ -29,7 +29,7 @@ public:
                   const QLength& idriveRadius);
 
   /**
-   * Strafe a distance in a relative direction while correcting angle using an AngleCalculator.
+   * Strafe a distance in a relative direction while correcting angle using an Angler.
    *
    * @param distance        The distance
    * @param direction       The relative direction of the strafing
@@ -39,12 +39,11 @@ public:
    */
   virtual void
     strafeRelativeDirection(const QLength& distance, const QAngle& direction,
-                            const AngleCalculator& angleCalculator = makeAngleCalculator(),
-                            double turnScale = 1,
+                            const Angler& angleCalculator = makeAngler(), double turnScale = 1,
                             Settler&& settler = Settler().distanceSettled().angleSettled());
 
   /**
-   * Strafe a distance in an absolute direction while correcting angle using an AngleCalculator.
+   * Strafe a distance in an absolute direction while correcting angle using an Angler.
    *
    * @param distance        The distance
    * @param direction       The absolute direction of the strafing
@@ -54,12 +53,11 @@ public:
    */
   virtual void
     strafeAbsoluteDirection(const QLength& distance, const QAngle& direction,
-                            const AngleCalculator& angleCalculator = makeAngleCalculator(),
-                            double turnScale = 1,
+                            const Angler& angleCalculator = makeAngler(), double turnScale = 1,
                             Settler&& settler = Settler().distanceSettled().angleSettled());
 
   /**
-   * Strafe to a point using field-centric math and an AngleCalculator.
+   * Strafe to a point using field-centric math and an Angler.
    *
    * @param targetPoint     The target point
    * @param angleCalculator The angle calculator
@@ -67,8 +65,7 @@ public:
    * @param settler         The settler
    */
   virtual void strafeToPoint(const Vector& targetPoint,
-                             const AngleCalculator& angleCalculator = makeAngleCalculator(),
-                             double turnScale = 1,
+                             const Angler& angleCalculator = makeAngler(), double turnScale = 1,
                              Settler&& settler = Settler().distanceSettled().angleSettled());
 
 protected:
