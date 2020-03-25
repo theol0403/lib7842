@@ -1,4 +1,4 @@
-#include "test.hpp"
+#include "../test/include/test.hpp"
 
 static QLength calculateDistanceTraveled(int ticks) {
   return (ticks / 360.0) * 1_pi * 4_in;

@@ -79,9 +79,8 @@ bool Settler::run(const OdomController* icontroller) {
   if (driveAbort && driveAbort->isSettled(change.convert(millimeter))) {
     GLOBAL_WARN_S("Settler::run: Aborting drive command");
     return true;
-  } else {
-    return Trigger::run();
   }
+  return Trigger::run();
 }
 
 bool Settler::operator()(const OdomController* icontroller) {

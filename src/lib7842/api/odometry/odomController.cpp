@@ -1,18 +1,20 @@
 #include "lib7842/api/odometry/odomController.hpp"
+
 #include "pros/rtos.hpp"
+#include <utility>
 
 namespace lib7842 {
 
 using namespace util;
 
-OdomController::OdomController(const std::shared_ptr<ChassisModel>& imodel,
-                               const std::shared_ptr<Odometry>& iodometry,
+OdomController::OdomController(std::shared_ptr<ChassisModel> imodel,
+                               std::shared_ptr<Odometry> iodometry,
                                std::unique_ptr<IterativePosPIDController> idistanceController,
                                std::unique_ptr<IterativePosPIDController> iturnController,
                                std::unique_ptr<IterativePosPIDController> iangleController,
                                const QLength& idriveRadius) :
-  model(imodel),
-  odometry(iodometry),
+  model(std::move(imodel)),
+  odometry(std::move(iodometry)),
   distanceController(std::move(idistanceController)),
   angleController(std::move(iangleController)),
   turnController(std::move(iturnController)),
@@ -178,7 +180,7 @@ AngleCalculator OdomController::makeAngleCalculator(const Vector& point) {
 }
 
 AngleCalculator OdomController::makeAngleCalculator() {
-  return [=](const OdomController&) {
+  return [=](const OdomController& /*unused*/) {
     return 0_deg;
   };
 }

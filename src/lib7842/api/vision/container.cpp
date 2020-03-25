@@ -36,11 +36,8 @@ Container& Container::remove(size_t startIndex, size_t endIndex) {
 }
 
 Object Container::get(size_t index) {
-  if (index < objects.size()) {
-    return objects.at(index);
-  } else {
-    return {};
-  }
+  if (index < objects.size()) { return objects.at(index); }
+  return {};
 }
 
 double Container::get(size_t index, const Query& query) {

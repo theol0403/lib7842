@@ -4,15 +4,16 @@
 #include "okapi/api/units/QArea.hpp"
 #include "pros/rtos.hpp"
 #include <iostream>
+#include <utility>
 
 namespace lib7842 {
 
-PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
-                           const std::shared_ptr<Odometry>& iodometry,
-                           const ChassisScales& ichassisScales, const QAngularSpeed& igearset,
-                           const QLength& ilookahead, const std::optional<QLength>& idriveRadius) :
-  model(imodel),
-  odometry(iodometry),
+PathFollower::PathFollower(std::shared_ptr<ChassisModel> imodel,
+                           std::shared_ptr<Odometry> iodometry, const ChassisScales& ichassisScales,
+                           const QAngularSpeed& igearset, const QLength& ilookahead,
+                           const std::optional<QLength>& idriveRadius) :
+  model(std::move(imodel)),
+  odometry(std::move(iodometry)),
   chassisScales(ichassisScales),
   gearset(igearset),
   lookahead(ilookahead),
@@ -206,11 +207,8 @@ std::optional<double> PathFollower::findIntersectT(const Vector& start, const Ve
     double t2 = (-b + dis) / (2.0 * a);
 
     // prioritize further down path
-    if (t2 >= 0.0 && t2 <= 1.0) {
-      return t2;
-    } else if (t1 >= 0.0 && t1 <= 1.0) {
-      return t1;
-    }
+    if (t2 >= 0.0 && t2 <= 1.0) { return t2; }
+    if (t1 >= 0.0 && t1 <= 1.0) { return t1; }
   }
 
   // no intersection on this interval

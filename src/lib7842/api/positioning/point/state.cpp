@@ -30,11 +30,11 @@ State State::operator-(const State& rhs) const {
   return {x - rhs.x, y - rhs.y, theta - rhs.theta};
 }
 
-State State::operator*(const double scalar) const {
+State State::operator*(double scalar) const {
   return {x * scalar, y * scalar, theta * scalar};
 }
 
-State State::operator/(const double scalar) const {
+State State::operator/(double scalar) const {
   return {x / scalar, y / scalar, theta / scalar};
 }
 

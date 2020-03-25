@@ -1,4 +1,4 @@
-#include "test.hpp"
+#include "../test/include/test.hpp"
 #include <unistd.h>
 
 class MockTask : public TaskWrapper {

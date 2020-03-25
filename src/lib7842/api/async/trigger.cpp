@@ -28,9 +28,9 @@ bool Trigger::run() {
   if (std::any_of(exceptions.begin(), exceptions.end(),
                   [](const auto& function) { return function(); })) {
     return true;
-  } else if (!requirements.empty() &&
-             std::all_of(requirements.begin(), requirements.end(),
-                         [](const auto& function) { return function(); })) {
+  }
+  if (!requirements.empty() && std::all_of(requirements.begin(), requirements.end(),
+                                           [](const auto& function) { return function(); })) {
     return true;
   }
   return false;

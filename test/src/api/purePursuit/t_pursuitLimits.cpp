@@ -1,4 +1,4 @@
-#include "test.hpp"
+#include "../test/include/test.hpp"
 
 TEST_CASE("PursuitLimits test") {
   QTime accelTime = 1_s;

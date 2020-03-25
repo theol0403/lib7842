@@ -45,8 +45,8 @@ struct Vector {
    */
   Vector operator+(const Vector& rhs) const;
   Vector operator-(const Vector& rhs) const;
-  Vector operator*(const double scalar) const;
-  Vector operator/(const double scalar) const;
+  Vector operator*(double scalar) const;
+  Vector operator/(double scalar) const;
   bool operator==(const Vector& rhs) const;
   bool operator!=(const Vector& rhs) const;
 

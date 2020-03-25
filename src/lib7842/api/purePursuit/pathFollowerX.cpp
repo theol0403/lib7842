@@ -47,8 +47,8 @@ void PathFollowerX::followPath(const PursuitPath& ipath) {
     double power = (wheelVel / gearset).convert(number);
 
     // calculate target angle at lookahead
-    QAngle start = ipath()[lastLookIndex]->getData<QAngle>("angle");
-    QAngle end = ipath()[lastLookIndex + 1]->getData<QAngle>("angle");
+    auto start = ipath()[lastLookIndex]->getData<QAngle>("angle");
+    auto end = ipath()[lastLookIndex + 1]->getData<QAngle>("angle");
     QAngle angle = start + ((end - start) * lastLookT);
 
     // get angle error from robot to lookahead

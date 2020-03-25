@@ -10,9 +10,11 @@ namespace lib7842 {
  * from the derived constructor or from outside the class.
  */
 class TaskWrapper {
+public:
+  TaskWrapper(const TaskWrapper& itask) = delete;
+
 protected:
   TaskWrapper() = default;
-  TaskWrapper(const TaskWrapper& itask) = delete;
   TaskWrapper(TaskWrapper&& itask) = default;
   virtual ~TaskWrapper() = default;
 

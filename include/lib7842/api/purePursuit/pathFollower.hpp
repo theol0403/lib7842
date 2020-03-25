@@ -25,9 +25,9 @@ public:
    * @param idriveRadius   Optional. The radius from the end of the path to turn off angle
    *                       correction. Defaults to lookahead distance.
    */
-  PathFollower(const std::shared_ptr<ChassisModel>& imodel,
-               const std::shared_ptr<Odometry>& iodometry, const ChassisScales& ichassisScales,
-               const QAngularSpeed& igearset, const QLength& ilookahead,
+  PathFollower(std::shared_ptr<ChassisModel> imodel, std::shared_ptr<Odometry> iodometry,
+               const ChassisScales& ichassisScales, const QAngularSpeed& igearset,
+               const QLength& ilookahead,
                const std::optional<QLength>& idriveRadius = std::nullopt);
 
   /**

@@ -1,5 +1,7 @@
 #include "lib7842/api/positioning/path/quinticSegment.hpp"
 
+#include <utility>
+
 namespace lib7842 {
 
 QuinticPolynomial::QuinticPolynomial(double istart, double istartSlope, double iend,
@@ -24,12 +26,12 @@ double QuinticPolynomial::calculate(double t) const {
   return xt;
 }
 
-QuinticSegment::QuinticSegment(const DataState& istart, const DataState& iend) :
-  start(istart), end(iend) {}
+QuinticSegment::QuinticSegment(DataState istart, DataState iend) :
+  start(std::move(istart)), end(std::move(iend)) {}
 
 SimplePath QuinticSegment::generate(int isteps, bool iend) const {
-  double startSlope = start.getData<double>("slope");
-  double endSlope = end.getData<double>("slope");
+  auto startSlope = start.getData<double>("slope");
+  auto endSlope = end.getData<double>("slope");
 
   double xStartSlope = startSlope * std::sin(start.theta.convert(radian));
   double yStartSlope = startSlope * std::cos(start.theta.convert(radian));

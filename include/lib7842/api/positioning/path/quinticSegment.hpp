@@ -47,7 +47,7 @@ public:
    * @param istart The start point
    * @param iend   The end point
    */
-  QuinticSegment(const DataState& istart, const DataState& iend);
+  QuinticSegment(DataState istart, DataState iend);
 
   /**
    * Interpolate the path

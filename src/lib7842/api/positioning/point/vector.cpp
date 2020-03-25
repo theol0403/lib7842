@@ -32,11 +32,11 @@ Vector Vector::operator-(const Vector& rhs) const {
   return {x - rhs.x, y - rhs.y};
 }
 
-Vector Vector::operator*(const double scalar) const {
+Vector Vector::operator*(double scalar) const {
   return {x * scalar, y * scalar};
 }
 
-Vector Vector::operator/(const double scalar) const {
+Vector Vector::operator/(double scalar) const {
   return {x / scalar, y / scalar};
 }
 

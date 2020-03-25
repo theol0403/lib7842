@@ -1,4 +1,4 @@
-#include "test.hpp"
+#include "../test/include/test.hpp"
 
 class MockQuinticPath : public QuinticPath {
 public:

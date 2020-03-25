@@ -18,7 +18,7 @@ public:
    * @param ipath        The path
    * @param islopeScalar The importance of each point's angle.
    */
-  explicit QuinticPath(const StatePath& ipath, double islopeScalar);
+  explicit QuinticPath(StatePath ipath, double islopeScalar);
 
   /**
    * Create a spline from an array of points containing only positions. The angle of each point is

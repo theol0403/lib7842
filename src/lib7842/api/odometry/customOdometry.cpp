@@ -2,9 +2,9 @@
 
 namespace lib7842 {
 
-CustomOdometry::CustomOdometry(const std::shared_ptr<ChassisModel>& imodel,
+CustomOdometry::CustomOdometry(std::shared_ptr<ChassisModel> imodel,
                                const ChassisScales& ichassisScales) :
-  model(imodel), chassisScales(ichassisScales) {}
+  model(std::move(imodel)), chassisScales(ichassisScales) {}
 
 void CustomOdometry::setScales(const ChassisScales& ichassisScales) {
   chassisScales = ichassisScales;
@@ -38,7 +38,7 @@ void CustomOdometry::step() {
   double i; // Half on the angle that I've traveled
   double h2; // The same as h but using the back instead of the side wheels
   double a = (L - R) / chassisScales.wheelTrack.convert(meter); // The angle that I've traveled
-  if (a) {
+  if (a != 0.0) {
     // The radius of the circle the robot travels around with the right side of the robot
     double r = R / a;
     i = a / 2.0;
@@ -71,11 +71,8 @@ const State& CustomOdometry::getState() const {
 
 OdomState CustomOdometry::getState(const StateMode& imode) const {
   const State& istate = getState();
-  if (imode == StateMode::CARTESIAN) {
-    return {istate.x, istate.y, istate.theta};
-  } else {
-    return {istate.y, istate.x, istate.theta};
-  }
+  if (imode == StateMode::CARTESIAN) { return {istate.x, istate.y, istate.theta}; }
+  return {istate.y, istate.x, istate.theta};
 }
 
 void CustomOdometry::setState(const State& istate) {

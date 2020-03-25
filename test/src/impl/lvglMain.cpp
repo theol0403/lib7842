@@ -1,6 +1,6 @@
+#include "../test/include/test.hpp"
 #include "lib7842/api.hpp"
 #include "lvgl/lvgl.h"
-#include "test.hpp"
 
 void lvglTest() {
   GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);

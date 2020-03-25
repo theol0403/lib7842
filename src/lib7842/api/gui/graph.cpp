@@ -58,7 +58,7 @@ Graph& Graph::withSeries(const std::string& iname, const lv_color_t& icolor,
   lv_obj_set_style(label, style.get());
   lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_LEFT, 7, 5 + lv_obj_get_height(label) * series.size());
 
-  series.push_back(std::make_tuple(ser, idata, std::move(style)));
+  series.emplace_back(ser, idata, std::move(style));
   return *this;
 }
 

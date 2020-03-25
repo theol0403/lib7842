@@ -18,7 +18,7 @@ public:
    * @param imodel         The chassis model for reading sensors.
    * @param ichassisScales The chassis dimensions.
    */
-  CustomOdometry(const std::shared_ptr<ChassisModel>& imodel, const ChassisScales& ichassisScales);
+  CustomOdometry(std::shared_ptr<ChassisModel> imodel, const ChassisScales& ichassisScales);
 
   /**
    * Set the drive and turn scales.

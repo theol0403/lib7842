@@ -39,8 +39,7 @@ public:
    * @param idriveRadius        The radius from the target point to turn off angle correction when
    *                            driving to a point
    */
-  OdomController(const std::shared_ptr<ChassisModel>& imodel,
-                 const std::shared_ptr<Odometry>& iodometry,
+  OdomController(std::shared_ptr<ChassisModel> imodel, std::shared_ptr<Odometry> iodometry,
                  std::unique_ptr<IterativePosPIDController> idistanceController,
                  std::unique_ptr<IterativePosPIDController> iturnController,
                  std::unique_ptr<IterativePosPIDController> iangleController,

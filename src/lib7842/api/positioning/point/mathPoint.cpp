@@ -27,11 +27,11 @@ bool MathPoint::operator!=(const MathPoint& rhs) const {
   return !(rhs == *this);
 }
 
-MathPoint MathPoint::operator*(const double scalar) const {
+MathPoint MathPoint::operator*(double scalar) const {
   return {x * scalar, y * scalar};
 }
 
-MathPoint MathPoint::operator/(const double scalar) const {
+MathPoint MathPoint::operator/(double scalar) const {
   return {x / scalar, y / scalar};
 }
 
@@ -41,7 +41,7 @@ double MathPoint::dist(const MathPoint& lhs, const MathPoint& rhs) {
 
 MathPoint MathPoint::normalize(const MathPoint& point) {
   double imag = mag(point);
-  return imag ? point / imag : point;
+  return imag != 0.0 ? point / imag : point;
 }
 
 double MathPoint::dot(const MathPoint& lhs, const MathPoint& rhs) {
