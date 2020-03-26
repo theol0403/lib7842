@@ -19,7 +19,6 @@ int main(int argc, char** argv) {
   } else {
     doctest::Context context;
     context.applyCommandLine(argc, argv);
-    std::cout << "Running doctest:" << std::endl;
     return context.run(); // run
   }
 }
