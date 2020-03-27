@@ -10,7 +10,7 @@ static void assertOdomState(const State& istate, std::shared_ptr<CustomOdometry>
   CHECK(iodom->getState().theta.convert(degree) == Approx(istate.theta.convert(degree)));
 }
 
-TEST_CASE("CustomOdometry test") {
+TEST_CASE("CustomOdometry") {
   auto model = std::make_shared<MockThreeEncoderXDriveModel>();
 
   SUBCASE("Common Odometry Tests") {

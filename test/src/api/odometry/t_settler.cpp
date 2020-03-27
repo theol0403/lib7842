@@ -6,7 +6,7 @@ public:
   using OdomController::_distanceErr;
 };
 
-TEST_CASE("Settler test") {
+TEST_CASE("Settler") {
   auto model = std::make_shared<MockThreeEncoderXDriveModel>();
   auto odom =
     std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}));

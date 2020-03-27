@@ -2,7 +2,7 @@
 
 using namespace lib7842::Vision;
 
-TEST_CASE("Object test") {
+TEST_CASE("Object") {
 
   GIVEN("an object") {
     Object obj;

@@ -1,6 +1,6 @@
 #include "../test/include/test.hpp"
 
-TEST_CASE("PursuitLimits test") {
+TEST_CASE("PursuitLimits") {
   QTime accelTime = 1_s;
   QTime decelTime = 2_s;
 

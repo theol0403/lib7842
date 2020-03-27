@@ -1,6 +1,6 @@
 #include "../test/include/test.hpp"
 
-TEST_CASE("Vector test") {
+TEST_CASE("Vector") {
 
   GIVEN("a default-constructed point") {
     Vector point;

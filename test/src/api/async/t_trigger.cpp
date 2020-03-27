@@ -6,7 +6,7 @@ public:
   using OdomController::_distanceErr;
 };
 
-TEST_CASE("Trigger test") {
+TEST_CASE("Trigger") {
   Trigger trigger;
 
   SUBCASE("logic tests") {

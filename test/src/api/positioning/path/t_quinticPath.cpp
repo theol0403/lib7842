@@ -6,7 +6,7 @@ public:
   using QuinticPath::path;
 };
 
-TEST_CASE("QuinticPath test") {
+TEST_CASE("QuinticPath") {
 
   SUBCASE("one point") {
     THEN("one point should return nothing") {}

@@ -8,7 +8,7 @@ public:
   using PathGenerator::setVelocity;
 };
 
-TEST_CASE("PathGenerator test") {
+TEST_CASE("PathGenerator") {
   PursuitLimits limits {2_mps, 8_mps2, 8_mps, 8_mps2, 3_mps, 0.03_mps};
 
   SUBCASE("ComputeSingleCurvature") {

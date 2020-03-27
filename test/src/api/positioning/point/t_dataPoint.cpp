@@ -1,6 +1,6 @@
 #include "../test/include/test.hpp"
 
-TEST_CASE("DataPoint test") {
+TEST_CASE("DataPoint") {
 
   GIVEN("a data point") {
     DataPoint point {5_in, 2_in};

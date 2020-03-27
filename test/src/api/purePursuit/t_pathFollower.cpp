@@ -10,7 +10,7 @@ public:
   using PathFollower::calculateVelocity;
 };
 
-TEST_CASE("PathFollower test") {
+TEST_CASE("PathFollower") {
 
   SUBCASE("given a model, odom, follower, and limits") {
 
