@@ -12,7 +12,7 @@ public:
   }
 };
 
-SCENARIO("TaskWrapper test") {
+TEST_CASE("TaskWrapper test") {
   GIVEN("a mock task") {
     MockTask task;
     WHEN("we wait a few milliseconds") {

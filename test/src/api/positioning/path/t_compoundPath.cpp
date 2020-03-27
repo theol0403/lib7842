@@ -1,6 +1,6 @@
 #include "../test/include/test.hpp"
 
-SCENARIO("CompoundPath test") {
+TEST_CASE("CompoundPath test") {
 
   GIVEN("an empty path") {
     CompoundPath path;

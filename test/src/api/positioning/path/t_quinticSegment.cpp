@@ -1,6 +1,6 @@
 #include "../test/include/test.hpp"
 
-SCENARIO("QuinticSegment test") {
+TEST_CASE("QuinticSegment test") {
 
   GIVEN("a simple segment") {
     DataState start {0_in, 0_in, 0_deg};

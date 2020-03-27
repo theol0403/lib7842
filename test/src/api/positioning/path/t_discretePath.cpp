@@ -1,6 +1,6 @@
 #include "../test/include/test.hpp"
 
-SCENARIO("SimpePath test") {
+TEST_CASE("SimplePath test") {
 
   GIVEN("a point") {
     Vector point1 {5_in, 3_in};
