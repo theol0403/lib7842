@@ -22,8 +22,8 @@ TEST_CASE("QuinticPath test") {
       THEN("generating one step should return both points") {
         auto ipath = path.generate(1);
         REQUIRE(ipath().size() == 2);
-        CHECK(*ipath()[0] == start);
-        CHECK(ipath()[1]->y.convert(inch) == Approx(1));
+        CHECK(*ipath().at(0) == start);
+        CHECK(ipath().at(1)->y.convert(inch) == Approx(1));
 
         for (auto&& point : ipath()) {
           CHECK(point->x.convert(inch) == Approx(0));
@@ -33,9 +33,9 @@ TEST_CASE("QuinticPath test") {
       THEN("generating two steps should return interpolated points") {
         auto ipath = path.generate(2);
         REQUIRE(ipath().size() == 3);
-        CHECK(*ipath()[0] == start);
-        CHECK(ipath()[1]->y.convert(inch) == Approx(0.5));
-        CHECK(ipath()[2]->y.convert(inch) == Approx(1));
+        CHECK(*ipath().at(0) == start);
+        CHECK(ipath().at(1)->y.convert(inch) == Approx(0.5));
+        CHECK(ipath().at(2)->y.convert(inch) == Approx(1));
 
         for (auto&& point : ipath()) {
           CHECK(point->x.convert(inch) == Approx(0));
@@ -47,8 +47,8 @@ TEST_CASE("QuinticPath test") {
         REQUIRE(ipath().size() == 11);
 
         for (size_t i = 0; i < ipath().size(); i++) {
-          CHECK(ipath()[i]->y.convert(inch) == Approx(i * 0.1));
-          CHECK(ipath()[i]->x.convert(inch) == Approx(0));
+          CHECK(ipath().at(i)->y.convert(inch) == Approx(i * 0.1));
+          CHECK(ipath().at(i)->x.convert(inch) == Approx(0));
         }
       }
     }
@@ -60,29 +60,29 @@ TEST_CASE("QuinticPath test") {
       THEN("generating one step should return both points") {
         auto ipath = path.generate(1);
         REQUIRE(ipath().size() == 2);
-        CHECK(*ipath()[0] == start);
-        CHECK(ipath()[1]->x.convert(inch) == Approx(2));
-        CHECK(ipath()[1]->y.convert(inch) == Approx(4));
+        CHECK(*ipath().at(0) == start);
+        CHECK(ipath().at(1)->x.convert(inch) == Approx(2));
+        CHECK(ipath().at(1)->y.convert(inch) == Approx(4));
       }
 
       THEN("generating two steps should return interpolated points") {
         auto ipath = path.generate(2);
         REQUIRE(ipath().size() == 3);
-        CHECK(*ipath()[0] == start);
-        CHECK(ipath()[1]->x.convert(inch) == Approx(1));
-        CHECK(ipath()[1]->y.convert(inch) == Approx(2));
-        CHECK(ipath()[2]->x.convert(inch) == Approx(2));
-        CHECK(ipath()[2]->y.convert(inch) == Approx(4));
+        CHECK(*ipath().at(0) == start);
+        CHECK(ipath().at(1)->x.convert(inch) == Approx(1));
+        CHECK(ipath().at(1)->y.convert(inch) == Approx(2));
+        CHECK(ipath().at(2)->x.convert(inch) == Approx(2));
+        CHECK(ipath().at(2)->y.convert(inch) == Approx(4));
       }
 
       THEN("generating 4 steps should return interpolated points") {
         auto ipath = path.generate(4);
         REQUIRE(ipath().size() == 5);
-        CHECK(*ipath()[0] == start);
-        CHECK(ipath()[2]->x.convert(inch) == Approx(1));
-        CHECK(ipath()[2]->y.convert(inch) == Approx(2));
-        CHECK(ipath()[4]->x.convert(inch) == Approx(2));
-        CHECK(ipath()[4]->y.convert(inch) == Approx(4));
+        CHECK(*ipath().at(0) == start);
+        CHECK(ipath().at(2)->x.convert(inch) == Approx(1));
+        CHECK(ipath().at(2)->y.convert(inch) == Approx(2));
+        CHECK(ipath().at(4)->x.convert(inch) == Approx(2));
+        CHECK(ipath().at(4)->y.convert(inch) == Approx(4));
       }
     }
   }
@@ -96,9 +96,9 @@ TEST_CASE("QuinticPath test") {
       THEN("generating one step should return 3 points") {
         auto ipath = path.generate(1);
         REQUIRE(ipath().size() == 3);
-        CHECK(*ipath()[0] == start);
-        CHECK(ipath()[1]->y.convert(inch) == Approx(1));
-        CHECK(ipath()[2]->y.convert(inch) == Approx(2));
+        CHECK(*ipath().at(0) == start);
+        CHECK(ipath().at(1)->y.convert(inch) == Approx(1));
+        CHECK(ipath().at(2)->y.convert(inch) == Approx(2));
 
         for (auto&& point : ipath()) {
           CHECK(point->x.convert(inch) == Approx(0));
@@ -108,11 +108,11 @@ TEST_CASE("QuinticPath test") {
       THEN("generating two steps should return 5 points") {
         auto ipath = path.generate(2);
         REQUIRE(ipath().size() == 5);
-        CHECK(*ipath()[0] == start);
-        CHECK(ipath()[1]->y.convert(inch) == Approx(0.5));
-        CHECK(ipath()[2]->y.convert(inch) == Approx(1));
-        CHECK(ipath()[3]->y.convert(inch) == Approx(1.5));
-        CHECK(ipath()[4]->y.convert(inch) == Approx(2));
+        CHECK(*ipath().at(0) == start);
+        CHECK(ipath().at(1)->y.convert(inch) == Approx(0.5));
+        CHECK(ipath().at(2)->y.convert(inch) == Approx(1));
+        CHECK(ipath().at(3)->y.convert(inch) == Approx(1.5));
+        CHECK(ipath().at(4)->y.convert(inch) == Approx(2));
 
         for (auto&& point : ipath()) {
           CHECK(point->x.convert(inch) == Approx(0));
@@ -124,8 +124,8 @@ TEST_CASE("QuinticPath test") {
         REQUIRE(ipath().size() == 21);
 
         for (size_t i = 0; i < ipath().size(); i++) {
-          CHECK(ipath()[i]->y.convert(inch) == Approx(i * 0.1));
-          CHECK(ipath()[i]->x.convert(inch) == Approx(0));
+          CHECK(ipath().at(i)->y.convert(inch) == Approx(i * 0.1));
+          CHECK(ipath().at(i)->x.convert(inch) == Approx(0));
         }
       }
     }
@@ -158,9 +158,9 @@ TEST_CASE("QuinticPath test") {
       MockQuinticPath path({{0_in, 0_in}, {0_in, 1_in}, {0_in, 2_in}}, 1);
 
       THEN("the points should be facing the proper way") {
-        CHECK(path.path()[0]->theta == 0_deg);
-        CHECK(path.path()[1]->theta == 0_deg);
-        CHECK(path.path()[2]->theta == 0_deg);
+        CHECK(path.path().at(0)->theta == 0_deg);
+        CHECK(path.path().at(1)->theta == 0_deg);
+        CHECK(path.path().at(2)->theta == 0_deg);
       }
     }
 
@@ -168,9 +168,9 @@ TEST_CASE("QuinticPath test") {
       MockQuinticPath path({{0_in, 0_in}, {1_in, 0_in}, {2_in, 0_in}}, 1);
 
       THEN("the points should be facing the proper way") {
-        CHECK(path.path()[0]->theta == 90_deg);
-        CHECK(path.path()[1]->theta == 90_deg);
-        CHECK(path.path()[2]->theta == 90_deg);
+        CHECK(path.path().at(0)->theta == 90_deg);
+        CHECK(path.path().at(1)->theta == 90_deg);
+        CHECK(path.path().at(2)->theta == 90_deg);
       }
     }
 
@@ -178,17 +178,17 @@ TEST_CASE("QuinticPath test") {
       MockQuinticPath path({{0_in, 0_in}, {1_in, 1_in}, {2_in, 2_in}}, 1);
 
       THEN("the points should be facing the proper way") {
-        CHECK(path.path()[0]->theta == 45_deg);
-        CHECK(path.path()[1]->theta == 45_deg);
-        CHECK(path.path()[2]->theta == 45_deg);
+        CHECK(path.path().at(0)->theta == 45_deg);
+        CHECK(path.path().at(1)->theta == 45_deg);
+        CHECK(path.path().at(2)->theta == 45_deg);
       }
 
       THEN("generating should work") {
         auto ipath = path.generate(10);
         REQUIRE(ipath().size() == 21);
         for (size_t i = 0; i < ipath().size(); i++) {
-          CHECK(ipath()[i]->y.convert(inch) == Approx(i * 0.1));
-          CHECK(ipath()[i]->x.convert(inch) == Approx(i * 0.1));
+          CHECK(ipath().at(i)->y.convert(inch) == Approx(i * 0.1));
+          CHECK(ipath().at(i)->x.convert(inch) == Approx(i * 0.1));
         }
       }
     }
@@ -197,10 +197,10 @@ TEST_CASE("QuinticPath test") {
       MockQuinticPath path({{0_in, 0_in}, {1_in, 0_in}, {1_in, 1_in}, {2_in, 0_in}}, 1);
 
       THEN("the points should be facing the proper way") {
-        CHECK(path.path()[0]->theta == 90_deg);
-        CHECK(path.path()[1]->theta == 45_deg);
-        CHECK(path.path()[2]->theta == 90_deg);
-        CHECK(path.path()[3]->theta == 135_deg);
+        CHECK(path.path().at(0)->theta == 90_deg);
+        CHECK(path.path().at(1)->theta == 45_deg);
+        CHECK(path.path().at(2)->theta == 90_deg);
+        CHECK(path.path().at(3)->theta == 135_deg);
       }
     }
   }

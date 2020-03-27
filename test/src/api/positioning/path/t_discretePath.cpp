@@ -31,8 +31,8 @@ SCENARIO("SimpePath test") {
         THEN("the pointers to the points should be equal") {
           SimplePath ipath2 = path;
           for (size_t i = 0; i < ipath().size(); i++) {
-            CHECK(ipath()[i] == ipath2()[i]);
-            CHECK(ipath()[i] == path()[i]);
+            CHECK(ipath().at(i) == ipath2().at(i));
+            CHECK(ipath().at(i) == path().at(i));
           }
         }
       }
@@ -47,9 +47,9 @@ SCENARIO("SimpePath test") {
         THEN("the pointers should not be equal but the points should be equal") {
           for (size_t i = 0; i < path().size(); i++) {
             // pointers should not be equal
-            CHECK(path()[i] != ipath()[i]);
+            CHECK(path().at(i) != ipath().at(i));
             // values should be equal
-            CHECK(*path()[i] == point1);
+            CHECK(*path().at(i) == point1);
           }
         }
       }
@@ -74,9 +74,9 @@ SCENARIO("SimpePath test") {
         THEN("the pointers should not be equal") {
           for (size_t i = 0; i < ipath().size(); i++) {
             // pointers should not be equal
-            CHECK(path()[i] != ipath()[i]);
+            CHECK(path().at(i) != ipath().at(i));
             // values should be equal
-            CHECK(*path()[i] == point1);
+            CHECK(*path().at(i) == point1);
           }
         }
       }
@@ -97,9 +97,9 @@ SCENARIO("SimpePath test") {
         THEN("the pointers should not be equal") {
           for (size_t i = 0; i < ipath().size(); i++) {
             // pointers should not be equal
-            CHECK(path()[i] != ipath()[i]);
+            CHECK(path().at(i) != ipath().at(i));
             // values should be equal
-            CHECK(*path()[i] == point1);
+            CHECK(*path().at(i) == point1);
           }
         }
       }
@@ -147,7 +147,7 @@ SCENARIO("SimpePath test") {
       }
 
       THEN("the point in the path should be equal to the point") {
-        CHECK(*ipath()[0] == point1);
+        CHECK(*ipath().at(0) == point1);
       }
     }
   }
@@ -178,19 +178,19 @@ SCENARIO("SimpePath test") {
       path.smoothen(0.25, 0.0001_in);
 
       THEN("the starting point should not move") {
-        CHECK(*path()[0] == (Vector {0_in, 0_in}));
+        CHECK(*path().at(0) == (Vector {0_in, 0_in}));
       }
 
       THEN("the ending point should not move") {
-        CHECK(*path()[2] == (Vector {5_in, 0_in}));
+        CHECK(*path().at(2) == (Vector {5_in, 0_in}));
       }
 
       THEN("the middle point x should not move") {
-        CHECK(path()[1]->x == 2.5_in);
+        CHECK(path().at(1)->x == 2.5_in);
       }
 
       THEN("the middle point y should move") {
-        CHECK(path()[1]->y != 4_in);
+        CHECK(path().at(1)->y != 4_in);
       }
     }
   }
@@ -203,7 +203,7 @@ SCENARIO("SimpePath test") {
 
       THEN("none of the middle points should be the same") {
         for (size_t i = 1; i < path().size() - 1; i++) {
-          CHECK(path()[i]->x != ipath()[i]->x);
+          CHECK(path().at(i)->x != ipath().at(i)->x);
         }
       }
     }
@@ -219,8 +219,8 @@ SCENARIO("SimpePath test") {
     }
 
     THEN("the 10th point should be in a certain position") {
-      CHECK(path()[10]->x.convert(inch) == Approx(5));
-      CHECK(path()[10]->y.convert(inch) == Approx(3.5).epsilon(0.001));
+      CHECK(path().at(10)->x.convert(inch) == Approx(5));
+      CHECK(path().at(10)->y.convert(inch) == Approx(3.5).epsilon(0.001));
     }
   }
 
@@ -233,7 +233,7 @@ SCENARIO("SimpePath test") {
 
     THEN("the points should increase in position") {
       for (size_t i = 0; i < path().size(); i++) {
-        CHECK(path()[i]->x.convert(inch) == Approx(i));
+        CHECK(path().at(i)->x.convert(inch) == Approx(i));
       }
     }
   }
@@ -248,9 +248,9 @@ SCENARIO("SimpePath test") {
 
     THEN("the angles should be interpolated") {
       for (size_t i = 0; i < path().size(); i++) {
-        CHECK(path()[i]->y.convert(foot) == Approx(i / 10.0));
-        CHECK(path()[i]->x.convert(foot) == 0);
-        CHECK(path()[i]->theta.convert(degree) == Approx(i * (90.0 / 10.0)));
+        CHECK(path().at(i)->y.convert(foot) == Approx(i / 10.0));
+        CHECK(path().at(i)->x.convert(foot) == 0);
+        CHECK(path().at(i)->theta.convert(degree) == Approx(i * (90.0 / 10.0)));
       }
     }
   }
