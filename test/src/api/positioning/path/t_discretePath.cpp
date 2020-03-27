@@ -107,6 +107,7 @@ SCENARIO("SimpePath test") {
       THEN("generating with invalid parameters should throw") {
         CHECK_THROWS_AS(path.generate(0), std::runtime_error);
         CHECK_THROWS_AS(path.generate(0.1), std::runtime_error);
+        CHECK_THROWS_AS(path.generate(-1), std::runtime_error);
       }
 
       GIVEN("a path generated with two interpolations") {

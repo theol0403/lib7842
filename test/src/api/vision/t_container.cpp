@@ -2,7 +2,7 @@
 
 using namespace lib7842::Vision;
 
-TEST_CASE("Object test") {
+TEST_CASE("Container test") {
 
   GIVEN("a container") {
     Container container;
