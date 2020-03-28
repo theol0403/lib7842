@@ -75,7 +75,21 @@ public:
                    [](const auto& ipoint) { return std::make_shared<T>(*ipoint); });
   }
 
-  template <typename C, typename T1 = T, typename = std::enable_if_t<std::is_same_v<T1, State>>>
+  /**
+   * Construct a StatePath from any other type of DiscretePath. This function accepts angles to map
+   * over the path. The angles will be gradually interpolated, so that the first point has the first
+   * angle and the last point has the last angle. Any other angles will be distributed across the
+   * path.
+   *
+   * For example, if 3 angles are provided, then 0-50% of the path will interpolate between the
+   * first and second angle, and 50-100% of the path will interpolate between the second and third
+   * angle.
+   *
+   * @param  ipath     The input DiscretePath
+   * @param  iangles   The array of angles to map over the path
+   */
+  template <typename C, typename T1 = DiscretePath<T>,
+            typename = std::enable_if_t<std::is_same_v<T1, StatePath>>>
   DiscretePath(const DiscretePath<C>& ipath, const std::vector<QAngle>& iangles) :
     DiscretePath(ipath) {
     path.front()->theta = iangles.front();
