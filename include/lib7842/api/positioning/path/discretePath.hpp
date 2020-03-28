@@ -75,6 +75,24 @@ public:
                    [](const auto& ipoint) { return std::make_shared<T>(*ipoint); });
   }
 
+  template <typename C, typename T1 = T, typename = std::enable_if_t<std::is_same_v<T1, State>>>
+  DiscretePath(const DiscretePath<C>& ipath, const std::vector<QAngle>& iangles) :
+    DiscretePath(ipath) {
+    path.front()->theta = iangles.front();
+    double ratio = static_cast<double>(iangles.size() - 1) / static_cast<double>(path.size() - 1);
+    for (size_t i = 1; i < path.size() - 1; i++) {
+      double position = i * ratio;
+      int index = std::floor(position);
+      double t = position - index;
+      if (t != 0.0) {
+        path.at(i)->theta = iangles.at(index) + ((iangles.at(index + 1) - iangles.at(index)) * t);
+      } else {
+        path.at(i)->theta = iangles.at(index);
+      }
+    }
+    path.back()->theta = iangles.back();
+  }
+
   /**
    * Get the underlying array of pointers.
    */
