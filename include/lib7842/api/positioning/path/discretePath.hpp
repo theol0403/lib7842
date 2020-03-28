@@ -186,7 +186,7 @@ public:
    * @return generated path
    */
   DiscretePath<T> generateT(int isteps = 1, bool iend = true) const {
-    if (isteps < 1) throw std::runtime_error("DiscretePath<T>::generate: isteps is less than 1");
+    if (isteps < 1) return copy();
 
     DiscretePath<T> temp;
     if (path.size() > 0) temp().reserve((isteps * (path.size() - 1)) + 1);

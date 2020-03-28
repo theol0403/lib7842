@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <string>
 
+#include "lib7842/api/other/global.hpp"
 #include "state.hpp"
 #include "vector.hpp"
 
@@ -51,8 +52,10 @@ public:
     try {
       return std::any_cast<U>(idata);
     } catch (const std::bad_any_cast&) {
-      throw std::runtime_error("Data::getData:: \"" + iid + "\" contains wrong type \"" +
-                               idata.type().name() + "\"");
+      std::string msg("Data::getData:: \"" + iid + "\" contains wrong type \"" +
+                      idata.type().name() + "\"");
+      GLOBAL_ERROR(msg);
+      throw std::runtime_error(msg);
     }
   }
 
@@ -67,7 +70,9 @@ protected:
     try {
       return data.at(iid);
     } catch (const std::out_of_range&) {
-      throw std::runtime_error("Data::getID:: \"" + iid + "\" does not exist in data");
+      std::string msg("Data::getID:: \"" + iid + "\" does not exist in data");
+      GLOBAL_ERROR(msg);
+      throw std::runtime_error(msg);
     }
   }
 
