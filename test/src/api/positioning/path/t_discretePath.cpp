@@ -55,7 +55,7 @@ TEST_CASE("SimplePath") {
       }
 
       GIVEN("one angle applied") {
-        StatePath statep = path.toState({90_deg});
+        StatePath statep(path, {90_deg});
 
         THEN("the angle should be duplicated") {
           REQUIRE(statep().at(0)->theta == 90_deg);
@@ -64,7 +64,7 @@ TEST_CASE("SimplePath") {
       }
 
       GIVEN("two angles applied") {
-        StatePath statep = path.toState({0_deg, 90_deg});
+        StatePath statep(path, {0_deg, 90_deg});
 
         THEN("the angles should be applied directly") {
           REQUIRE(statep().at(0)->theta == 0_deg);
@@ -73,7 +73,7 @@ TEST_CASE("SimplePath") {
       }
 
       GIVEN("three angles applied") {
-        StatePath statep = path.toState({0_deg, 45_deg, 90_deg});
+        StatePath statep(path, {0_deg, 45_deg, 90_deg});
 
         THEN("the middle angle should be dropped") {
           REQUIRE(statep().at(0)->theta == 0_deg);
@@ -82,7 +82,7 @@ TEST_CASE("SimplePath") {
       }
 
       GIVEN("four angles applied") {
-        StatePath statep = path.toState({0_deg, 45_deg, 90_deg, 180_deg});
+        StatePath statep(path, {0_deg, 45_deg, 90_deg, 180_deg});
 
         THEN("the middle angles should be dropped") {
           REQUIRE(statep().at(0)->theta == 0_deg);
@@ -175,7 +175,7 @@ TEST_CASE("SimplePath") {
       }
 
       GIVEN("one angle applied") {
-        StatePath statep = path.toState({90_deg});
+        StatePath statep(path, {90_deg});
 
         THEN("the angle should be duplicated") {
           REQUIRE(statep().at(0)->theta == 90_deg);
@@ -185,7 +185,7 @@ TEST_CASE("SimplePath") {
       }
 
       GIVEN("two angles applied") {
-        StatePath statep = path.toState({0_deg, 90_deg});
+        StatePath statep(path, {0_deg, 90_deg});
 
         THEN("the angles should be interpolated") {
           REQUIRE(statep().at(0)->theta == 0_deg);
@@ -195,7 +195,7 @@ TEST_CASE("SimplePath") {
       }
 
       GIVEN("three angles applied") {
-        StatePath statep = path.toState({0_deg, 50_deg, 90_deg});
+        StatePath statep(path, {0_deg, 50_deg, 90_deg});
 
         THEN("the angles should be copied") {
           REQUIRE(statep().at(0)->theta == 0_deg);
@@ -205,7 +205,7 @@ TEST_CASE("SimplePath") {
       }
 
       GIVEN("four angles applied") {
-        StatePath statep = path.toState({0_deg, 45_deg, 90_deg, 180_deg});
+        StatePath statep(path, {0_deg, 45_deg, 90_deg, 180_deg});
 
         THEN("positional interpolation") {
           REQUIRE(statep().at(0)->theta == 0_deg);
@@ -215,7 +215,7 @@ TEST_CASE("SimplePath") {
       }
 
       GIVEN("five angles applied") {
-        StatePath statep = path.toState({0_deg, 45_deg, 90_deg, 180_deg, 360_deg});
+        StatePath statep(path, {0_deg, 45_deg, 90_deg, 180_deg, 360_deg});
 
         THEN("positional interpolation") {
           REQUIRE(statep().at(0)->theta == 0_deg);
@@ -229,7 +229,7 @@ TEST_CASE("SimplePath") {
       SimplePath path({point1, point1, point1, point1});
 
       GIVEN("one angle applied") {
-        StatePath statep = path.toState({90_deg});
+        StatePath statep(path, {90_deg});
 
         THEN("the angle should be duplicated") {
           REQUIRE(statep().at(0)->theta == 90_deg);
@@ -240,7 +240,7 @@ TEST_CASE("SimplePath") {
       }
 
       GIVEN("two angles applied") {
-        StatePath statep = path.toState({0_deg, 90_deg});
+        StatePath statep(path, {0_deg, 90_deg});
 
         THEN("the angles should be interpolated") {
           REQUIRE(statep().at(0)->theta == 0_deg);
@@ -251,7 +251,7 @@ TEST_CASE("SimplePath") {
       }
 
       GIVEN("three angles applied") {
-        StatePath statep = path.toState({0_deg, 50_deg, 90_deg});
+        StatePath statep(path, {0_deg, 50_deg, 90_deg});
 
         THEN("the angles should be interpolated") {
           REQUIRE(statep().at(0)->theta == 0_deg);
@@ -262,7 +262,7 @@ TEST_CASE("SimplePath") {
       }
 
       GIVEN("the angles should be copied") {
-        StatePath statep = path.toState({0_deg, 45_deg, 90_deg, 180_deg});
+        StatePath statep(path, {0_deg, 45_deg, 90_deg, 180_deg});
 
         THEN("positional interpolation") {
           REQUIRE(statep().at(0)->theta == 0_deg);
@@ -273,7 +273,7 @@ TEST_CASE("SimplePath") {
       }
 
       GIVEN("five angles applied") {
-        StatePath statep = path.toState({0_deg, 45_deg, 90_deg, 180_deg, 360_deg});
+        StatePath statep(path, {0_deg, 45_deg, 90_deg, 180_deg, 360_deg});
 
         THEN("positional interpolation") {
           REQUIRE(statep().at(0)->theta == 0_deg);
