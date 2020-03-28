@@ -17,9 +17,7 @@ void CustomOdometry::step() {
   auto newTicks = model->getSensorVals();
 
   if (newTicks.size() < 3) {
-    std::string msg("CustomOdometry::step: The model does not contain three encoders");
-    GLOBAL_ERROR(msg);
-    throw std::runtime_error(msg);
+    GLOBAL_ERROR_THROW("CustomOdometry::step: The model does not contain three encoders");
   }
 
   // The amount the left side of the robot moved

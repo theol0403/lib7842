@@ -52,10 +52,8 @@ public:
     try {
       return std::any_cast<U>(idata);
     } catch (const std::bad_any_cast&) {
-      std::string msg("Data::getData:: \"" + iid + "\" contains wrong type \"" +
-                      idata.type().name() + "\"");
-      GLOBAL_ERROR(msg);
-      throw std::runtime_error(msg);
+      GLOBAL_ERROR_THROW("Data::getData:: \"" + iid + "\" contains wrong type \"" +
+                         idata.type().name() + "\"");
     }
   }
 
@@ -70,9 +68,7 @@ protected:
     try {
       return data.at(iid);
     } catch (const std::out_of_range&) {
-      std::string msg("Data::getID:: \"" + iid + "\" does not exist in data");
-      GLOBAL_ERROR(msg);
-      throw std::runtime_error(msg);
+      GLOBAL_ERROR_THROW("Data::getID:: \"" + iid + "\" does not exist in data");
     }
   }
 

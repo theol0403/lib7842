@@ -44,4 +44,8 @@ std::shared_ptr<TimeUtil> getTimeUtil();
 #define GLOBAL_WARN_S(msg) GLOBAL_WARN(std::string(msg))
 #define GLOBAL_ERROR_S(msg) GLOBAL_ERROR(std::string(msg))
 
+#define GLOBAL_ERROR_THROW(msg)                                                                    \
+  GLOBAL_ERROR_S(msg);                                                                             \
+  throw std::runtime_error(msg)
+
 } // namespace lib7842::global

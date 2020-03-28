@@ -140,12 +140,6 @@ TEST_CASE("SimplePath") {
         }
       }
 
-      THEN("generating with invalid parameters should throw") {
-        CHECK_THROWS_AS(path.generate(0), std::runtime_error);
-        CHECK_THROWS_AS(path.generate(0.1), std::runtime_error);
-        CHECK_THROWS_AS(path.generate(-1), std::runtime_error);
-      }
-
       GIVEN("a path generated with two interpolations") {
         SimplePath ipath2 = path.generate(2);
 
@@ -303,7 +297,7 @@ TEST_CASE("SimplePath") {
     THEN("generating should not return anything") {
       CHECK(path.generate(1)().size() == 0);
       CHECK(path.generate(5)().size() == 0);
-      CHECK_THROWS_AS(path.generate(0), std::runtime_error);
+      CHECK(path.generate(0)().size() == 0);
     }
   }
 
