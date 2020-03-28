@@ -220,7 +220,7 @@ TEST_CASE("SimplePath") {
         THEN("positional interpolation") {
           REQUIRE(statep().at(0)->theta == 0_deg);
           REQUIRE(statep().at(1)->theta == 90_deg);
-          REQUIRE(statep().at(2)->theta == 180_deg);
+          REQUIRE(statep().at(2)->theta == 360_deg);
         }
       }
     }
@@ -255,8 +255,8 @@ TEST_CASE("SimplePath") {
 
         THEN("the angles should be interpolated") {
           REQUIRE(statep().at(0)->theta == 0_deg);
-          REQUIRE(statep().at(1)->theta == 25_deg);
-          REQUIRE(statep().at(2)->theta == 70_deg);
+          REQUIRE(statep().at(1)->theta == 2.0 / 3.0 * 50_deg);
+          REQUIRE(statep().at(2)->theta == 50_deg + (1.0 / 3.0 * 40_deg));
           REQUIRE(statep().at(3)->theta == 90_deg);
         }
       }
@@ -277,8 +277,8 @@ TEST_CASE("SimplePath") {
 
         THEN("positional interpolation") {
           REQUIRE(statep().at(0)->theta == 0_deg);
-          REQUIRE(statep().at(1)->theta == 56.25_deg);
-          REQUIRE(statep().at(2)->theta == 157.5_deg);
+          REQUIRE(statep().at(1)->theta == 45_deg + (1.0 / 3.0 * 45_deg));
+          REQUIRE(statep().at(2)->theta == 90_deg + (2.0 / 3.0 * 90_deg));
           REQUIRE(statep().at(3)->theta == 360_deg);
         }
       }
