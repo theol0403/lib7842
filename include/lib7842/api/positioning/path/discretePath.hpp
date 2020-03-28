@@ -92,9 +92,8 @@ public:
             typename = std::enable_if_t<std::is_same_v<T1, StatePath>>>
   DiscretePath(const DiscretePath<C>& ipath, const std::vector<QAngle>& iangles) :
     DiscretePath(ipath) {
-    path.front()->theta = iangles.front();
     double ratio = static_cast<double>(iangles.size() - 1) / static_cast<double>(path.size() - 1);
-    for (size_t i = 1; i < path.size() - 1; i++) {
+    for (size_t i = 0; i < path.size(); i++) {
       double position = i * ratio;
       int index = std::floor(position);
       double t = position - index;
@@ -104,7 +103,6 @@ public:
         path.at(i)->theta = iangles.at(index);
       }
     }
-    path.back()->theta = iangles.back();
   }
 
   /**
