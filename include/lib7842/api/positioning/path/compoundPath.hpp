@@ -46,7 +46,7 @@ public:
    *                start of the next segment from being redundant.
    * @return generated path
    */
-  SimplePath generate(int isteps = 1, bool iend = true) const override;
+  SimplePath generate(int isteps, bool iend = true) const override;
 
 protected:
   std::vector<std::shared_ptr<AbstractPath>> segments {};
