@@ -46,7 +46,7 @@ void OdomXController::strafeToPoint(const Vector& point, const Angler& angler, d
     double distanceVel = distanceController->step(-_distanceErr.convert(millimeter));
     double angleVel = angleController->step(-_angleErr.convert(degree));
 
-    strafeVector(xModel, distanceVel, angleVel * turnScale, angleToTarget);
+    strafeVector(xModel, distanceVel, angleVel * turnScale, angleToTarget, driveMode);
     rate->delayUntil(10_ms);
   } while (!settler(this));
 

@@ -67,14 +67,16 @@ public:
    * A Turner is a function that accepts a chassis and a turning velocity. It controls the motor
    * distribution and execution of the turn, and is used to implement a point or pivot turn.
    */
-  using Turner = std::function<void(const std::shared_ptr<ChassisModel>& imodel, double vel)>;
+  using motorMode = util::motorMode;
+  using Turner =
+    std::function<void(const std::shared_ptr<ChassisModel>& imodel, double vel, motorMode imode)>;
 
   /**
    * The built-in default Turners.
    *  - A Turner that executes a point turn which turns in place using both motors. Used as the
    *    default for all turn functions.
-   *  - A Turner that executes a left pivot, meaning it only moves the left motors.
-   *  - A Turner that executes a right pivot, meaning it only moves the right motors.
+   *  - A Turner that executes a left pivot, meaning it only moves the right motors.
+   *  - A Turner that executes a right pivot, meaning it only moves the left motors.
    */
   static Turner pointTurn, leftPivot, rightPivot;
 
@@ -154,6 +156,43 @@ public:
                             Settler&& settler = Settler().distanceSettled().angleSettled());
 
   /**
+   * Set the motor mode for drive commands. Velocity mode is faster to tune and more precise, but
+   * voltage mode is smoother and has better performance when tuned well. Default is voltage.
+   *
+   * @param mode The motor mode
+   */
+  virtual void setDriveMode(motorMode mode);
+
+  /**
+   * Set the motor mode for turn commands. Velocity mode is faster to tune and more precise, but
+   * voltage mode is smoother and has better performance when tuned well. Default is voltage.
+   *
+   * @param mode The motor mode
+   */
+  virtual void setTurnMode(motorMode mode);
+
+  /**
+   * Set the distance controller gains.
+   *
+   * @param igains The new gains.
+   */
+  virtual void setDistanceGains(const IterativePosPIDController::Gains& igains);
+
+  /**
+   * Set the angle controller gains.
+   *
+   * @param igains The new gains.
+   */
+  virtual void setAngleGains(const IterativePosPIDController::Gains& igains);
+
+  /**
+   * Set the turn controller gains.
+   *
+   * @param igains The new gains.
+   */
+  virtual void setTurnGains(const IterativePosPIDController::Gains& igains);
+
+  /**
    * Get the state from the odometry in cartesian coordinates.
    *
    * @return The odometry state.
@@ -195,27 +234,6 @@ public:
    * @return true if settled, false otherwise.
    */
   virtual bool isTurnSettled() const;
-
-  /**
-   * Set the distance controller gains.
-   *
-   * @param igains The new gains.
-   */
-  virtual void setDistanceGains(const IterativePosPIDController::Gains& igains);
-
-  /**
-   * Set the angle controller gains.
-   *
-   * @param igains The new gains.
-   */
-  virtual void setAngleGains(const IterativePosPIDController::Gains& igains);
-
-  /**
-   * Set the turn controller gains.
-   *
-   * @param igains The new gains.
-   */
-  virtual void setTurnGains(const IterativePosPIDController::Gains& igains);
 
   /**
    * Make a Trigger that fires if the distance to a point is within a value.
@@ -311,6 +329,9 @@ protected:
   std::unique_ptr<IterativePosPIDController> angleController {nullptr};
   std::unique_ptr<IterativePosPIDController> turnController {nullptr};
   const QLength driveRadius;
+
+  motorMode driveMode {motorMode::voltage};
+  motorMode turnMode {motorMode::voltage};
 
   QLength _distanceErr {0_in};
   QAngle _angleErr {0_deg};

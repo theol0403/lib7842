@@ -40,18 +40,30 @@ OdomController::Angler OdomController::makeAngler(const Vector& point) {
 }
 
 OdomController::Turner OdomController::pointTurn = [](const std::shared_ptr<ChassisModel>& imodel,
-                                                      double vel) {
-  imodel->tank(vel, -vel);
+                                                      double vel, motorMode imode) {
+  if (imode == motorMode::voltage) {
+    imodel->tank(vel, -vel);
+  } else {
+    imodel->rotate(vel);
+  }
 };
 
 OdomController::Turner OdomController::leftPivot = [](const std::shared_ptr<ChassisModel>& imodel,
-                                                      double vel) {
-  imodel->tank(vel * 2, 0);
+                                                      double vel, motorMode imode) {
+  if (imode == motorMode::voltage) {
+    imodel->tank(0, vel * 2);
+  } else {
+    imodel->right(vel);
+  }
 };
 
 OdomController::Turner OdomController::rightPivot = [](const std::shared_ptr<ChassisModel>& imodel,
-                                                       double vel) {
-  imodel->tank(0, -vel * 2);
+                                                       double vel, motorMode imode) {
+  if (imode == motorMode::voltage) {
+    imodel->tank(vel * 2, 0);
+  } else {
+    imodel->left(vel);
+  }
 };
 
 void OdomController::turn(const Angler& angler, const Turner& turner, Settler&& settler) {
@@ -62,10 +74,10 @@ void OdomController::turn(const Angler& angler, const Turner& turner, Settler&& 
   do {
     _angleErr = angler(*this);
     double vel = turnController->step(-_angleErr.convert(degree));
-    turner(model, vel);
+    turner(model, vel, turnMode);
     rate->delayUntil(10_ms);
   } while (!settler(this));
-  turner(model, 0);
+  turner(model, 0, turnMode);
 }
 
 void OdomController::turnToAngle(const QAngle& angle, const Turner& turner, Settler&& settler) {
@@ -96,11 +108,11 @@ void OdomController::moveDistanceAtAngle(const QLength& distance, const Angler& 
     double distanceVel = distanceController->step(-_distanceErr.convert(millimeter));
     double angleVel = angleController->step(-_angleErr.convert(degree));
 
-    driveVector(model, distanceVel, angleVel);
+    driveVector(model, distanceVel, angleVel, driveMode);
     rate->delayUntil(10_ms);
   } while (!settler(this));
 
-  driveVector(model, 0, 0);
+  driveVector(model, 0, 0, driveMode);
 }
 
 void OdomController::moveDistance(const QLength& distance, Settler&& settler) {
@@ -139,11 +151,31 @@ void OdomController::driveToPoint(const Vector& point, double turnScale, Settler
     double angleVel = angleController->step(-_angleErr.convert(degree));
     double distanceVel = distanceController->step(-distanceToClose.convert(millimeter));
 
-    driveVector(model, distanceVel, angleVel * turnScale);
+    driveVector(model, distanceVel, angleVel * turnScale, driveMode);
     rate->delayUntil(10_ms);
   } while (!settler(this));
 
-  driveVector(model, 0, 0);
+  driveVector(model, 0, 0, driveMode);
+}
+
+void OdomController::setDriveMode(motorMode mode) {
+  driveMode = mode;
+}
+
+void OdomController::setTurnMode(motorMode mode) {
+  turnMode = mode;
+}
+
+void OdomController::setDistanceGains(const IterativePosPIDController::Gains& igains) {
+  distanceController->setGains(igains);
+}
+
+void OdomController::setAngleGains(const IterativePosPIDController::Gains& igains) {
+  angleController->setGains(igains);
+}
+
+void OdomController::setTurnGains(const IterativePosPIDController::Gains& igains) {
+  turnController->setGains(igains);
 }
 
 State OdomController::getState() const {
@@ -168,18 +200,6 @@ bool OdomController::isAngleSettled() const {
 
 bool OdomController::isTurnSettled() const {
   return turnController->isSettled();
-}
-
-void OdomController::setDistanceGains(const IterativePosPIDController::Gains& igains) {
-  distanceController->setGains(igains);
-}
-
-void OdomController::setAngleGains(const IterativePosPIDController::Gains& igains) {
-  angleController->setGains(igains);
-}
-
-void OdomController::setTurnGains(const IterativePosPIDController::Gains& igains) {
-  turnController->setGains(igains);
 }
 
 Trigger::Function OdomController::distanceTo(const Vector& point, const QLength& trigger) const {
