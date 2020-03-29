@@ -92,6 +92,7 @@ public:
             typename = std::enable_if_t<std::is_same_v<T1, StatePath>>>
   DiscretePath(const DiscretePath<C>& ipath, const std::vector<QAngle>& iangles) :
     DiscretePath(ipath) {
+    if (iangles.empty()) return;
     double ratio = static_cast<double>(iangles.size() - 1) / static_cast<double>(path.size() - 1);
     for (size_t i = 0; i < path.size(); i++) {
       double position = i * ratio;
