@@ -8,13 +8,15 @@
 #include "lib7842/api/gui/selector.hpp"
 #include "lib7842/api/gui/visionDrawer.hpp"
 
+#include "lib7842/api/async/async.hpp"
+#include "lib7842/api/async/taskWrapper.hpp"
 #include "lib7842/api/async/trigger.hpp"
+
 #include "lib7842/api/odometry/customOdometry.hpp"
 #include "lib7842/api/odometry/odomController.hpp"
 #include "lib7842/api/odometry/odomXController.hpp"
 #include "lib7842/api/odometry/settler.hpp"
 
-#include "lib7842/api/async/taskWrapper.hpp"
 #include "lib7842/api/other/global.hpp"
 #include "lib7842/api/other/units.hpp"
 #include "lib7842/api/other/utility.hpp"
