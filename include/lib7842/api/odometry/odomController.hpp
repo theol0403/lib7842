@@ -197,6 +197,27 @@ public:
   bool isTurnSettled() const;
 
   /**
+   * Set the distance controller gains.
+   *
+   * @param igains The new gains.
+   */
+  virtual void setDistanceGains(const IterativePosPIDController::Gains& igains);
+
+  /**
+   * Set the angle controller gains.
+   *
+   * @param igains The new gains.
+   */
+  virtual void setAngleGains(const IterativePosPIDController::Gains& igains);
+
+  /**
+   * Set the turn controller gains.
+   *
+   * @param igains The new gains.
+   */
+  virtual void setTurnGains(const IterativePosPIDController::Gains& igains);
+
+  /**
    * Make a Trigger that fires if the distance to a point is within a value.
    *
    * @param  point   The point.
