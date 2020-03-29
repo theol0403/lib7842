@@ -158,7 +158,7 @@ public:
    *
    * @return The odometry state.
    */
-  State getState() const;
+  virtual State getState() const;
 
   /**
    * Get the error of the distance PID controller. Is valid when driving linearly or driving to a
@@ -166,35 +166,35 @@ public:
    *
    * @return The distance error.
    */
-  QLength getDistanceError() const;
+  virtual QLength getDistanceError() const;
 
   /**
    * Get the error of the angle or turn PID controller. Is valid when turning or driving.
    *
    * @return The angle error.
    */
-  QAngle getAngleError() const;
+  virtual QAngle getAngleError() const;
 
   /**
    * Determine if the distance PID controller is settled.
    *
    * @return true if settled, false otherwise.
    */
-  bool isDistanceSettled() const;
+  virtual bool isDistanceSettled() const;
 
   /**
    * Determine if the angle PID controller is settled.
    *
    * @return true if settled, false otherwise.
    */
-  bool isAngleSettled() const;
+  virtual bool isAngleSettled() const;
 
   /**
    * Determine if the turn PID controller is settled.
    *
    * @return true if settled, false otherwise.
    */
-  bool isTurnSettled() const;
+  virtual bool isTurnSettled() const;
 
   /**
    * Set the distance controller gains.
