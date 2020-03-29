@@ -8,11 +8,11 @@ using namespace util;
 OdomXController::OdomXController(const std::shared_ptr<XDriveModel>& imodel,
                                  const std::shared_ptr<Odometry>& iodometry,
                                  std::unique_ptr<IterativePosPIDController> idistanceController,
-                                 std::unique_ptr<IterativePosPIDController> iturnController,
                                  std::unique_ptr<IterativePosPIDController> iangleController,
+                                 std::unique_ptr<IterativePosPIDController> iturnController,
                                  const QLength& idriveRadius) :
-  OdomController(imodel, iodometry, std::move(idistanceController), std::move(iturnController),
-                 std::move(iangleController), idriveRadius),
+  OdomController(imodel, iodometry, std::move(idistanceController), std::move(iangleController),
+                 std::move(iturnController), idriveRadius),
   xModel(imodel) {};
 
 void OdomXController::strafeRelativeDirection(const QLength& distance, const QAngle& direction,

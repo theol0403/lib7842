@@ -10,8 +10,8 @@ using namespace util;
 OdomController::OdomController(std::shared_ptr<ChassisModel> imodel,
                                std::shared_ptr<Odometry> iodometry,
                                std::unique_ptr<IterativePosPIDController> idistanceController,
-                               std::unique_ptr<IterativePosPIDController> iturnController,
                                std::unique_ptr<IterativePosPIDController> iangleController,
+                               std::unique_ptr<IterativePosPIDController> iturnController,
                                const QLength& idriveRadius) :
   model(std::move(imodel)),
   odometry(std::move(iodometry)),
@@ -168,6 +168,18 @@ bool OdomController::isAngleSettled() const {
 
 bool OdomController::isTurnSettled() const {
   return turnController->isSettled();
+}
+
+void OdomController::setDistanceGains(const IterativePosPIDController::Gains& igains) {
+  distanceController->setGains(igains);
+}
+
+void OdomController::setAngleGains(const IterativePosPIDController::Gains& igains) {
+  angleController->setGains(igains);
+}
+
+void OdomController::setTurnGains(const IterativePosPIDController::Gains& igains) {
+  turnController->setGains(igains);
 }
 
 Trigger::Function OdomController::distanceTo(const Vector& point, const QLength& trigger) const {

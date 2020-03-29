@@ -15,8 +15,8 @@ public:
    * @param imodel              The chassis model.
    * @param iodometry           The chassis odometry.
    * @param idistanceController The distance PID controller.
-   * @param iturnController     The turning PID controller, used for turn commands.
    * @param iangleController    The angle PID controller, used to keep distance driving straight.
+   * @param iturnController     The turning PID controller, used for turn commands.
    * @param idriveRadius        The radius from the target point to turn off angle correction when
    *                            driving to a point. Used by OdomController's driveToPoint, which is
    *                            not used with an X drive.
@@ -24,8 +24,8 @@ public:
   OdomXController(const std::shared_ptr<XDriveModel>& imodel,
                   const std::shared_ptr<Odometry>& iodometry,
                   std::unique_ptr<IterativePosPIDController> idistanceController,
-                  std::unique_ptr<IterativePosPIDController> iturnController,
                   std::unique_ptr<IterativePosPIDController> iangleController,
+                  std::unique_ptr<IterativePosPIDController> iturnController,
                   const QLength& idriveRadius);
 
   /**
