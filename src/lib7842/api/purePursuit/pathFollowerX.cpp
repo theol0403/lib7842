@@ -10,14 +10,15 @@ PathFollowerX::PathFollowerX(const std::shared_ptr<XDriveModel>& imodel,
                              const QLength& ilookahead) :
   PathFollower(imodel, iodometry, ichassisScales, igearset, ilookahead), xModel(imodel) {};
 
-void PathFollowerX::followPath(const PursuitPath& ipath) {
+void PathFollowerX::followPath(const PursuitPath& ipath, const std::optional<QSpeed>& istartSpeed) {
   resetPursuit();
 
   auto rate = global::getTimeUtil()->getRate();
   auto timer = global::getTimeUtil()->getTimer();
 
   PursuitLimits limits = ipath.getLimits();
-  QSpeed lastVelocity = limits.minVel; // assume the robot starts at minimum velocity
+  // assume the robot starts at minimum velocity unless otherwise specified
+  QSpeed lastVelocity = istartSpeed.value_or(limits.minVel);
 
   bool isFinished = false; // loop until the robot is considered to have finished the path
   while (!isFinished) {

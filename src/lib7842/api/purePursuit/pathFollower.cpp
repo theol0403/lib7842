@@ -19,14 +19,16 @@ PathFollower::PathFollower(std::shared_ptr<ChassisModel> imodel,
   lookahead(ilookahead),
   driveRadius(idriveRadius.value_or(ilookahead)) {}
 
-void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
+void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
+                              const std::optional<QSpeed>& istartSpeed) {
   resetPursuit();
 
   auto rate = global::getTimeUtil()->getRate();
   auto timer = global::getTimeUtil()->getTimer();
 
   PursuitLimits limits = ipath.getLimits();
-  QSpeed lastVelocity = limits.minVel; // assume the robot starts at minimum velocity
+  // assume the robot starts at minimum velocity unless otherwise specified
+  QSpeed lastVelocity = istartSpeed.value_or(limits.minVel);
 
   bool isFinished = false; // loop until the robot is considered to have finished the path
   while (!isFinished) {
