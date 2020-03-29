@@ -10,8 +10,8 @@ public:
   Async(const Async& itask) = delete;
   Async(Async&& itask) = default;
 
-  explicit Async(Trigger::Function&& iaction);
-  explicit Async(Trigger&& itrigger, Trigger::Function&& iaction);
+  explicit Async(std::function<void()>&& iaction);
+  explicit Async(Trigger&& itrigger, std::function<void()>&& iaction);
 
   virtual void forceStart();
   virtual void forceStop();
@@ -22,7 +22,7 @@ public:
 
 protected:
   Trigger trigger {};
-  Trigger::Function action {nullptr};
+  std::function<void()> action {nullptr};
 
   bool _forceStart {false};
   bool _started {false};

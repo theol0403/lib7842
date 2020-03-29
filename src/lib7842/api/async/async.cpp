@@ -3,11 +3,11 @@
 
 namespace lib7842 {
 
-Async::Async(Trigger::Function&& iaction) : action(std::move(iaction)) {
+Async::Async(std::function<void()>&& iaction) : action(std::move(iaction)) {
   startTask("Async");
 }
 
-Async::Async(Trigger&& itrigger, Trigger::Function&& iaction) :
+Async::Async(Trigger&& itrigger, std::function<void()>&& iaction) :
   trigger(std::move(itrigger)), action(std::move(iaction)) {
   startTask("Async");
 }
