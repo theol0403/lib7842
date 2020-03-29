@@ -29,8 +29,8 @@ bool Trigger::run() {
                   [](const auto& function) { return function(); })) {
     return true;
   }
-  if (!requirements.empty() && std::all_of(requirements.begin(), requirements.end(),
-                                           [](const auto& function) { return function(); })) {
+  if (std::all_of(requirements.begin(), requirements.end(),
+                  [](const auto& function) { return function(); })) {
     return true;
   }
   return false;

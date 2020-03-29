@@ -14,8 +14,8 @@ TEST_CASE("Settler") {
 
   Settler settler;
 
-  SUBCASE("nothing should return false") {
-    REQUIRE(!settler(chassis.get()));
+  SUBCASE("nothing should return true") {
+    REQUIRE(settler(chassis.get()));
   }
 
   settler.requirement([] { return false; });

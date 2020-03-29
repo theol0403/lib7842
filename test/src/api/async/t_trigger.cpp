@@ -11,8 +11,8 @@ TEST_CASE("Trigger") {
 
   SUBCASE("logic tests") {
 
-    SUBCASE("nothing should return false") {
-      REQUIRE(!trigger());
+    SUBCASE("nothing should return true") {
+      REQUIRE(trigger());
     }
 
     SUBCASE("requirements") {
@@ -57,6 +57,7 @@ TEST_CASE("Trigger") {
       }
 
       SUBCASE("adding exception") {
+        trigger.requirement([] { return false; });
         trigger.exception([] { return false; });
         REQUIRE(!trigger());
 
