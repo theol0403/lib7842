@@ -101,16 +101,26 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
       right /= maxMag;
     }
 
-    if (!ibackwards) {
+    if (ibackwards) {
+      left *= -1;
+      right *= -1;
+    }
+
+    if (mode == util::motorMode::voltage) {
       model->tank(left, right);
     } else {
-      model->tank(-left, -right);
+      model->left(left);
+      model->right(right);
     }
 
     rate->delayUntil(10_ms);
   }
 
   model->driveVector(0, 0); // apply velocity braking
+}
+
+void PathFollower::setMotorMode(util::motorMode imode) {
+  mode = imode;
 }
 
 PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,

@@ -30,6 +30,8 @@ public:
                const QLength& ilookahead,
                const std::optional<QLength>& idriveRadius = std::nullopt);
 
+  virtual ~PathFollower() = default;
+
   /**
    * Follow a pre-generated PursuitPath.
    *
@@ -39,6 +41,14 @@ public:
    *                   drive backwards.
    */
   void followPath(const PursuitPath& ipath, bool ibackwards = false);
+
+  /**
+   * Set the motor mode for the pursuit. Velocity mode is more accurate, but voltage mode is
+   * smoother. Default is voltage.
+   *
+   * @param imode The motor mode
+   */
+  virtual void setMotorMode(util::motorMode imode);
 
 protected:
   /**
@@ -114,6 +124,8 @@ protected:
 
   const QLength lookahead {0_in};
   const QLength driveRadius {0_in};
+
+  util::motorMode mode {util::motorMode::voltage};
 
   std::optional<pathIterator_t> lastClosest {std::nullopt};
   size_t lastLookIndex {0};

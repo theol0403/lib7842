@@ -69,7 +69,7 @@ void PathFollowerX::followPath(const PursuitPath& ipath) {
     QAngle angleToLook = pos.angleTo(lookPoint);
 
     // drive toward the lookahead
-    strafeVector(xModel, power, turnPower, angleToLook);
+    strafeVector(xModel, power, turnPower, angleToLook, mode);
 
     rate->delayUntil(10_ms);
   }
