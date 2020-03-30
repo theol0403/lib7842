@@ -8,46 +8,45 @@ using namespace util;
 OdomXController::OdomXController(const std::shared_ptr<XDriveModel>& imodel,
                                  const std::shared_ptr<Odometry>& iodometry,
                                  std::unique_ptr<IterativePosPIDController> idistanceController,
-                                 std::unique_ptr<IterativePosPIDController> iturnController,
                                  std::unique_ptr<IterativePosPIDController> iangleController,
+                                 std::unique_ptr<IterativePosPIDController> iturnController,
                                  const QLength& idriveRadius) :
-  OdomController(imodel, iodometry, std::move(idistanceController), std::move(iturnController),
-                 std::move(iangleController), idriveRadius),
+  OdomController(imodel, iodometry, std::move(idistanceController), std::move(iangleController),
+                 std::move(iturnController), idriveRadius),
   xModel(imodel) {};
 
 void OdomXController::strafeRelativeDirection(const QLength& distance, const QAngle& direction,
-                                              const AngleCalculator& angleCalculator,
-                                              double turnScale, Trigger&& settler) {
+                                              const Angler& angler, double turnScale,
+                                              Settler&& settler) {
   QAngle absoluteDirection = direction + getState().theta;
-  strafeAbsoluteDirection(distance, absoluteDirection, angleCalculator, turnScale,
-                          std::move(settler));
+  strafeAbsoluteDirection(distance, absoluteDirection, angler, turnScale, std::move(settler));
 }
 
 void OdomXController::strafeAbsoluteDirection(const QLength& distance, const QAngle& direction,
-                                              const AngleCalculator& angleCalculator,
-                                              double turnScale, Trigger&& settler) {
+                                              const Angler& angler, double turnScale,
+                                              Settler&& settler) {
   QLength x = sin(direction.convert(radian)) * distance;
   QLength y = cos(direction.convert(radian)) * distance;
-  Vector target = Vector(State(getState())) + Vector(x, y);
-  strafeToPoint(target, angleCalculator, turnScale, std::move(settler));
+  Vector&& istate = State(getState());
+  Vector target = istate + Vector(x, y);
+  strafeToPoint(target, angler, turnScale, std::move(settler));
 }
 
-void OdomXController::strafeToPoint(const Vector& targetPoint,
-                                    const AngleCalculator& angleCalculator, double turnScale,
-                                    Trigger&& settler) {
+void OdomXController::strafeToPoint(const Vector& point, const Angler& angler, double turnScale,
+                                    Settler&& settler) {
   resetPid();
   auto rate = global::getTimeUtil()->getRate();
   do {
     State state = getState();
-    distanceErr = state.distTo(targetPoint);
-    angleErr = angleCalculator(*this);
+    _distanceErr = state.distTo(point);
+    _angleErr = angler(*this);
 
-    QAngle angleToTarget = angleToPoint(targetPoint);
+    QAngle angleToTarget = state.angleTo(point);
 
-    double distanceVel = distanceController->step(-distanceErr.convert(millimeter));
-    double angleVel = angleController->step(-angleErr.convert(degree));
+    double distanceVel = distanceController->step(-_distanceErr.convert(millimeter));
+    double angleVel = angleController->step(-_angleErr.convert(degree));
 
-    strafeVector(xModel, distanceVel, angleVel * turnScale, angleToTarget);
+    strafeVector(xModel, distanceVel, angleVel * turnScale, angleToTarget, driveMode);
     rate->delayUntil(10_ms);
   } while (!settler(this));
 

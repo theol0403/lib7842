@@ -97,13 +97,13 @@ void opcontrol() {
    */
   auto odomController = std::make_shared<OdomXController>(
     model, odom,
-    //Distance PID - To mm
+    // Distance PID - To mm
     std::make_unique<IterativePosPIDController>(
       0.0165, 0.00026, 0.00033, 0, TimeUtilFactory::withSettledUtilParams(10, 5, 150_ms)),
-    //Turn PID - To Degree
+    // Turn PID - To Degree
     std::make_unique<IterativePosPIDController>(
       0.045, 0.002, 0.0006, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
-    //Angle PID - To Degree
+    // Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
       0.043, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(2, 1, 150_ms)),
     0_ft);

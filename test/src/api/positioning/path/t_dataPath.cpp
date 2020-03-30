@@ -1,6 +1,6 @@
-#include "test.hpp"
+#include "../test/include/test.hpp"
 
-SCENARIO("DataPath test") {
+TEST_CASE("DataPath") {
 
   GIVEN("a data point with some data") {
     DataPoint point1 {5_in, 3_in};

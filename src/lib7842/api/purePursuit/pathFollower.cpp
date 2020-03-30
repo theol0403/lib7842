@@ -4,28 +4,31 @@
 #include "okapi/api/units/QArea.hpp"
 #include "pros/rtos.hpp"
 #include <iostream>
+#include <utility>
 
 namespace lib7842 {
 
-PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
-                           const std::shared_ptr<Odometry>& iodometry,
-                           const ChassisScales& ichassisScales, const QAngularSpeed& igearset,
-                           const QLength& ilookahead, const std::optional<QLength>& idriveRadius) :
-  model(imodel),
-  odometry(iodometry),
+PathFollower::PathFollower(std::shared_ptr<ChassisModel> imodel,
+                           std::shared_ptr<Odometry> iodometry, const ChassisScales& ichassisScales,
+                           const QAngularSpeed& igearset, const QLength& ilookahead,
+                           const std::optional<QLength>& idriveRadius) :
+  model(std::move(imodel)),
+  odometry(std::move(iodometry)),
   chassisScales(ichassisScales),
   gearset(igearset),
   lookahead(ilookahead),
   driveRadius(idriveRadius.value_or(ilookahead)) {}
 
-void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
+void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
+                              const std::optional<QSpeed>& istartSpeed) {
   resetPursuit();
 
   auto rate = global::getTimeUtil()->getRate();
   auto timer = global::getTimeUtil()->getTimer();
 
   PursuitLimits limits = ipath.getLimits();
-  QSpeed lastVelocity = limits.minVel; // assume the robot starts at minimum velocity
+  // assume the robot starts at minimum velocity unless otherwise specified
+  QSpeed lastVelocity = istartSpeed.value_or(limits.minVel);
 
   bool isFinished = false; // loop until the robot is considered to have finished the path
   while (!isFinished) {
@@ -100,16 +103,26 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
       right /= maxMag;
     }
 
-    if (!ibackwards) {
+    if (ibackwards) {
+      left *= -1;
+      right *= -1;
+    }
+
+    if (mode == util::motorMode::voltage) {
       model->tank(left, right);
     } else {
-      model->tank(-left, -right);
+      model->left(left);
+      model->right(right);
     }
 
     rate->delayUntil(10_ms);
   }
 
   model->driveVector(0, 0); // apply velocity braking
+}
+
+void PathFollower::setMotorMode(util::motorMode imode) {
+  mode = imode;
 }
 
 PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,
@@ -206,14 +219,11 @@ std::optional<double> PathFollower::findIntersectT(const Vector& start, const Ve
     double t2 = (-b + dis) / (2.0 * a);
 
     // prioritize further down path
-    if (t2 >= 0.0 && t2 <= 1.0) {
-      return t2;
-    } else if (t1 >= 0.0 && t1 <= 1.0) {
-      return t1;
-    }
+    if (t2 >= 0.0 && t2 <= 1.0) { return t2; }
+    if (t1 >= 0.0 && t1 <= 1.0) { return t1; }
   }
 
-  //no intersection on this interval
+  // no intersection on this interval
   return std::nullopt;
 }
 

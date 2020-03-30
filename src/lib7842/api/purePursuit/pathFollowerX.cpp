@@ -10,14 +10,15 @@ PathFollowerX::PathFollowerX(const std::shared_ptr<XDriveModel>& imodel,
                              const QLength& ilookahead) :
   PathFollower(imodel, iodometry, ichassisScales, igearset, ilookahead), xModel(imodel) {};
 
-void PathFollowerX::followPath(const PursuitPath& ipath) {
+void PathFollowerX::followPath(const PursuitPath& ipath, const std::optional<QSpeed>& istartSpeed) {
   resetPursuit();
 
   auto rate = global::getTimeUtil()->getRate();
   auto timer = global::getTimeUtil()->getTimer();
 
   PursuitLimits limits = ipath.getLimits();
-  QSpeed lastVelocity = limits.minVel; // assume the robot starts at minimum velocity
+  // assume the robot starts at minimum velocity unless otherwise specified
+  QSpeed lastVelocity = istartSpeed.value_or(limits.minVel);
 
   bool isFinished = false; // loop until the robot is considered to have finished the path
   while (!isFinished) {
@@ -47,8 +48,8 @@ void PathFollowerX::followPath(const PursuitPath& ipath) {
     double power = (wheelVel / gearset).convert(number);
 
     // calculate target angle at lookahead
-    QAngle start = ipath()[lastLookIndex]->getData<QAngle>("angle");
-    QAngle end = ipath()[lastLookIndex + 1]->getData<QAngle>("angle");
+    auto start = ipath()[lastLookIndex]->getData<QAngle>("angle");
+    auto end = ipath()[lastLookIndex + 1]->getData<QAngle>("angle");
     QAngle angle = start + ((end - start) * lastLookT);
 
     // get angle error from robot to lookahead
@@ -69,7 +70,7 @@ void PathFollowerX::followPath(const PursuitPath& ipath) {
     QAngle angleToLook = pos.angleTo(lookPoint);
 
     // drive toward the lookahead
-    strafeVector(xModel, power, turnPower, angleToLook);
+    strafeVector(xModel, power, turnPower, angleToLook, mode);
 
     rate->delayUntil(10_ms);
   }

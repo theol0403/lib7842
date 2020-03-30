@@ -1,6 +1,6 @@
 #pragma once
+#include "lib7842/api/async/taskWrapper.hpp"
 #include "lib7842/api/other/global.hpp"
-#include "lib7842/api/other/taskWrapper.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/odometry/odometry.hpp"
@@ -18,7 +18,7 @@ public:
    * @param imodel         The chassis model for reading sensors.
    * @param ichassisScales The chassis dimensions.
    */
-  CustomOdometry(const std::shared_ptr<ChassisModel>& imodel, const ChassisScales& ichassisScales);
+  CustomOdometry(std::shared_ptr<ChassisModel> imodel, const ChassisScales& ichassisScales);
 
   /**
    * Set the drive and turn scales.

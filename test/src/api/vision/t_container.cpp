@@ -1,8 +1,8 @@
-#include "test.hpp"
+#include "../test/include/test.hpp"
 
 using namespace lib7842::Vision;
 
-TEST_CASE("Object test") {
+TEST_CASE("Container") {
 
   GIVEN("a container") {
     Container container;
@@ -50,8 +50,8 @@ TEST_CASE("Object test") {
         }
 
         THEN("filtering should work") {
-          CHECK(container.remove(Query::x, std::equal_to<double>(), 50)().size() == 1);
-          CHECK(container.remove(Query::x, std::equal_to<double>(), 100)().size() == 0);
+          CHECK(container.remove(Query::x, std::equal_to<>(), 50)().size() == 1);
+          CHECK(container.remove(Query::x, std::equal_to<>(), 100)().size() == 0);
         }
 
         THEN("filtering should work") {
@@ -89,8 +89,8 @@ TEST_CASE("Object test") {
         }
 
         THEN("filtering should work") {
-          CHECK(container.remove(Query::x, std::equal_to<double>(), 50)().size() == 3);
-          CHECK(container.remove(Query::x, std::equal_to<double>(), 100)().size() == 0);
+          CHECK(container.remove(Query::x, std::equal_to<>(), 50)().size() == 3);
+          CHECK(container.remove(Query::x, std::equal_to<>(), 100)().size() == 0);
         }
 
         THEN("filtering should work") {
@@ -155,7 +155,7 @@ TEST_CASE("Object test") {
       }());
 
       WHEN("the container is sorted") {
-        container.sort(Query::x, std::less<double>());
+        container.sort(Query::x, std::less<>());
 
         THEN("the container should be sorted") {
           for (size_t i = 0; i < container().size(); i++) {
@@ -164,7 +164,7 @@ TEST_CASE("Object test") {
         }
 
         WHEN("the container is sorted again") {
-          container.sort(Query::x, std::greater<double>());
+          container.sort(Query::x, std::greater<>());
 
           THEN("the container should be sorted") {
             for (size_t i = 0; i < container().size(); i++) {

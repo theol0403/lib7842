@@ -40,7 +40,7 @@ Language: Cpp
 MaxEmptyLinesToKeep: '1'
 NamespaceIndentation: None
 PointerAlignment: Left
-ReflowComments: 'false'
+ReflowComments: 'true'
 SortIncludes: 'true'
 SortUsingDeclarations: 'false'
 SpaceAfterCStyleCast: 'false'

@@ -1,6 +1,6 @@
+#include "../test/include/test.hpp"
 #include "lib7842/api.hpp"
 #include "lvgl/lvgl.h"
-#include "test.hpp"
 
 void lvglTest() {
   GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
@@ -102,8 +102,8 @@ static void hal_init(void) {
   lv_indev_drv_register(&indev_drv);
 
   /* Tick init.
-   * You have to call 'lv_tick_inc()' in periodically to inform LittelvGL about how much time were elapsed
-   * Create an SDL thread to do this*/
+   * You have to call 'lv_tick_inc()' in periodically to inform LittelvGL about how much time were
+   * elapsed Create an SDL thread to do this*/
   SDL_CreateThread(tick_thread, "tick", NULL);
   SDL_CreateThread(lvgl_thread, "lvgl", NULL);
 }

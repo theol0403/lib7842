@@ -27,7 +27,7 @@ public:
    *                start of the next segment from being redundant.
    * @return generated path
    */
-  virtual SimplePath generate(int isteps = 1, bool iend = true) const = 0;
+  virtual SimplePath generate(int isteps, bool iend = true) const = 0;
 
   /**
    * Implicitly convert path to a shared pointer

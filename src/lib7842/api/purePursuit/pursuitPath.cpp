@@ -7,11 +7,8 @@ void PursuitPath::setLimits(const PursuitLimits& ilimits) {
 }
 
 PursuitLimits PursuitPath::getLimits() const {
-  if (limits) {
-    return limits.value();
-  } else {
-    throw std::runtime_error("PursuitPath::getLimits: no limits set");
-  }
+  if (limits) return limits.value();
+  GLOBAL_ERROR_THROW("PursuitPath::getLimits: no limits set");
 }
 
 bool PursuitPath::hasLimits() const {

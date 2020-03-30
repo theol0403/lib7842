@@ -1,12 +1,14 @@
 #include "lib7842/api/positioning/path/quinticPath.hpp"
+
 #include "lib7842/api/positioning/path/compoundPath.hpp"
 #include "lib7842/api/positioning/path/quinticSegment.hpp"
 #include "lib7842/api/positioning/point/mathPoint.hpp"
+#include <utility>
 
 namespace lib7842 {
 
-QuinticPath::QuinticPath(const StatePath& ipath, double islopeScalar) :
-  path(ipath), slopeScalar(islopeScalar) {}
+QuinticPath::QuinticPath(StatePath ipath, double islopeScalar) :
+  path(std::move(ipath)), slopeScalar(islopeScalar) {}
 
 QuinticPath::QuinticPath(const SimplePath& ipath, double islopeScalar) :
   path(ipath), slopeScalar(islopeScalar) {

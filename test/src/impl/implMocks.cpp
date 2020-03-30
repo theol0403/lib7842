@@ -2,7 +2,7 @@
 #include <unistd.h>
 
 #define protected public
-#include "test.hpp"
+#include "../test/include/test.hpp"
 
 extern "C" {
 namespace pros {

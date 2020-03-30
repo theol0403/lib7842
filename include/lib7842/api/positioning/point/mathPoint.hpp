@@ -43,8 +43,8 @@ struct MathPoint {
   /**
    * Scale operators
    */
-  MathPoint operator*(const double scalar) const;
-  MathPoint operator/(const double scalar) const;
+  MathPoint operator*(double scalar) const;
+  MathPoint operator/(double scalar) const;
 
   /**
    * Utility functions

@@ -76,6 +76,37 @@ public:
   }
 
   /**
+   * Construct a StatePath from any other type of DiscretePath. This function accepts angles to map
+   * over the path. The angles will be gradually interpolated, so that the first point has the first
+   * angle and the last point has the last angle. Any other angles will be distributed across the
+   * path.
+   *
+   * For example, if 3 angles are provided, then 0-50% of the path will interpolate between the
+   * first and second angle, and 50-100% of the path will interpolate between the second and third
+   * angle.
+   *
+   * @param  ipath     The input DiscretePath
+   * @param  iangles   The array of angles to map over the path
+   */
+  template <typename C, typename T1 = DiscretePath<T>,
+            typename = std::enable_if_t<std::is_same_v<T1, StatePath>>>
+  DiscretePath(const DiscretePath<C>& ipath, const std::vector<QAngle>& iangles) :
+    DiscretePath(ipath) {
+    if (iangles.empty()) return;
+    double ratio = static_cast<double>(iangles.size() - 1) / static_cast<double>(path.size() - 1);
+    for (size_t i = 0; i < path.size(); i++) {
+      double position = i * ratio;
+      int index = std::floor(position);
+      double t = position - index;
+      if (t != 0.0) {
+        path.at(i)->theta = iangles.at(index) + ((iangles.at(index + 1) - iangles.at(index)) * t);
+      } else {
+        path.at(i)->theta = iangles.at(index);
+      }
+    }
+  }
+
+  /**
    * Get the underlying array of pointers.
    */
   array_t& get() {
@@ -156,7 +187,7 @@ public:
    * @return generated path
    */
   DiscretePath<T> generateT(int isteps = 1, bool iend = true) const {
-    if (isteps < 1) throw std::runtime_error("DiscretePath<T>::generate: isteps is less than 1");
+    if (isteps < 1) return copy();
 
     DiscretePath<T> temp;
     if (path.size() > 0) temp().reserve((isteps * (path.size() - 1)) + 1);

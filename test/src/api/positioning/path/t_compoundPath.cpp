@@ -1,6 +1,6 @@
-#include "test.hpp"
+#include "../test/include/test.hpp"
 
-SCENARIO("CompoundPath test") {
+TEST_CASE("CompoundPath") {
 
   GIVEN("an empty path") {
     CompoundPath path;
@@ -76,7 +76,7 @@ SCENARIO("CompoundPath test") {
 
         THEN("the points should be preserved") {
           for (size_t i = 0; i < ipath().size(); i++) {
-            CHECK(*ipath()[i] == (Vector {(i + 1) * inch, (i + 2) * inch}));
+            CHECK(*ipath().at(i) == (Vector {(i + 1) * inch, (i + 2) * inch}));
           }
         }
       }
@@ -103,7 +103,7 @@ SCENARIO("CompoundPath test") {
 
         THEN("the points should be preserved") {
           for (size_t i = 0; i < ipath().size(); i++) {
-            CHECK(*ipath()[i] == (Vector {(i + 1) * inch, (i + 2) * inch}));
+            CHECK(*ipath().at(i) == (Vector {(i + 1) * inch, (i + 2) * inch}));
           }
         }
       }

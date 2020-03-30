@@ -47,7 +47,7 @@ public:
    * @param istart The start point
    * @param iend   The end point
    */
-  QuinticSegment(const DataState& istart, const DataState& iend);
+  QuinticSegment(DataState istart, DataState iend);
 
   /**
    * Interpolate the path
@@ -60,7 +60,7 @@ public:
    *                start of the next segment from being redundant.
    * @return generated path
    */
-  SimplePath generate(int isteps = 1, bool iend = true) const override;
+  SimplePath generate(int isteps, bool iend = true) const override;
 
 protected:
   DataState start {};

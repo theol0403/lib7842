@@ -84,7 +84,7 @@ define cxx_rule_test
 $(BINDIR)/%.$1.o: $(TESTDIR)/%.$1
 	$(VV)mkdir -p $$(dir $$@)
 	@echo -n "Compiling $$< "
-	$$(call test_output,$D$(CXX) -c $(INCLUDE) -iquote$(INCDIR)/$$(dir $$*) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o $$@ $$<,$(OK_STRING))
+	$$(call test_output,$D$(CXX) -c $(INCLUDE) -iquote$(INCDIR)/$$(dir $$*) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o $$@ $(shell pwd)/$$<,$(OK_STRING))
 endef
 $(eval $(call cxx_rule_test,cpp))
 

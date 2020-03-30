@@ -18,7 +18,7 @@ public:
    * @param ipath        The path
    * @param islopeScalar The importance of each point's angle.
    */
-  explicit QuinticPath(const StatePath& ipath, double islopeScalar);
+  explicit QuinticPath(StatePath ipath, double islopeScalar);
 
   /**
    * Create a spline from an array of points containing only positions. The angle of each point is
@@ -40,7 +40,7 @@ public:
    *                start of the next segment from being redundant.
    * @return generated path
    */
-  SimplePath generate(int isteps = 1, bool iend = true) const override;
+  SimplePath generate(int isteps, bool iend = true) const override;
 
 protected:
   StatePath path {};

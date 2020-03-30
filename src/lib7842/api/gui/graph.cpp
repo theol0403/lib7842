@@ -45,7 +45,7 @@ Graph& Graph::withSeries(const std::string& iname, const lv_color_t& icolor,
   lv_chart_series_t* ser = lv_chart_add_series(graph, icolor);
   lv_chart_init_points(graph, ser, idata());
 
-  //Add text to legend
+  // Add text to legend
   lv_obj_t* label = lv_label_create(graph, NULL);
   lv_label_set_text(label, (std::string(SYMBOL_MINUS) + " " + iname).c_str());
 
@@ -58,7 +58,7 @@ Graph& Graph::withSeries(const std::string& iname, const lv_color_t& icolor,
   lv_obj_set_style(label, style.get());
   lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_LEFT, 7, 5 + lv_obj_get_height(label) * series.size());
 
-  series.push_back(std::make_tuple(ser, idata, std::move(style)));
+  series.emplace_back(ser, idata, std::move(style));
   return *this;
 }
 

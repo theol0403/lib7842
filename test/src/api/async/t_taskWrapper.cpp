@@ -1,4 +1,4 @@
-#include "test.hpp"
+#include "../test/include/test.hpp"
 #include <unistd.h>
 
 class MockTask : public TaskWrapper {
@@ -12,7 +12,7 @@ public:
   }
 };
 
-SCENARIO("TaskWrapper test") {
+TEST_CASE("TaskWrapper") {
   GIVEN("a mock task") {
     MockTask task;
     WHEN("we wait a few milliseconds") {

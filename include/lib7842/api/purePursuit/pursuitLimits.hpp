@@ -39,7 +39,8 @@ struct PursuitLimits {
                 const QAcceleration& idecel, const QSpeed& ifinalVel,
                 const std::optional<QSpeed>& ik = std::nullopt);
   /**
-   * Real-world units. Deceleration and final velocity is inferred from acceleration and minimum velocity.
+   * Real-world units. Deceleration and final velocity is inferred from acceleration and minimum
+   * velocity.
    *
    * @param iminVel The minimum velocity through the entire path.
    * @param iaccel  The acceleration from min velocity to max velocity.

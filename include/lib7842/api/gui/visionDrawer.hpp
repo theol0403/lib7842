@@ -79,7 +79,7 @@ protected:
 class VisionLayer {
 public:
   /**
-   * Create a vision layer. Prefer using VisionPage::makeLayer. 
+   * Create a vision layer. Prefer using VisionPage::makeLayer.
    *
    * @param idrawer The vision page
    */

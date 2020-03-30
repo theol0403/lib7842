@@ -22,3 +22,4 @@ test/temp.log
 test/temp.errors
 
 *.sublime-workspace
+.clangd
