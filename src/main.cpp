@@ -117,12 +117,10 @@ void opcontrol() {
   /**
    * Follower
    */
-  PathFollowerX follower(model, odom, ChassisScales({2.75_in, 12_in}, imev5GreenTPR), 200_rpm,
-                         0.2_ft);
+  PathFollower follower(model, odom, ChassisScales({2.75_in, 11.5_in}, imev5GreenTPR), 200_rpm,
+                        1_ft, 2_in);
 
-  PursuitLimits limits {2.75_in, 200_rpm, 0.2, 2_s, 1, 0_s, 1};
-
-  odom->setState({0_in, 0_in, -90_deg});
+  PursuitLimits limits {2.75_in, 200_rpm, 0.2, 1.5_s, 1};
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -135,12 +133,11 @@ void opcontrol() {
         QuinticPath({{0_ft, 0_ft, 0_deg}, {-1_ft, 2_ft, -90_deg}, {-2_ft, 0_ft, 180_deg}}, 1)
           .generate(100);
 
-      follower.followPath(PathGenerator::generateX({path, {-90_deg, -180_deg, -270_deg}}, limits));
+      follower.followPath(PathGenerator::generate(path, limits));
 
-      auto path2 = QuinticPath({{-2_ft, 0_ft, 0_deg}, {0_ft, 2_ft, 0_deg}}, 1.5).generate(100);
+      auto path2 = QuinticPath({{-2_ft, 0_ft, 0_deg}, {0_ft, 2_ft, 0_deg}}, 2).generate(100);
 
-      follower.followPath(
-        PathGenerator::generateX({path2, {-270_deg, -360_deg, -360_deg}}, limits));
+      follower.followPath(PathGenerator::generate(path2, limits), true);
     }
 
     pros::delay(10);
