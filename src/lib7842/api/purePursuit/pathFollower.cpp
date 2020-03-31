@@ -94,11 +94,23 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
     // calculate robot wheel velocities
     auto wheelVel = calculateVelocity(targetVel, curvature, chassisScales, limits);
 
+    // if within the the of the path, ignore the default parameter and drive directly to the end. We
+    // are past the end of the path if the angle is above 90, so drive backwards if so.
+    bool driveBackward = withinDriveRadius ? angleToEnd > 90_deg : ibackwards;
+
+    // negate velocities to drive backward
+    if (driveBackward) {
+      wheelVel[0] *= -1;
+      wheelVel[1] *= -1;
+    }
+
     // if the robot is within the drive radius, switch to a heading controller which seeks the exit
     // angle
     if (withinDriveRadius) {
       // get exit angle of the path
       auto endAngle = (path.end() - 2)->get()->angleTo(*path.back());
+      // if backwards, exit angle is flipped
+      if (ibackwards) endAngle += 180_deg;
       // get angle error
       QAngle error = util::wrapAngle90(endAngle - pos.theta);
       // get distance to lookahead
@@ -110,13 +122,8 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
       // calculate what speed the wheels need to be moving at
       QAngularSpeed turnVel = rotation * chassisScales.wheelTrack / chassisScales.wheelDiameter;
 
-      if (!ibackwards) {
-        wheelVel[0] += turnVel;
-        wheelVel[1] -= turnVel;
-      } else {
-        wheelVel[0] -= turnVel;
-        wheelVel[1] += turnVel;
-      }
+      wheelVel[0] += turnVel;
+      wheelVel[1] -= turnVel;
     }
 
     double left = (wheelVel[0] / gearset).convert(number);
@@ -127,15 +134,6 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
     if (maxMag > 1.0) {
       left /= maxMag;
       right /= maxMag;
-    }
-
-    // if within the the of the path, ignore the default parameter and drive directly to the end. We
-    // are past the end of the path if the angle is above 90, so drive backwards if so.
-    if (withinDriveRadius) ibackwards = angleToEnd > 90_deg;
-
-    if (ibackwards) {
-      left *= -1;
-      right *= -1;
     }
 
     if (mode == util::motorMode::voltage) {
