@@ -1,11 +1,7 @@
 #pragma once
-#include "lib7842/api/other/global.hpp"
 #include "lib7842/api/other/utility.hpp"
-#include "lib7842/api/positioning/path/discretePath.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/odometry/odometry.hpp"
-#include "okapi/api/units/QAngularSpeed.hpp"
-#include "okapi/api/units/QSpeed.hpp"
 #include "pursuitLimits.hpp"
 #include "pursuitPath.hpp"
 #include <optional>

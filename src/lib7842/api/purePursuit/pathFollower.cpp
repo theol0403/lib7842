@@ -1,10 +1,5 @@
 #include "lib7842/api/purePursuit/pathFollower.hpp"
 #include "lib7842/api/positioning/point/mathPoint.hpp"
-#include "okapi/api/units/QAngularSpeed.hpp"
-#include "okapi/api/units/QArea.hpp"
-#include "pros/rtos.hpp"
-#include <iostream>
-#include <utility>
 
 namespace lib7842 {
 
