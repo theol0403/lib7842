@@ -38,8 +38,8 @@ void UnicycleFollower::seek(const State& iref, double ih, double ikv, double ika
 
     double p = sqrt(ex * ex + ey * ey);
 
-    double phi = atan2(ex, ey) - theta_ref;
-    double a = atan2(ex, ey) - theta;
+    double phi = atan2(ey, ex) - theta_ref;
+    double a = atan2(ey, ex) - theta;
 
     double v = ikv * p * cos(a);
     double w = ika * a + ikv * sinc(2 * a) * (a + ih * phi);
@@ -60,8 +60,8 @@ void UnicycleFollower::seek(const State& iref, double ih, double ikv, double ika
 UnicycleFollower::u_t UnicycleFollower::clamp(const UnicycleFollower::u_t& u) {
   auto& [v, w] = u;
 
-  auto v_ratio = (v / maxVel).abs().convert(number);
-  auto w_ratio = (w / maxTurnVel).abs().convert(number);
+  double v_ratio = (v / maxVel).abs().convert(number);
+  double w_ratio = (w / maxTurnVel).abs().convert(number);
 
   auto sigma = std::max({v_ratio, w_ratio, 1.0});
 
