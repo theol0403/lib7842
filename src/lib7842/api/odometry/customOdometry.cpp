@@ -105,7 +105,6 @@ ChassisScales CustomOdometry::getScales() {
 
 void CustomOdometry::loop() {
   auto rate = global::getTimeUtil()->getRate();
-  rate->delayUntil(10_ms);
   while (true) {
     step();
     rate->delayUntil(5_ms);

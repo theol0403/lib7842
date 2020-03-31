@@ -20,6 +20,7 @@ std::string TaskWrapper::getName() {
 };
 
 void TaskWrapper::trampoline(void* iparam) {
+  pros::delay(10); // give subclasses a chance to initialize
   static_cast<TaskWrapper*>(iparam)->loop();
 }
 
