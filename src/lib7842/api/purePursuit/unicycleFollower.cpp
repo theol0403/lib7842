@@ -45,6 +45,15 @@ void UnicycleFollower::seek(const State& iref, double ih, double ikv, double ika
     double w = ika * a + ikv * sinc(2 * a) * (a + ih * phi);
 
     auto [vel, turnVel] = clamp({v * mps, w * radps});
+
+    QAngularSpeed wheelVel = (vel / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
+    QAngularSpeed wheelTurnVel = turnVel * chassisScales.wheelTrack / chassisScales.wheelDiameter;
+
+    double left = ((wheelVel + wheelTurnVel) / gearset).convert(number);
+    double right = ((wheelVel - wheelTurnVel) / gearset).convert(number);
+
+    model->tank(left, right);
+    rate->delayUntil(10_ms);
   }
 }
 
