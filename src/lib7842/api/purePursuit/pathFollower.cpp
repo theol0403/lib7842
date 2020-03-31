@@ -46,6 +46,9 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
     // The projected point will cause the robot to rotate more appropriately.
     Vector projectedLook = (MathPoint::normalize(lookPoint - pos) * lookahead.convert(meter)) + pos;
 
+    // if the robot is on the path, use the normal lookahead. If not, use the projected.
+    auto& finalLook = onPath ? lookPoint : projectedLook;
+
     // whether the robot is within the driveRadius of the end of the path. If it is, disable angle
     // correction.
     bool withinDriveRadius = Vector::dist(lookPoint, *ipath().back()) < driveRadius &&
@@ -53,7 +56,7 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
                              Vector::dist(**closest, *ipath().back()) < driveRadius;
 
     // calculate the arc curvature for the robot to travel to the lookahead
-    double curvature = withinDriveRadius ? 0 : calculateCurvature(pos, projectedLook);
+    double curvature = withinDriveRadius ? 0 : calculateCurvature(pos, finalLook);
 
     // the angle to the end of the path
     QAngle angleToEnd = pos.angleTo(*ipath().back()).abs();
