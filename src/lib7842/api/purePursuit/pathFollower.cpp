@@ -66,10 +66,6 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
     // we are done the path if the angle is opposite of the drive direction
     bool pastEnd = ibackwards ? angleToEnd < 90_deg : angleToEnd > 90_deg;
 
-    // if within the the of the path, ignore the default parameter and drive directly to the end. We
-    // are past the end of the path if the angle is above 90, so drive backwards if so.
-    if (withinDriveRadius) ibackwards = angleToEnd > 90_deg;
-
     // the robot is considered finished if it has passed the end
     isFinished = pastEnd && withinDriveRadius;
 
@@ -98,6 +94,31 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
     // calculate robot wheel velocities
     auto wheelVel = calculateVelocity(targetVel, curvature, chassisScales, limits);
 
+    // if the robot is within the drive radius, switch to a heading controller which seeks the exit
+    // angle
+    if (withinDriveRadius) {
+      // get exit angle of the path
+      auto endAngle = (path.end() - 2)->get()->angleTo(*path.back());
+      // get angle error
+      QAngle error = util::wrapAngle90(endAngle - pos.theta);
+      // get distance to lookahead
+      QLength dist = Vector::dist(pos, lookPoint);
+      // given robot velocity, approximate time to get to lookahead
+      QTime time = dist / targetVel;
+      // calculate angular velocity to reach the lookahead angle given the time
+      QAngularSpeed rotation = error / time;
+      // calculate what speed the wheels need to be moving at
+      QAngularSpeed turnVel = rotation * chassisScales.wheelTrack / chassisScales.wheelDiameter;
+
+      if (!ibackwards) {
+        wheelVel[0] += turnVel;
+        wheelVel[1] -= turnVel;
+      } else {
+        wheelVel[0] -= turnVel;
+        wheelVel[1] += turnVel;
+      }
+    }
+
     double left = (wheelVel[0] / gearset).convert(number);
     double right = (wheelVel[1] / gearset).convert(number);
 
@@ -107,6 +128,10 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
       left /= maxMag;
       right /= maxMag;
     }
+
+    // if within the the of the path, ignore the default parameter and drive directly to the end. We
+    // are past the end of the path if the angle is above 90, so drive backwards if so.
+    if (withinDriveRadius) ibackwards = angleToEnd > 90_deg;
 
     if (ibackwards) {
       left *= -1;
