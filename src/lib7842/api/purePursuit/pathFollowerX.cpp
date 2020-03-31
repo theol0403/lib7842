@@ -8,7 +8,8 @@ PathFollowerX::PathFollowerX(const std::shared_ptr<XDriveModel>& imodel,
                              const std::shared_ptr<Odometry>& iodometry,
                              const ChassisScales& ichassisScales, const QAngularSpeed& igearset,
                              const QLength& ilookahead) :
-  PathFollower(imodel, iodometry, ichassisScales, igearset, ilookahead), xModel(imodel) {};
+  PathFollower(imodel, iodometry, ichassisScales, igearset, ilookahead, ilookahead),
+  xModel(imodel) {};
 
 void PathFollowerX::followPath(const PursuitPath& ipath, const std::optional<QSpeed>& istartSpeed) {
   resetPursuit();
@@ -20,6 +21,8 @@ void PathFollowerX::followPath(const PursuitPath& ipath, const std::optional<QSp
   // assume the robot starts at minimum velocity unless otherwise specified
   QSpeed lastVelocity = istartSpeed.value_or(limits.minVel);
 
+  auto& path = ipath(); // simplify getting path
+
   bool isFinished = false; // loop until the robot is considered to have finished the path
   while (!isFinished) {
     // get the robot position and heading
@@ -29,7 +32,7 @@ void PathFollowerX::followPath(const PursuitPath& ipath, const std::optional<QSp
     Vector lookPoint = findLookaheadPoint(ipath, pos); // get the lookahead
 
     // the robot is considered finished if it has passed the end
-    isFinished = closest >= ipath().end() - 1;
+    isFinished = closest >= path.end() - 1;
 
     // get the velocity from the closest point
     auto targetVel = closest->get()->getData<QSpeed>("velocity");
@@ -48,8 +51,8 @@ void PathFollowerX::followPath(const PursuitPath& ipath, const std::optional<QSp
     double power = (wheelVel / gearset).convert(number);
 
     // calculate target angle at lookahead
-    auto start = ipath()[lastLookIndex]->getData<QAngle>("angle");
-    auto end = ipath()[lastLookIndex + 1]->getData<QAngle>("angle");
+    auto start = path[lastLookIndex]->getData<QAngle>("angle");
+    auto end = path[lastLookIndex + 1]->getData<QAngle>("angle");
     QAngle angle = start + ((end - start) * lastLookT);
 
     // get angle error from robot to lookahead
