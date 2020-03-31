@@ -3,14 +3,11 @@
 namespace lib7842 {
 
 UnicycleFollower::UnicycleFollower(std::shared_ptr<ChassisModel> imodel,
-                                   std::shared_ptr<Odometry> iodometry, const QSpeed& imaxVel,
-                                   const QAngularSpeed& imaxTurnVel,
+                                   std::shared_ptr<Odometry> iodometry,
                                    const ChassisScales& ichassisScales,
                                    const QAngularSpeed& igearset) :
   model(std::move(imodel)),
   odometry(std::move(iodometry)),
-  maxVel(imaxVel),
-  maxTurnVel(imaxTurnVel),
   chassisScales(ichassisScales),
   gearset(igearset) {}
 
@@ -44,43 +41,44 @@ void UnicycleFollower::seek(const State& iref, double ih, double ikv, double ika
     double v = ikv * p * cos(a);
     double w = ika * a + ikv * sinc(2 * a) * (a + ih * phi);
 
-    auto [vel, turnVel] = clamp({v * mps, w * radps});
+    auto vel = v * mps;
+    auto turnVel = w * radps;
 
     QAngularSpeed wheelVel = (vel / (1_pi * chassisScales.wheelDiameter)) * 360_deg;
     QAngularSpeed wheelTurnVel = turnVel * chassisScales.wheelTrack / chassisScales.wheelDiameter;
 
-    double left = ((wheelVel + wheelTurnVel) / gearset).convert(number);
-    double right = ((wheelVel - wheelTurnVel) / gearset).convert(number);
+    double wheelPower = (wheelVel / gearset).convert(number);
+    double turnPower = (wheelTurnVel / gearset).convert(number);
+
+    auto finalPower = clamp(wheelPower, turnPower);
+
+    double left = finalPower[0] + finalPower[1];
+    double right = finalPower[0] - finalPower[1];
 
     model->tank(left, right);
     rate->delayUntil(10_ms);
   }
 }
 
-UnicycleFollower::u_t UnicycleFollower::clamp(const UnicycleFollower::u_t& u) {
-  auto& [v, w] = u;
+std::valarray<double> clamp(double v, double w) {
+  auto sigma = std::max({v, w, 1.0});
 
-  double v_ratio = (v / maxVel).abs().convert(number);
-  double w_ratio = (w / maxTurnVel).abs().convert(number);
-
-  auto sigma = std::max({v_ratio, w_ratio, 1.0});
-
-  QSpeed v_c;
-  QAngularSpeed w_c;
+  double v_c;
+  double w_c;
 
   if (sigma == 1.0) {
     v_c = v;
     w_c = w;
-  } else if (sigma == v_ratio) {
-    v_c = maxVel * util::sgn(v);
+  } else if (sigma == v) {
+    v_c = util::sgn(v);
     w_c = w / sigma;
   } else {
     v_c = v / sigma;
-    w_c = maxTurnVel * util::sgn(w);
+    w_c = util::sgn(w);
   }
 
-  v_c = std::clamp(v_c, maxVel * -1, maxVel);
-  w_c = std::clamp(w_c, maxTurnVel * -1, maxTurnVel);
+  v_c = std::clamp(v_c, -1.0, 1.0);
+  w_c = std::clamp(w_c, -1.0, 1.0);
 
   return {v_c, w_c};
 }
