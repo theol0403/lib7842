@@ -1,6 +1,7 @@
 #include "main.h"
 
 #include "lib7842/api.hpp"
+#include "lib7842/api/purePursuit/unicycleFollower.hpp"
 
 using namespace lib7842;
 
@@ -117,10 +118,8 @@ void opcontrol() {
   /**
    * Follower
    */
-  PathFollower follower(model, odom, ChassisScales({2.75_in, 11.5_in}, imev5GreenTPR), 200_rpm,
-                        1.3_ft, 6_in);
-
-  PursuitLimits limits {2.75_in, 200_rpm, 0.3, 1.5_s, 1};
+  UnicycleFollower follower(model, odom, ChassisScales({2.75_in * sqrt(2), 11.5_in}, imev5GreenTPR),
+                            200_rpm);
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -128,19 +127,7 @@ void opcontrol() {
                    controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::A)) {
-
-      auto path =
-        QuinticPath({{0_ft, 0_ft, 0_deg}, {-1_ft, 2_ft, -90_deg}, {-2_ft, 0_ft, 180_deg}}, 1.1)
-          .generate(100);
-
-      follower.followPath(PathGenerator::generate(path, limits));
-
-      auto path2 = QuinticPath({{-2_ft, 0_ft, 0_deg}, {0_ft, 2_ft, 0_deg}}, 2).generate(100);
-
-      follower.followPath(PathGenerator::generate(path2, limits), true);
-
-      // auto path2 = QuinticPath({{0_ft, 0_ft, 180_deg}, {2_ft, -2_ft, 180_deg}}, 2).generate(100);
-      // follower.followPath(PathGenerator::generate(path2, limits), true);
+      follower.seek({0_ft, 0_ft, 90_deg}, 6, 3, 5);
     }
 
     pros::delay(10);
