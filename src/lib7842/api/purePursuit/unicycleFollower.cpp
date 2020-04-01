@@ -56,8 +56,8 @@ void UnicycleFollower::seek(const State& iref, double ih, double ikv, double ika
 
   auto finalPower = clamp(wheelPower, turnPower);
 
-  double left = finalPower[0] + finalPower[1];
-  double right = finalPower[0] - finalPower[1];
+  double left = finalPower[0] - finalPower[1];
+  double right = finalPower[0] + finalPower[1];
 
   model->tank(left, right);
 }
