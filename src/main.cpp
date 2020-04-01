@@ -118,9 +118,9 @@ void opcontrol() {
    * Follower
    */
   PathFollower follower(model, odom, ChassisScales({2.75_in, 11.5_in}, imev5GreenTPR), 200_rpm,
-                        1.3_ft, 6_in);
+                        1.3_ft);
 
-  PursuitLimits limits {2.75_in, 200_rpm, 0.3, 1.5_s, 1};
+  PursuitLimits limits {2.75_in, 200_rpm, 0.1, 2_s, 1};
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -129,18 +129,18 @@ void opcontrol() {
 
     if (controller.getDigital(ControllerDigital::A)) {
 
-      auto path =
-        QuinticPath({{0_ft, 0_ft, 0_deg}, {-1_ft, 2_ft, -90_deg}, {-2_ft, 0_ft, 180_deg}}, 1.1)
-          .generate(100);
+      // auto path =
+      //   QuinticPath({{0_ft, 0_ft, 0_deg}, {-1_ft, 2_ft, -90_deg}, {-2_ft, 0_ft, 180_deg}}, 1.1)
+      //     .generate(100);
 
-      follower.followPath(PathGenerator::generate(path, limits));
+      // follower.followPath(PathGenerator::generate(path, limits));
 
-      auto path2 = QuinticPath({{-2_ft, 0_ft, 0_deg}, {0_ft, 2_ft, 0_deg}}, 2).generate(100);
+      // auto path2 = QuinticPath({{-2_ft, 0_ft, 0_deg}, {0_ft, 2_ft, 0_deg}}, 2).generate(100);
 
-      follower.followPath(PathGenerator::generate(path2, limits), true);
-
-      // auto path2 = QuinticPath({{0_ft, 0_ft, 180_deg}, {2_ft, -2_ft, 180_deg}}, 2).generate(100);
       // follower.followPath(PathGenerator::generate(path2, limits), true);
+
+      auto path2 = QuinticPath({{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}}, 2).generate(100);
+      follower.followPath(PathGenerator::generate(path2, limits), false);
     }
 
     pros::delay(10);
