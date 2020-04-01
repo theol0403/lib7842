@@ -71,7 +71,7 @@ std::valarray<double> UnicycleFollower::clamp(double v, double w) {
   if (sigma == 1.0) {
     v_c = v;
     w_c = w;
-  } else if (sigma == v) {
+  } else if (sigma == std::abs(v)) {
     v_c = util::sgn(v);
     w_c = w / sigma;
   } else {
