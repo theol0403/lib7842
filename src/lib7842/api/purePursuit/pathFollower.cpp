@@ -188,7 +188,7 @@ Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& 
   // behind the robot, causing the robot to drive backwards when we want it to go straight to the
   // lookahead. To fix this, if the lookahead has not been found yet, but the robot is within the
   // end of the path, then jump the lookahead to the end of the path.
-  if (lastClosest && Vector::dist(ipos, *path.back()) < lookahead) {
+  if (!lastClosest && Vector::dist(ipos, *path.back()) < lookahead) {
     lastClosest = path.end() - 2;
     lastLookT = 1;
   }
