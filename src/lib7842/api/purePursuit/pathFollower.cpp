@@ -6,13 +6,13 @@ namespace lib7842 {
 PathFollower::PathFollower(std::shared_ptr<ChassisModel> imodel,
                            std::shared_ptr<Odometry> iodometry, const ChassisScales& ichassisScales,
                            const QAngularSpeed& igearset, const QLength& ilookahead,
-                           const QLength& idriveRadius) :
+                           const std::optional<QLength>& idriveRadius) :
   model(std::move(imodel)),
   odometry(std::move(iodometry)),
   chassisScales(ichassisScales),
   gearset(igearset),
   lookahead(ilookahead),
-  driveRadius(idriveRadius) {}
+  driveRadius(idriveRadius.value_or(ilookahead)) {}
 
 void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
                               const std::optional<QSpeed>& istartSpeed) {

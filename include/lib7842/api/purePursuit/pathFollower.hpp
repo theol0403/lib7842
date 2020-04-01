@@ -18,11 +18,13 @@ public:
    * @param ichassisScales The powered wheel scales.
    * @param igearset       The powered wheel gearset multiplied by any external gear ratio.
    * @param ilookahead     The lookahead distance.
-   * @param idriveRadius   The radius from the end of the path to turn off angle correction.
+   * @param idriveRadius   Optional. The radius from the end of the path to turn off angle
+   *                       correction. Defaults to lookahead distance.
    */
   PathFollower(std::shared_ptr<ChassisModel> imodel, std::shared_ptr<Odometry> iodometry,
                const ChassisScales& ichassisScales, const QAngularSpeed& igearset,
-               const QLength& ilookahead, const QLength& idriveRadius);
+               const QLength& ilookahead,
+               const std::optional<QLength>& idriveRadius = std::nullopt);
 
   virtual ~PathFollower() = default;
 
