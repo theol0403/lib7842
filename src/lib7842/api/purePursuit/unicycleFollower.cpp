@@ -37,9 +37,9 @@ void UnicycleFollower::seek(const State& iref, double ih, double ikv, double ika
 
   double p = sqrt(ex * ex + ey * ey);
 
-  double phi = atan2(ey, ex) - theta_ref;
+  double phi = atan2(y_ref - y, x_ref - x) - theta_ref;
   phi = wrap180(phi);
-  double a = atan2(ey, ex) - theta;
+  double a = atan2(y_ref - y, x_ref - x) - theta;
   a = wrap180(a);
 
   double v = ikv * p * cos(a);
