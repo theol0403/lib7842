@@ -63,7 +63,7 @@ void UnicycleFollower::seek(const State& iref, double ih, double ikv, double ika
 }
 
 std::valarray<double> UnicycleFollower::clamp(double v, double w) {
-  auto sigma = std::max({v, w, 1.0});
+  auto sigma = std::max({std::abs(v), std::abs(w), 1.0});
 
   double v_c;
   double w_c;
