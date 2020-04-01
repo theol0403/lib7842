@@ -20,16 +20,16 @@ double wrap180(double a) {
 }
 
 void UnicycleFollower::seek(const State& iref, double ih, double ikv, double ika) {
-  auto rate = global::getTimeUtil()->getRate();
+  // auto rate = global::getTimeUtil()->getRate();
 
   State pos = State(odometry->getState(StateMode::CARTESIAN));
 
-  double x_ref = -iref.y.convert(meter);
-  double y_ref = iref.x.convert(meter);
+  double x_ref = iref.y.convert(meter);
+  double y_ref = -iref.x.convert(meter);
   double theta_ref = (iref.theta * -1).convert(radian);
 
-  double x = -pos.y.convert(meter);
-  double y = pos.x.convert(meter);
+  double x = pos.y.convert(meter);
+  double y = -pos.x.convert(meter);
   double theta = (pos.theta * -1).convert(radian);
 
   double ex = cos(theta) * (x_ref - x) - sin(theta) * (y_ref - y);

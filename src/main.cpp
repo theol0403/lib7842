@@ -127,7 +127,7 @@ void opcontrol() {
                    controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::A)) {
-      follower.seek({2_ft, 2_ft, 0_deg}, 6, 3, 5);
+      follower.seek({2_ft, 2_ft, 0_deg}, 1, 1, 1);
     }
 
     pros::delay(10);
