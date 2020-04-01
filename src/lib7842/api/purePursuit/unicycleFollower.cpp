@@ -24,13 +24,13 @@ void UnicycleFollower::seek(const State& iref, double ih, double ikv, double ika
 
   State pos = State(odometry->getState(StateMode::CARTESIAN));
 
-  double x_ref = iref.y.convert(meter);
+  double x_ref = -iref.y.convert(meter);
   double y_ref = iref.x.convert(meter);
-  double theta_ref = (90_deg - iref.theta).convert(radian);
+  double theta_ref = (iref.theta * -1).convert(radian);
 
-  double x = pos.y.convert(meter);
+  double x = -pos.y.convert(meter);
   double y = pos.x.convert(meter);
-  double theta = (90_deg - pos.theta).convert(radian);
+  double theta = (pos.theta * -1).convert(radian);
 
   double ex = cos(theta) * (x_ref - x) - sin(theta) * (y_ref - y);
   double ey = sin(theta) * (x_ref - x) + cos(theta) * (y_ref - y);
