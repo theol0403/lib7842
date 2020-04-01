@@ -122,12 +122,13 @@ void opcontrol() {
                             200_rpm);
 
   while (true) {
-    model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
-                   controller.getAnalog(ControllerAnalog::rightY),
-                   controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::A)) {
       follower.seek({2_ft, 2_ft, 0_deg}, 1, 1, 1);
+    } else {
+      model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
+                     controller.getAnalog(ControllerAnalog::rightY),
+                     controller.getAnalog(ControllerAnalog::leftX));
     }
 
     pros::delay(10);
