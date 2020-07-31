@@ -119,7 +119,7 @@ void Odom::initializeField() {
   lv_line_set_points(line, linePoints.data(), linePoints.size());
   lv_obj_set_pos(line, 0, 0);
 
-  lineLength = fieldDim / 6;
+  lineLength = static_cast<int>(fieldDim) / 6;
 
   lv_style_copy(&lineStyle, &lv_style_plain);
   lineStyle.line.width = 3;
@@ -196,10 +196,12 @@ void Odom::updateOdom() {
                  (c_y * fieldDim) - lv_obj_get_height(led) / 2.0 - 1.0);
 
   // move start and end of line
-  linePoints.at(0) = {(int16_t)((c_x * fieldDim)), (int16_t)((c_y * fieldDim) - (3.0 / 2.0))};
+  linePoints.at(0) = {static_cast<int16_t>((c_x * fieldDim)),
+                      static_cast<int16_t>((c_y * fieldDim) - (3.0 / 2.0))};
   double newY = lineLength * cos(c_theta);
   double newX = lineLength * sin(c_theta);
-  linePoints.at(1) = {(int16_t)(newX + linePoints.at(0).x), (int16_t)(-newY + linePoints.at(0).y)};
+  linePoints.at(1) = {static_cast<int16_t>(newX + linePoints.at(0).x),
+                      static_cast<int16_t>(-newY + linePoints.at(0).y)};
 
   lv_line_set_points(line, linePoints.data(), linePoints.size());
   lv_obj_invalidate(line);

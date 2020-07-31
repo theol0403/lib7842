@@ -25,7 +25,7 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
   // assume the robot starts at minimum velocity unless otherwise specified
   QSpeed lastVelocity = istartSpeed.value_or(limits.minVel);
 
-  auto& path = ipath(); // simplify getting path
+  const auto& path = ipath(); // simplify getting path
 
   bool isFinished = false; // loop until the robot is considered to have finished the path
   while (!isFinished) {
@@ -150,7 +150,7 @@ void PathFollower::setMotorMode(util::motorMode imode) {
 
 PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,
                                                        const Vector& ipos) {
-  auto& path = ipath(); // simplify getting path
+  const auto& path = ipath(); // simplify getting path
 
   QLength closestDist {std::numeric_limits<double>::max()};
   // get the last closest point, or the beginning of the path if there is none
@@ -182,7 +182,7 @@ PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,
 }
 
 Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& ipos) {
-  auto& path = ipath(); // simplify getting path
+  const auto& path = ipath(); // simplify getting path
 
   // Optimization: if the robot starts within the end of the path, then the only intersection is
   // behind the robot, causing the robot to drive backwards when we want it to go straight to the

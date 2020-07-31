@@ -20,7 +20,7 @@ Page::Page(lv_obj_t* iparent, lv_color_t icolor) :
 }
 
 Page::~Page() {
-  if (container) lv_obj_del(container);
+  if (container != nullptr) lv_obj_del(container);
 }
 
 lv_obj_t* Page::getPage() const {

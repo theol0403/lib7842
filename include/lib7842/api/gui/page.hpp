@@ -54,7 +54,7 @@ public:
 
 protected:
   lv_obj_t* container;
-  lv_style_t cStyle;
+  lv_style_t cStyle {};
   const lv_color_t themeColor;
 };
 } // namespace lib7842::GUI

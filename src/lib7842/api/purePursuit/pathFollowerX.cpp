@@ -21,7 +21,7 @@ void PathFollowerX::followPath(const PursuitPath& ipath, const std::optional<QSp
   // assume the robot starts at minimum velocity unless otherwise specified
   QSpeed lastVelocity = istartSpeed.value_or(limits.minVel);
 
-  auto& path = ipath(); // simplify getting path
+  const auto& path = ipath(); // simplify getting path
 
   bool isFinished = false; // loop until the robot is considered to have finished the path
   while (!isFinished) {

@@ -67,12 +67,12 @@ private:
   lv_obj_t* tabview {nullptr};
   std::vector<std::shared_ptr<Page>> pages {};
 
-  lv_style_t style_bg;
-  lv_style_t style_indic;
-  lv_style_t style_btn_bg;
-  lv_style_t style_rel;
-  lv_style_t style_tgl_rel;
-  lv_style_t style_pr;
-  lv_style_t pageStyle;
+  lv_style_t style_bg {};
+  lv_style_t style_indic {};
+  lv_style_t style_btn_bg {};
+  lv_style_t style_rel {};
+  lv_style_t style_tgl_rel {};
+  lv_style_t style_pr {};
+  lv_style_t pageStyle {};
 };
 } // namespace lib7842::GUI

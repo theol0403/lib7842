@@ -1,4 +1,5 @@
 #include "lib7842/api/odometry/customOdometry.hpp"
+#include <cmath>
 
 namespace lib7842 {
 
@@ -32,9 +33,9 @@ void CustomOdometry::step() {
 
   // The hypotenuse of the triangle formed by the middle of the robot on the starting position and
   // ending position and the middle of the circle it travels around
-  double h;
-  double i; // Half on the angle that I've traveled
-  double h2; // The same as h but using the back instead of the side wheels
+  double h = 0;
+  double i = 0; // Half on the angle that I've traveled
+  double h2 = 0; // The same as h but using the back instead of the side wheels
   double a = (L - R) / chassisScales.wheelTrack.convert(meter); // The angle that I've traveled
   if (a != 0.0) {
     // The radius of the circle the robot travels around with the right side of the robot
