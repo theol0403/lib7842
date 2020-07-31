@@ -21,7 +21,7 @@ PursuitPath PathGenerator::generateX(const StatePath& ipath, const PursuitLimits
   return path;
 }
 
-void PathGenerator::setCurvatures(PursuitPath& ipath) {
+void PathGenerator::setCurvatures(const PursuitPath& ipath) {
   ipath().at(0)->setData("curvature", 0.0);
   for (size_t i = 1; i < ipath().size() - 1; i++) {
     double curvature = calculateCurvature(*ipath()[i - 1], *ipath()[i], *ipath()[i + 1]);

@@ -147,7 +147,6 @@ TEST_CASE("QuinticPath") {
 
     THEN("generating 10 steps should return 31 points") {
       auto ipath = path.generate(10);
-      std::string str;
       REQUIRE(ipath().size() == 31);
     }
   }

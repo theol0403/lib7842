@@ -5,8 +5,7 @@
 #include "../test/include/test.hpp"
 
 extern "C" {
-namespace pros {
-namespace c {
+namespace pros::c {
 
 void delay(const uint32_t milliseconds) {
   usleep(1000 * milliseconds);
@@ -17,9 +16,7 @@ void task_delay_until(uint32_t* const prev_time, const uint32_t delta) {
   usleep(1000 * delta);
 }
 
-} // namespace c
-} // namespace pros
-} // extern "C"
+} // namespace pros::c
 
 namespace okapi {
 

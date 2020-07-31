@@ -32,7 +32,7 @@ protected:
    *
    * @param ipath The path
    */
-  static void setCurvatures(PursuitPath& ipath);
+  static void setCurvatures(const PursuitPath& ipath);
 
   /**
    * Sets the waypoint velocities respecting curvature and deceleration. Traverses the path

@@ -62,7 +62,8 @@ TEST_CASE("CompoundPath") {
 
       CompoundPath segment5 = CompoundPath().add(CompoundPath() + SimplePath({{8_in, 9_in}}));
 
-      path += std::shared_ptr<CompoundPath>(&segment1, [](AbstractPath*) {}); // empty deleter
+      path +=
+        std::shared_ptr<CompoundPath>(&segment1, [](AbstractPath* /*unused*/) {}); // empty deleter
       path += CompoundPath() + std::make_shared<CompoundPath>(std::move(segment4)) +
               CompoundPath() // move the local into shared
               + segment5; // make copy

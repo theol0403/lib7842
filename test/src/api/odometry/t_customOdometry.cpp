@@ -1,7 +1,7 @@
 #include "../test/include/test.hpp"
 
-static QLength calculateDistanceTraveled(int ticks) {
-  return (ticks / 360.0) * 1_pi * 4_in;
+static QLength calculateDistanceTraveled(double ticks) {
+  return (double(ticks) / 360.0) * 1_pi * 4_in;
 }
 
 static void assertOdomState(const State& istate, std::shared_ptr<CustomOdometry> iodom) {
