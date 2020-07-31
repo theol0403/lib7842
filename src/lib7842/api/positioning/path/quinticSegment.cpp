@@ -1,4 +1,6 @@
-#include "quinticSegment.hpp"
+#include "lib7842/api/positioning/path/quinticSegment.hpp"
+
+#include <utility>
 
 namespace lib7842 {
 
@@ -24,12 +26,12 @@ double QuinticPolynomial::calculate(double t) const {
   return xt;
 }
 
-QuinticSegment::QuinticSegment(const DataState& istart, const DataState& iend) :
-  start(istart), end(iend) {}
+QuinticSegment::QuinticSegment(DataState istart, DataState iend) :
+  start(std::move(istart)), end(std::move(iend)) {}
 
 SimplePath QuinticSegment::generate(int isteps, bool iend) const {
-  double startSlope = start.getData<double>("slope");
-  double endSlope = end.getData<double>("slope");
+  auto startSlope = start.getData<double>("slope");
+  auto endSlope = end.getData<double>("slope");
 
   double xStartSlope = startSlope * std::sin(start.theta.convert(radian));
   double yStartSlope = startSlope * std::cos(start.theta.convert(radian));
@@ -43,8 +45,9 @@ SimplePath QuinticSegment::generate(int isteps, bool iend) const {
   temp().reserve(isteps);
 
   for (size_t i = 0; i <= (iend ? isteps : isteps - 1); i++) {
-    temp().emplace_back(std::make_shared<Vector>(xPoly.calculate(i / (double)isteps) * meter,
-                                                 yPoly.calculate(i / (double)isteps) * meter));
+    temp().emplace_back(
+      std::make_shared<Vector>(xPoly.calculate(i / static_cast<double>(isteps)) * meter,
+                               yPoly.calculate(i / static_cast<double>(isteps)) * meter));
   }
 
   return temp;

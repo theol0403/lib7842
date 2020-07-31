@@ -1,11 +1,9 @@
-#include "taskWrapper.hpp"
+#include "lib7842/api/async/taskWrapper.hpp"
 
 namespace lib7842 {
 
 void TaskWrapper::loop() {
-  std::string msg("TaskWrapper::loop: loop is not overridden");
-  GLOBAL_ERROR(msg);
-  throw std::runtime_error(msg);
+  GLOBAL_ERROR_THROW("TaskWrapper::loop: loop is not overridden");
 }
 
 void TaskWrapper::startTask(const std::string& iname) {
@@ -22,7 +20,6 @@ std::string TaskWrapper::getName() {
 };
 
 void TaskWrapper::trampoline(void* iparam) {
-  pros::delay(20);
   static_cast<TaskWrapper*>(iparam)->loop();
 }
 

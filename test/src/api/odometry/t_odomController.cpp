@@ -1,11 +1,11 @@
-#include "test.hpp"
+#include "../test/include/test.hpp"
 
 class MockOdomController : public OdomController {
 public:
   using OdomController::OdomController;
 };
 
-TEST_CASE("OdomController test") {
+TEST_CASE("OdomController") {
 
   auto model = std::make_shared<MockThreeEncoderXDriveModel>();
   auto odom =

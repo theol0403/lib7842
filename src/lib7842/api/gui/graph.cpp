@@ -1,4 +1,4 @@
-#include "graph.hpp"
+#include "lib7842/api/gui/graph.hpp"
 
 namespace lib7842::GUI {
 
@@ -13,7 +13,8 @@ void Graph::initialize() {
   lv_style_copy(&gStyle, &lv_style_pretty);
   gStyle.body.main_color = themeColor;
   gStyle.body.grad_color = themeColor;
-  gStyle.line.color = LV_COLOR_HEX(0xFF7F00);
+  gStyle.line.color = LV_COLOR_WHITE;
+  gStyle.line.width = 1;
   lv_obj_set_style(graph, &gStyle);
 }
 
@@ -44,7 +45,7 @@ Graph& Graph::withSeries(const std::string& iname, const lv_color_t& icolor,
   lv_chart_series_t* ser = lv_chart_add_series(graph, icolor);
   lv_chart_init_points(graph, ser, idata());
 
-  //Add text to legend
+  // Add text to legend
   lv_obj_t* label = lv_label_create(graph, NULL);
   lv_label_set_text(label, (std::string(SYMBOL_MINUS) + " " + iname).c_str());
 
@@ -57,7 +58,7 @@ Graph& Graph::withSeries(const std::string& iname, const lv_color_t& icolor,
   lv_obj_set_style(label, style.get());
   lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_LEFT, 7, 5 + lv_obj_get_height(label) * series.size());
 
-  series.push_back(std::make_tuple(ser, idata, std::move(style)));
+  series.emplace_back(ser, idata, std::move(style));
   return *this;
 }
 

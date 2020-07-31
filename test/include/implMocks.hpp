@@ -211,7 +211,7 @@ public:
 
   void threadFunc();
 
-  std::thread thread;
+  // std::thread thread;
   int reverse {1};
   AbstractMotor::gearset gearset {AbstractMotor::gearset::green};
   AbstractMotor::encoderUnits encoderUnits {AbstractMotor::encoderUnits::counts};
@@ -346,7 +346,7 @@ public:
   FlywheelSimulator& simulator;
   MockRate rate {};
   std::atomic_bool dtorCalled {false};
-  std::thread thread;
+  // std::thread thread;
 };
 
 enum class IsSettledOverride { none, alwaysSettled, neverSettled };

@@ -1,24 +1,32 @@
+#include "../test/include/test.hpp"
 #include "lib7842/api.hpp"
 #include "lvgl/lvgl.h"
-#include "test.hpp"
 
 void lvglTest() {
   GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
 
   scr.makePage<GUI::Odom>("Odom").attachOdom(nullptr).attachResetter(nullptr);
 
-  scr.makePage<GUI::Graph>("Graph").withRange(0, 100).withSeries("Test", LV_COLOR_RED,
-                                                                 []() { return 50; });
+  scr.makePage<GUI::Graph>("Graph")
+    .withRange(0, 100)
+    .withSeries("Series 1", LV_COLOR_RED, []() { return 40; })
+    .withSeries("Series 2", LV_COLOR_GREEN, []() { return 50; })
+    .withSeries("Series 3", LV_COLOR_PURPLE, []() { return 60; });
 
-  scr.makePage<GUI::Actions>("Buttons")
-    .button("Claw", [&]() { std::cout << "help" << std::endl; })
-    .button("Claw2", [&]() { std::cout << "help" << std::endl; })
+  scr.makePage<GUI::Actions>("Actions")
+    .button("Action 1", [&]() { std::cout << "Doing Action 1" << std::endl; })
+    .button("Action 2", [&]() { std::cout << "Doing Action 2" << std::endl; })
+    .newRow()
+    .button("Action 3", [&]() { std::cout << "Doing Action 3" << std::endl; })
+    .button("Action 4", [&]() { std::cout << "Doing Action 4" << std::endl; })
     .build();
 
-  scr.makePage<GUI::Selector>("Auton")
-    .button("Claw", [&]() { std::cout << "c" << std::endl; })
-    .button("Arm", [&]() { std::cout << "a" << std::endl; })
-    .button("Yeet", [&]() { std::cout << "y" << std::endl; })
+  scr.makePage<GUI::Selector>("Selector")
+    .button("Option 1", [&]() { std::cout << "Running Option 1" << std::endl; })
+    .button("Option 2", [&]() { std::cout << "Running Option 2" << std::endl; })
+    .newRow()
+    .button("Option 3", [&]() { std::cout << "Running Option 3" << std::endl; })
+    .button("Option 4", [&]() { std::cout << "Running Option 4" << std::endl; })
     .build();
 
   auto& vision = scr.makePage<GUI::VisionPage>("Vision");
@@ -34,26 +42,6 @@ void lvglTest() {
     .withColor(LV_COLOR_YELLOW)
     .withColor(LV_COLOR_WHITE, LV_COLOR_GREEN, 2)
     .draw(container2);
-
-  // .button(
-  //   "Test",
-  //   []() {
-  //     std::cout << "Test" << std::endl;
-  //   })
-  // .button(
-  //   "Test2",
-  //   []() {
-  //     std::cout << "Test" << std::endl;
-  //   })
-  // .newRow()
-  // .button(
-  //   "Test3",
-  //   []() {
-  //     std::cout << "Test" << std::endl;
-  //   })
-  // .button("Test4", []() {
-  //   std::cout << "Test" << std::endl;
-  // });
 
   while (true) {
     pros::delay(100);
@@ -114,8 +102,8 @@ static void hal_init(void) {
   lv_indev_drv_register(&indev_drv);
 
   /* Tick init.
-   * You have to call 'lv_tick_inc()' in periodically to inform LittelvGL about how much time were elapsed
-   * Create an SDL thread to do this*/
+   * You have to call 'lv_tick_inc()' in periodically to inform LittelvGL about how much time were
+   * elapsed Create an SDL thread to do this*/
   SDL_CreateThread(tick_thread, "tick", NULL);
   SDL_CreateThread(lvgl_thread, "lvgl", NULL);
 }

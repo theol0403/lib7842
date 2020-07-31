@@ -1,4 +1,4 @@
-#include "test.hpp"
+#include "../test/include/test.hpp"
 
 class MockPathFollower : public PathFollower {
 public:
@@ -10,7 +10,7 @@ public:
   using PathFollower::calculateVelocity;
 };
 
-TEST_CASE("PathFollower test") {
+TEST_CASE("PathFollower") {
 
   SUBCASE("given a model, odom, follower, and limits") {
 
@@ -19,7 +19,7 @@ TEST_CASE("PathFollower test") {
       std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}));
 
     auto follower = std::make_shared<MockPathFollower>(
-      model, odom, ChassisScales({{4_in, 10_in}, 360}), 6_in, 6_in);
+      model, odom, ChassisScales({{4_in, 10_in}, 360}), 200_rpm, 6_in);
 
     PursuitLimits limits {0_mps, 0.5_mps2, 1_mps, 1_mps};
 

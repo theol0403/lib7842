@@ -1,4 +1,4 @@
-#include "pathGenerator.hpp"
+#include "lib7842/api/purePursuit/pathGenerator.hpp"
 
 namespace lib7842 {
 
@@ -37,7 +37,10 @@ void PathGenerator::setVelocity(PursuitPath& ipath, const PursuitLimits& limits)
     DataPoint& end = *ipath()[i - 1];
 
     // k / curvature, limited to max
-    QSpeed wantedVel = std::min(limits.maxVel, limits.k / ipath()[i]->getData<double>("curvature"));
+    QSpeed wantedVel =
+      limits.k
+        ? std::min(limits.maxVel, limits.k.value() / ipath()[i]->getData<double>("curvature"))
+        : limits.maxVel;
 
     // distance from last point
     double distance = MathPoint::dist(start, end);

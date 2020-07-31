@@ -1,11 +1,10 @@
-#include "customOdometry.hpp"
+#include "lib7842/api/odometry/customOdometry.hpp"
 
 namespace lib7842 {
 
-CustomOdometry::CustomOdometry(const std::shared_ptr<ChassisModel>& imodel,
+CustomOdometry::CustomOdometry(std::shared_ptr<ChassisModel> imodel,
                                const ChassisScales& ichassisScales) :
-
-  model(imodel), chassisScales(ichassisScales) {}
+  model(std::move(imodel)), chassisScales(ichassisScales) {}
 
 void CustomOdometry::setScales(const ChassisScales& ichassisScales) {
   chassisScales = ichassisScales;
@@ -18,9 +17,7 @@ void CustomOdometry::step() {
   auto newTicks = model->getSensorVals();
 
   if (newTicks.size() < 3) {
-    std::string msg("CustomOdometry::step: The model does not contain three encoders");
-    GLOBAL_ERROR(msg);
-    throw std::runtime_error(msg);
+    GLOBAL_ERROR_THROW("CustomOdometry::step: The model does not contain three encoders");
   }
 
   // The amount the left side of the robot moved
@@ -33,12 +30,13 @@ void CustomOdometry::step() {
   // Update the last values
   lastTicks = newTicks;
 
-  // The hypotenuse of the triangle formed by the middle of the robot on the starting position and ending position and the middle of the circle it travels around
+  // The hypotenuse of the triangle formed by the middle of the robot on the starting position and
+  // ending position and the middle of the circle it travels around
   double h;
   double i; // Half on the angle that I've traveled
   double h2; // The same as h but using the back instead of the side wheels
   double a = (L - R) / chassisScales.wheelTrack.convert(meter); // The angle that I've traveled
-  if (a) {
+  if (a != 0.0) {
     // The radius of the circle the robot travels around with the right side of the robot
     double r = R / a;
     i = a / 2.0;
@@ -71,11 +69,8 @@ const State& CustomOdometry::getState() const {
 
 OdomState CustomOdometry::getState(const StateMode& imode) const {
   const State& istate = getState();
-  if (imode == StateMode::CARTESIAN) {
-    return {istate.x, istate.y, istate.theta};
-  } else {
-    return {istate.y, istate.x, istate.theta};
-  }
+  if (imode == StateMode::CARTESIAN) { return {istate.x, istate.y, istate.theta}; }
+  return {istate.y, istate.x, istate.theta};
 }
 
 void CustomOdometry::setState(const State& istate) {
@@ -110,6 +105,7 @@ ChassisScales CustomOdometry::getScales() {
 
 void CustomOdometry::loop() {
   auto rate = global::getTimeUtil()->getRate();
+  rate->delayUntil(20_ms);
   while (true) {
     step();
     rate->delayUntil(5_ms);

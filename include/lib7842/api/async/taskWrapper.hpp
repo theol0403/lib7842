@@ -1,21 +1,20 @@
 #pragma once
 #include "lib7842/api/other/global.hpp"
 #include "okapi/api/coreProsAPI.hpp"
-#include "pros/rtos.hpp"
-#include <memory>
 
 namespace lib7842 {
-using namespace okapi;
 
 /**
- * A utility class that wraps a task trampoline. To use, simply inherit your class from TaskWrapper
- * and override the `loop` method. To start the task, the `startTask` method must be called, either
- * from the constructor or from outside the class.
+ * A utility class that wraps a task trampoline. To use, inherit your class from TaskWrapper and
+ * override the `loop` method. To start the task, the `startTask` method must be called, either
+ * from the derived constructor or from outside the class.
  */
 class TaskWrapper {
+public:
+  TaskWrapper(const TaskWrapper& itask) = delete;
+
 protected:
   TaskWrapper() = default;
-  TaskWrapper(const TaskWrapper& itask) = delete;
   TaskWrapper(TaskWrapper&& itask) = default;
   virtual ~TaskWrapper() = default;
 

@@ -64,7 +64,8 @@ void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, dou
 Vector closest(const Vector& current, const QAngle& heading, const Vector& target);
 
 /**
- * Calculate the point along a given heading that is closest to a target point. Uses the heading that is contained in State.
+ * Calculate the point along a given heading that is closest to a target point. Uses the heading
+ * that is contained in State.
  *
  * @param  state  The current state with heading
  * @param  target The target point
@@ -82,8 +83,8 @@ Vector closest(const State& state, const Vector& target);
 QAngle rollAngle360(const QAngle& angle);
 
 /**
- * Roll a given angle to be within the constraints of [-180, 180] degrees. Does not change the actual
- * direction.
+ * Roll a given angle to be within the constraints of [-180, 180] degrees. Does not change the
+ * actual direction.
  *
  * @param  angle The input angle
  * @return The constrained angle

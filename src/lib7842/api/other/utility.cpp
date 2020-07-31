@@ -1,4 +1,4 @@
-#include "utility.hpp"
+#include "lib7842/api/other/utility.hpp"
 #include "lib7842/api/positioning/point/mathPoint.hpp"
 #include "okapi/api/util/mathUtil.hpp"
 
@@ -9,10 +9,10 @@ void driveVector(const std::shared_ptr<ChassisModel>& model, double forward, dou
   forward = std::clamp(forward, -1.0, 1.0);
   double leftOutput = forward + yaw;
   double rightOutput = forward - yaw;
-  double maxInputMag = std::max(std::abs(leftOutput), std::abs(rightOutput));
-  if (maxInputMag > 1.0) {
-    leftOutput /= maxInputMag;
-    rightOutput /= maxInputMag;
+  double maxMag = std::max(std::abs(leftOutput), std::abs(rightOutput));
+  if (maxMag > 1.0) {
+    leftOutput /= maxMag;
+    rightOutput /= maxMag;
   }
 
   if (mode == motorMode::voltage) {
@@ -47,13 +47,13 @@ void strafeVector(const std::shared_ptr<XDriveModel>& model, double forward, dou
   double bottomLeft = forward * scaleTopRight + yaw;
   double bottomRight = forward * scaleTopLeft - yaw;
 
-  double maxInputMag =
+  double maxMag =
     std::max({std::abs(topLeft), std::abs(topRight), std::abs(bottomLeft), std::abs(bottomRight)});
-  if (maxInputMag > 1.0) {
-    topLeft /= maxInputMag;
-    topRight /= maxInputMag;
-    bottomLeft /= maxInputMag;
-    bottomRight /= maxInputMag;
+  if (maxMag > 1.0) {
+    topLeft /= maxMag;
+    topRight /= maxMag;
+    bottomLeft /= maxMag;
+    bottomRight /= maxMag;
   }
 
   auto modeFnc = mode == motorMode::voltage ? motorVoltage : motorVelocity;

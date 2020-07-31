@@ -1,4 +1,4 @@
-#include "container.hpp"
+#include "lib7842/api/vision/container.hpp"
 #include <numeric>
 
 namespace lib7842::Vision {
@@ -36,11 +36,8 @@ Container& Container::remove(size_t startIndex, size_t endIndex) {
 }
 
 Object Container::get(size_t index) {
-  if (index < objects.size()) {
-    return objects.at(index);
-  } else {
-    return {};
-  }
+  if (index < objects.size()) { return objects.at(index); }
+  return {};
 }
 
 double Container::get(size_t index, const Query& query) {

@@ -17,7 +17,7 @@ namespace lib7842::GUI {
 class Page {
 public:
   Page(const Page& ipage) = delete;
-  Page(Page&& ipage) = default;
+  Page(Page&& ipage);
   virtual ~Page();
 
   /**

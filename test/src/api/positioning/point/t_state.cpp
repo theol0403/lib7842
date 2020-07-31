@@ -1,6 +1,6 @@
-#include "test.hpp"
+#include "../test/include/test.hpp"
 
-SCENARIO("State test") {
+TEST_CASE("State") {
 
   GIVEN("a default-constructed state") {
     State state;

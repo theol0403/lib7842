@@ -1,4 +1,4 @@
-#include "actions.hpp"
+#include "lib7842/api/gui/actions.hpp"
 
 namespace lib7842::GUI {
 
@@ -46,12 +46,12 @@ void Actions::initialize() {
 }
 
 Actions& Actions::button(const std::string& iname, const std::function<void()>& iaction) {
-  buttons.push_back(std::make_pair(iname, iaction));
+  buttons.emplace_back(iname, iaction);
   return *this;
 }
 
 Actions& Actions::newRow() {
-  buttons.push_back(std::make_pair("\n", nullptr));
+  buttons.emplace_back("\n", nullptr);
   return *this;
 }
 

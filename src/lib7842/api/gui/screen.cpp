@@ -1,4 +1,4 @@
-#include "screen.hpp"
+#include "lib7842/api/gui/screen.hpp"
 
 namespace lib7842::GUI {
 
@@ -75,10 +75,6 @@ Screen::Screen(lv_obj_t* iparent, lv_color_t icolor) :
   startTask("Screen");
 }
 
-Screen::~Screen() {
-  lv_obj_del(tabview);
-}
-
 lv_obj_t* Screen::newPage(const std::string& iname) {
   lv_obj_t* page = lv_tabview_add_tab(tabview, iname.c_str());
   lv_page_set_sb_mode(page, LV_SB_MODE_OFF);
@@ -94,9 +90,10 @@ void Screen::render() {
 }
 
 void Screen::loop() {
+  auto rate = global::getTimeUtil()->getRate();
   while (true) {
     render();
-    pros::delay(100);
+    rate->delayUntil(50_ms);
   }
 }
 

@@ -84,7 +84,7 @@ void opcontrol() {
     // limits
     200, 12000);
 
-  ChassisScales scales({2.75_in, 11.39_in, 0_in, 2.75_in}, 360);
+  ChassisScales scales({2.75_in, 11.3_in, 0_in, 2.75_in}, 360);
 
   /**
    * Odom
@@ -97,13 +97,13 @@ void opcontrol() {
    */
   auto odomController = std::make_shared<OdomXController>(
     model, odom,
-    //Distance PID - To mm
+    // Distance PID - To mm
     std::make_unique<IterativePosPIDController>(
       0.0165, 0.00026, 0.00033, 0, TimeUtilFactory::withSettledUtilParams(10, 5, 150_ms)),
-    //Turn PID - To Degree
+    // Turn PID - To Degree
     std::make_unique<IterativePosPIDController>(
       0.045, 0.002, 0.0006, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
-    //Angle PID - To Degree
+    // Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
       0.043, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(2, 1, 150_ms)),
     0_ft);
@@ -117,8 +117,10 @@ void opcontrol() {
   /**
    * Follower
    */
-  PathFollowerX follower(model, odom, ChassisScales({2.75_in, 14_in}, imev5GreenTPR), 0.5_ft);
-  PursuitLimits limits {0.1_mps, 1.9_mps2, 1.2_mps, 40_mps};
+  PathFollower follower(model, odom, ChassisScales({2.75_in, 11.5_in}, imev5GreenTPR), 200_rpm,
+                        1.3_ft);
+
+  PursuitLimits limits {2.75_in, 200_rpm, 0.1, 2_s, 1};
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -127,13 +129,18 @@ void opcontrol() {
 
     if (controller.getDigital(ControllerDigital::A)) {
 
-      auto path = StatePath({{0_ft, 0_ft, 0_deg}, {0_ft, 2_ft, 90_deg}}).generateT(1_cm);
+      // auto path =
+      //   QuinticPath({{0_ft, 0_ft, 0_deg}, {-1_ft, 2_ft, -90_deg}, {-2_ft, 0_ft, 180_deg}}, 1.1)
+      //     .generate(100);
 
-      follower.followPath(PathGenerator::generateX(path, limits));
+      // follower.followPath(PathGenerator::generate(path, limits));
 
-      auto path2 = StatePath({{0_ft, 2_ft, 90_deg}, {0_ft, 0_ft, 0_deg}}).generateT(1_cm);
+      // auto path2 = QuinticPath({{-2_ft, 0_ft, 0_deg}, {0_ft, 2_ft, 0_deg}}, 2).generate(100);
 
-      follower.followPath(PathGenerator::generateX(path2, limits));
+      // follower.followPath(PathGenerator::generate(path2, limits), true);
+
+      auto path2 = QuinticPath({{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}}, 2).generate(100);
+      follower.followPath(PathGenerator::generate(path2, limits), false);
     }
 
     pros::delay(10);

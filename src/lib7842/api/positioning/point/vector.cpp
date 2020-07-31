@@ -1,4 +1,5 @@
-#include "vector.hpp"
+#include "lib7842/api/positioning/point/vector.hpp"
+#include "lib7842/api/other/global.hpp"
 #include "lib7842/api/other/utility.hpp"
 #include "okapi/api/units/QArea.hpp"
 #include <stdexcept>
@@ -12,12 +13,10 @@ Vector::Vector(const Point& ipoint) : Vector(ipoint.x, ipoint.y) {}
 
 QLength& Vector::at(size_t iindex) {
   switch (iindex) {
-    case 0: return x; break;
-    case 1: return y; break;
+    case 0: return x;
+    case 1: return y;
     default:
-      throw std::runtime_error("Vector::at():: \"" + std::to_string(iindex) +
-                               "\" is invalid index");
-      break;
+      GLOBAL_ERROR_THROW("Vector::at():: \"" + std::to_string(iindex) + "\" is invalid index");
   }
 }
 
@@ -33,11 +32,11 @@ Vector Vector::operator-(const Vector& rhs) const {
   return {x - rhs.x, y - rhs.y};
 }
 
-Vector Vector::operator*(const double scalar) const {
+Vector Vector::operator*(double scalar) const {
   return {x * scalar, y * scalar};
 }
 
-Vector Vector::operator/(const double scalar) const {
+Vector Vector::operator/(double scalar) const {
   return {x / scalar, y / scalar};
 }
 

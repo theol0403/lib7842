@@ -1,30 +1,31 @@
-#include "pathFollower.hpp"
+#include "lib7842/api/purePursuit/pathFollower.hpp"
 #include "lib7842/api/positioning/point/mathPoint.hpp"
-#include "okapi/api/units/QAngularSpeed.hpp"
-#include "okapi/api/units/QArea.hpp"
-#include "pros/rtos.hpp"
-#include <iostream>
 
 namespace lib7842 {
 
-PathFollower::PathFollower(const std::shared_ptr<ChassisModel>& imodel,
-                           const std::shared_ptr<Odometry>& iodometry,
-                           const ChassisScales& ichassisScales, const QLength& ilookahead,
+PathFollower::PathFollower(std::shared_ptr<ChassisModel> imodel,
+                           std::shared_ptr<Odometry> iodometry, const ChassisScales& ichassisScales,
+                           const QAngularSpeed& igearset, const QLength& ilookahead,
                            const std::optional<QLength>& idriveRadius) :
-  model(imodel),
-  odometry(iodometry),
+  model(std::move(imodel)),
+  odometry(std::move(iodometry)),
   chassisScales(ichassisScales),
+  gearset(igearset),
   lookahead(ilookahead),
   driveRadius(idriveRadius.value_or(ilookahead)) {}
 
-void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
+void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
+                              const std::optional<QSpeed>& istartSpeed) {
   resetPursuit();
 
   auto rate = global::getTimeUtil()->getRate();
   auto timer = global::getTimeUtil()->getTimer();
 
   PursuitLimits limits = ipath.getLimits();
-  QSpeed lastVelocity = limits.minVel; // assume the robot starts at minimum velocity
+  // assume the robot starts at minimum velocity unless otherwise specified
+  QSpeed lastVelocity = istartSpeed.value_or(limits.minVel);
+
+  auto& path = ipath(); // simplify getting path
 
   bool isFinished = false; // loop until the robot is considered to have finished the path
   while (!isFinished) {
@@ -42,23 +43,23 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
     // The projected point will cause the robot to rotate more appropriately.
     Vector projectedLook = (MathPoint::normalize(lookPoint - pos) * lookahead.convert(meter)) + pos;
 
+    // if the robot is on the path, use the normal lookahead. If not, use the projected.
+    auto& finalLook = onPath ? lookPoint : projectedLook;
+
     // whether the robot is within the driveRadius of the end of the path. If it is, disable angle
     // correction.
-    bool withinDriveRadius = Vector::dist(**closest, *ipath().back()) < lookahead &&
-                             Vector::dist(pos, *ipath().back()) < lookahead;
+    bool withinDriveRadius = Vector::dist(lookPoint, *path.back()) < driveRadius &&
+                             Vector::dist(pos, *path.back()) < driveRadius &&
+                             Vector::dist(**closest, *path.back()) < driveRadius;
 
     // calculate the arc curvature for the robot to travel to the lookahead
-    double curvature = withinDriveRadius ? 0 : calculateCurvature(pos, projectedLook);
+    double curvature = withinDriveRadius ? 0 : calculateCurvature(pos, finalLook);
 
     // the angle to the end of the path
-    QAngle angleToEnd = pos.angleTo(*ipath().back()).abs();
+    QAngle angleToEnd = pos.angleTo(*path.back()).abs();
 
     // we are done the path if the angle is opposite of the drive direction
     bool pastEnd = ibackwards ? angleToEnd < 90_deg : angleToEnd > 90_deg;
-
-    // if within the the of the path, ignore the default parameter and drive directly to the end. We
-    // are past the end of the path if the angle is above 90, so drive backwards if so.
-    if (withinDriveRadius) ibackwards = angleToEnd > 90_deg;
 
     // the robot is considered finished if it has passed the end
     isFinished = pastEnd && withinDriveRadius;
@@ -68,10 +69,12 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
     // the max velocity or the curvature-based speed reduction.
     QSpeed targetVel = 0_mps;
     if (onPath) {
+      auto pathSpeed = closest->get()->getData<QSpeed>("velocity");
       targetVel =
-        std::min(closest->get()->getData<QSpeed>("velocity"), limits.k / std::abs(curvature));
+        limits.k ? std::min(pathSpeed, limits.k.value() / std::abs(curvature)) : pathSpeed;
     } else {
-      targetVel = std::min(limits.maxVel, limits.k / std::abs(curvature));
+      targetVel =
+        limits.k ? std::min(limits.maxVel, limits.k.value() / std::abs(curvature)) : limits.maxVel;
     }
 
     // add an upwards rate limiter to the robot velocity using the formula vf=vi+at
@@ -86,20 +89,53 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
     // calculate robot wheel velocities
     auto wheelVel = calculateVelocity(targetVel, curvature, chassisScales, limits);
 
-    double left = wheelVel[0].convert(rpm) / 200.0;
-    double right = wheelVel[1].convert(rpm) / 200.0;
+    // if within the the of the path, ignore the default parameter and drive directly to the end. We
+    // are past the end of the path if the angle is above 90, so drive backwards if so.
+    bool driveBackward = withinDriveRadius ? angleToEnd > 90_deg : ibackwards;
 
-    // take any speed that is clipped from one side and move it to the other
-    double maxMag = std::abs(left) > std::abs(right) ? left : right;
-    if (std::abs(maxMag) > 1) {
-      left -= (std::abs(maxMag) - 1) * util::sgn(maxMag);
-      right -= (std::abs(maxMag) - 1) * util::sgn(maxMag);
+    // negate velocities to drive backward
+    if (driveBackward) {
+      wheelVel[0] *= -1;
+      wheelVel[1] *= -1;
     }
 
-    if (!ibackwards) {
+    // if the robot is within the drive radius, switch to a heading controller which seeks the exit
+    // angle
+    if (withinDriveRadius) {
+      // get exit angle of the path
+      auto endAngle = (path.end() - 2)->get()->angleTo(*path.back());
+      // if backwards, exit angle is flipped
+      if (ibackwards) endAngle += 180_deg;
+      // get angle error
+      QAngle error = util::wrapAngle90(endAngle - pos.theta);
+      // get distance to lookahead
+      QLength dist = Vector::dist(pos, lookPoint);
+      // given robot velocity, approximate time to get to lookahead
+      QTime time = dist / targetVel;
+      // calculate angular velocity to reach the lookahead angle given the time
+      QAngularSpeed rotation = error / time;
+      // calculate what speed the wheels need to be moving at
+      QAngularSpeed turnVel = rotation * chassisScales.wheelTrack / chassisScales.wheelDiameter;
+
+      wheelVel[0] += turnVel;
+      wheelVel[1] -= turnVel;
+    }
+
+    double left = (wheelVel[0] / gearset).convert(number);
+    double right = (wheelVel[1] / gearset).convert(number);
+
+    // normalize the sides
+    double maxMag = std::max(std::abs(left), std::abs(right));
+    if (maxMag > 1.0) {
+      left /= maxMag;
+      right /= maxMag;
+    }
+
+    if (mode == util::motorMode::voltage) {
       model->tank(left, right);
     } else {
-      model->tank(-left, -right);
+      model->left(left);
+      model->right(right);
     }
 
     rate->delayUntil(10_ms);
@@ -108,11 +144,17 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards) {
   model->driveVector(0, 0); // apply velocity braking
 }
 
+void PathFollower::setMotorMode(util::motorMode imode) {
+  mode = imode;
+}
+
 PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,
                                                        const Vector& ipos) {
+  auto& path = ipath(); // simplify getting path
+
   QLength closestDist {std::numeric_limits<double>::max()};
   // get the last closest point, or the beginning of the path if there is none
-  auto closest = lastClosest.value_or(ipath().begin());
+  auto closest = lastClosest.value_or(path.begin());
 
   // Optimization: limit the progression of the closest point. It considers the last closest point,
   // and all the options up to one point ahead of the lookahead. This improves performance and
@@ -122,12 +164,12 @@ PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,
   // path. This is to make sure that the closest point is the end in the scenario where the
   // lookahead is not the end of the path.
 
-  auto end = Vector::dist(ipos, *ipath().back()) > lookahead ? ipath().begin() + lastLookIndex + 2
-                                                             : ipath().end();
+  auto end =
+    Vector::dist(ipos, *path.back()) > lookahead ? path.begin() + lastLookIndex + 2 : path.end();
 
   // loop from the last closest point to one point past the lookahead
   for (auto it = closest; it < end; it++) {
-    if (it >= ipath().end()) break;
+    if (it >= path.end()) break;
     QLength distance = Vector::dist(ipos, **it);
     if (distance < closestDist) {
       closestDist = distance;
@@ -140,25 +182,27 @@ PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,
 }
 
 Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& ipos) {
+  auto& path = ipath(); // simplify getting path
+
   // Optimization: if the robot starts within the end of the path, then the only intersection is
   // behind the robot, causing the robot to drive backwards when we want it to go straight to the
   // lookahead. To fix this, if the lookahead has not been found yet, but the robot is within the
   // end of the path, then jump the lookahead to the end of the path.
-  if (lastClosest && Vector::dist(ipos, *ipath().back()) < lookahead) {
-    lastClosest = ipath().end() - 2;
+  if (!lastClosest && Vector::dist(ipos, *path.back()) < lookahead) {
+    lastClosest = path.end() - 2;
     lastLookT = 1;
   }
 
   // lookahead intersection should not be behind closest
-  size_t lastClosestIndex = lastClosest.value_or(ipath().begin()) - ipath().begin();
+  size_t lastClosestIndex = lastClosest.value_or(path.begin()) - path.begin();
 
   // used for optimizing number of intersection searches
   size_t lastIntersect = 0;
 
   // loop through every segment looking for intersection
-  for (size_t i = std::max(lastLookIndex, lastClosestIndex); i < ipath().size() - 1; i++) {
-    auto& start = *ipath()[i];
-    auto& end = *ipath()[i + 1];
+  for (size_t i = std::max(lastLookIndex, lastClosestIndex); i < path.size() - 1; i++) {
+    auto& start = *path[i];
+    auto& end = *path[i + 1];
 
     auto t = findIntersectT(start, end, ipos, lookahead);
     if (t) {
@@ -176,13 +220,13 @@ Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& 
 
     // Optimization: if an intersection has been found, and the loop is checking distances from the
     // last intersection that are further than the lookahead, we are done.
-    if (lastIntersect > 0 && Vector::dist(*ipath()[i], *ipath()[lastIntersect]) >= lookahead * 2) {
+    if (lastIntersect > 0 && Vector::dist(*path[i], *path[lastIntersect]) >= lookahead * 2) {
       break;
     }
   }
 
-  const auto& start = *ipath()[lastLookIndex];
-  const auto& end = *ipath()[lastLookIndex + 1];
+  const auto& start = *path[lastLookIndex];
+  const auto& end = *path[lastLookIndex + 1];
   return start + ((end - start) * lastLookT);
 }
 
@@ -202,14 +246,11 @@ std::optional<double> PathFollower::findIntersectT(const Vector& start, const Ve
     double t2 = (-b + dis) / (2.0 * a);
 
     // prioritize further down path
-    if (t2 >= 0.0 && t2 <= 1.0) {
-      return t2;
-    } else if (t1 >= 0.0 && t1 <= 1.0) {
-      return t1;
-    }
+    if (t2 >= 0.0 && t2 <= 1.0) { return t2; }
+    if (t1 >= 0.0 && t1 <= 1.0) { return t1; }
   }
 
-  //no intersection on this interval
+  // no intersection on this interval
   return std::nullopt;
 }
 

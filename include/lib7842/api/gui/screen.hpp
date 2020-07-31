@@ -1,5 +1,5 @@
 #pragma once
-#include "lib7842/api/other/taskWrapper.hpp"
+#include "lib7842/api/async/taskWrapper.hpp"
 #include "page.hpp"
 #include <string>
 
@@ -28,7 +28,6 @@ public:
 
   Screen(const Screen& iscreen) = delete;
   Screen(Screen&& iscreen) = default;
-  ~Screen() override;
 
   /**
    * Create a new tab and return the LVGL pointer.

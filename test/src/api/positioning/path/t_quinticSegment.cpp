@@ -1,6 +1,6 @@
-#include "test.hpp"
+#include "../test/include/test.hpp"
 
-SCENARIO("QuinticSegment test") {
+TEST_CASE("QuinticSegment") {
 
   GIVEN("a simple segment") {
     DataState start {0_in, 0_in, 0_deg};
@@ -12,16 +12,16 @@ SCENARIO("QuinticSegment test") {
     THEN("generating one step should return both points") {
       auto path = segment.generate(1);
       REQUIRE(path().size() == 2);
-      CHECK(*path()[0] == start);
-      CHECK(path()[1]->y.convert(inch) == Approx(1));
+      CHECK(*path().at(0) == start);
+      CHECK(path().at(1)->y.convert(inch) == Approx(1));
     }
 
     THEN("generating two steps should return interpolated points") {
       auto path = segment.generate(2);
       REQUIRE(path().size() == 3);
-      CHECK(*path()[0] == start);
-      CHECK(path()[1]->y.convert(inch) == Approx(0.5));
-      CHECK(path()[2]->y.convert(inch) == Approx(1));
+      CHECK(*path().at(0) == start);
+      CHECK(path().at(1)->y.convert(inch) == Approx(0.5));
+      CHECK(path().at(2)->y.convert(inch) == Approx(1));
     }
   }
 
@@ -35,19 +35,19 @@ SCENARIO("QuinticSegment test") {
     THEN("generating one step should return both points") {
       auto path = segment.generate(1);
       REQUIRE(path().size() == 2);
-      CHECK(*path()[0] == start);
-      CHECK(path()[1]->x.convert(inch) == Approx(2));
-      CHECK(path()[1]->y.convert(inch) == Approx(4));
+      CHECK(*path().at(0) == start);
+      CHECK(path().at(1)->x.convert(inch) == Approx(2));
+      CHECK(path().at(1)->y.convert(inch) == Approx(4));
     }
 
     THEN("generating two steps should return interpolated points") {
       auto path = segment.generate(2);
       REQUIRE(path().size() == 3);
-      CHECK(*path()[0] == start);
-      CHECK(path()[1]->x.convert(inch) == Approx(1));
-      CHECK(path()[1]->y.convert(inch) == Approx(2));
-      CHECK(path()[2]->x.convert(inch) == Approx(2));
-      CHECK(path()[2]->y.convert(inch) == Approx(4));
+      CHECK(*path().at(0) == start);
+      CHECK(path().at(1)->x.convert(inch) == Approx(1));
+      CHECK(path().at(1)->y.convert(inch) == Approx(2));
+      CHECK(path().at(2)->x.convert(inch) == Approx(2));
+      CHECK(path().at(2)->y.convert(inch) == Approx(4));
     }
   }
 }

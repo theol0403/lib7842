@@ -1,4 +1,4 @@
-#include "compoundPath.hpp"
+#include "lib7842/api/positioning/path/compoundPath.hpp"
 
 namespace lib7842 {
 
@@ -24,7 +24,7 @@ CompoundPath&& CompoundPath::operator+(const std::shared_ptr<AbstractPath>& iseg
 SimplePath CompoundPath::combine() const {
   SimplePath temp;
   for (auto&& segment : segments) {
-    SimplePath isegment = segment->generate();
+    SimplePath isegment = segment->generate(1);
     temp().reserve(temp().size() + isegment().size());
     for (auto&& point : isegment()) {
       temp().emplace_back(point);

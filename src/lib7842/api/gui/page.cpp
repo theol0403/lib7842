@@ -1,6 +1,10 @@
-#include "page.hpp"
+#include "lib7842/api/gui/page.hpp"
 
 namespace lib7842::GUI {
+
+Page::Page(Page&& ipage) : container(ipage.container), themeColor(ipage.themeColor) {
+  ipage.container = nullptr;
+}
 
 Page::Page(lv_obj_t* iparent) : Page(iparent, lv_obj_get_style(iparent)->body.main_color) {}
 
@@ -16,7 +20,7 @@ Page::Page(lv_obj_t* iparent, lv_color_t icolor) :
 }
 
 Page::~Page() {
-  lv_obj_del(container);
+  if (container) lv_obj_del(container);
 }
 
 lv_obj_t* Page::getPage() const {

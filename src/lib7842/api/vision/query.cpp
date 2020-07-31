@@ -1,5 +1,5 @@
-#include "query.hpp"
-#include "object.hpp"
+#include "lib7842/api/vision/query.hpp"
+#include "lib7842/api/vision/object.hpp"
 
 namespace lib7842::Vision {
 
