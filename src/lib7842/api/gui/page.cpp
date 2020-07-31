@@ -6,6 +6,14 @@ Page::Page(Page&& ipage) : container(ipage.container), themeColor(ipage.themeCol
   ipage.container = nullptr;
 }
 
+Page& Page::operator=(Page&& ipage) {
+  if (container != nullptr) lv_obj_del(container);
+  container = ipage.container;
+  themeColor = ipage.themeColor;
+  ipage.container = nullptr;
+  return *this;
+}
+
 Page::Page(lv_obj_t* iparent) : Page(iparent, lv_obj_get_style(iparent)->body.main_color) {}
 
 Page::Page(lv_obj_t* iparent, lv_color_t icolor) :

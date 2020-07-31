@@ -37,7 +37,7 @@ jobs:
           cd test/
           make
           mkdir testBinary
-          cp ./bin/main.exe testBinary
+          cp ./bin/main testBinary
         displayName: Build Tests
 
       - task: PublishPipelineArtifact@0
@@ -48,12 +48,12 @@ jobs:
         displayName: "Publish Tests"
 
       - bash: |
-          valgrind --tool=memcheck --leak-check=full --leak-resolution=med --show-leak-kinds=all --undef-value-errors=yes --track-origins=yes --show-reachable=no ./test/bin/main.exe
+          valgrind --tool=memcheck --leak-check=full --leak-resolution=med --show-leak-kinds=all --undef-value-errors=yes --track-origins=yes --show-reachable=no ./test/bin/main
         displayName: "Run Valgrind"
         continueOnError: true
 
       - bash: |
-          ./test/bin/main.exe
+          ./test/bin/main
         displayName: Run Tests
 
       - bash: |
@@ -62,7 +62,7 @@ jobs:
         condition: always()
 
       - bash: |
-          valgrind --tool=callgrind  --error-exitcode=0 ./test/bin/main.exe
+          valgrind --tool=callgrind  --error-exitcode=0 ./test/bin/main
           mkdir -p callgrindOut
           cp callgrind.out.* callgrindOut
         displayName: "Run Callgrind"

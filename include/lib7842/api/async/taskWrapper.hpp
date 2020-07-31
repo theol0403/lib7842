@@ -11,12 +11,14 @@ namespace lib7842 {
  */
 class TaskWrapper {
 public:
-  TaskWrapper(const TaskWrapper& itask) = delete;
+  TaskWrapper(const TaskWrapper&) = delete;
+  TaskWrapper operator=(const TaskWrapper&) = delete;
+  TaskWrapper(TaskWrapper&&) = default;
+  TaskWrapper& operator=(TaskWrapper&&) = default;
+  virtual ~TaskWrapper() = default;
 
 protected:
   TaskWrapper() = default;
-  TaskWrapper(TaskWrapper&& itask) = default;
-  virtual ~TaskWrapper() = default;
 
   /**
    * Override this function to implement a custom task loop.

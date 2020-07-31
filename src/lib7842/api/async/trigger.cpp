@@ -2,7 +2,7 @@
 
 namespace lib7842 {
 
-Trigger::Function Trigger::Function::operator!()&& {
+Trigger::Function Trigger::Function::operator!() && {
   return std::not_fn(std::move(*this));
 }
 

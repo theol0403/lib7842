@@ -16,9 +16,9 @@ int main(int argc, char** argv) {
   if (argc > 1 && std::string(argv[1]) == "lvgl") {
     std::cout << "Running lvgl:" << std::endl;
     return lvglMain();
-  } else {
-    doctest::Context context;
-    context.applyCommandLine(argc, argv);
-    return context.run(); // run
   }
+
+  doctest::Context context;
+  context.applyCommandLine(argc, argv);
+  return context.run(); // run
 }

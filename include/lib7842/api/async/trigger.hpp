@@ -18,7 +18,7 @@ public:
   class Function : public std::function<bool()> {
   public:
     using function::function;
-    Function operator!()&&;
+    Function operator!() &&;
   };
 
   /**
@@ -26,7 +26,9 @@ public:
    */
   Trigger() = default;
   Trigger(const Trigger&) = delete;
+  Trigger operator=(const Trigger&) = delete;
   Trigger(Trigger&&) = default;
+  Trigger& operator=(Trigger&&) = default;
   virtual ~Trigger() = default;
 
   /**

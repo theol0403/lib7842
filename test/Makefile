@@ -9,7 +9,7 @@ BINDIR=$(ROOT)/bin
 SRCDIR=$(PROJECTROOT)/src/lib7842/api
 INCDIR=$(PROJECTROOT)/include
 TESTDIR=$(ROOT)/src
-OUTBIN:=$(BINDIR)/main.exe
+OUTBIN:=$(BINDIR)/main
 
 WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function -Wnull-dereference -Wno-sign-compare -Wno-narrowing
 EXTRA_CXXFLAGS= -std=gnu++17 -g -pthread -D THREADS_STD 

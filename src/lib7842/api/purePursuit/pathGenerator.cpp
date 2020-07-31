@@ -30,7 +30,7 @@ void PathGenerator::setCurvatures(const PursuitPath& ipath) {
   ipath().back()->setData("curvature", 0.0);
 }
 
-void PathGenerator::setVelocity(PursuitPath& ipath, const PursuitLimits& limits) {
+void PathGenerator::setVelocity(const PursuitPath& ipath, const PursuitLimits& limits) {
   ipath().back()->setData("velocity", limits.finalVel);
   for (size_t i = ipath().size() - 1; i > 0; i--) {
     DataPoint& start = *ipath()[i];

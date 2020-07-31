@@ -26,9 +26,6 @@ public:
    */
   explicit Screen(lv_obj_t* iparent, lv_color_t icolor);
 
-  Screen(const Screen& iscreen) = delete;
-  Screen(Screen&& iscreen) = default;
-
   /**
    * Create a new tab and return the LVGL pointer.
    *

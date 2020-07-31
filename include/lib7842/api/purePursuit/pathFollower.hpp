@@ -115,7 +115,6 @@ protected:
    */
   void resetPursuit();
 
-protected:
   std::shared_ptr<ChassisModel> model {nullptr};
   std::shared_ptr<Odometry> odometry {nullptr};
   const ChassisScales chassisScales;

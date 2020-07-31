@@ -17,6 +17,7 @@ void task_delay_until(uint32_t* const prev_time, const uint32_t delta) {
 }
 
 } // namespace pros::c
+} // extern "C"
 
 namespace okapi {
 

@@ -70,29 +70,30 @@ void Odom::initializeField() {
   /**
    * Tile Layout
    */
-  lv_style_t* tileData[6][6] = {{&gry, &red, &gry, &gry, &blu, &gry}, //
-                                {&red, &gry, &gry, &gry, &gry, &blu}, //
-                                {&gry, &gry, &gry, &gry, &gry, &gry}, //
-                                {&gry, &gry, &gry, &gry, &gry, &gry}, //
-                                {&gry, &gry, &gry, &gry, &gry, &gry}, //
-                                {&gry, &gry, &gry, &gry, &gry, &gry}};
+  std::array<std::array<lv_style_t*, side>, side> tileData = {
+    {{&gry, &red, &gry, &gry, &blu, &gry}, //
+     {&red, &gry, &gry, &gry, &gry, &blu}, //
+     {&gry, &gry, &gry, &gry, &gry, &gry}, //
+     {&gry, &gry, &gry, &gry, &gry, &gry}, //
+     {&gry, &gry, &gry, &gry, &gry, &gry}, //
+     {&gry, &gry, &gry, &gry, &gry, &gry}}};
 
-  double tileDim = fieldDim / 6; // tile dimention
+  double tileDim = fieldDim / side; // tile dimension
 
   /**
    * Create tile matrix, register callbacks, assign each tile an ID
    */
-  for (size_t y = 0; y < 6; y++) {
-    for (size_t x = 0; x < 6; x++) {
+  for (size_t y = 0; y < side; y++) {
+    for (size_t x = 0; x < side; x++) {
       lv_obj_t* tileObj = lv_btn_create(field, NULL);
       lv_obj_set_pos(tileObj, x * tileDim, y * tileDim);
       lv_obj_set_size(tileObj, tileDim, tileDim);
       lv_btn_set_action(tileObj, LV_BTN_ACTION_CLICK, tileAction);
-      lv_obj_set_free_num(tileObj, y * 6 + x);
+      lv_obj_set_free_num(tileObj, y * side + x);
       lv_obj_set_free_ptr(tileObj, this);
       lv_btn_set_toggle(tileObj, false);
-      lv_btn_set_style(tileObj, LV_BTN_STYLE_PR, tileData[y][x]);
-      lv_btn_set_style(tileObj, LV_BTN_STYLE_REL, tileData[y][x]);
+      lv_btn_set_style(tileObj, LV_BTN_STYLE_PR, tileData.at(y).at(x));
+      lv_btn_set_style(tileObj, LV_BTN_STYLE_REL, tileData.at(y).at(x));
     }
   }
 
@@ -119,7 +120,7 @@ void Odom::initializeField() {
   lv_line_set_points(line, linePoints.data(), linePoints.size());
   lv_obj_set_pos(line, 0, 0);
 
-  lineLength = static_cast<int>(fieldDim) / 6;
+  lineLength = static_cast<int>(fieldDim) / side;
 
   lv_style_copy(&lineStyle, &lv_style_plain);
   lineStyle.line.width = 3;
@@ -230,8 +231,8 @@ void Odom::updateOdom() {
 lv_res_t Odom::tileAction(lv_obj_t* tileObj) {
   Odom* that = static_cast<Odom*>(lv_obj_get_free_ptr(tileObj));
   int num = lv_obj_get_free_num(tileObj);
-  int y = num / 6;
-  int x = num - y * 6;
+  int y = num / side;
+  int x = num - y * side;
   if (that->odom) {
     that->odom->setState({x * tile + 0.5_tile, 1_court - y * tile - 0.5_tile, 0_deg},
                          StateMode::CARTESIAN);
