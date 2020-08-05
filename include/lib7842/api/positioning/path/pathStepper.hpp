@@ -33,11 +33,10 @@ protected:
     State operator->() { return *(*this); }
 
     iterator& operator++() {
-      t += p.sampler(t, p.path);
+      t = p.sampler(*this);
       return *this;
     }
 
-  protected:
     const PathStepper& p;
     double t;
   };

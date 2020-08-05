@@ -5,7 +5,7 @@
 TEST_CASE("PathStepper") {
   Line l({0_m, 0_m}, {1_m, 1_m});
 
-  auto i = PathStepper(l, [](double, auto& path) { return 0.1; });
+  auto i = PathStepper(l, [](auto& it) { return it.t += 0.1; });
 
   for (auto&& point : i) {
     std::cout << point << std::endl;
