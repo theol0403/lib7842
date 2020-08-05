@@ -7,26 +7,26 @@
 
 namespace lib7842 {
 
-template <typename T = Vector> class Path {
+template <typename Prod = Vector> class Path {
 public:
   Path() = default;
   virtual ~Path() = default;
 
-  virtual T calc(double t) const = 0;
+  virtual Prod calc(double t) const = 0;
 
   virtual double curvature(double t) const = 0;
 
-  virtual double velocity(double t) const {
+  virtual QLength velocity(double /*t*/) const {
     return length();
   }
 
-  virtual DiscretePath<T> interpolate(double steps) const {
-    std::vector<T> temp;
+  virtual DiscretePath<Prod> interpolate(double steps) const {
+    std::vector<Prod> temp;
     temp.reserve(steps + 1);
     for (size_t i = 0; i < steps + 1; i++) {
       temp.emplace_back(calc(i / steps));
     }
-    return DiscretePath<T>(std::move(temp));
+    return DiscretePath<Prod>(std::move(temp));
   }
 
   virtual QLength length(double resolution = 100) const {
@@ -38,7 +38,7 @@ public:
   }
 
   virtual double t_at_dist_travelled(double t, const QLength& dist) const {
-    return t + dist / std::abs(velocity(t));
+    return t + (dist / velocity(t).abs()).convert(number);
   }
 };
 } // namespace lib7842
