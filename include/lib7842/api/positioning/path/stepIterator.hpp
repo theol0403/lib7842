@@ -1,3 +1,4 @@
+#include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 #include <cstddef>
 #include <functional>
@@ -6,12 +7,10 @@
 
 namespace lib7842 {
 
-template <typename Prod = Vector, typename T = std::nullptr_t, typename Sampler = nullptr_t>
-class StepIterator {
+template <typename T = std::nullptr_t, typename Sampler = nullptr_t> class StepIterator {
 public:
   template <typename U, typename S> static constexpr auto create(U&& ipath, S&& isampler) {
-    return StepIterator<typename std::remove_reference_t<U>::prod,
-                        std::conditional_t<std::is_lvalue_reference_v<U>,
+    return StepIterator<std::conditional_t<std::is_lvalue_reference_v<U>,
                                            std::reference_wrapper<std::remove_reference_t<U>>, U>,
                         S>(std::forward<U>(ipath), std::forward<S>(isampler));
   }
@@ -19,19 +18,19 @@ public:
   class iterator {
   public:
     using iterator_category = std::bidirectional_iterator_tag;
-    using value_type = Prod;
+    using value_type = State;
     using difference_type = double;
-    using pointer = Prod*;
-    using reference = Prod&;
+    using pointer = State*;
+    using reference = State&;
 
     bool operator!=(const iterator& rhs) {
       return t <= rhs.t;
     }
 
-    Prod operator*() {
+    State operator*() {
       return container->calc(t);
     }
-    Prod operator->() {
+    State operator->() {
       return container->calc(t);
     }
 
@@ -51,10 +50,10 @@ public:
       return ++(*this);
     }
 
-    iterator(StepIterator<Sampler, Prod, T>* icontainer, double it = 0.0) :
+    iterator(StepIterator<Sampler, T>* icontainer, double it = 0.0) :
       container(icontainer), t(it) {}
 
-    StepIterator<Sampler, Prod, T>* container {nullptr};
+    StepIterator<Sampler, T>* container {nullptr};
     double t;
   };
 

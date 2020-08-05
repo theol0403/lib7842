@@ -5,9 +5,8 @@
 
 namespace lib7842 {
 
-class Line : public Path<State> {
+class Line : public Path {
 public:
-  using prod = State;
   Line(const Vector& istart, const Vector& iend) :
     start(istart, istart.angleTo(iend)), end(iend, start.theta) {}
 

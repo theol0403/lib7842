@@ -1,5 +1,6 @@
 #pragma once
 #include "abstractPath.hpp"
+#include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 #include <cstddef>
 #include <memory>
@@ -7,12 +8,12 @@
 
 namespace lib7842 {
 
-template <typename Prod = Vector> class Path {
+class Path {
 public:
   Path() = default;
   virtual ~Path() = default;
 
-  virtual Prod calc(double t) const = 0;
+  virtual State calc(double t) const = 0;
 
   virtual double curvature(double t) const = 0;
 
@@ -20,13 +21,13 @@ public:
     return length();
   }
 
-  virtual DiscretePath<Prod> interpolate(double steps) const {
-    std::vector<Prod> temp;
+  virtual std::vector<State> interpolate(double steps) const {
+    std::vector<State> temp;
     temp.reserve(steps + 1);
     for (size_t i = 0; i < steps + 1; i++) {
       temp.emplace_back(calc(i / steps));
     }
-    return DiscretePath<Prod>(std::move(temp));
+    return temp;
   }
 
   virtual QLength length(double resolution = 100) const {
