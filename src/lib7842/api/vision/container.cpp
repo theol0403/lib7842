@@ -3,13 +3,9 @@
 
 namespace lib7842::Vision {
 
-std::vector<Object>& Container::operator()() {
-  return objects;
-}
+std::vector<Object>& Container::operator()() { return objects; }
 
-const std::vector<Object>& Container::operator()() const {
-  return objects;
-}
+const std::vector<Object>& Container::operator()() const { return objects; }
 
 Container& Container::add(const Object& iobj) {
   objects.emplace_back(iobj);
@@ -40,9 +36,7 @@ Object Container::get(size_t index) {
   return {};
 }
 
-double Container::get(size_t index, const Query& query) {
-  return get(index).get(query);
-}
+double Container::get(size_t index, const Query& query) { return get(index).get(query); }
 
 double Container::total(const Query& query) {
   return std::accumulate(objects.begin(), objects.end(), 0.0,

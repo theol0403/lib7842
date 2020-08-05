@@ -3,13 +3,9 @@
 
 class MockTask : public TaskWrapper {
 public:
-  MockTask() {
-    startTask();
-  }
+  MockTask() { startTask(); }
   bool taskRan = false;
-  void loop() override {
-    taskRan = true;
-  }
+  void loop() override { taskRan = true; }
 };
 
 TEST_CASE("TaskWrapper") {
@@ -17,9 +13,7 @@ TEST_CASE("TaskWrapper") {
     MockTask task;
     WHEN("we wait a few milliseconds") {
       usleep(100000);
-      THEN("the task should have started") {
-        REQUIRE(task.taskRan);
-      }
+      THEN("the task should have started") { REQUIRE(task.taskRan); }
     }
   }
 }

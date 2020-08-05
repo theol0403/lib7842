@@ -10,17 +10,11 @@ public:
   Line(const Vector& istart, const Vector& iend) :
     start(istart, istart.angleTo(iend)), end(iend, start.theta) {}
 
-  State calc(double t) const override {
-    return start + (end - start) * t;
-  }
+  State calc(double t) const override { return start + (end - start) * t; }
 
-  double curvature(double /*t*/) const override {
-    return 0;
-  }
+  double curvature(double /*t*/) const override { return 0; }
 
-  QLength length(double /*resolution*/) const override {
-    return start.distTo(end);
-  }
+  QLength length(double /*resolution*/) const override { return start.distTo(end); }
 
 protected:
   const State start;

@@ -22,29 +22,19 @@ State::State(const Vector& ipoint, const QAngle& itheta) : Vector(ipoint), theta
  */
 State::State(const OdomState& ipoint) : State(ipoint.x, ipoint.y, ipoint.theta) {};
 
-State State::operator+(const State& rhs) const {
-  return {x + rhs.x, y + rhs.y, theta + rhs.theta};
-}
+State State::operator+(const State& rhs) const { return {x + rhs.x, y + rhs.y, theta + rhs.theta}; }
 
-State State::operator-(const State& rhs) const {
-  return {x - rhs.x, y - rhs.y, theta - rhs.theta};
-}
+State State::operator-(const State& rhs) const { return {x - rhs.x, y - rhs.y, theta - rhs.theta}; }
 
-State State::operator*(double scalar) const {
-  return {x * scalar, y * scalar, theta * scalar};
-}
+State State::operator*(double scalar) const { return {x * scalar, y * scalar, theta * scalar}; }
 
-State State::operator/(double scalar) const {
-  return {x / scalar, y / scalar, theta / scalar};
-}
+State State::operator/(double scalar) const { return {x / scalar, y / scalar, theta / scalar}; }
 
 bool State::operator==(const State& rhs) const {
   return x == rhs.x && y == rhs.y && theta == rhs.theta;
 }
 
-bool State::operator!=(const State& rhs) const {
-  return !(rhs == *this);
-}
+bool State::operator!=(const State& rhs) const { return !(rhs == *this); }
 
 QAngle State::angleTo(const Vector& ipoint) const {
   return util::rollAngle180(Vector::angleTo(ipoint) - theta);

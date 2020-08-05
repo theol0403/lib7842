@@ -19,7 +19,5 @@ TEST_CASE("OdomController") {
     chassis->driveToPoint({0_in, 0_in});
   }
 
-  SUBCASE("turning with default settler should not segfault") {
-    chassis->turnAngle(0_deg);
-  }
+  SUBCASE("turning with default settler should not segfault") { chassis->turnAngle(0_deg); }
 }

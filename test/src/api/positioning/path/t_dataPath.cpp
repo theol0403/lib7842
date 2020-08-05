@@ -20,9 +20,7 @@ TEST_CASE("DataPath") {
     GIVEN("a path containing three points") {
       DataPath path({point1, point1, point1});
 
-      THEN("the size of the path should be three") {
-        REQUIRE(path().size() == 3);
-      }
+      THEN("the size of the path should be three") { REQUIRE(path().size() == 3); }
 
       THEN("each point should contain data") {
         for (auto&& point : path()) {
@@ -36,9 +34,7 @@ TEST_CASE("DataPath") {
       GIVEN("a simple path generated from the data path") {
         SimplePath ipath = path.generate();
 
-        THEN("the size of the path should be three") {
-          REQUIRE(ipath().size() == 3);
-        }
+        THEN("the size of the path should be three") { REQUIRE(ipath().size() == 3); }
 
         THEN("the positions should be the same") {
           for (auto&& point : ipath()) {

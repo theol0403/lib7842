@@ -12,12 +12,8 @@ using namespace okapi;
  */
 constexpr QLength tile = 2 * foot;
 constexpr QLength court = 12 * foot;
-constexpr QLength operator"" _tile(long double x) {
-  return static_cast<double>(x) * tile;
-}
-constexpr QLength operator"" _court(long double x) {
-  return static_cast<double>(x) * court;
-}
+constexpr QLength operator"" _tile(long double x) { return static_cast<double>(x) * tile; }
+constexpr QLength operator"" _court(long double x) { return static_cast<double>(x) * court; }
 constexpr QLength operator"" _tile(unsigned long long int x) {
   return static_cast<double>(x) * tile;
 }

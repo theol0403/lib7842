@@ -158,13 +158,9 @@ void OdomController::driveToPoint(const Vector& point, double turnScale, Settler
   driveVector(model, 0, 0, driveMode);
 }
 
-void OdomController::setDriveMode(motorMode mode) {
-  driveMode = mode;
-}
+void OdomController::setDriveMode(motorMode mode) { driveMode = mode; }
 
-void OdomController::setTurnMode(motorMode mode) {
-  turnMode = mode;
-}
+void OdomController::setTurnMode(motorMode mode) { turnMode = mode; }
 
 void OdomController::setDistanceGains(const IterativePosPIDController::Gains& igains) {
   distanceController->setGains(igains);
@@ -178,29 +174,17 @@ void OdomController::setTurnGains(const IterativePosPIDController::Gains& igains
   turnController->setGains(igains);
 }
 
-State OdomController::getState() const {
-  return State(odometry->getState(StateMode::CARTESIAN));
-}
+State OdomController::getState() const { return State(odometry->getState(StateMode::CARTESIAN)); }
 
-QLength OdomController::getDistanceError() const {
-  return _distanceErr;
-}
+QLength OdomController::getDistanceError() const { return _distanceErr; }
 
-QAngle OdomController::getAngleError() const {
-  return _angleErr;
-}
+QAngle OdomController::getAngleError() const { return _angleErr; }
 
-bool OdomController::isDistanceSettled() const {
-  return distanceController->isSettled();
-}
+bool OdomController::isDistanceSettled() const { return distanceController->isSettled(); }
 
-bool OdomController::isAngleSettled() const {
-  return angleController->isSettled();
-}
+bool OdomController::isAngleSettled() const { return angleController->isSettled(); }
 
-bool OdomController::isTurnSettled() const {
-  return turnController->isSettled();
-}
+bool OdomController::isTurnSettled() const { return turnController->isSettled(); }
 
 Trigger::Function OdomController::distanceTo(const Vector& point, const QLength& trigger) const {
   return [=] {

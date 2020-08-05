@@ -83,9 +83,7 @@ bool Settler::run(const OdomController* icontroller) {
   return Trigger::run();
 }
 
-bool Settler::operator()(const OdomController* icontroller) {
-  return run(icontroller);
-}
+bool Settler::operator()(const OdomController* icontroller) { return run(icontroller); }
 
 void Settler::setDefaultAbort(const TimeUtil& itimeUtil) {
   defaultAbort = std::shared_ptr<SettledUtil>(itimeUtil.getSettledUtil());

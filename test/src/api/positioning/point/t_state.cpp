@@ -4,9 +4,7 @@ TEST_CASE("State") {
 
   GIVEN("a default-constructed state") {
     State state;
-    THEN("the members should be equal to 0") {
-      CHECK(state == (State {0_in, 0_in, 0_rad}));
-    }
+    THEN("the members should be equal to 0") { CHECK(state == (State {0_in, 0_in, 0_rad})); }
   }
 
   GIVEN("a state and a vector") {
@@ -64,18 +62,12 @@ TEST_CASE("State") {
         CHECK(state2.theta == 0_rad);
       }
 
-      THEN("the new state should be equal to a default state") {
-        CHECK(state2 == State());
-      }
+      THEN("the new state should be equal to a default state") { CHECK(state2 == State()); }
 
-      THEN("the new state should be the old state times 0") {
-        CHECK(Vector(state2) == state * 0);
-      }
+      THEN("the new state should be the old state times 0") { CHECK(Vector(state2) == state * 0); }
     }
 
-    THEN("the state should be equal to itself") {
-      CHECK(state == state);
-    }
+    THEN("the state should be equal to itself") { CHECK(state == state); }
 
     THEN("the state plus another state should be equal to itself") {
       CHECK((state + State {1_in, 2_in, 4_rad}) == (state + State {1_in, 2_in, 4_rad}));

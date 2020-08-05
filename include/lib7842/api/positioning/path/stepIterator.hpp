@@ -23,32 +23,22 @@ public:
     using pointer = State*;
     using reference = State&;
 
-    bool operator!=(const iterator& rhs) {
-      return t <= rhs.t;
-    }
+    bool operator!=(const iterator& rhs) { return t <= rhs.t; }
 
-    State operator*() {
-      return container->calc(t);
-    }
-    State operator->() {
-      return container->calc(t);
-    }
+    State operator*() { return container->calc(t); }
+    State operator->() { return container->calc(t); }
 
     iterator& operator++() {
       t += container->sampler(t, container->path);
       return *this;
     }
-    iterator operator++(int) {
-      return ++(*this);
-    }
+    iterator operator++(int) { return ++(*this); }
 
     iterator& operator--() {
       t -= container->sampler(t, container->path);
       return *this;
     }
-    iterator operator--(int) {
-      return ++(*this);
-    }
+    iterator operator--(int) { return ++(*this); }
 
     iterator(StepIterator<Sampler, T>* icontainer, double it = 0.0) :
       container(icontainer), t(it) {}
@@ -57,13 +47,9 @@ public:
     double t;
   };
 
-  iterator begin() {
-    return {this, 0.0};
-  }
+  iterator begin() { return {this, 0.0}; }
 
-  iterator end() {
-    return {this, 1.0};
-  }
+  iterator end() { return {this, 1.0}; }
 
   // protected:
   StepIterator(T&& ipath, Sampler&& isampler) :

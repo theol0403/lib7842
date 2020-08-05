@@ -109,24 +109,16 @@ public:
   /**
    * Get the underlying array of pointers.
    */
-  array_t& get() {
-    return path;
-  }
+  array_t& get() { return path; }
 
-  const array_t& get() const {
-    return path;
-  }
+  const array_t& get() const { return path; }
 
   /**
    * Get the underlying array of pointers using the () operator.
    */
-  array_t& operator()() {
-    return path;
-  }
+  array_t& operator()() { return path; }
 
-  const array_t& operator()() const {
-    return path;
-  }
+  const array_t& operator()() const { return path; }
 
   /**
    * Copy the entire path.

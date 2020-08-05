@@ -3,31 +3,23 @@
 
 namespace lib7842 {
 
-Async::Async(std::function<void()>&& iaction) : action(std::move(iaction)) {
-  startTask("Async");
-}
+Async::Async(std::function<void()>&& iaction) : action(std::move(iaction)) { startTask("Async"); }
 
 Async::Async(Trigger&& itrigger, std::function<void()>&& iaction) :
   trigger(std::move(itrigger)), action(std::move(iaction)) {
   startTask("Async");
 }
 
-void Async::forceStart() {
-  _forceStart = true;
-}
+void Async::forceStart() { _forceStart = true; }
 
 void Async::forceStop() {
   stopTask();
   _complete = true;
 }
 
-bool Async::hasStarted() const {
-  return _started;
-}
+bool Async::hasStarted() const { return _started; }
 
-bool Async::isComplete() const {
-  return _complete;
-}
+bool Async::isComplete() const { return _complete; }
 
 void Async::waitUntilComplete() const {
   while (!_complete) {

@@ -14,13 +14,9 @@ static std::shared_ptr<Logger> logger =
   std::make_shared<Logger>(std::make_unique<Timer>(), "/ser/sout", Logger::LogLevel::info);
 #endif
 
-void setLogger(const std::shared_ptr<Logger>& ilogger) {
-  logger = ilogger;
-}
+void setLogger(const std::shared_ptr<Logger>& ilogger) { logger = ilogger; }
 
-std::shared_ptr<Logger> getLogger() {
-  return logger;
-}
+std::shared_ptr<Logger> getLogger() { return logger; }
 
 #if defined(THREADS_STD)
 static std::shared_ptr<TimeUtil> timeUtil = nullptr;
@@ -28,12 +24,8 @@ static std::shared_ptr<TimeUtil> timeUtil = nullptr;
 static std::shared_ptr<TimeUtil> timeUtil = std::make_shared<TimeUtil>(TimeUtilFactory().create());
 #endif
 
-void setTimeUtil(const std::shared_ptr<TimeUtil>& itimeUtil) {
-  timeUtil = itimeUtil;
-}
+void setTimeUtil(const std::shared_ptr<TimeUtil>& itimeUtil) { timeUtil = itimeUtil; }
 
-std::shared_ptr<TimeUtil> getTimeUtil() {
-  return timeUtil;
-}
+std::shared_ptr<TimeUtil> getTimeUtil() { return timeUtil; }
 
 } // namespace lib7842::global

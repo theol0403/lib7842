@@ -31,13 +31,9 @@ TEST_CASE("Container") {
       WHEN("adding the object to the container") {
         container.add(obj);
 
-        THEN("the size should be one") {
-          CHECK(container().size() == 1);
-        }
+        THEN("the size should be one") { CHECK(container().size() == 1); }
 
-        THEN("the accessor should work") {
-          CHECK(container.get(0).sig == 1);
-        }
+        THEN("the accessor should work") { CHECK(container.get(0).sig == 1); }
 
         THEN("removing should work") {
           CHECK(container.remove(0)().size() == 0);
@@ -59,17 +55,13 @@ TEST_CASE("Container") {
           CHECK(container.remove([](const Object& iobj) { return iobj.x == 100; })().size() == 0);
         }
 
-        THEN("totaling should work") {
-          CHECK(container.total(Query::x) == 100);
-        }
+        THEN("totaling should work") { CHECK(container.total(Query::x) == 100); }
       }
 
       WHEN("adding the object multiple times") {
         container.add({obj, obj, obj});
 
-        THEN("the size should be three") {
-          CHECK(container().size() == 3);
-        }
+        THEN("the size should be three") { CHECK(container().size() == 3); }
 
         THEN("the accessor should work") {
           CHECK(container.get(0).sig == 1);
@@ -101,13 +93,9 @@ TEST_CASE("Container") {
                   .size() == 0);
         }
 
-        THEN("totaling should work") {
-          CHECK(container.total(Query::x) == 300);
-        }
+        THEN("totaling should work") { CHECK(container.total(Query::x) == 300); }
 
-        THEN("averaging should work") {
-          CHECK(container.avg(Query::x) == 100);
-        }
+        THEN("averaging should work") { CHECK(container.avg(Query::x) == 100); }
 
         THEN("trimming should work") {
           CHECK(container.trim(2)().size() == 2);
@@ -119,9 +107,7 @@ TEST_CASE("Container") {
           CHECK(container.resize(10)().size() == 10);
         }
 
-        THEN("resetting should work") {
-          CHECK(container.reset()().size() == 0);
-        }
+        THEN("resetting should work") { CHECK(container.reset()().size() == 0); }
       }
     }
 

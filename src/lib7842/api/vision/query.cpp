@@ -47,8 +47,6 @@ Query Query::centerY = [](const Object& obj) {
   return obj.y + obj.height / 2.0;
 };
 
-double Query::getFrom(const Object& obj) const {
-  return (*this)(obj);
-}
+double Query::getFrom(const Object& obj) const { return (*this)(obj); }
 
 } // namespace lib7842::Vision

@@ -64,9 +64,7 @@ void CustomOdometry::step() {
   state.theta += a * radian;
 }
 
-const State& CustomOdometry::getState() const {
-  return state;
-}
+const State& CustomOdometry::getState() const { return state; }
 
 OdomState CustomOdometry::getState(const StateMode& imode) const {
   const State& istate = getState();
@@ -74,13 +72,9 @@ OdomState CustomOdometry::getState(const StateMode& imode) const {
   return {istate.y, istate.x, istate.theta};
 }
 
-void CustomOdometry::setState(const State& istate) {
-  state = istate;
-}
+void CustomOdometry::setState(const State& istate) { state = istate; }
 
-void CustomOdometry::resetState() {
-  state = {0_in, 0_in, 0_deg};
-}
+void CustomOdometry::resetState() { state = {0_in, 0_in, 0_deg}; }
 
 void CustomOdometry::reset() {
   model->resetSensors();
@@ -96,13 +90,9 @@ void CustomOdometry::setState(const OdomState& istate, const StateMode& imode) {
   }
 }
 
-std::shared_ptr<ReadOnlyChassisModel> CustomOdometry::getModel() {
-  return model;
-}
+std::shared_ptr<ReadOnlyChassisModel> CustomOdometry::getModel() { return model; }
 
-ChassisScales CustomOdometry::getScales() {
-  return chassisScales;
-}
+ChassisScales CustomOdometry::getScales() { return chassisScales; }
 
 void CustomOdometry::loop() {
   auto rate = global::getTimeUtil()->getRate();

@@ -144,9 +144,7 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
   model->driveVector(0, 0); // apply velocity braking
 }
 
-void PathFollower::setMotorMode(util::motorMode imode) {
-  mode = imode;
-}
+void PathFollower::setMotorMode(util::motorMode imode) { mode = imode; }
 
 PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,
                                                        const Vector& ipos) {

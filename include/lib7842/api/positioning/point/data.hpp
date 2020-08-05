@@ -36,9 +36,7 @@ public:
    * @param iid   The data name
    * @param idata The data
    */
-  void setData(const std::string& iid, const std::any& idata) {
-    data[iid] = idata;
-  }
+  void setData(const std::string& iid, const std::any& idata) { data[iid] = idata; }
 
   /**
    * Get the data, given the name and the type.

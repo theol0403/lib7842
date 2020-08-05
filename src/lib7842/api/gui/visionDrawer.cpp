@@ -52,9 +52,7 @@ VisionPage& VisionPage::draw(const Vision::Container& icontainer, const lv_color
   return *this;
 }
 
-VisionLayer VisionPage::makeLayer() {
-  return VisionLayer(*this);
-}
+VisionLayer VisionPage::makeLayer() { return VisionLayer(*this); }
 
 VisionPage::ScreenObject& VisionPage::addObject() {
   auto attempt = iterator;

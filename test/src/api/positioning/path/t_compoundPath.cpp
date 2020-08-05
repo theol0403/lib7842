@@ -23,9 +23,7 @@ TEST_CASE("CompoundPath") {
         GIVEN("a simple path generated from the compound path") {
           SimplePath ipath = path.combine();
 
-          THEN("the size of the path should be four") {
-            REQUIRE(ipath().size() == 4);
-          }
+          THEN("the size of the path should be four") { REQUIRE(ipath().size() == 4); }
 
           THEN("each generated point should be equal to the original point") {
             for (auto&& point : ipath()) {
@@ -71,9 +69,7 @@ TEST_CASE("CompoundPath") {
       GIVEN("a simple path generated from the compound path") {
         SimplePath ipath = path.combine();
 
-        THEN("the size of the path should be eight") {
-          REQUIRE(ipath().size() == 8);
-        }
+        THEN("the size of the path should be eight") { REQUIRE(ipath().size() == 8); }
 
         THEN("the points should be preserved") {
           for (size_t i = 0; i < ipath().size(); i++) {
@@ -98,9 +94,7 @@ TEST_CASE("CompoundPath") {
       GIVEN("a simple path generated from the compound path") {
         SimplePath ipath = path.combine();
 
-        THEN("the size of the path should be eight") {
-          REQUIRE(ipath().size() == 8);
-        }
+        THEN("the size of the path should be eight") { REQUIRE(ipath().size() == 8); }
 
         THEN("the points should be preserved") {
           for (size_t i = 0; i < ipath().size(); i++) {

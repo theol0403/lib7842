@@ -17,9 +17,7 @@ public:
 
   virtual double curvature(double t) const = 0;
 
-  virtual QLength velocity(double /*t*/) const {
-    return length();
-  }
+  virtual QLength velocity(double /*t*/) const { return length(); }
 
   virtual std::vector<State> interpolate(double steps) const {
     std::vector<State> temp;

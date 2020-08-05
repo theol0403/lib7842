@@ -24,9 +24,7 @@ TEST_CASE("DataPoint") {
         CHECK(point.getData<int>("segmentIndex") == 5);
       }
 
-      THEN("the point should be equal to itself") {
-        CHECK(point == point);
-      }
+      THEN("the point should be equal to itself") { CHECK(point == point); }
     }
 
     GIVEN("some bad data") {

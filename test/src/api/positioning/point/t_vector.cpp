@@ -4,9 +4,7 @@ TEST_CASE("Vector") {
 
   GIVEN("a default-constructed point") {
     Vector point;
-    THEN("the members should be equal to 0") {
-      CHECK(point == (Vector {0_in, 0_in}));
-    }
+    THEN("the members should be equal to 0") { CHECK(point == (Vector {0_in, 0_in})); }
   }
 
   GIVEN("a point") {
@@ -34,18 +32,12 @@ TEST_CASE("Vector") {
         CHECK(point2.y == point.y * 2);
       }
 
-      THEN("the new point should be the old point times two") {
-        CHECK(point2 == point * 2);
-      }
+      THEN("the new point should be the old point times two") { CHECK(point2 == point * 2); }
 
-      THEN("the new point should be the old point divided by .5") {
-        CHECK(point2 == point / 0.5);
-      }
+      THEN("the new point should be the old point divided by .5") { CHECK(point2 == point / 0.5); }
     }
 
-    THEN("the point should be equal to itself") {
-      CHECK(point == point);
-    }
+    THEN("the point should be equal to itself") { CHECK(point == point); }
 
     THEN("the point plus another point should be equal to itself") {
       CHECK((point + Vector {1_in, 2_in}) == (point + Vector {1_in, 2_in}));
