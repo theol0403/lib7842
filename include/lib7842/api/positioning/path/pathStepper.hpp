@@ -8,28 +8,8 @@
 namespace lib7842 {
 
 template <typename T, typename U, typename S> class PathStepper {
-private:
-  friend class iterator;
-  class iterator : std::iterator<std::forward_iterator_tag, State, double> {
-  public:
-    iterator(const PathStepper& ip, double it = 0.0) : p(ip), t(it) {}
-
-    bool operator!=(const iterator& rhs) { return t <= rhs.t; }
-
-    State operator*() { return static_cast<T>(p.path).calc(t); }
-    State operator->() { return *(*this); }
-
-    iterator& operator++() {
-      t += p.sampler(t, p.path);
-      return *this;
-    }
-
-    iterator operator++(int) { return ++(*this); }
-
-  protected:
-    const PathStepper& p;
-    double t;
-  };
+protected:
+  class iterator;
 
 public:
   PathStepper(T&& ipath, S&& isampler) :
@@ -41,6 +21,26 @@ public:
 protected:
   const U path;
   const S& sampler;
+
+  friend class iterator;
+  class iterator : std::iterator<std::forward_iterator_tag, State, double> {
+  public:
+    iterator(const PathStepper& ip, double it) : p(ip), t(it) {}
+
+    bool operator!=(const iterator& rhs) { return t <= rhs.t; }
+
+    State operator*() { return static_cast<T>(p.path).calc(t); }
+    State operator->() { return *(*this); }
+
+    iterator& operator++() {
+      t += p.sampler(t, p.path);
+      return *this;
+    }
+
+  protected:
+    const PathStepper& p;
+    double t;
+  };
 };
 
 template <typename T, typename S>
