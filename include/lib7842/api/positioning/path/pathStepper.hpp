@@ -44,23 +44,17 @@ PathStepper(T&&, S &&)
                  S>;
 
 namespace StepBy {
-class T {
-public:
-  constexpr T(float it) : t(it) {}
-  template <typename U> constexpr float operator()(U& it) const { return it.t += t; }
+constexpr auto T(double t) {
+  return [t](const auto& it) {
+    return it.t + t;
+  };
+}
 
-protected:
-  const float t;
-};
-
-class Count {
-public:
-  constexpr Count(int ic) : t(1.0F / static_cast<float>(ic)) {}
-  template <typename U> constexpr float operator()(U& it) const { return it.t += t; }
-
-protected:
-  const float t;
-};
-
+constexpr auto Count(int c) {
+  return [c](const auto& it) {
+    return it.t + 1.0F / static_cast<float>(c);
+  };
+}
 } // namespace StepBy
+
 } // namespace lib7842
