@@ -3,9 +3,7 @@
 #include "lib7842/api/positioning/path/pathStepper.hpp"
 
 TEST_CASE("PathStepper") {
-  Line l({0_m, 0_m}, {1_m, 1_m});
-
-  auto i = PathStepper(l, [](auto& it) { return it.t += 0.1; });
+  auto i = PathStepper(Line({0_m, 0_m}, {1_m, 1_m}), StepBy::T(0.01));
 
   for (auto&& point : i) {
     std::cout << point << std::endl;
