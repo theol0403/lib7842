@@ -10,6 +10,8 @@ public:
   constexpr PathStepper(T&& ipath, S&& isampler) :
     path(std::forward<T>(ipath)), sampler(std::forward<S>(isampler)) {}
 
+  constexpr const std::remove_reference_t<T>& get() const { return path; }
+
   constexpr iterator begin() { return {*this, 0.0}; }
   constexpr iterator end() { return {*this, 1.0}; }
 
@@ -59,6 +61,12 @@ constexpr auto T(double t) {
 constexpr auto Count(int c) {
   return [c](const auto& it) {
     return it.t + 1.0F / static_cast<double>(c);
+  };
+}
+
+template <typename T> constexpr auto Dist(T&& d) {
+  return [d2 = std::forward<T>(d)](const auto& it) {
+    return it.p.get().t_at_dist_travelled(it.t, d2);
   };
 }
 } // namespace StepBy
