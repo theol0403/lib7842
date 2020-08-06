@@ -8,4 +8,6 @@ TEST_CASE("PathStepper") {
   for (auto&& point : i) {
     std::cout << point << std::endl;
   }
+  std::vector<State> d;
+  std::move(i.begin(), i.end(), std::back_inserter(d));
 }

@@ -1,4 +1,4 @@
-#include "lib7842/api/positioning/point/state.hpp"
+#include "path.hpp"
 
 namespace lib7842 {
 
@@ -13,16 +13,22 @@ public:
   constexpr iterator begin() { return {*this, 0.0}; }
   constexpr iterator end() { return {*this, 1.0}; }
 
+  std::vector<State> generate() const {
+    std::vector<State> s;
+    std::move(begin(), end(), std::back_inserter(s));
+    return s;
+  }
+
 protected:
   const U path;
   const S& sampler;
 
   friend class iterator;
-  class iterator : std::iterator<const std::forward_iterator_tag, State, float> {
+  class iterator : public std::iterator<const std::forward_iterator_tag, State, double> {
   public:
-    constexpr iterator(const PathStepper& ip, float it) : p(ip), t(it) {}
+    constexpr iterator(const PathStepper& ip, double it) : p(ip), t(it) {}
 
-    constexpr bool operator!=(const iterator& rhs) { return t <= rhs.t; }
+    constexpr bool operator!=(const iterator& rhs) { return static_cast<float>(t) <= rhs.t; }
     State operator*() { return static_cast<T>(p.path).calc(t); }
     State operator->() { return *(*this); }
 
@@ -32,7 +38,7 @@ protected:
     }
 
     const PathStepper& p;
-    float t;
+    double t;
   };
 };
 
@@ -52,7 +58,7 @@ constexpr auto T(double t) {
 
 constexpr auto Count(int c) {
   return [c](const auto& it) {
-    return it.t + 1.0F / static_cast<float>(c);
+    return it.t + 1.0F / static_cast<double>(c);
   };
 }
 } // namespace StepBy
