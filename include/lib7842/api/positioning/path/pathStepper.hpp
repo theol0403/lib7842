@@ -8,8 +8,8 @@ public:
   constexpr PathStepper(T&& ipath, S&& isampler) :
     path(std::forward<T>(ipath)), sampler(std::forward<S>(isampler)) {}
 
-  constexpr typename S::template iterator<T> begin() const { return sampler.begin(path); }
-  constexpr typename S::template iterator<T> end() const { return sampler.end(path); }
+  constexpr auto begin() const { return sampler.begin(static_cast<T>(path)); }
+  constexpr auto end() const { return sampler.end(static_cast<T>(path)); }
   constexpr const std::remove_reference_t<T>& get() const { return path; }
 
   std::vector<State> generate() const {
@@ -32,35 +32,29 @@ PathStepper(T&&, S &&)
 
 namespace StepBy {
 
-template <typename P>
-class iteratorBase : public std::iterator<const std::forward_iterator_tag, State, double> {
-public:
-  constexpr iteratorBase(const P& ip) : p(ip) {}
-
-  const P& p;
-};
-
 class Count {
 public:
-  constexpr Count(int ic) : c(ic) {}
-
-  template <typename P> class iterator : public iteratorBase<P> {
+  template <typename P>
+  class iterator : public std::iterator<const std::forward_iterator_tag, State, int> {
   public:
-    constexpr iterator(const P& ip, int ic, int ii) : iteratorBase<P>(ip), c(ic), i(ii) {}
+    constexpr iterator(const P& ip, int ic, int ii) : p(ip), c(ic), i(ii) {}
 
     constexpr bool operator!=(const iterator& rhs) { return i != (rhs.i + 1); }
-    State operator*() { return static_cast<P>(iteratorBase<P>::p).calc(i / c); }
+    State operator*() { return p.calc(i / c); }
     State operator->() { return *(*this); }
 
     constexpr iterator& operator++() {
-      i++;
+      ++i;
       return *this;
     }
 
+  protected:
+    const P& p;
     const int c;
     int i;
   };
 
+  constexpr Count(int ic) : c(ic) {}
   template <typename P> auto begin(const P& ip) const -> iterator<P> { return {ip, c, 0}; }
   template <typename P> auto end(const P& ip) const -> iterator<P> { return {ip, c, c}; }
 
