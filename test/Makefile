@@ -12,15 +12,15 @@ TESTDIR=$(ROOT)/src
 OUTBIN:=$(BINDIR)/main
 
 WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function -Wnull-dereference -Wno-sign-compare -Wno-narrowing
-EXTRA_CXXFLAGS= -std=gnu++17 -g -pthread -D THREADS_STD 
+EXTRA_CXXFLAGS= -std=gnu++20 -pedantic -g -pthread -D THREADS_STD 
 EXTRA_CXXFLAGS+= -fsanitize=undefined -fsanitize=vptr -fsanitize=integer-divide-by-zero -fsanitize=null
 # EXTRA_CXXFLAGS+= -fsanitize=address 
 
 CXXFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -I ./include
 LDFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -lm -lgcc -lstdc++ -lsupc++ ./firmware/libOkapiLibV5.a ./firmware/lvgl.a -lSDL2
 
-CXX:=g++-9
-LD:=g++-9
+CXX:=g++-10
+LD:=g++-10
 
 rwildcard=$(foreach d,$(filter-out $3,$(wildcard $1*)),$(call rwildcard,$d/,$2,$3)$(filter $(subst *,%,$2),$d))
 NO_COLOR=\x1b[0m
