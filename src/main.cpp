@@ -56,6 +56,12 @@ void autonomous() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+class test {
+public:
+  constexpr test() = default;
+  constexpr State calc(double) const { return {}; }
+};
+consteval auto f() { return PathStepper(test(), StepBy::T(0.01)); }
 void opcontrol() {
   Controller controller(ControllerId::master);
 

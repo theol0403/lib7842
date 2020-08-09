@@ -11,8 +11,8 @@ INCDIR=$(PROJECTROOT)/include
 TESTDIR=$(ROOT)/src
 OUTBIN:=$(BINDIR)/main
 
-WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function -Wnull-dereference -Wno-sign-compare -Wno-narrowing
-EXTRA_CXXFLAGS= -std=gnu++20 -pedantic -g -pthread -D THREADS_STD 
+WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function -Wnull-dereference -Wno-sign-compare -Wno-narrowing -Wno-deprecated
+EXTRA_CXXFLAGS= -std=gnu++20 -g -pthread -D THREADS_STD 
 EXTRA_CXXFLAGS+= -fsanitize=undefined -fsanitize=vptr -fsanitize=integer-divide-by-zero -fsanitize=null
 # EXTRA_CXXFLAGS+= -fsanitize=address 
 

@@ -1,3 +1,4 @@
+#pragma once
 #include "path.hpp"
 
 namespace lib7842 {
@@ -8,8 +9,8 @@ public:
   constexpr PathStepper(T&& ipath, S&& isampler) :
     path(std::forward<T>(ipath)), sampler(std::forward<S>(isampler)) {}
 
-  constexpr auto begin() const { return sampler.begin(static_cast<T>(path)); }
-  constexpr auto end() const { return sampler.end(static_cast<T>(path)); }
+  constexpr auto begin() const { return sampler.begin(static_cast<const T&>(path)); }
+  constexpr auto end() const { return sampler.end(static_cast<const T&>(path)); }
   constexpr const std::remove_reference_t<T>& get() const { return path; }
 
   std::vector<State> generate() const {
@@ -39,9 +40,9 @@ public:
   public:
     constexpr iterator(const P& ip, int ic, int ii) : p(ip), c(ic), i(ii) {}
 
-    constexpr bool operator!=(const iterator& rhs) { return i != (rhs.i + 1); }
-    State operator*() { return p.calc(i / c); }
-    State operator->() { return *(*this); }
+    constexpr bool operator!=(const iterator& rhs) const { return i != (rhs.i + 1); }
+    constexpr State operator*() const { return p.calc(static_cast<double>(i) / c); }
+    constexpr State operator->() const { return *(*this); }
 
     constexpr iterator& operator++() {
       ++i;
@@ -54,13 +55,22 @@ public:
     int i;
   };
 
-  constexpr Count(int ic) : c(ic) {}
+  constexpr Count(int ic) : c(ic) {
+    // ic < 0 ? true : throw std::invalid_argument("count must be greater than zero");
+  }
+
   template <typename P> auto begin(const P& ip) const -> iterator<P> { return {ip, c, 0}; }
   template <typename P> auto end(const P& ip) const -> iterator<P> { return {ip, c, c}; }
 
 protected:
   const int c;
 };
+
+constexpr Count T(double t) {
+  return t > 0.0 && t <= 1.0
+           ? static_cast<int>(1.0 / t)
+           : throw std::invalid_argument("t must be greater than zero and less than or equal to 1");
+}
 } // namespace StepBy
 
 // constexpr auto T(double t) { return [t](const auto& it) { return it.t + t;
