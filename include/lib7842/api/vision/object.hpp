@@ -1,5 +1,6 @@
 #pragma once
 #include "query.hpp"
+#include <cstdint>
 
 namespace lib7842::Vision {
 

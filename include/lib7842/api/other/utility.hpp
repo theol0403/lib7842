@@ -1,12 +1,14 @@
 #pragma once
-#include "lib7842/api/positioning/point/state.hpp"
-#include "lib7842/api/positioning/point/vector.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/chassis/model/xDriveModel.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include <memory>
 
-namespace lib7842::util {
+namespace lib7842 {
+struct Vector;
+struct State;
+
+namespace util {
 
 using namespace okapi;
 
@@ -87,7 +89,9 @@ QAngle rollAngle360(const QAngle& angle);
  * @param  angle The input angle
  * @return The constrained angle
  */
-QAngle rollAngle180(const QAngle& angle);
+constexpr QAngle rollAngle180(const QAngle& angle) {
+  return angle - 360.0 * floor((angle + 180.0_deg) / 360.0, degree);
+}
 
 /**
  * Rotate a given angle to be within the constraints of [-90, 90] degrees. Finds the nearest angle
@@ -98,4 +102,5 @@ QAngle rollAngle180(const QAngle& angle);
  */
 QAngle wrapAngle90(const QAngle& angle);
 
-} // namespace lib7842::util
+} // namespace util
+} // namespace lib7842

@@ -18,7 +18,7 @@ OdomController::OdomController(std::shared_ptr<ChassisModel> imodel,
   distanceController(std::move(idistanceController)),
   angleController(std::move(iangleController)),
   turnController(std::move(iturnController)),
-  driveRadius(idriveRadius) {};
+  driveRadius(idriveRadius) {}
 
 OdomController::Angler OdomController::makeAngler() {
   return [=](const OdomController& /*unused*/) {
@@ -187,63 +187,65 @@ bool OdomController::isAngleSettled() const { return angleController->isSettled(
 bool OdomController::isTurnSettled() const { return turnController->isSettled(); }
 
 Trigger::Function OdomController::distanceTo(const Vector& point, const QLength& trigger) const {
-  return [=] {
+  return [=, this] {
     return getState().distTo(point) < trigger;
   };
 }
 
 Trigger::Function OdomController::angleTo(const Vector& point, const QAngle& trigger) const {
-  return [=] {
+  return [=, this] {
     return getState().angleTo(point) < trigger;
   };
 }
 
 Trigger::Function OdomController::angleTo(const QAngle& angle, const QAngle& trigger) const {
-  return [=] {
+  return [=, this] {
     return (getState().theta - angle).abs() < trigger;
   };
 }
 
 Trigger::Function OdomController::distanceErr(const QLength& trigger) const {
-  return [=] {
+  return [=, this] {
     return getDistanceError() < trigger;
   };
 }
 
 Trigger::Function OdomController::angleErr(const QAngle& trigger) const {
-  return [=] {
+  return [=, this] {
     return getAngleError() < trigger;
   };
 }
 
 Trigger::Function OdomController::distanceSettled() const {
-  return [=] {
+  return [this] {
     return isDistanceSettled();
   };
 }
 
 Trigger::Function OdomController::turnSettled() const {
-  return [=] {
+  return [this] {
     return isTurnSettled();
   };
 }
 
 Trigger::Function OdomController::angleSettled() const {
-  return [=] {
+  return [this] {
     return isAngleSettled();
   };
 }
 
 Trigger::Function OdomController::distanceSettledUtil(const TimeUtil& timeUtil) const {
-  return [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
-    return settledUtil->isSettled(getDistanceError().convert(millimeter));
-  };
+  return
+    [=, this, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
+      return settledUtil->isSettled(getDistanceError().convert(millimeter));
+    };
 }
 
 Trigger::Function OdomController::angleSettledUtil(const TimeUtil& timeUtil) const {
-  return [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
-    return settledUtil->isSettled(getAngleError().convert(degree));
-  };
+  return
+    [=, this, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
+      return settledUtil->isSettled(getAngleError().convert(degree));
+    };
 }
 
 void OdomController::resetPid() {

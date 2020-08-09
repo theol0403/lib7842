@@ -1,6 +1,7 @@
 #pragma once
 #include "lib7842/api/other/global.hpp"
 #include "lib7842/api/other/utility.hpp"
+#include "lib7842/api/positioning/point/state.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/control/iterative/iterativePosPidController.hpp"
 #include "okapi/api/odometry/odometry.hpp"

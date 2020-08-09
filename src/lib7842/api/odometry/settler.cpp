@@ -5,52 +5,52 @@
 namespace lib7842 {
 
 Settler&& Settler::distanceTo(const Vector& point, const QLength& trigger) {
-  assembly.emplace([=]() { requirement(controller->distanceTo(point, trigger)); });
+  assembly.emplace([=, this]() { requirement(controller->distanceTo(point, trigger)); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleTo(const Vector& point, const QAngle& trigger) {
-  assembly.emplace([=]() { requirement(controller->angleTo(point, trigger)); });
+  assembly.emplace([=, this]() { requirement(controller->angleTo(point, trigger)); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleTo(const QAngle& angle, const QAngle& trigger) {
-  assembly.emplace([=]() { requirement(controller->angleTo(angle, trigger)); });
+  assembly.emplace([=, this]() { requirement(controller->angleTo(angle, trigger)); });
   return std::move(*this);
 }
 
 Settler&& Settler::distanceErr(const QLength& trigger) {
-  assembly.emplace([=]() { requirement(controller->distanceErr(trigger)); });
+  assembly.emplace([=, this]() { requirement(controller->distanceErr(trigger)); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleErr(const QAngle& trigger) {
-  assembly.emplace([=]() { requirement(controller->angleErr(trigger)); });
+  assembly.emplace([=, this]() { requirement(controller->angleErr(trigger)); });
   return std::move(*this);
 }
 
 Settler&& Settler::distanceSettled() {
-  assembly.emplace([=]() { requirement(controller->distanceSettled()); });
+  assembly.emplace([=, this]() { requirement(controller->distanceSettled()); });
   return std::move(*this);
 }
 
 Settler&& Settler::turnSettled() {
-  assembly.emplace([=]() { requirement(controller->turnSettled()); });
+  assembly.emplace([=, this]() { requirement(controller->turnSettled()); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleSettled() {
-  assembly.emplace([=]() { requirement(controller->angleSettled()); });
+  assembly.emplace([=, this]() { requirement(controller->angleSettled()); });
   return std::move(*this);
 }
 
 Settler&& Settler::distanceSettledUtil(const TimeUtil& timeUtil) {
-  assembly.emplace([=]() { requirement(controller->distanceSettledUtil(timeUtil)); });
+  assembly.emplace([=, this]() { requirement(controller->distanceSettledUtil(timeUtil)); });
   return std::move(*this);
 }
 
 Settler&& Settler::angleSettledUtil(const TimeUtil& timeUtil) {
-  assembly.emplace([=]() { requirement(controller->angleSettledUtil(timeUtil)); });
+  assembly.emplace([=, this]() { requirement(controller->angleSettledUtil(timeUtil)); });
   return std::move(*this);
 }
 

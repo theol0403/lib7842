@@ -1,5 +1,6 @@
 #include "lib7842/api/other/utility.hpp"
 #include "lib7842/api/positioning/point/mathPoint.hpp"
+#include "lib7842/api/positioning/point/state.hpp"
 #include "okapi/api/util/mathUtil.hpp"
 
 namespace lib7842::util {
@@ -78,10 +79,6 @@ Vector closest(const State& state, const Vector& target) {
 
 QAngle rollAngle360(const QAngle& angle) {
   return angle - 360.0_deg * std::floor(angle.convert(degree) / 360.0);
-}
-
-QAngle rollAngle180(const QAngle& angle) {
-  return angle - 360.0_deg * std::floor((angle.convert(degree) + 180.0) / 360.0);
 }
 
 QAngle wrapAngle90(const QAngle& angle) {
