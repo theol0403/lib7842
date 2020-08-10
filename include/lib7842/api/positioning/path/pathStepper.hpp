@@ -1,5 +1,5 @@
 #pragma once
-#include "path.hpp"
+#include "lib7842/api/positioning/point/state.hpp"
 
 namespace lib7842 {
 
