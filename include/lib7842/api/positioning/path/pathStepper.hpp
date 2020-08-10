@@ -4,13 +4,13 @@
 namespace lib7842 {
 
 template <typename T, typename U, typename S> class PathStepper {
-
 public:
   constexpr PathStepper(T&& ipath, S&& isampler) :
     path(std::forward<T>(ipath)), sampler(std::forward<S>(isampler)) {}
 
   constexpr auto begin() const { return sampler.begin(static_cast<const T&>(path)); }
   constexpr auto end() const { return sampler.end(static_cast<const T&>(path)); }
+
   constexpr const std::remove_reference_t<T>& get() const { return path; }
 
   std::vector<State> generate() const {
@@ -34,7 +34,20 @@ PathStepper(T&&, S &&)
 namespace StepBy {
 
 class Count {
+  template <typename P> class iterator;
+
 public:
+  consteval Count(int ic) : c(ic) {
+    ic > 0 ? true : throw std::invalid_argument("StepBy::Count: count must be greater than zero");
+  }
+
+  template <typename P> auto begin(const P& ip) const -> iterator<P> { return {ip, c, 0}; }
+  template <typename P> auto end(const P& ip) const -> iterator<P> { return {ip, c, c}; }
+
+protected:
+  const int c;
+
+private:
   template <typename P>
   class iterator : public std::iterator<const std::forward_iterator_tag, State, int> {
   public:
@@ -54,22 +67,13 @@ public:
     const int c;
     int i;
   };
-
-  constexpr Count(int ic) : c(ic) {
-    // ic < 0 ? true : throw std::invalid_argument("count must be greater than zero");
-  }
-
-  template <typename P> auto begin(const P& ip) const -> iterator<P> { return {ip, c, 0}; }
-  template <typename P> auto end(const P& ip) const -> iterator<P> { return {ip, c, c}; }
-
-protected:
-  const int c;
 };
 
-constexpr Count T(double t) {
+consteval Count T(double t) {
   return t > 0.0 && t <= 1.0
            ? static_cast<int>(1.0 / t)
-           : throw std::invalid_argument("t must be greater than zero and less than or equal to 1");
+           : throw std::invalid_argument(
+               "StepBy::T: t must be greater than zero and less than or equal to 1");
 }
 } // namespace StepBy
 

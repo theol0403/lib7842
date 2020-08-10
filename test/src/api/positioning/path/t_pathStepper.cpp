@@ -2,19 +2,10 @@
 #include "lib7842/api/positioning/path/line.hpp"
 #include "lib7842/api/positioning/path/pathStepper.hpp"
 
-class test {
-public:
-  constexpr test() = default;
-  constexpr State calc(double) const { return {}; }
-};
-
-consteval auto f() { return PathStepper(test(), StepBy::T(0.01)); }
-
 TEST_CASE("PathStepper") {
-  auto i = PathStepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::Count(100));
+  auto i = PathStepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::Count(1));
   auto v = i.generate();
   std::cout << v.size() << std::endl;
-
   for (auto&& point : i) {
     std::cout << point << std::endl;
   }
