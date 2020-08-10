@@ -17,7 +17,7 @@ struct Vector {
   QLength y {0_in};
 
   constexpr Vector() = default;
-  virtual ~Vector() = default;
+  constexpr virtual ~Vector() = default;
 
   /**
    * Create a new point

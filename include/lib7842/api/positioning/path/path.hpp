@@ -8,7 +8,7 @@ namespace lib7842 {
 class Path {
 public:
   constexpr Path() = default;
-  virtual ~Path() = default;
+  constexpr virtual ~Path() = default;
 
   constexpr virtual State calc(double t) const = 0;
 

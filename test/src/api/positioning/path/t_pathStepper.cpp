@@ -2,6 +2,8 @@
 #include "lib7842/api/positioning/path/line.hpp"
 #include "lib7842/api/positioning/path/pathStepper.hpp"
 
+consteval auto d() { return PathStepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::Dist(0.1_m)); }
+
 TEST_CASE("PathStepper") {
   auto i = PathStepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::Dist(0.1_m));
   auto v = i.generate();

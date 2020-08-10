@@ -7,14 +7,14 @@ namespace lib7842 {
 
 class Line : public Path {
 public:
-  Line(const Vector& istart, const Vector& iend) :
+  constexpr Line(const Vector& istart, const Vector& iend) :
     start(istart, istart.angleTo(iend)), end(iend, start.theta) {}
 
-  State calc(double t) const override { return start + (end - start) * t; }
+  constexpr State calc(double t) const override { return start + (end - start) * t; }
 
-  double curvature(double /*t*/) const override { return 0; }
+  constexpr double curvature(double /*t*/) const override { return 0; }
 
-  QLength length(double /*resolution*/) const override { return start.distTo(end); }
+  constexpr QLength length(double /*resolution*/) const override { return start.distTo(end); }
 
 protected:
   const State start;
