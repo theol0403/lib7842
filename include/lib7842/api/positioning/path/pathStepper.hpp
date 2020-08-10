@@ -96,7 +96,7 @@ private:
   public:
     constexpr iterator(const P& ip, const QLength& id, double it) : p(ip), d(id), t(it) {}
 
-    constexpr bool operator!=(const iterator& rhs) const { return t <= rhs.t; }
+    constexpr bool operator!=(const iterator& rhs) const { return static_cast<float>(t) <= rhs.t; }
     constexpr State operator*() const { return p.calc(t); }
     constexpr State operator->() const { return *(*this); }
 
