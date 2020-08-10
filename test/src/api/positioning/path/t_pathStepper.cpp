@@ -3,7 +3,7 @@
 #include "lib7842/api/positioning/path/pathStepper.hpp"
 
 TEST_CASE("PathStepper") {
-  auto i = PathStepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::Count(1));
+  auto i = PathStepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::Dist(0.1_m));
   auto v = i.generate();
   std::cout << v.size() << std::endl;
   for (auto&& point : i) {
@@ -16,6 +16,6 @@ TEST_CASE("PathStepper") {
 }
 
 TEST_CASE("Generate") {
-  auto v = Line({0_m, 0_m}, {0_m, 1_m}).generate(StepBy::Count(100));
-  std::cout << v.size() << std::endl;
+  // auto v = Line({0_m, 0_m}, {0_m, 1_m}).generate(StepBy::Count(100));
+  // std::cout << v.size() << std::endl;
 }

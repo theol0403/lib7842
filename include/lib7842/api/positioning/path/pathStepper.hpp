@@ -75,20 +75,42 @@ consteval Count T(double t) {
            : throw std::invalid_argument(
                "StepBy::T: t must be greater than zero and less than or equal to 1");
 }
+
+class Dist {
+  template <typename P> class iterator;
+
+public:
+  consteval Dist(const QLength& id) : d(id) {
+    id > 0_m ? true : throw std::invalid_argument("StepBy::Dist: dist must be greater than zero");
+  }
+
+  template <typename P> auto begin(const P& ip) const -> iterator<P> { return {ip, d, 0.0}; }
+  template <typename P> auto end(const P& ip) const -> iterator<P> { return {ip, d, 1.0}; }
+
+protected:
+  const QLength d;
+
+private:
+  template <typename P>
+  class iterator : public std::iterator<const std::forward_iterator_tag, State, double> {
+  public:
+    constexpr iterator(const P& ip, const QLength& id, double it) : p(ip), d(id), t(it) {}
+
+    constexpr bool operator!=(const iterator& rhs) const { return t <= rhs.t; }
+    constexpr State operator*() const { return p.calc(t); }
+    constexpr State operator->() const { return *(*this); }
+
+    constexpr iterator& operator++() {
+      t = p.t_at_dist_travelled(t, d);
+      return *this;
+    }
+
+  protected:
+    const P& p;
+    const QLength d;
+    double t;
+  };
+};
+
 } // namespace StepBy
-
-// constexpr auto T(double t) { return [t](const auto& it) { return it.t + t;
-// }; }
-
-// constexpr auto Count(int c) {
-//   return [c](const auto& it) {
-//     return it.t + 1.0F / static_cast<double>(c);
-//   };
-// }
-
-// template <typename T> constexpr auto Dist(T&& d) {
-//   return [d2 = std::forward<T>(d)](const auto& it) {
-//     return it.p.get().t_at_dist_travelled(it.t, d2);
-//   };
-// }
 } // namespace lib7842
