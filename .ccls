@@ -1,6 +1,0 @@
-g++
-%cpp -std=c++17
-%h -x
-%h c++-header
--Iinclude
--Itest/include
