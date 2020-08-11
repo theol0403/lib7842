@@ -37,7 +37,7 @@ class Count {
   template <typename P> class iterator;
 
 public:
-  consteval Count(int ic) : c(ic) {
+  consteval explicit Count(int ic) : c(ic) {
     ic > 0 ? true : throw std::invalid_argument("StepBy::Count: count must be greater than zero");
   }
 
@@ -70,17 +70,17 @@ private:
 };
 
 consteval Count T(double t) {
-  return t > 0.0 && t <= 1.0
-           ? static_cast<int>(1.0 / t)
-           : throw std::invalid_argument(
-               "StepBy::T: t must be greater than zero and less than or equal to 1");
+  return Count(t > 0.0 && t <= 1.0
+                 ? static_cast<int>(1.0 / t)
+                 : throw std::invalid_argument(
+                     "StepBy::T: t must be greater than zero and less than or equal to 1"));
 }
 
 class Dist {
   template <typename P> class iterator;
 
 public:
-  consteval Dist(const QLength& id) : d(id) {
+  consteval explicit Dist(const QLength& id) : d(id) {
     id > 0_m ? true : throw std::invalid_argument("StepBy::Dist: dist must be greater than zero");
   }
 
