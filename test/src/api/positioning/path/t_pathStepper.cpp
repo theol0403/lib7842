@@ -2,27 +2,6 @@
 #include "lib7842/api/positioning/path/line.hpp"
 #include "lib7842/api/positioning/path/pathStepper.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
-#include <cstddef>
-
-consteval auto d() { return PathStepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::Dist(0.1_m)); }
-
-TEST_CASE("PathStepper") {
-  auto i = PathStepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::Dist(0.1_m));
-  auto v = i.generate();
-  std::cout << v.size() << std::endl;
-  for (auto&& point : i) {
-    std::cout << point << std::endl;
-  }
-
-  std::vector<State> d;
-  std::move(i.begin(), i.end(), std::back_inserter(d));
-  std::cout << d.size() << std::endl;
-}
-
-TEST_CASE("Generate") {
-  // auto v = Line({0_m, 0_m}, {0_m, 1_m}).generate(StepBy::Count(100));
-  // std::cout << v.size() << std::endl;
-}
 
 class DontCopy {
 public:
