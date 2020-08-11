@@ -1,7 +1,10 @@
 #define DOCTEST_CONFIG_IMPLEMENT
-#include "../test/include/test.hpp"
+#include "implMocks.hpp"
+#include "lib7842/api/other/global.hpp"
+#include "lib7842/test.hpp"
 #include "okapi/api/util/logging.hpp"
 
+using namespace test;
 int lvglMain();
 
 int main(int argc, char** argv) {

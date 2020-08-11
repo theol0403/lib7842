@@ -1,8 +1,11 @@
+#include "implMocks.hpp"
+#include "okapi/api/chassis/model/threeEncoderXDriveModel.hpp"
 #include "pros/rtos.hpp"
 #include <unistd.h>
 
 #define protected public
-#include "../test/include/test.hpp"
+#include "lib7842/test.hpp"
+using namespace test;
 
 extern "C" {
 namespace pros::c {
@@ -17,7 +20,18 @@ void task_delay_until(uint32_t* const prev_time, const uint32_t delta) {
 } // namespace pros::c
 } // extern "C"
 
-namespace okapi {
+namespace test {
+
+class MockThreeEncoderXDriveModel : public ThreeEncoderXDriveModel {
+public:
+  MockThreeEncoderXDriveModel();
+  std::valarray<std::int32_t> getSensorVals() const override;
+  void setSensorVals(std::int32_t left, std::int32_t right, std::int32_t middle);
+
+  std::int32_t leftEnc {0};
+  std::int32_t rightEnc {0};
+  std::int32_t middleEnc {0};
+};
 
 MockThreeEncoderXDriveModel::MockThreeEncoderXDriveModel() :
   ThreeEncoderXDriveModel(std::make_shared<MockMotor>(), std::make_shared<MockMotor>(),
@@ -37,33 +51,4 @@ void MockThreeEncoderXDriveModel::setSensorVals(std::int32_t left, std::int32_t 
   middleEnc = middle;
 }
 
-} // namespace okapi
-
-namespace lib7842 {
-std::ostream& operator<<(std::ostream& os, const Vector& rhs) {
-  os << "{" << rhs.x << ", " << rhs.y << "}";
-  return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const State& rhs) {
-  os << "{" << rhs.x << ", " << rhs.y << ", " << rhs.theta << "}";
-  return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const DataPoint& rhs) {
-  os << "{" << rhs.x << ", " << rhs.y;
-  bool first = true;
-  for (auto&& data : rhs.data) {
-    if (first) {
-      os << ", [";
-      first = false;
-    } else {
-      os << ", ";
-    }
-    os << data.first;
-  }
-  if (!first) { os << "]"; }
-  os << "}";
-  return os;
-}
-} // namespace lib7842
+} // namespace test
