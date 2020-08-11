@@ -1,5 +1,8 @@
-#include "../test/include/test.hpp"
+#include "lib7842/api/positioning/path/discretePath.hpp"
+#include "okapi/api/units/QSpeed.hpp"
 
+#include "lib7842/test.hpp"
+namespace test {
 TEST_CASE("DataPath") {
 
   GIVEN("a data point with some data") {
@@ -45,3 +48,4 @@ TEST_CASE("DataPath") {
     }
   }
 }
+} // namespace test

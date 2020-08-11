@@ -104,3 +104,15 @@ QAngle wrapAngle90(const QAngle& angle);
 
 } // namespace util
 } // namespace lib7842
+
+/**
+ * Provides a way to stringify RQuantity units. Mainly used for unit tests.
+ */
+namespace okapi {
+template <typename MassDim, typename LengthDim, typename TimeDim, typename AngleDim>
+std::ostream& operator<<(std::ostream& os,
+                         const RQuantity<MassDim, LengthDim, TimeDim, AngleDim>& rhs) {
+  os << rhs.getValue();
+  return os;
+}
+} // namespace okapi

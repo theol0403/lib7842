@@ -1,5 +1,7 @@
-#include "../test/include/test.hpp"
+#include "lib7842/api/positioning/point/vector.hpp"
 
+#include "lib7842/test.hpp"
+namespace test {
 TEST_CASE("Vector") {
 
   GIVEN("a default-constructed point") {
@@ -58,3 +60,5 @@ TEST_CASE("Vector") {
     }
   }
 }
+
+} // namespace test

@@ -1,5 +1,7 @@
-#include "../test/include/test.hpp"
+#include "lib7842/api/positioning/point/state.hpp"
 
+#include "lib7842/test.hpp"
+namespace test {
 TEST_CASE("State") {
 
   GIVEN("a default-constructed state") {
@@ -12,8 +14,8 @@ TEST_CASE("State") {
     Vector point {5_in, 2_in};
 
     THEN("all the constructors should work") {
-      State(5_in, 2_in, 90_deg);
-      State();
+      State s(5_in, 2_in, 90_deg);
+      State u;
 
       State pointCopy(point);
       State copy(state);
@@ -105,3 +107,4 @@ TEST_CASE("State") {
     }
   }
 }
+} // namespace test

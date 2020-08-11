@@ -1,5 +1,7 @@
-#include "../test/include/test.hpp"
+#include "lib7842/api/positioning/path/discretePath.hpp"
 
+#include "lib7842/test.hpp"
+namespace test {
 TEST_CASE("SimplePath") {
 
   GIVEN("a point") {
@@ -364,3 +366,4 @@ TEST_CASE("SimplePath") {
     }
   }
 }
+} // namespace test

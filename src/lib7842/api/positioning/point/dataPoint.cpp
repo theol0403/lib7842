@@ -1,5 +1,8 @@
-#include "../test/include/test.hpp"
+#include "lib7842/api/positioning/point/data.hpp"
+#include "okapi/api/units/QSpeed.hpp"
 
+#include "lib7842/test.hpp"
+namespace test {
 TEST_CASE("DataPoint") {
 
   GIVEN("a data point") {
@@ -49,3 +52,4 @@ TEST_CASE("DataPoint") {
     }
   }
 }
+}; // namespace test

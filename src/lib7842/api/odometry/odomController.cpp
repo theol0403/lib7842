@@ -257,3 +257,40 @@ void OdomController::resetPid() {
 }
 
 } // namespace lib7842
+
+// #include "lib7842/test.hpp"
+// #include "okapi/api/chassis/model/threeEncoderXDriveModel.hpp"
+// namespace test {
+// class MockOdomController : public OdomController {
+// public:
+//   using OdomController::OdomController;
+// };
+
+// class MockThreeEncoderXDriveModel : public ThreeEncoderXDriveModel {
+// public:
+//   MockThreeEncoderXDriveModel();
+//   std::valarray<std::int32_t> getSensorVals() const override;
+//   void setSensorVals(std::int32_t left, std::int32_t right, std::int32_t middle);
+
+//   std::int32_t leftEnc {0};
+//   std::int32_t rightEnc {0};
+//   std::int32_t middleEnc {0};
+// };
+
+// TEST_CASE("OdomController") {
+
+//   auto model = std::make_shared<MockThreeEncoderXDriveModel>();
+//   auto odom =
+//     std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}));
+//   auto chassis = std::make_shared<MockOdomController>(
+//     model, odom, std::make_unique<IterativePosPIDController>(0.015, 0, 0, 0, createTimeUtil()),
+//     std::make_unique<IterativePosPIDController>(0.03, 0, 0, 0, createTimeUtil()),
+//     std::make_unique<IterativePosPIDController>(0.02, 0, 0, 0, createTimeUtil()), 0_in);
+
+//   SUBCASE("moving with default settler should not segfault") {
+//     chassis->driveToPoint({0_in, 0_in});
+//   }
+
+//   SUBCASE("turning with default settler should not segfault") { chassis->turnAngle(0_deg); }
+// }
+// } // namespace test

@@ -287,3 +287,145 @@ void PathFollower::resetPursuit() {
 }
 
 } // namespace lib7842
+
+#include "lib7842/api/odometry/customOdometry.hpp"
+#include "lib7842/test.hpp"
+#include "okapi/api/chassis/model/threeEncoderXDriveModel.hpp"
+namespace test {
+class MockPathFollower : public PathFollower {
+public:
+  using PathFollower::PathFollower;
+  using PathFollower::lastLookIndex;
+  using PathFollower::findClosest;
+  using PathFollower::findLookaheadPoint;
+  using PathFollower::calculateCurvature;
+  using PathFollower::calculateVelocity;
+};
+
+class MockThreeEncoderXDriveModel : public ThreeEncoderXDriveModel {
+public:
+  MockThreeEncoderXDriveModel();
+  std::valarray<std::int32_t> getSensorVals() const override;
+  void setSensorVals(std::int32_t left, std::int32_t right, std::int32_t middle);
+
+  std::int32_t leftEnc {0};
+  std::int32_t rightEnc {0};
+  std::int32_t middleEnc {0};
+};
+
+TEST_CASE("PathFollower") {
+
+  SUBCASE("given a model, odom, follower, and limits") {
+
+    auto model = std::make_shared<MockThreeEncoderXDriveModel>();
+    auto odom =
+      std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}));
+
+    auto follower = std::make_shared<MockPathFollower>(
+      model, odom, ChassisScales({{4_in, 10_in}, 360}), 200_rpm, 6_in);
+
+    PursuitLimits limits {0_mps, 0.5_mps2, 1_mps, 1_mps};
+
+    SUBCASE("TestClosest") {
+      PursuitPath path({{0_ft, 0_ft}, {1_ft, 1_ft}, {2_ft, 2_ft}, {3_ft, 3_ft}, {4_ft, 4_ft}});
+      follower->lastLookIndex = 4;
+
+      auto closest = follower->findClosest(path, {1_ft, 1_ft});
+      CHECK(closest - path().begin() == 1);
+
+      closest = follower->findClosest(path, {0_ft, 0_ft});
+      CHECK(closest - path().begin() == 1);
+
+      closest = follower->findClosest(path, {3_ft, 3.3_ft});
+      CHECK(closest - path().begin() == 3);
+
+      closest = follower->findClosest(path, {6_ft, 6_ft});
+      CHECK(closest - path().begin() == 4);
+
+      closest = follower->findClosest(path, {0_ft, 0_ft});
+      CHECK(closest - path().begin() == 4);
+    }
+
+    SUBCASE("TestLookahead") {
+      PursuitPath path({{0_ft, 0_ft}, {0_ft, 1_ft}, {0_ft, 2_ft}, {0_ft, 3_ft}, {0_ft, 4_ft}});
+
+      Vector lookahead = follower->findLookaheadPoint(path, {0_ft, 1_ft});
+      Vector estimated {0_ft, 1.5_ft};
+      CHECK(lookahead == estimated);
+
+      lookahead = follower->findLookaheadPoint(path, {0_ft, 1_ft});
+      CHECK(lookahead == estimated);
+
+      lookahead = follower->findLookaheadPoint(path, {0_ft, 2_ft});
+      estimated = {0_ft, 2.5_ft};
+      CHECK(lookahead == estimated);
+
+      lookahead = follower->findLookaheadPoint(path, {0_ft, 0_ft});
+      CHECK(lookahead == estimated);
+
+      lookahead = follower->findLookaheadPoint(path, {0_ft, 3.5_ft});
+      estimated = {0_ft, 4_ft};
+      CHECK(lookahead.y.convert(foot) == Approx(estimated.y.convert(foot)));
+
+      lookahead = follower->findLookaheadPoint(path, {0_ft, 4_ft});
+      estimated = {0_ft, 4_ft};
+      CHECK(lookahead.y.convert(foot) == Approx(estimated.y.convert(foot)));
+
+      lookahead = follower->findLookaheadPoint(path, {0_ft, 2_ft});
+      CHECK(lookahead.y.convert(foot) == Approx(estimated.y.convert(foot)));
+    }
+
+    SUBCASE("TestCurvature") {
+      auto curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 0_deg}, {0_in, 5_in});
+      CHECK(std::abs(curvature) < 1e-4);
+
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 90_deg}, {5_in, 0_in});
+      CHECK(std::abs(curvature) < 1e-4);
+
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 90_deg}, {-5_in, 0_in});
+      CHECK(std::abs(curvature) < 1e-4);
+
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 45_deg}, {5_in, 5_in});
+      CHECK(std::abs(curvature) < 1e-4);
+
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 45_deg}, {-5_in, -5_in});
+      CHECK(std::abs(curvature) < 1e-4);
+
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 45_deg}, {10_in, 5_in});
+      CHECK(std::abs(curvature) > 2);
+
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, -45_deg}, {-5_in, 5_in});
+      CHECK(std::abs(curvature) < 1e-4);
+
+      curvature = MockPathFollower::calculateCurvature({0_in, 0_in, 200_deg}, {10_in, 5_in});
+      CHECK(std::abs(curvature) > 4);
+    }
+
+    SUBCASE("TestVelocityStraight") {
+      auto vel = MockPathFollower::calculateVelocity(
+        1_mps, 0, ChassisScales({{1_m / 1_pi, 10_m}, 360}), {0_mps, 1_mps2, 10_mps, 1_mps});
+      CHECK(vel[0] == 60_rpm);
+      CHECK(vel[1] == 60_rpm);
+    }
+
+    SUBCASE("TestVelocityCurved") {
+      auto vel = MockPathFollower::calculateVelocity(
+        1_mps, 1, ChassisScales({{1_m / 1_pi, 10_m}, 360}), {0_mps, 1_mps2, 10_mps, 1_mps});
+      CHECK(vel[0] > 60_rpm);
+      CHECK(vel[1] < 60_rpm);
+    }
+  }
+
+  SUBCASE("TestVelConversions") {
+    QSpeed robotVel = 1_mps;
+    QAngularSpeed leftWheel = (robotVel / 10_cm) * 360_deg;
+    CHECK(leftWheel == 600_rpm);
+  }
+
+  SUBCASE("ReverseVelConversions") {
+    QAngularSpeed wheel = (1_mps / (1_pi * 10_cm)) * 360_deg;
+    QSpeed vel = (wheel * 1_pi * 10_cm) / 360_deg;
+    CHECK(vel == 1_mps);
+  }
+}
+} // namespace test

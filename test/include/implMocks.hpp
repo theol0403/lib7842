@@ -306,9 +306,7 @@ class MockControllerInput : public ControllerInput<double> {
 public:
   virtual ~MockControllerInput() = default;
 
-  double controllerGet() override {
-    return reading;
-  }
+  double controllerGet() override { return reading; }
 
   double reading {0};
 };
@@ -444,18 +442,14 @@ void assertOdomStateEquals(Odometry* odom, QLength x, QLength y, QAngle theta);
 
 class MockReadOnlyChassisModel : public ReadOnlyChassisModel {
 public:
-  std::valarray<int32_t> getSensorVals() const override {
-    return {0, 0};
-  }
+  std::valarray<int32_t> getSensorVals() const override { return {0, 0}; }
 };
 
 class MockChassisModel : public ChassisModel {
 public:
   MockChassisModel() : ChassisModel() {}
 
-  void forward(double ispeed) override {
-    lastForward = ispeed;
-  }
+  void forward(double ispeed) override { lastForward = ispeed; }
 
   void driveVector(double iySpeed, double izRotation) override {
     lastVectorY = iySpeed;
@@ -467,13 +461,9 @@ public:
     lastVectorZ = izRotation;
   }
 
-  void rotate(double ispeed) override {
-    lastRotate = ispeed;
-  }
+  void rotate(double ispeed) override { lastRotate = ispeed; }
 
-  void stop() override {
-    stopWasCalled = true;
-  }
+  void stop() override { stopWasCalled = true; }
 
   void tank(double ileftSpeed, double irightSpeed, double) override {
     lastTankLeft = ileftSpeed;
@@ -485,46 +475,24 @@ public:
     lastArcadeZ = izRotation;
   }
 
-  void left(double ispeed) override {
-    lastLeft = ispeed;
-  }
+  void left(double ispeed) override { lastLeft = ispeed; }
 
-  void right(double ispeed) override {
-    lastRight = ispeed;
-  }
+  void right(double ispeed) override { lastRight = ispeed; }
 
-  void resetSensors() override {
-    resetSensorsWasCalled = true;
-  }
+  void resetSensors() override { resetSensorsWasCalled = true; }
 
-  void setBrakeMode(AbstractMotor::brakeMode mode) override {
-    lastBrakeMode = mode;
-  }
+  void setBrakeMode(AbstractMotor::brakeMode mode) override { lastBrakeMode = mode; }
 
-  void setEncoderUnits(AbstractMotor::encoderUnits units) override {
-    lastEncoderUnits = units;
-  }
+  void setEncoderUnits(AbstractMotor::encoderUnits units) override { lastEncoderUnits = units; }
 
-  void setGearing(AbstractMotor::gearset gearset) override {
-    lastGearset = gearset;
-  }
+  void setGearing(AbstractMotor::gearset gearset) override { lastGearset = gearset; }
 
-  std::valarray<int32_t> getSensorVals() const override {
-    return {0, 0};
-  }
+  std::valarray<int32_t> getSensorVals() const override { return {0, 0}; }
 
-  void setMaxVelocity(double imaxVelocity) override {
-    maxVelocity = imaxVelocity;
-  }
-  double getMaxVelocity() const override {
-    return maxVelocity;
-  }
-  void setMaxVoltage(double imaxVoltage) override {
-    maxVoltage = imaxVoltage;
-  }
-  double getMaxVoltage() const override {
-    return maxVoltage;
-  }
+  void setMaxVelocity(double imaxVelocity) override { maxVelocity = imaxVelocity; }
+  double getMaxVelocity() const override { return maxVelocity; }
+  void setMaxVoltage(double imaxVoltage) override { maxVoltage = imaxVoltage; }
+  double getMaxVoltage() const override { return maxVoltage; }
 
   mutable double lastForward {0};
   mutable double lastVectorY {0};
@@ -575,60 +543,24 @@ public:
 
 class MockChassisController : public ChassisController {
 public:
-  void moveDistance(QLength itarget) override {
-    lastMoveDistanceTargetQLength = itarget;
-  }
-  void moveRaw(double itarget) override {
-    lastMoveDistanceTargetDouble = itarget;
-  }
-  void moveDistanceAsync(QLength itarget) override {
-    moveDistance(itarget);
-  }
-  void moveRawAsync(double itarget) override {
-    moveRaw(itarget);
-  }
-  void turnAngle(QAngle idegTarget) override {
-    lastTurnAngleTargetQAngle = idegTarget;
-  }
-  void turnRaw(double idegTarget) override {
-    lastTurnAngleTargetDouble = idegTarget;
-  }
-  void turnAngleAsync(QAngle idegTarget) override {
-    turnAngle(idegTarget);
-  }
-  void turnRawAsync(double idegTarget) override {
-    turnRaw(idegTarget);
-  }
-  void setTurnsMirrored(bool ishouldMirror) override {
-    turnsMirrored = ishouldMirror;
-  }
-  bool isSettled() override {
-    return settled;
-  }
-  void waitUntilSettled() override {
-    waitUntilSettledCalled++;
-  }
-  void stop() override {
-    stopCalled++;
-  }
-  void setMaxVelocity(double imaxVelocity) override {
-    chassisModel->setMaxVelocity(imaxVelocity);
-  }
-  double getMaxVelocity() const override {
-    return chassisModel->getMaxVelocity();
-  }
-  ChassisScales getChassisScales() const override {
-    return scales;
-  }
-  AbstractMotor::GearsetRatioPair getGearsetRatioPair() const override {
-    return gearset;
-  }
-  std::shared_ptr<ChassisModel> getModel() override {
-    return chassisModel;
-  }
-  ChassisModel& model() override {
-    return *chassisModel;
-  }
+  void moveDistance(QLength itarget) override { lastMoveDistanceTargetQLength = itarget; }
+  void moveRaw(double itarget) override { lastMoveDistanceTargetDouble = itarget; }
+  void moveDistanceAsync(QLength itarget) override { moveDistance(itarget); }
+  void moveRawAsync(double itarget) override { moveRaw(itarget); }
+  void turnAngle(QAngle idegTarget) override { lastTurnAngleTargetQAngle = idegTarget; }
+  void turnRaw(double idegTarget) override { lastTurnAngleTargetDouble = idegTarget; }
+  void turnAngleAsync(QAngle idegTarget) override { turnAngle(idegTarget); }
+  void turnRawAsync(double idegTarget) override { turnRaw(idegTarget); }
+  void setTurnsMirrored(bool ishouldMirror) override { turnsMirrored = ishouldMirror; }
+  bool isSettled() override { return settled; }
+  void waitUntilSettled() override { waitUntilSettledCalled++; }
+  void stop() override { stopCalled++; }
+  void setMaxVelocity(double imaxVelocity) override { chassisModel->setMaxVelocity(imaxVelocity); }
+  double getMaxVelocity() const override { return chassisModel->getMaxVelocity(); }
+  ChassisScales getChassisScales() const override { return scales; }
+  AbstractMotor::GearsetRatioPair getGearsetRatioPair() const override { return gearset; }
+  std::shared_ptr<ChassisModel> getModel() override { return chassisModel; }
+  ChassisModel& model() override { return *chassisModel; }
 
   QLength lastMoveDistanceTargetQLength;
   double lastMoveDistanceTargetDouble;
