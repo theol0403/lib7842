@@ -1,6 +1,6 @@
 #include "lib7842/api/positioning/point/state.hpp"
 
-#include "lib7842/test.hpp"
+#include "lib7842/test/test.hpp"
 namespace test {
 TEST_CASE("State") {
 

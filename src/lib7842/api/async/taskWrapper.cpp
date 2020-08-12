@@ -18,7 +18,7 @@ void TaskWrapper::trampoline(void* iparam) { static_cast<TaskWrapper*>(iparam)->
 
 } // namespace lib7842
 
-#include "lib7842/test.hpp"
+#include "lib7842/test/test.hpp"
 namespace test {
 class MockTask : public TaskWrapper {
 public:

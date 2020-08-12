@@ -289,8 +289,7 @@ void PathFollower::resetPursuit() {
 } // namespace lib7842
 
 #include "lib7842/api/odometry/customOdometry.hpp"
-#include "lib7842/test.hpp"
-#include "okapi/api/chassis/model/threeEncoderXDriveModel.hpp"
+#include "lib7842/test/mocks.hpp"
 namespace test {
 class MockPathFollower : public PathFollower {
 public:
@@ -300,17 +299,6 @@ public:
   using PathFollower::findLookaheadPoint;
   using PathFollower::calculateCurvature;
   using PathFollower::calculateVelocity;
-};
-
-class MockThreeEncoderXDriveModel : public ThreeEncoderXDriveModel {
-public:
-  MockThreeEncoderXDriveModel();
-  std::valarray<std::int32_t> getSensorVals() const override;
-  void setSensorVals(std::int32_t left, std::int32_t right, std::int32_t middle);
-
-  std::int32_t leftEnc {0};
-  std::int32_t rightEnc {0};
-  std::int32_t middleEnc {0};
 };
 
 TEST_CASE("PathFollower") {

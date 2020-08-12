@@ -1,7 +1,7 @@
 #include "lib7842/api/positioning/path/discretePath.hpp"
 #include "okapi/api/units/QSpeed.hpp"
 
-#include "lib7842/test.hpp"
+#include "lib7842/test/test.hpp"
 namespace test {
 TEST_CASE("DataPath") {
 

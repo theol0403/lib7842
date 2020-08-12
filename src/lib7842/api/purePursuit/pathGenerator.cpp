@@ -78,7 +78,7 @@ double PathGenerator::calculateCurvature(const Vector& prev, const Vector& point
 
 } // namespace lib7842
 
-#include "lib7842/test.hpp"
+#include "lib7842/test/test.hpp"
 namespace test {
 class MockPathGenerator : public PathGenerator {
 public:

@@ -6,7 +6,7 @@ double Object::get(const Query& iquery) const { return iquery(*this); }
 
 } // namespace lib7842::Vision
 
-#include "lib7842/test.hpp"
+#include "lib7842/test/test.hpp"
 namespace test {
 using namespace lib7842::Vision;
 

@@ -1,7 +1,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT
-#include "implMocks.hpp"
 #include "lib7842/api/other/global.hpp"
-#include "lib7842/test.hpp"
+#include "lib7842/test/mocks.hpp"
 #include "okapi/api/util/logging.hpp"
 
 using namespace test;

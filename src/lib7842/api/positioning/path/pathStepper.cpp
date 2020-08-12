@@ -1,8 +1,8 @@
-#include "lib7842/api/positioning/path/line.hpp"
 #include "lib7842/api/positioning/path/pathStepper.hpp"
+#include "lib7842/api/positioning/path/line.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 
-#include "lib7842/test.hpp"
+#include "lib7842/test/test.hpp"
 namespace test {
 class DontCopy {
 public:

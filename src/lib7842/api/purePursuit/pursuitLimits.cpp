@@ -40,7 +40,7 @@ PursuitLimits::PursuitLimits(const QSpeed& itopSpeed, double imin, const QTime& 
 
 } // namespace lib7842
 
-#include "lib7842/test.hpp"
+#include "lib7842/test/test.hpp"
 namespace test {
 TEST_CASE("PursuitLimits") {
   QTime accelTime = 1_s;

@@ -94,24 +94,12 @@ std::shared_ptr<SettledUtil> Settler::defaultAbort {nullptr};
 } // namespace lib7842
 
 #include "lib7842/api/odometry/customOdometry.hpp"
-#include "lib7842/test.hpp"
-#include "okapi/api/chassis/model/threeEncoderXDriveModel.hpp"
+#include "lib7842/test/mocks.hpp"
 namespace test {
 class MockOdomController : public OdomController {
 public:
   using OdomController::OdomController;
   using OdomController::_distanceErr;
-};
-
-class MockThreeEncoderXDriveModel : public ThreeEncoderXDriveModel {
-public:
-  MockThreeEncoderXDriveModel();
-  std::valarray<std::int32_t> getSensorVals() const override;
-  void setSensorVals(std::int32_t left, std::int32_t right, std::int32_t middle);
-
-  std::int32_t leftEnc {0};
-  std::int32_t rightEnc {0};
-  std::int32_t middleEnc {0};
 };
 
 TEST_CASE("Settler") {
@@ -126,28 +114,28 @@ TEST_CASE("Settler") {
 
   settler.requirement([] { return false; });
 
-  // settler.abort(createTimeUtil(
-  //   Supplier<std::unique_ptr<SettledUtil>>([]() { return createSettledUtilPtr(5, 0, 20_ms); })));
+  settler.abort(createTimeUtil(
+    Supplier<std::unique_ptr<SettledUtil>>([]() { return createSettledUtilPtr(5, 0, 20_ms); })));
 
-  // SUBCASE("checking abort") {
-  //   pros::delay(30);
-  //   REQUIRE(!settler(chassis.get()));
-  //   pros::delay(30);
-  //   REQUIRE(settler(chassis.get()));
+  SUBCASE("checking abort") {
+    pros::delay(30);
+    REQUIRE(!settler(chassis.get()));
+    pros::delay(30);
+    REQUIRE(settler(chassis.get()));
 
-  //   settler.noAbort();
-  //   REQUIRE(!settler(chassis.get()));
-  // }
+    settler.noAbort();
+    REQUIRE(!settler(chassis.get()));
+  }
 
-  // SUBCASE("checking not abort") {
-  //   pros::delay(30);
-  //   REQUIRE(!settler(chassis.get()));
-  //   chassis->_distanceErr = 10_mm;
-  //   pros::delay(30);
-  //   REQUIRE(!settler(chassis.get()));
-  //   chassis->_distanceErr = 0_mm;
-  //   pros::delay(30);
-  //   REQUIRE(!settler(chassis.get()));
-  // }
+  SUBCASE("checking not abort") {
+    pros::delay(30);
+    REQUIRE(!settler(chassis.get()));
+    chassis->_distanceErr = 10_mm;
+    pros::delay(30);
+    REQUIRE(!settler(chassis.get()));
+    chassis->_distanceErr = 0_mm;
+    pros::delay(30);
+    REQUIRE(!settler(chassis.get()));
+  }
 }
 } // namespace test

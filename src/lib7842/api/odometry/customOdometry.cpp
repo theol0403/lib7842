@@ -105,8 +105,7 @@ void CustomOdometry::loop() {
 
 } // namespace lib7842
 
-#include "lib7842/test.hpp"
-#include "okapi/api/chassis/model/threeEncoderXDriveModel.hpp"
+#include "lib7842/test/mocks.hpp"
 namespace test {
 static QLength calculateDistanceTraveled(double ticks) {
   return (double(ticks) / 360.0) * 1_pi * 4_in;
@@ -117,17 +116,6 @@ static void assertOdomState(const State& istate, std::shared_ptr<CustomOdometry>
   CHECK(iodom->getState().y.convert(meter) == Approx(istate.y.convert(meter)));
   CHECK(iodom->getState().theta.convert(degree) == Approx(istate.theta.convert(degree)));
 }
-
-class MockThreeEncoderXDriveModel : public ThreeEncoderXDriveModel {
-public:
-  MockThreeEncoderXDriveModel();
-  std::valarray<std::int32_t> getSensorVals() const override;
-  void setSensorVals(std::int32_t left, std::int32_t right, std::int32_t middle);
-
-  std::int32_t leftEnc {0};
-  std::int32_t rightEnc {0};
-  std::int32_t middleEnc {0};
-};
 
 TEST_CASE("CustomOdometry") {
   auto model = std::make_shared<MockThreeEncoderXDriveModel>();
