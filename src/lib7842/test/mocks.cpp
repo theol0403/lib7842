@@ -4,12 +4,17 @@
 
 namespace test {
 
-MockTimer::MockTimer() : AbstractTimer(millis()) {}
 #ifndef THREADS_STD
+MockTimer::MockTimer() : AbstractTimer(pros::millis() * millisecond) {}
 QTime MockTimer::millis() const { return pros::millis() * millisecond; }
 #else
 std::chrono::system_clock::time_point epoch = std::chrono::high_resolution_clock::from_time_t(0);
 
+MockTimer::MockTimer() :
+  AbstractTimer(std::chrono::duration_cast<std::chrono::milliseconds>(
+                  std::chrono::high_resolution_clock::now() - epoch)
+                  .count() *
+                millisecond) {}
 QTime MockTimer::millis() const {
   return std::chrono::duration_cast<std::chrono::milliseconds>(
            std::chrono::high_resolution_clock::now() - epoch)

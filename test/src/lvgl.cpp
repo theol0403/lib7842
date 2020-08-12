@@ -1,6 +1,6 @@
+#include "lvgl/lvgl.h"
 #include "lib7842/api.hpp"
 #include "lib7842/test/mocks.hpp"
-#include "lvgl/lvgl.h"
 #include <iostream>
 
 using namespace test;
