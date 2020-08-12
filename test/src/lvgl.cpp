@@ -1,6 +1,9 @@
-#include "../test/include/test.hpp"
 #include "lib7842/api.hpp"
+#include "lib7842/test/mocks.hpp"
 #include "lvgl/lvgl.h"
+#include <iostream>
+
+using namespace test;
 
 void lvglTest() {
   GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);

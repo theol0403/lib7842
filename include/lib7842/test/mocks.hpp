@@ -2,8 +2,42 @@
 #include "okapi/api/chassis/model/threeEncoderXDriveModel.hpp"
 #include "okapi/api/control/util/settledUtil.hpp"
 #include "okapi/api/util/timeUtil.hpp"
+#include "pros/rtos.hpp"
 
 namespace test {
+class MockTimer : public AbstractTimer {
+public:
+  MockTimer();
+  QTime millis() const override;
+};
+
+class ConstantMockTimer : public AbstractTimer {
+public:
+  explicit ConstantMockTimer(QTime idt);
+  QTime millis() const override;
+  QTime getDt() override;
+  QTime readDt() const override;
+  QTime getStartingTime() const override;
+  QTime getDtFromStart() const override;
+  void placeMark() override;
+  QTime clearMark() override;
+  void placeHardMark() override;
+  QTime clearHardMark() override;
+  QTime getDtFromMark() const override;
+  QTime getDtFromHardMark() const override;
+  bool repeat(QTime time) override;
+  bool repeat(QFrequency frequency) override;
+  QTime dtToReturn;
+};
+
+class MockRate : public AbstractRate {
+public:
+  MockRate();
+  void delay(QFrequency ihz) override;
+  void delayUntil(QTime itime) override;
+  void delayUntil(uint32_t ims) override;
+};
+
 std::unique_ptr<SettledUtil> createSettledUtilPtr(double iatTargetError = 50,
                                                   double iatTargetDerivative = 5,
                                                   QTime iatTargetTime = 250_ms);
@@ -12,12 +46,6 @@ TimeUtil createTimeUtil();
 TimeUtil createConstantTimeUtil(QTime idt);
 TimeUtil createTimeUtil(const Supplier<std::unique_ptr<AbstractTimer>>& itimerSupplier);
 TimeUtil createTimeUtil(const Supplier<std::unique_ptr<SettledUtil>>& isettledUtilSupplier);
-
-class MockTimer : public AbstractTimer {
-public:
-  MockTimer();
-  QTime millis() const override;
-};
 
 class MockThreeEncoderXDriveModel : public ThreeEncoderXDriveModel {
 public:

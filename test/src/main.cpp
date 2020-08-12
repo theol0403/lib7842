@@ -1,7 +1,7 @@
-#define DOCTEST_CONFIG_IMPLEMENT
 #include "lib7842/api/other/global.hpp"
 #include "lib7842/test/mocks.hpp"
-#include "okapi/api/util/logging.hpp"
+#include <iostream>
+#include <sys/unistd.h>
 
 using namespace test;
 int lvglMain();
@@ -20,7 +20,18 @@ int main(int argc, char** argv) {
     return lvglMain();
   }
 
-  doctest::Context context;
-  context.applyCommandLine(argc, argv);
-  return context.run(); // run
+  return runUnitTests(argc, argv);
 }
+
+extern "C" {
+namespace pros::c {
+
+void delay(const uint32_t milliseconds) { usleep(1000 * milliseconds); }
+
+void task_delay_until(uint32_t* const prev_time, const uint32_t delta) {
+  (void)prev_time;
+  usleep(1000 * delta);
+}
+
+} // namespace pros::c
+} // extern "C"

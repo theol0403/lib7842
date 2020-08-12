@@ -3,9 +3,10 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "lib7842/test/mocks.hpp"
 
-using namespace test;
-
-void runUnitTests() {
+namespace test {
+int runUnitTests(int argc, char** argv) {
   doctest::Context context;
-  context.run(); // run
+  context.applyCommandLine(argc, argv);
+  return context.run(); // run
 }
+} // namespace test
