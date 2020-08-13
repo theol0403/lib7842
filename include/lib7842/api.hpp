@@ -24,6 +24,7 @@
 #include "lib7842/api/positioning/path/abstractPath.hpp"
 #include "lib7842/api/positioning/path/compoundPath.hpp"
 #include "lib7842/api/positioning/path/discretePath.hpp"
+#include "lib7842/api/positioning/path/parametric.hpp"
 #include "lib7842/api/positioning/path/pathStepper.hpp"
 #include "lib7842/api/positioning/path/quinticPath.hpp"
 #include "lib7842/api/positioning/path/quinticSegment.hpp"
