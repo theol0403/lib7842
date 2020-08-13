@@ -3,7 +3,6 @@
 #include "okapi/api/util/timeUtil.hpp"
 
 namespace lib7842::global {
-
 using namespace okapi;
 
 /**

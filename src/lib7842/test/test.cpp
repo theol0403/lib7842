@@ -1,3 +1,4 @@
+#include "lib7842/api/other/global.hpp"
 #define DOCTEST_CONFIG_NO_WINDOWS_SEH
 #define DOCTEST_CONFIG_NO_POSIX_SIGNALS
 #define DOCTEST_CONFIG_IMPLEMENT
