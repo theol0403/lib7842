@@ -2,9 +2,12 @@
 #include "okapi/api/units/QLength.hpp"
 #include "okapi/api/units/RQuantity.hpp"
 
-namespace lib7842::units {
+namespace lib7842 {
 
 using namespace okapi;
+QUANTITY_TYPE(0, -1, 0, 0, QCurvature);
+
+namespace units {
 
 /**
  * Units that represent a tile (2ft) and a court(12ft)
@@ -21,4 +24,5 @@ constexpr QLength operator"" _court(unsigned long long int x) {
   return static_cast<double>(x) * court;
 }
 
-} // namespace lib7842::units
+} // namespace units
+} // namespace lib7842

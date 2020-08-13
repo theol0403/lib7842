@@ -1,4 +1,5 @@
 #pragma once
+#include "lib7842/api/other/units.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include "path.hpp"
@@ -12,7 +13,7 @@ public:
 
   constexpr State calc(double t) const override { return start + (end - start) * t; }
 
-  constexpr double curvature(double /*t*/) const override { return 0; }
+  constexpr QCurvature curvature(double /*t*/) const override { return 0 / meter; }
 
   constexpr QLength length(double /*resolution*/) const override { return start.distTo(end); }
 

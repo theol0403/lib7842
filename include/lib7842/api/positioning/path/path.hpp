@@ -1,4 +1,5 @@
 #pragma once
+#include "lib7842/api/other/units.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 #include "pathStepper.hpp"
@@ -12,7 +13,7 @@ public:
 
   constexpr virtual State calc(double t) const = 0;
 
-  constexpr virtual double curvature(double t) const = 0;
+  constexpr virtual QCurvature curvature(double t) const = 0;
 
   constexpr virtual QLength velocity(double /*t*/) const { return length(); }
 

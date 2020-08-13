@@ -5,10 +5,6 @@ namespace lib7842 {
 template <typename T> concept ParametricFunction = requires(T t) {
   { t.calc(0.0) }
   ->std::convertible_to<double>;
-  { t.calc_d(0.0) }
-  ->std::convertible_to<double>;
-  { t.calc_d2(0.0) }
-  ->std::convertible_to<double>;
 };
 
 template <ParametricFunction T> class Parametric : public Path {
@@ -25,12 +21,12 @@ public:
     return State(x_t, y_t, atan2(y1_t, x1_t));
   }
 
-  constexpr double curvature(double t) const override {
+  constexpr QCurvature curvature(double t) const override {
     QLength x_d = x.calc_d(t) * meter;
     QLength y_d = y.calc_d(t) * meter;
     QLength x_d_2 = x.calc_d2(t) * meter;
     QLength y_d_2 = y.calc_d2(t) * meter;
-    return ((x_d * y_d_2 - y_d * x_d_2) / pow<3>(sqrt(x_d * x_d + y_d * y_d))).convert(1 / meter);
+    return ((x_d * y_d_2 - y_d * x_d_2) / pow<3>(sqrt(x_d * x_d + y_d * y_d)));
   }
 
   constexpr QLength velocity(double t) const override {
@@ -42,5 +38,5 @@ protected:
   T y;
 };
 
-template <ParametricFunction T> Parametric(T&&, T &&) -> Parametric<T>;
+template <ParametricFunction T> Parametric(T&&, T&&) -> Parametric<T>;
 }; // namespace lib7842

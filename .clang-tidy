@@ -1,4 +1,4 @@
-Checks: '*, -modernize-use-nodiscard, -*private-member-variables-in-classes, -google-default-arguments, -*-magic-numbers, -modernize-use-trailing-return-type, -fuchsia-*, -google-build-using-namespace, -cert-err58-cpp, -hicpp-signed-bitwise'
+Checks: '*, -modernize-use-nodiscard, -*private-member-variables-in-classes, -google-default-arguments, -*-magic-numbers, -modernize-use-trailing-return-type, -fuchsia-*, -google-build-using-namespace, -cert-err58-cpp, -hicpp-signed-bitwise, -llvmlibc-callee-namespace'
 CheckOptions:
   - { key: hicpp-special-member-functions.AllowSoleDefaultDtor, value: 1 }
   - { key: cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor, value: 1 }
