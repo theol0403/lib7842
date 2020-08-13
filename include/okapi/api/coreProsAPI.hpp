@@ -60,6 +60,7 @@ class CrossplatformThread {
 #ifdef THREADS_STD
     thread.join();
 #else
+    if(pros::c::task_get_state(thread) != pros::E_TASK_STATE_DELETED)
     pros::c::task_delete(thread);
 #endif
   }

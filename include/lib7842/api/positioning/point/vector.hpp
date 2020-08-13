@@ -80,5 +80,11 @@ struct Vector {
   }
 
   constexpr virtual QAngle angleTo(const Vector& ipoint) const { return angle(*this, ipoint); }
+
+protected:
+  friend inline std::ostream& operator<<(std::ostream& os, const Vector& rhs) {
+    os << "{" << rhs.x << ", " << rhs.y << "}";
+    return os;
+  }
 };
 } // namespace lib7842

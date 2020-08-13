@@ -7,9 +7,9 @@ Screen::Screen(lv_obj_t* iparent) : Screen(iparent, lv_obj_get_style(iparent)->b
 Screen::Screen(lv_obj_t* iparent, lv_color_t icolor) :
   Page(iparent, icolor),
 
-  tabview(lv_tabview_create(container, NULL)) {
+  tabview(lv_tabview_create(container, nullptr)) {
   lv_obj_set_size(tabview, lv_obj_get_width(container), lv_obj_get_height(container));
-  lv_obj_align(tabview, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
+  lv_obj_align(tabview, nullptr, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
 
   lv_style_copy(&style_bg, &lv_style_plain);
   style_bg.body.main_color = themeColor;
@@ -79,7 +79,7 @@ lv_obj_t* Screen::newPage(const std::string& iname) {
   lv_obj_t* page = lv_tabview_add_tab(tabview, iname.c_str());
   lv_page_set_sb_mode(page, LV_SB_MODE_OFF);
   lv_page_set_style(page, LV_PAGE_STYLE_BG, &pageStyle);
-  lv_obj_align(page, NULL, LV_ALIGN_IN_TOP_MID, 0, 0);
+  lv_obj_align(page, nullptr, LV_ALIGN_IN_TOP_MID, 0, 0);
   return page;
 }
 

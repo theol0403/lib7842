@@ -7,6 +7,7 @@ PROJECTROOT=..
 
 BINDIR=$(ROOT)/bin
 SRCDIR=$(PROJECTROOT)/src/lib7842/api
+SRCTESTDIR=$(PROJECTROOT)/src/lib7842/test
 INCDIR=$(PROJECTROOT)/include
 TESTDIR=$(ROOT)/src
 OUTBIN:=$(BINDIR)/main
@@ -51,10 +52,13 @@ INCLUDE=-iquote$(INCDIR)
 CXXSRC=$(call rwildcard, $(SRCDIR),*.cpp, $1)
 CXXOBJ=$(addprefix $(BINDIR)/,$(patsubst $(SRCDIR)/%,%.o,$(call CXXSRC,$1)))
 
+CXXTESTSRC=$(call rwildcard, $(SRCTESTDIR),*.cpp, $1)
+CXXTESTOBJ=$(addprefix $(BINDIR)/,$(patsubst $(SRCTESTDIR)/%,%.o,$(call CXXTESTSRC,$1)))
+
 CXXSRCTEST=$(call rwildcard, $(TESTDIR),*.cpp, $1)
 CXXOBJTEST=$(addprefix $(BINDIR)/,$(patsubst $(TESTDIR)/%,%.o,$(call CXXSRCTEST,$1)))
 
-GETALLOBJ=$(sort $(call CXXOBJ,$1) $(call CXXOBJTEST,$1))
+GETALLOBJ=$(sort $(call CXXOBJ,$1) $(call CXXOBJTEST,$1) $(call CXXTESTOBJ,$1))
 
 .DEFAULT_GOAL=quick
 
@@ -88,3 +92,10 @@ $(BINDIR)/%.$1.o: $(TESTDIR)/%.$1
 endef
 $(eval $(call cxx_rule_test,cpp))
 
+define cxx_rule_src_test
+$(BINDIR)/%.$1.o: $(SRCTESTDIR)/%.$1
+	$(VV)mkdir -p $$(dir $$@)
+	@echo -n "Compiling $$< "
+	$$(call test_output,$D$(CXX) -c $(INCLUDE) -iquote$(INCDIR)/$$(dir $$*) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o $$@ $(shell pwd)/$$<,$(OK_STRING))
+endef
+$(eval $(call cxx_rule_src_test,cpp))

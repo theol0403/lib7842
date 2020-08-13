@@ -74,5 +74,11 @@ struct State : public Vector {
   constexpr QAngle angleTo(const Vector& ipoint) const override {
     return util::rollAngle180(Vector::angleTo(ipoint) - theta);
   }
+
+protected:
+  friend inline std::ostream& operator<<(std::ostream& os, const State& rhs) {
+    os << "{" << rhs.x << ", " << rhs.y << ", " << rhs.theta << "}";
+    return os;
+  }
 };
 } // namespace lib7842

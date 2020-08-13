@@ -18,8 +18,8 @@ class Page {
 public:
   Page(const Page&) = delete;
   Page operator=(const Page&) = delete;
-  Page(Page&& ipage);
-  Page& operator=(Page&& ipage);
+  Page(Page&& ipage) noexcept;
+  Page& operator=(Page&& ipage) noexcept;
   virtual ~Page();
 
   /**

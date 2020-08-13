@@ -92,7 +92,7 @@ public:
             typename = std::enable_if_t<std::is_same_v<T1, StatePath>>>
   DiscretePath(const DiscretePath<C>& ipath, const std::vector<QAngle>& iangles) :
     DiscretePath(ipath) {
-    if (iangles.empty()) return;
+    if (iangles.empty()) { return; }
     double ratio = static_cast<double>(iangles.size() - 1) / static_cast<double>(path.size() - 1);
     for (size_t i = 0; i < path.size(); i++) {
       double position = i * ratio;
@@ -179,10 +179,10 @@ public:
    * @return generated path
    */
   DiscretePath<T> generateT(int isteps = 1, bool iend = true) const {
-    if (isteps < 1) return copy();
+    if (isteps < 1) { return copy(); }
 
     DiscretePath<T> temp;
-    if (path.size() > 0) temp().reserve((isteps * (path.size() - 1)) + 1);
+    if (path.size() > 0) { temp().reserve((isteps * (path.size() - 1)) + 1); }
 
     // if path is more than 2 points - interpolation needed
     if (path.size() > 1) {
@@ -209,8 +209,9 @@ public:
 
     // if the path is more than 1 point and the end point is required - return last point
     // if there is only one point, always return it
-    if ((iend && path.size() > 0) || path.size() == 1)
+    if ((iend && path.size() > 0) || path.size() == 1) {
       temp().emplace_back(std::make_shared<T>(*path.back()));
+    }
     return temp;
   }
 
@@ -242,8 +243,9 @@ public:
 
     // if the path is more than 1 point and the end point is required - return last point
     // if there is only one point, always return it
-    if ((iend && path.size() > 0) || path.size() == 1)
+    if ((iend && path.size() > 0) || path.size() == 1) {
       temp().emplace_back(std::make_shared<T>(*path.back()));
+    }
 
     return temp;
   }
