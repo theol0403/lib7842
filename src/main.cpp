@@ -13,7 +13,7 @@ using namespace lib7842;
  */
 void initialize() {
   pros::delay(200);
-  test::runUnitTests(0, NULL);
+  test::runUnitTests(0, nullptr);
 }
 
 /**

@@ -83,7 +83,7 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
     // get maximum allowable change in velocity
     QSpeed maxVelocity = lastVelocity + dT * limits.accel;
     // limit the velocity
-    if (targetVel > maxVelocity) targetVel = maxVelocity;
+    if (targetVel > maxVelocity) { targetVel = maxVelocity; }
     lastVelocity = targetVel;
 
     // calculate robot wheel velocities
@@ -105,7 +105,7 @@ void PathFollower::followPath(const PursuitPath& ipath, bool ibackwards,
       // get exit angle of the path
       auto endAngle = (path.end() - 2)->get()->angleTo(*path.back());
       // if backwards, exit angle is flipped
-      if (ibackwards) endAngle += 180_deg;
+      if (ibackwards) { endAngle += 180_deg; }
       // get angle error
       QAngle error = util::wrapAngle90(endAngle - pos.theta);
       // get distance to lookahead
@@ -167,7 +167,7 @@ PathFollower::pathIterator_t PathFollower::findClosest(const PursuitPath& ipath,
 
   // loop from the last closest point to one point past the lookahead
   for (auto it = closest; it < end; it++) {
-    if (it >= path.end()) break;
+    if (it >= path.end()) { break; }
     QLength distance = Vector::dist(ipos, **it);
     if (distance < closestDist) {
       closestDist = distance;
@@ -210,7 +210,7 @@ Vector PathFollower::findLookaheadPoint(const PursuitPath& ipath, const Vector& 
         lastLookIndex = i;
         lastLookT = t.value();
         // if this is the second intersection that was found, we are done
-        if (lastIntersect > 0) break;
+        if (lastIntersect > 0) { break; }
         // record the index of the first intersection
         lastIntersect = i;
       }

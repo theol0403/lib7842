@@ -111,7 +111,7 @@ static QLength calculateDistanceTraveled(double ticks) {
   return (double(ticks) / 360.0) * 1_pi * 4_in;
 }
 
-static void assertOdomState(const State& istate, std::shared_ptr<CustomOdometry> iodom) {
+static void assertOdomState(const State& istate, const std::shared_ptr<CustomOdometry>& iodom) {
   CHECK(iodom->getState().x.convert(meter) == Approx(istate.x.convert(meter)));
   CHECK(iodom->getState().y.convert(meter) == Approx(istate.y.convert(meter)));
   CHECK(iodom->getState().theta.convert(degree) == Approx(istate.theta.convert(degree)));

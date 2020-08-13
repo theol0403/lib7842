@@ -2,12 +2,12 @@
 
 namespace lib7842::GUI {
 
-Page::Page(Page&& ipage) : container(ipage.container), themeColor(ipage.themeColor) {
+Page::Page(Page&& ipage) noexcept : container(ipage.container), themeColor(ipage.themeColor) {
   ipage.container = nullptr;
 }
 
-Page& Page::operator=(Page&& ipage) {
-  if (container != nullptr) lv_obj_del(container);
+Page& Page::operator=(Page&& ipage) noexcept {
+  if (container != nullptr) { lv_obj_del(container); }
   container = ipage.container;
   themeColor = ipage.themeColor;
   ipage.container = nullptr;
@@ -17,9 +17,9 @@ Page& Page::operator=(Page&& ipage) {
 Page::Page(lv_obj_t* iparent) : Page(iparent, lv_obj_get_style(iparent)->body.main_color) {}
 
 Page::Page(lv_obj_t* iparent, lv_color_t icolor) :
-  container(lv_obj_create(iparent, NULL)), themeColor(icolor) {
+  container(lv_obj_create(iparent, nullptr)), themeColor(icolor) {
   lv_obj_set_size(container, lv_obj_get_width(iparent), lv_obj_get_height(iparent));
-  lv_obj_align(container, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
+  lv_obj_align(container, nullptr, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
 
   lv_style_copy(&cStyle, &lv_style_plain_color);
   cStyle.body.main_color = themeColor;
@@ -28,7 +28,7 @@ Page::Page(lv_obj_t* iparent, lv_color_t icolor) :
 }
 
 Page::~Page() {
-  if (container != nullptr) lv_obj_del(container);
+  if (container != nullptr) { lv_obj_del(container); }
 }
 
 lv_obj_t* Page::getPage() const { return container; }

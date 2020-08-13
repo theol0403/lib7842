@@ -132,7 +132,7 @@ void OdomController::driveToPoint(const Vector& point, double turnScale, Settler
     QLength distanceToTarget = state.distTo(point);
 
     // go backwards
-    if (angleToClose.abs() >= 90_deg) distanceToClose = -distanceToClose;
+    if (angleToClose.abs() >= 90_deg) { distanceToClose = -distanceToClose; }
 
     if (distanceToTarget.abs() < driveRadius) {
       _angleErr = 0_deg;

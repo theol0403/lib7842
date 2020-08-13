@@ -5,7 +5,7 @@ namespace lib7842 {
 void PursuitPath::setLimits(const PursuitLimits& ilimits) { limits = ilimits; }
 
 PursuitLimits PursuitPath::getLimits() const {
-  if (limits) return limits.value();
+  if (limits) { return limits.value(); }
   GLOBAL_ERROR_THROW("PursuitPath::getLimits: no limits set");
 }
 

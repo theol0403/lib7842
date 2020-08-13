@@ -43,7 +43,7 @@ void PathFollowerX::followPath(const PursuitPath& ipath, const std::optional<QSp
     // get maximum allowable change in velocity
     QSpeed maxVelocity = lastVelocity + dT * limits.accel;
     // limit the velocity
-    if (targetVel > maxVelocity) targetVel = maxVelocity;
+    if (targetVel > maxVelocity) { targetVel = maxVelocity; }
     lastVelocity = targetVel;
 
     // calculate robot wheel velocities

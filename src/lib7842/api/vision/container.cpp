@@ -19,12 +19,12 @@ Container& Container::add(const std::vector<Object>& iobjects) {
 }
 
 Container& Container::remove(size_t index) {
-  if (index < objects.size()) objects.erase(objects.begin() + index);
+  if (index < objects.size()) { objects.erase(objects.begin() + index); }
   return *this;
 }
 
 Container& Container::remove(size_t startIndex, size_t endIndex) {
-  if (endIndex > objects.size()) endIndex = objects.size();
+  if (endIndex > objects.size()) { endIndex = objects.size(); }
   if (startIndex < objects.size()) {
     objects.erase(objects.begin() + startIndex, objects.begin() + endIndex);
   }
@@ -53,7 +53,7 @@ Container& Container::resize(size_t size) {
 }
 
 Container& Container::trim(size_t size) {
-  if (size < objects.size()) resize(size);
+  if (size < objects.size()) { resize(size); }
   return *this;
 }
 

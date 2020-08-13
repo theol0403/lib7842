@@ -30,7 +30,7 @@ SimplePath QuinticPath::generate(int isteps, bool iend) const {
     auto& p2 = temp()[i + 1];
     double slope = slopeScalar * MathPoint::dist(*p1, *p2);
     p1->setData("slope", slope);
-    if (i == temp().size() - 2) p2->setData("slope", slope);
+    if (i == temp().size() - 2) { p2->setData("slope", slope); }
   }
 
   CompoundPath compound;
