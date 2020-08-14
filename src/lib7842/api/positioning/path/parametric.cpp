@@ -1,5 +1,4 @@
 #include "lib7842/api/positioning/path/parametric.hpp"
-
 #include "lib7842/test/test.hpp"
 namespace test {
 class Test {
