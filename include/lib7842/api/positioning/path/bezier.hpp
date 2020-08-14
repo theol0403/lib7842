@@ -20,7 +20,7 @@ public:
   constexpr double calc_d(double x) const {
     double sum {0.0};
     for (size_t i = 0; i < N; ++i) {
-      sum += basis(N - 1, i, x) * order(ctrls[i + 1] - ctrls[i]);
+      sum += basis(N - 1, i, x) * N * (ctrls[i + 1] - ctrls[i]);
     }
     return sum;
   }

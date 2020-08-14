@@ -22,7 +22,7 @@ public:
     return sum;
   }
 
-  constexpr double calc_d_2(double x) const {
+  constexpr double calc_d2(double x) const {
     double sum {0};
     for (size_t i = 2; i < coeffs.size(); ++i) {
       sum += coeffs[i] * i * (i - 1) * std::pow(x, i - 2);

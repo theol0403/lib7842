@@ -1,4 +1,8 @@
+#include "bezier.hpp"
+#include "hermite.hpp"
 #include "path.hpp"
+#include <bits/iterator_concepts.h>
+#include <cstddef>
 
 namespace lib7842 {
 
@@ -10,6 +14,23 @@ template <typename T> concept ParametricFunction = requires(T t) {
 template <ParametricFunction T> class Parametric : public Path {
 public:
   constexpr Parametric(T&& ix, T&& iy) : x(std::forward<T>(ix)), y(std::forward<T>(iy)) {}
+
+  constexpr Parametric(const State& start, const State& end) :
+    x(T(start.x.convert(meter), cos(start.theta).convert(number), end.x.convert(meter),
+        cos(end.theta).convert(number))),
+    y(T(start.y.convert(meter), sin(start.theta).convert(number), end.y.convert(meter),
+        sin(end.theta).convert(number))) {}
+
+  template <size_t N>
+  constexpr explicit Parametric(const std::array<Vector, N>& ictrls) :
+    x(Bezier(process(ictrls, [](const Vector& p) { return p.x.convert(meter); }))),
+    y(Bezier(process(ictrls, [](const Vector& p) { return p.y.convert(meter); }))) {}
+
+  template <size_t N> constexpr auto process(const std::array<Vector, N>& ictrls, auto&& f) {
+    std::array<double, N> t;
+    std::transform(std::begin(ictrls), std::end(ictrls), std::begin(t), f);
+    return t;
+  }
 
   constexpr State calc(double t) const override {
     QLength x_t = x.calc(t) * meter;
@@ -39,4 +60,6 @@ protected:
 };
 
 template <ParametricFunction T> Parametric(T&&, T&&) -> Parametric<T>;
+template <size_t N> Parametric(const std::array<Vector, N>&) -> Parametric<Bezier<N - 1>>;
+
 }; // namespace lib7842
