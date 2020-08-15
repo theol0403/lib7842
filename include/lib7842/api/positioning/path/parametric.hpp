@@ -54,7 +54,7 @@ protected:
   std::pair<T, T> p;
 
 private:
-  template <size_t N> constexpr auto process(const std::array<Vector, N>& ictrls, auto&& f) {
+  template <size_t N> constexpr auto process(const Vector (&ictrls)[N], auto&& f) {
     std::array<double, N> t;
     std::transform(std::begin(ictrls), std::end(ictrls), std::begin(t), f);
     return t;
