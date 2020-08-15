@@ -15,19 +15,6 @@ template <ParametricFunction T> class Parametric : public Path {
 public:
   constexpr Parametric(T&& x, T&& y) : p(std::forward<T>(x), std::forward<T>(y)) {}
 
-  template <typename U = T, std::enable_if_t<std::is_base_of_v<Hermite<U::order>, U>>* = nullptr>
-  constexpr Parametric(const State& start, const State& end) :
-    p(U(start.x.convert(meter), cos(start.theta).convert(number), end.x.convert(meter),
-        cos(end.theta).convert(number)),
-      U(start.y.convert(meter), sin(start.theta).convert(number), end.y.convert(meter),
-        sin(end.theta).convert(number))) {}
-
-  template <typename U = T, size_t N = U::order,
-            std::enable_if_t<std::is_same_v<Bezier<N>, U>>* = nullptr>
-  constexpr explicit Parametric(const Vector (&ictrls)[N + 1]) :
-    p(Bezier(process(ictrls, [](const auto& ip) { return ip.x.convert(meter); })),
-      Bezier(process(ictrls, [](const auto& ip) { return ip.y.convert(meter); }))) {}
-
   constexpr State calc(double t) const override {
     QLength x_t = p.first.calc(t) * meter;
     QLength y_t = p.second.calc(t) * meter;
@@ -50,13 +37,26 @@ public:
     return sqrt(square(p.first.calc_d(t) * meter) + square(p.second.calc_d(t) * meter));
   }
 
+  template <typename U = T, std::enable_if_t<std::is_base_of_v<Hermite<U::order>, U>>* = nullptr>
+  constexpr Parametric(const State& start, const State& end) :
+    p(U(start.x.convert(meter), cos(start.theta).convert(number), end.x.convert(meter),
+        cos(end.theta).convert(number)),
+      U(start.y.convert(meter), sin(start.theta).convert(number), end.y.convert(meter),
+        sin(end.theta).convert(number))) {}
+
+  template <typename U = T, size_t N = U::order,
+            std::enable_if_t<std::is_same_v<Bezier<N>, U>>* = nullptr>
+  constexpr explicit Parametric(const Vector (&ctrls)[N + 1]) :
+    p(Bezier(process(ctrls, [](const auto& ip) { return ip.x.convert(meter); })),
+      Bezier(process(ctrls, [](const auto& ip) { return ip.y.convert(meter); }))) {}
+
 protected:
   std::pair<T, T> p;
 
 private:
-  template <size_t N> constexpr auto process(const Vector (&ictrls)[N], auto&& f) {
+  template <size_t N> constexpr auto process(const Vector (&ctrls)[N], auto&& f) {
     std::array<double, N> t;
-    std::transform(std::begin(ictrls), std::end(ictrls), std::begin(t), f);
+    std::transform(std::begin(ctrls), std::end(ctrls), std::begin(t), f);
     return t;
   }
 };
