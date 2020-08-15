@@ -1,15 +1,17 @@
 #include "lib7842/api/positioning/path/pathStepper.hpp"
+#include "lib7842/api/other/units.hpp"
 #include "lib7842/api/positioning/path/line.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 
 #include "lib7842/test/test.hpp"
 namespace test {
-class DontCopy {
+class DontCopy : public PathHelper<DontCopy> {
 public:
-  DontCopy() = default;
-  DontCopy(const DontCopy&) = delete;
-  DontCopy(DontCopy&&) = default;
-  State calc(double /*t*/) const { return {}; };
+  constexpr DontCopy() = default;
+  constexpr DontCopy(const DontCopy&) = delete;
+  constexpr DontCopy(DontCopy&&) = default;
+  constexpr State calc(double /*t*/) const override { return {}; };
+  constexpr QCurvature curvature(double /*t*/) const override { return 0 / meter; }
 };
 
 TEST_CASE("PathStepper") {
@@ -52,6 +54,23 @@ TEST_CASE("PathStepper") {
       REQUIRE(v.size() == 101);
       for (size_t j = 0; j < v.size(); ++j) {
         REQUIRE(v.at(j).y.convert(meter) == Approx(j / 100.0));
+      }
+    }
+
+    SUBCASE("Step") {
+      SUBCASE("Lvalue") {
+        DontCopy l;
+        auto s = l.step(StepBy::T(0.01));
+        for (auto&& point : s) {
+          REQUIRE(point == State());
+        }
+      }
+
+      SUBCASE("Rvalue") {
+        auto s = DontCopy().step(StepBy::T(0.01));
+        for (auto&& point : s) {
+          REQUIRE(point == State());
+        }
       }
     }
   }

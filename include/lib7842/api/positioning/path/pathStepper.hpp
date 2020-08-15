@@ -25,7 +25,7 @@ protected:
 };
 
 template <typename T, typename S>
-PathStepper(T&&, S &&)
+PathStepper(T&&, S&&)
   -> PathStepper<T,
                  std::conditional_t<std::is_lvalue_reference_v<T>,
                                     std::reference_wrapper<std::remove_reference_t<T>>, T>,

@@ -35,4 +35,15 @@ public:
     return v;
   }
 };
+
+template <typename CRTP> class PathHelper : public Path {
+public:
+  constexpr PathHelper() = default;
+  template <typename S> constexpr auto step(S&& s) const& {
+    return PathStepper(static_cast<const CRTP&>(*this), s);
+  }
+  template <typename S> constexpr auto step(S&& s) && {
+    return PathStepper(static_cast<CRTP&&>(*this), s);
+  }
+};
 } // namespace lib7842

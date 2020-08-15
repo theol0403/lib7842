@@ -6,7 +6,7 @@
 
 namespace lib7842 {
 
-class Line : public Path {
+class Line : public PathHelper<Line> {
 public:
   constexpr Line(const Vector& istart, const Vector& iend) :
     start(istart, istart.angleTo(iend)), end(iend, start.theta) {}

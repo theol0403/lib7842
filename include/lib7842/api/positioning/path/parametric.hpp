@@ -11,7 +11,7 @@ template <typename T> concept ParametricFunction = requires(T t) {
   ->std::convertible_to<double>;
 };
 
-template <ParametricFunction T> class Parametric : public Path {
+template <ParametricFunction T> class Parametric : public PathHelper<Parametric<T>> {
 public:
   constexpr Parametric(T&& x, T&& y) : p(std::forward<T>(x), std::forward<T>(y)) {}
 
