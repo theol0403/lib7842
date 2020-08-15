@@ -24,7 +24,7 @@ public:
 
   template <typename U = T, size_t N = U::order,
             std::enable_if_t<std::is_same_v<Bezier<N>, U>>* = nullptr>
-  constexpr explicit Parametric(const std::array<Vector, N + 1>& ictrls) :
+  constexpr explicit Parametric(const Vector (&ictrls)[N + 1]) :
     p(Bezier(process(ictrls, [](const auto& ip) { return ip.x.convert(meter); })),
       Bezier(process(ictrls, [](const auto& ip) { return ip.y.convert(meter); }))) {}
 
@@ -62,6 +62,6 @@ private:
 };
 
 template <ParametricFunction T> Parametric(T&&, T&&) -> Parametric<T>;
-template <size_t N> Parametric(const std::array<Vector, N>&) -> Parametric<Bezier<N - 1>>;
+template <size_t N> Parametric(const Vector (&)[N]) -> Parametric<Bezier<N - 1>>;
 
 }; // namespace lib7842

@@ -56,4 +56,8 @@ protected:
 };
 
 template <size_t N> Bezier(const std::array<double, N>&) -> Bezier<N - 1>;
+
+using CubicBezier = Bezier<3>;
+using QuarticBezier = Bezier<4>;
+using QuinticBezier = Bezier<5>;
 } // namespace lib7842

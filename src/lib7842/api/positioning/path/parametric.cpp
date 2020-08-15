@@ -5,7 +5,6 @@ namespace test {
 TEST_CASE("Parametric") {
   Parametric<CubicHermite> c({0_in, 0_in, 0_deg}, {1_in, 1_in, 0_deg});
 
-  Parametric<Bezier<3>> s(
-    {Vector {0_m, 0_m}, Vector {1_m, 1_m}, Vector {2_m, 2_m}, Vector {3_m, 3_m}});
+  Parametric s({{0_m, 0_m}, {1_m, 1_m}, {2_m, 2_m}, {3_m, 3_m}});
 }
 } // namespace test
