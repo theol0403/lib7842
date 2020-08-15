@@ -13,50 +13,52 @@ template <typename T> concept ParametricFunction = requires(T t) {
 
 template <ParametricFunction T> class Parametric : public Path {
 public:
-  constexpr Parametric(T&& ix, T&& iy) : x(std::forward<T>(ix)), y(std::forward<T>(iy)) {}
+  constexpr Parametric(T&& x, T&& y) : p(std::forward<T>(x), std::forward<T>(y)) {}
 
+  template <typename U = T, std::enable_if_t<std::is_base_of_v<Hermite<U::order>, U>>* = nullptr>
   constexpr Parametric(const State& start, const State& end) :
-    x(T(start.x.convert(meter), cos(start.theta).convert(number), end.x.convert(meter),
-        cos(end.theta).convert(number))),
-    y(T(start.y.convert(meter), sin(start.theta).convert(number), end.y.convert(meter),
+    p(U(start.x.convert(meter), cos(start.theta).convert(number), end.x.convert(meter),
+        cos(end.theta).convert(number)),
+      U(start.y.convert(meter), sin(start.theta).convert(number), end.y.convert(meter),
         sin(end.theta).convert(number))) {}
 
-  template <size_t N>
-  constexpr explicit Parametric(const std::array<Vector, N>& ictrls) :
-    x(Bezier(process(ictrls, [](const Vector& p) { return p.x.convert(meter); }))),
-    y(Bezier(process(ictrls, [](const Vector& p) { return p.y.convert(meter); }))) {}
-
-  template <size_t N> constexpr auto process(const std::array<Vector, N>& ictrls, auto&& f) {
-    std::array<double, N> t;
-    std::transform(std::begin(ictrls), std::end(ictrls), std::begin(t), f);
-    return t;
-  }
+  template <typename U = T, size_t N = U::order,
+            std::enable_if_t<std::is_same_v<Bezier<N>, U>>* = nullptr>
+  constexpr explicit Parametric(const std::array<Vector, N + 1>& ictrls) :
+    p(Bezier(process(ictrls, [](const auto& ip) { return ip.x.convert(meter); })),
+      Bezier(process(ictrls, [](const auto& ip) { return ip.y.convert(meter); }))) {}
 
   constexpr State calc(double t) const override {
-    QLength x_t = x.calc(t) * meter;
-    QLength y_t = y.calc(t) * meter;
+    QLength x_t = p.first.calc(t) * meter;
+    QLength y_t = p.second.calc(t) * meter;
 
-    QLength x1_t = x.calc_d(t) * meter;
-    QLength y1_t = y.calc_d(t) * meter;
+    QLength x1_t = p.first.calc_d(t) * meter;
+    QLength y1_t = p.second.calc_d(t) * meter;
 
     return State(x_t, y_t, atan2(y1_t, x1_t));
   }
 
   constexpr QCurvature curvature(double t) const override {
-    QLength x_d = x.calc_d(t) * meter;
-    QLength y_d = y.calc_d(t) * meter;
-    QLength x_d_2 = x.calc_d2(t) * meter;
-    QLength y_d_2 = y.calc_d2(t) * meter;
+    QLength x_d = p.first.calc_d(t) * meter;
+    QLength y_d = p.second.calc_d(t) * meter;
+    QLength x_d_2 = p.first.calc_d2(t) * meter;
+    QLength y_d_2 = p.second.calc_d2(t) * meter;
     return ((x_d * y_d_2 - y_d * x_d_2) / pow<3>(sqrt(x_d * x_d + y_d * y_d)));
   }
 
   constexpr QLength velocity(double t) const override {
-    return sqrt(square(x.calc_d(t) * meter) + square(y.calc_d(t) * meter));
+    return sqrt(square(p.first.calc_d(t) * meter) + square(p.second.calc_d(t) * meter));
   }
 
 protected:
-  T x;
-  T y;
+  std::pair<T, T> p;
+
+private:
+  template <size_t N> constexpr auto process(const std::array<Vector, N>& ictrls, auto&& f) {
+    std::array<double, N> t;
+    std::transform(std::begin(ictrls), std::end(ictrls), std::begin(t), f);
+    return t;
+  }
 };
 
 template <ParametricFunction T> Parametric(T&&, T&&) -> Parametric<T>;

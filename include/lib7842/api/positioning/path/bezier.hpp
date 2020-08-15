@@ -34,6 +34,8 @@ public:
     return sum;
   }
 
+  static constexpr size_t order = N;
+
 protected:
   std::array<double, N + 1> ctrls {};
 

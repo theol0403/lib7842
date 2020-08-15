@@ -30,6 +30,8 @@ public:
     return sum;
   }
 
+  static constexpr size_t order = N;
+
 protected:
   constexpr Hermite() = default;
   constexpr ~Hermite() = default;
