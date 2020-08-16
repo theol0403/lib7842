@@ -1,3 +1,4 @@
+#pragma once
 #include "path.hpp"
 #include <cstddef>
 #include <ranges>

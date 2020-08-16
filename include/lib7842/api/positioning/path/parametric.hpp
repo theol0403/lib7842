@@ -1,3 +1,4 @@
+#pragma once
 #include "bezier.hpp"
 #include "hermite.hpp"
 #include "path.hpp"
