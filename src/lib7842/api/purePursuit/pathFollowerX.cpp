@@ -11,31 +11,29 @@ PathFollowerX::PathFollowerX(const std::shared_ptr<XDriveModel>& imodel,
   PathFollower(imodel, iodometry, ichassisScales, igearset, ilookahead, ilookahead),
   xModel(imodel) {};
 
-void PathFollowerX::followPath(const PursuitPath& ipath, const std::optional<QSpeed>& istartSpeed) {
+void PathFollowerX::followPath(const std::vector<Waypoint>& path, const PursuitLimits& limits,
+                               const std::optional<QSpeed>& startSpeed) {
   resetPursuit();
 
   auto rate = global::getTimeUtil()->getRate();
   auto timer = global::getTimeUtil()->getTimer();
 
-  PursuitLimits limits = ipath.getLimits();
   // assume the robot starts at minimum velocity unless otherwise specified
-  QSpeed lastVelocity = istartSpeed.value_or(limits.minVel);
-
-  const auto& path = ipath(); // simplify getting path
+  QSpeed lastVelocity = startSpeed.value_or(limits.minVel);
 
   bool isFinished = false; // loop until the robot is considered to have finished the path
   while (!isFinished) {
     // get the robot position and heading
     State pos = State(odometry->getState(StateMode::CARTESIAN));
 
-    auto closest = findClosest(ipath, pos); // get an iterator to the closest point
-    Vector lookPoint = findLookaheadPoint(ipath, pos); // get the lookahead
+    auto closest = findClosest(path, pos); // get an iterator to the closest point
+    Vector lookPoint = findLookaheadPoint(path, pos); // get the lookahead
 
     // the robot is considered finished if it has passed the end
     isFinished = closest >= path.end() - 1;
 
     // get the velocity from the closest point
-    auto targetVel = closest->get()->getData<QSpeed>("velocity");
+    auto targetVel = closest->velocity;
 
     // add an upwards rate limiter to the robot velocity using the formula vf=vi+at
     targetVel = std::max(targetVel, limits.minVel); // add minimum velocity
@@ -51,8 +49,8 @@ void PathFollowerX::followPath(const PursuitPath& ipath, const std::optional<QSp
     double power = (wheelVel / gearset).convert(number);
 
     // calculate target angle at lookahead
-    auto start = path[lastLookIndex]->getData<QAngle>("angle");
-    auto end = path[lastLookIndex + 1]->getData<QAngle>("angle");
+    auto start = path[lastLookIndex].theta;
+    auto end = path[lastLookIndex + 1].theta;
     QAngle angle = start + ((end - start) * lastLookT);
 
     // get angle error from robot to lookahead
