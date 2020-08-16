@@ -38,9 +38,8 @@ public:
    * @param startSpeed Optional. The starting speed of the robot. Defaults to the min speed of the
    *                   path limits. Used to chain paths together without accelerating from zero.
    */
-  virtual void followPath(const std::vector<Waypoint>& path, const PursuitLimits& limits,
-                          bool backwards = false,
-                          const std::optional<QSpeed>& startSpeed = std::nullopt);
+  void followPath(const std::vector<Waypoint>& path, const PursuitLimits& limits,
+                  bool backwards = false, const std::optional<QSpeed>& startSpeed = std::nullopt);
 
   /**
    * Set the motor mode for the pursuit. Velocity mode is more accurate, but voltage mode is

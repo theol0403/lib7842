@@ -141,8 +141,9 @@ void opcontrol() {
 
       // follower.followPath(PathGenerator::generate(path2, limits), true);
 
-      auto path2 = QuinticPath({{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}}, 2).generate(100);
-      follower.followPath(PathGenerator::generate(path2, limits), false);
+      auto path2 = Parametric<QuinticHermite>({0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg})
+                     .step(StepBy::Count(100));
+      follower.followPath(PathGenerator::generate(path2, limits), limits, false);
     }
 
     pros::delay(10);
