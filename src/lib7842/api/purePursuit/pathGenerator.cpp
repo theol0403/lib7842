@@ -1,59 +1,40 @@
 #include "lib7842/api/purePursuit/pathGenerator.hpp"
+#include "lib7842/api/positioning/path/line.hpp"
+#include "lib7842/api/positioning/point/mathPoint.hpp"
 
 namespace lib7842 {
 
-PursuitPath PathGenerator::generate(const SimplePath& ipath, const PursuitLimits& limits) {
-  PursuitPath path(ipath);
-  path.setLimits(limits);
-
-  setCurvatures(path);
-  setVelocity(path, limits);
-
-  return path;
-}
-
-PursuitPath PathGenerator::generateX(const StatePath& ipath, const PursuitLimits& limits) {
-  auto path = generate(SimplePath(ipath), limits);
-  setVelocity(path, limits);
-  for (size_t i = 0; i < ipath().size(); i++) {
-    path().at(i)->setData("angle", ipath().at(i)->theta);
+void PathGenerator::setCurvatures(std::vector<Waypoint>& ipath) {
+  ipath.at(0).curvature = 0.0 / meter;
+  for (size_t i = 1; i < ipath.size() - 1; i++) {
+    double curvature = calculateCurvature(ipath.at(i - 1), ipath.at(i), ipath.at(i + 1));
+    ipath[i].curvature = curvature / meter;
   }
-  return path;
+  ipath.back().curvature = 0.0 / meter;
 }
 
-void PathGenerator::setCurvatures(const PursuitPath& ipath) {
-  ipath().at(0)->setData("curvature", 0.0);
-  for (size_t i = 1; i < ipath().size() - 1; i++) {
-    double curvature = calculateCurvature(*ipath()[i - 1], *ipath()[i], *ipath()[i + 1]);
-    ipath()[i]->setData("curvature", curvature);
-  }
-  ipath().back()->setData("curvature", 0.0);
-}
-
-void PathGenerator::setVelocity(const PursuitPath& ipath, const PursuitLimits& limits) {
-  ipath().back()->setData("velocity", limits.finalVel);
-  for (size_t i = ipath().size() - 1; i > 0; i--) {
-    DataPoint& start = *ipath()[i];
-    DataPoint& end = *ipath()[i - 1];
+void PathGenerator::setVelocity(std::vector<Waypoint>& ipath, const PursuitLimits& limits) {
+  ipath.back().velocity = limits.finalVel;
+  for (size_t i = ipath.size() - 1; i > 0; i--) {
+    auto& start = ipath[i];
+    auto& end = ipath[i - 1];
 
     // k / curvature, limited to max
     QSpeed wantedVel =
-      limits.k
-        ? std::min(limits.maxVel, limits.k.value() / ipath()[i]->getData<double>("curvature"))
-        : limits.maxVel;
+      limits.k ? std::min(limits.maxVel, limits.k.value() / ipath[i].curvature.convert(1 / meter))
+               : limits.maxVel;
 
     // distance from last point
     double distance = MathPoint::dist(start, end);
 
     // maximum velocity given distance respecting acceleration
     // vf = sqrt(vi2 + 2ad)
-    QSpeed maxIncrement =
-      mps * std::sqrt(std::pow(start.getData<QSpeed>("velocity").convert(mps), 2) +
-                      (2.0 * limits.decel.convert(mps2) * distance));
+    QSpeed maxIncrement = mps * std::sqrt(std::pow(start.velocity.convert(mps), 2) +
+                                          (2.0 * limits.decel.convert(mps2) * distance));
 
     // limiting to maximum accelerated velocity
     QSpeed newVel = std::min(wantedVel, maxIncrement);
-    end.setData("velocity", newVel);
+    end.velocity = newVel;
   }
 }
 
@@ -103,48 +84,51 @@ TEST_CASE("PathGenerator") {
   }
 
   SUBCASE("SetCurvatures") {
-    PursuitPath pathStraight({{0_m, 0_m}, {0_m, 5_m}, {0_m, 10_m}});
+    std::vector<Waypoint> pathStraight {{0_m, 0_m}, {0_m, 5_m}, {0_m, 10_m}};
     MockPathGenerator::setCurvatures(pathStraight);
 
-    CHECK(pathStraight()[1]->getData<double>("curvature") == 0);
+    CHECK(pathStraight[1].curvature == 0 / meter);
 
-    CHECK(pathStraight()[0]->getData<double>("curvature") == 0);
-    CHECK(pathStraight()[2]->getData<double>("curvature") == 0);
+    CHECK(pathStraight[0].curvature == 0 / meter);
+    CHECK(pathStraight[2].curvature == 0 / meter);
 
-    PursuitPath pathCurv({{0_m, 0_m}, {3_m, 5_m}, {0_m, 10_m}});
+    std::vector<Waypoint> pathCurv({{0_m, 0_m}, {3_m, 5_m}, {0_m, 10_m}});
     MockPathGenerator::setCurvatures(pathCurv);
-    CHECK(pathCurv()[1]->getData<double>("curvature") != 0);
+    CHECK(pathCurv[1].curvature != 0 / meter);
 
-    CHECK(pathCurv()[0]->getData<double>("curvature") == 0);
-    CHECK(pathCurv()[2]->getData<double>("curvature") == 0);
+    CHECK(pathCurv[0].curvature == 0 / meter);
+    CHECK(pathCurv[2].curvature == 0 / meter);
 
-    PursuitPath pathTurn({{0_m, 0_m}, {3_m, 5_m}, {0_m, 0_m}});
+    std::vector<Waypoint> pathTurn({{0_m, 0_m}, {3_m, 5_m}, {0_m, 0_m}});
     MockPathGenerator::setCurvatures(pathTurn);
-    CHECK(pathTurn()[1]->getData<double>("curvature") == 0);
+    CHECK(pathTurn[1].curvature == 0 / meter);
 
-    CHECK(pathTurn()[0]->getData<double>("curvature") == 0);
-    CHECK(pathTurn()[2]->getData<double>("curvature") == 0);
+    CHECK(pathTurn[0].curvature == 0 / meter);
+    CHECK(pathTurn[2].curvature == 0 / meter);
   }
 
   SUBCASE("SetMaxVelocity") {
-    PursuitPath path({{0_m, 0_m}, {0_m, 5_m}, {0_m, 10_m}});
+    std::vector<Waypoint> path({{0_m, 0_m}, {0_m, 5_m}, {0_m, 10_m}});
     MockPathGenerator::setCurvatures(path);
     MockPathGenerator::setVelocity(path, limits);
 
-    CHECK(path()[0]->getData<QSpeed>("velocity") == 8_mps);
-    CHECK(path()[1]->getData<QSpeed>("velocity") == 8_mps);
-    CHECK(path()[2]->getData<QSpeed>("velocity") == 3_mps);
+    CHECK(path[0].velocity == 8_mps);
+    CHECK(path[1].velocity == 8_mps);
+    CHECK(path[2].velocity == 3_mps);
   }
 
   SUBCASE("SetMaxVelocityTurn") {
-    PursuitPath path({{0_m, 0_m}, {3_m, 4_m}, {6_m, 10_m}, {5_m, 12_m}});
+    std::vector<Waypoint> path({{0_m, 0_m}, {3_m, 4_m}, {6_m, 10_m}, {5_m, 12_m}});
     MockPathGenerator::setCurvatures(path);
     MockPathGenerator::setVelocity(path, limits);
 
-    CHECK(path()[0]->getData<QSpeed>("velocity") == 8_mps);
-    CHECK(path()[1]->getData<QSpeed>("velocity") < 8_mps);
-    CHECK(path()[2]->getData<QSpeed>("velocity") < 8_mps);
-    CHECK(path()[3]->getData<QSpeed>("velocity") == 3_mps);
+    CHECK(path[0].velocity == 8_mps);
+    CHECK(path[1].velocity < 8_mps);
+    CHECK(path[2].velocity < 8_mps);
+    CHECK(path[3].velocity == 3_mps);
   }
+
+  auto p = Line({{0_m, 0_m}, {0_m, 5_m}}).step(StepBy::T(0.01));
+  PathGenerator::generate(p, limits);
 }
 } // namespace test

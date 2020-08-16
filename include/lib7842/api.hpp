@@ -36,6 +36,7 @@
 #include "lib7842/api/purePursuit/pathFollowerX.hpp"
 #include "lib7842/api/purePursuit/pathGenerator.hpp"
 #include "lib7842/api/purePursuit/pursuitLimits.hpp"
+#include "lib7842/api/purePursuit/waypoint.hpp"
 
 #include "lib7842/api/vision/container.hpp"
 #include "lib7842/api/vision/object.hpp"

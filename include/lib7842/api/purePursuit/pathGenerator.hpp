@@ -1,7 +1,7 @@
 #pragma once
-#include "lib7842/api/positioning/point/mathPoint.hpp"
+#include "lib7842/api/positioning/path/pathStepper.hpp"
 #include "pursuitLimits.hpp"
-#include "pursuitPath.hpp"
+#include "waypoint.hpp"
 
 namespace lib7842 {
 
@@ -14,17 +14,18 @@ public:
    * @param  limits The pure pursuit limits
    * @return the generated path
    */
-  static PursuitPath generate(const SimplePath& ipath, const PursuitLimits& limits);
-
-  /**
-   * Generate a PursuitPath containing waypoint information for pure pursuit and heading
-   * information.
-   *
-   * @param  ipath  The path
-   * @param  limits The pure pursuit limits
-   * @return the generated path
-   */
-  static PursuitPath generateX(const StatePath& ipath, const PursuitLimits& limits);
+  template <typename T, typename U, typename S>
+  static std::vector<Waypoint> generate(const PathStepper<T, U, S>& ipath,
+                                        const PursuitLimits& limits) {
+    auto t = ipath.generate();
+    std::vector<Waypoint> path;
+    path.reserve(t.size());
+    std::transform(t.begin(), t.end(), std::back_inserter(path),
+                   [](const State& p) { return Waypoint(p); });
+    setCurvatures(path);
+    setVelocity(path, limits);
+    return path;
+  }
 
 protected:
   /**
@@ -32,7 +33,7 @@ protected:
    *
    * @param ipath The path
    */
-  static void setCurvatures(const PursuitPath& ipath);
+  static void setCurvatures(std::vector<Waypoint>& ipath);
 
   /**
    * Sets the waypoint velocities respecting curvature and deceleration. Traverses the path
@@ -41,7 +42,7 @@ protected:
    * @param ipath  The path
    * @param limits The pure pursuit limits
    */
-  static void setVelocity(const PursuitPath& ipath, const PursuitLimits& limits);
+  static void setVelocity(std::vector<Waypoint>& ipath, const PursuitLimits& limits);
 
   /**
    * Gets the curvature of a given segment.
