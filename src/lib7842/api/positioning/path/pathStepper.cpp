@@ -87,5 +87,12 @@ TEST_CASE("PathStepper") {
       REQUIRE(v.at(i) == State(i / 100.0 * meter, i / 100.0 * meter, 45_deg));
     }
   }
+
+  SUBCASE("Compile Time Generate") {
+    auto v = f2();
+    for (size_t i = 0; i < v.size(); ++i) {
+      REQUIRE(v.at(i) == State(i / 100.0 * meter, i / 100.0 * meter, 45_deg));
+    }
+  }
 }
 } // namespace test

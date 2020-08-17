@@ -42,16 +42,10 @@ public:
 template <typename CRTP> class PathHelper : public Path {
 public:
   constexpr PathHelper() = default;
-  template <typename S> requires(!ConstStepper<S>) constexpr auto step(S&& s) const& {
+  template <typename S> constexpr auto step(S&& s) const& {
     return PathStepper(static_cast<const CRTP&>(*this), s);
   }
-  template <typename S> requires(!ConstStepper<S>) constexpr auto step(S&& s) && {
-    return PathStepper(static_cast<CRTP&&>(*this), s);
-  }
-  template <typename S> requires ConstStepper<S> consteval auto step(S&& s) const& {
-    return PathStepper(static_cast<const CRTP&>(*this), s);
-  }
-  template <typename S> requires ConstStepper<S> consteval auto step(S&& s) && {
+  template <typename S> constexpr auto step(S&& s) && {
     return PathStepper(static_cast<CRTP&&>(*this), s);
   }
 };
