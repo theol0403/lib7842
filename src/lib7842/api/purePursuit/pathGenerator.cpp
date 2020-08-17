@@ -128,7 +128,10 @@ TEST_CASE("PathGenerator") {
     CHECK(path[3].velocity == 3_mps);
   }
 
-  auto p = Line({{0_m, 0_m}, {0_m, 5_m}}).step(StepBy::T(0.01));
-  PathGenerator::generate(p, limits);
+  SUBCASE("GeneratePath") {
+    auto p = Line({{0_m, 0_m}, {0_m, 5_m}}).step(StepBy::T(0.01));
+    auto z = PathGenerator::generate(p, limits);
+    REQUIRE(z[0].velocity == 8_mps);
+  }
 }
 } // namespace test

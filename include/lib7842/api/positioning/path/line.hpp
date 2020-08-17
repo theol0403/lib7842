@@ -15,7 +15,7 @@ public:
 
   constexpr QCurvature curvature(double /*t*/) const override { return 0 / meter; }
 
-  constexpr QLength length(double /*resolution*/) const override { return start.distTo(end); }
+  constexpr QLength length(double /*resolution*/ = 0) const override { return start.distTo(end); }
 
 protected:
   const State start;
