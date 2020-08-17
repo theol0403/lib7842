@@ -17,7 +17,7 @@ struct Vector {
   QLength y {0_in};
 
   constexpr Vector() = default;
-  constexpr virtual ~Vector() = default;
+  constexpr ~Vector() = default;
 
   /**
    * Create a new point
@@ -79,7 +79,7 @@ struct Vector {
     return util::rollAngle180(angle);
   }
 
-  constexpr virtual QAngle angleTo(const Vector& ipoint) const { return angle(*this, ipoint); }
+  constexpr QAngle angleTo(const Vector& ipoint) const { return angle(*this, ipoint); }
 
 protected:
   friend inline std::ostream& operator<<(std::ostream& os, const Vector& rhs) {

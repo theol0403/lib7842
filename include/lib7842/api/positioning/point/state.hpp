@@ -13,6 +13,7 @@ struct State : public Vector {
   QAngle theta {0_rad};
 
   constexpr State() = default;
+  constexpr ~State() = default;
 
   /**
    * Create a new state
@@ -71,7 +72,7 @@ struct State : public Vector {
    *
    * @param  ipoint The point
    */
-  constexpr QAngle angleTo(const Vector& ipoint) const override {
+  constexpr QAngle angleTo(const Vector& ipoint) const {
     return util::rollAngle180(Vector::angleTo(ipoint) - theta);
   }
 

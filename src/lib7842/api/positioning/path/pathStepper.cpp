@@ -14,6 +14,10 @@ public:
   constexpr QCurvature curvature(double /*t*/) const override { return 0 / meter; }
 };
 
+consteval auto f() {
+  return PathStepper(Line({0_m, 0_m}, {1_m, 1_m}), StepBy::ConstCount<100>()).generate();
+}
+
 TEST_CASE("PathStepper") {
 
   SUBCASE("Lvalue") {
@@ -72,6 +76,13 @@ TEST_CASE("PathStepper") {
           REQUIRE(point == State());
         }
       }
+    }
+  }
+
+  SUBCASE("Compile Time") {
+    auto v = f();
+    for (size_t i = 0; i < v.size(); ++i) {
+      REQUIRE(v.at(i) == State(i / 100.0 * meter, i / 100.0 * meter, 45_deg));
     }
   }
 }
