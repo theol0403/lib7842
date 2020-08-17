@@ -34,4 +34,8 @@ protected:
 };
 
 template <typename P, size_t N> Piecewise(P(&&)[N]) -> Piecewise<P, N>;
+
+template <typename P, size_t N> constexpr Piecewise<P, N> make_piecewise(P(&&ip)[N]) {
+  return Piecewise<P, N>(std::move(ip));
+}
 } // namespace lib7842
