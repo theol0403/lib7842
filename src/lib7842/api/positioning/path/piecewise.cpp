@@ -3,6 +3,7 @@
 #include "line.hpp"
 namespace test {
 TEST_CASE("Piecewise") {
-  auto l = make_piecewise<Line>({{{0_m, 0_m}, {1_m, 1_m}}, {{0_m, 0_m}, {1_m, 1_m}}});
+  auto p = make_piecewise<Line>({{{0_m, 0_m}, {1_m, 1_m}}, {{0_m, 0_m}, {1_m, 1_m}}})
+             .step(StepBy::T(0.01));
 }
 } // namespace test

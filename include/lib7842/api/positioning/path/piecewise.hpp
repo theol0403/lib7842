@@ -8,7 +8,7 @@
 
 namespace lib7842 {
 
-template <typename P, size_t N> class Piecewise : public Path {
+template <typename P, size_t N> class Piecewise : public PathHelper<Piecewise<P, N>> {
 public:
   constexpr Piecewise() = default;
   constexpr explicit Piecewise(P(&&ip)[N]) : p(ip) {}
