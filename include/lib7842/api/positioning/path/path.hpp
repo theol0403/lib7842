@@ -29,20 +29,29 @@ public:
     return t + (dist / velocity(t).abs()).convert(number);
   }
 
-  template <typename S> std::vector<State> generate(S&& s) const {
-    std::vector<State> v;
-    std::move(s.begin(*this), s.end(*this), std::back_inserter(v));
-    return v;
+  template <typename S> requires(!ConstStepper<S>) std::vector<State> generate(S&& s) const {
+    return PathStepper(*this, std::forward<S>(s)).generate();
+  }
+
+  template <typename S>
+  requires ConstStepper<S> consteval std::array<State, S::N> generate(S&& s) const {
+    return PathStepper(*this, std::forward<S>(s)).generate();
   }
 };
 
 template <typename CRTP> class PathHelper : public Path {
 public:
   constexpr PathHelper() = default;
-  template <typename S> constexpr auto step(S&& s) const& {
+  template <typename S> requires(!ConstStepper<S>) constexpr auto step(S&& s) const& {
     return PathStepper(static_cast<const CRTP&>(*this), s);
   }
-  template <typename S> constexpr auto step(S&& s) && {
+  template <typename S> requires(!ConstStepper<S>) constexpr auto step(S&& s) && {
+    return PathStepper(static_cast<CRTP&&>(*this), s);
+  }
+  template <typename S> requires ConstStepper<S> consteval auto step(S&& s) const& {
+    return PathStepper(static_cast<const CRTP&>(*this), s);
+  }
+  template <typename S> requires ConstStepper<S> consteval auto step(S&& s) && {
     return PathStepper(static_cast<CRTP&&>(*this), s);
   }
 };

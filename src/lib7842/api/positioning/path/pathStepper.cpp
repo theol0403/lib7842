@@ -18,6 +18,8 @@ consteval auto f() {
   return PathStepper(Line({0_m, 0_m}, {1_m, 1_m}), StepBy::ConstCount<100>()).generate();
 }
 
+consteval auto f2() { return Line({0_m, 0_m}, {1_m, 1_m}).generate(StepBy::ConstCount<100>()); }
+
 TEST_CASE("PathStepper") {
 
   SUBCASE("Lvalue") {

@@ -2,24 +2,24 @@
 #include "lib7842/api/positioning/point/state.hpp"
 
 namespace lib7842 {
-template <typename T> concept CompileTime = requires { T::N; };
+template <typename T> concept ConstStepper = requires { T::N; };
 
 template <typename T, typename U, typename S> class PathStepper {
 public:
   // runtime
   template <typename V = S>
-  requires(!CompileTime<V>) constexpr PathStepper(T&& ipath, S&& isampler) :
+  requires(!ConstStepper<V>) constexpr PathStepper(T&& ipath, S&& isampler) :
     path(std::forward<T>(ipath)), sampler(std::forward<S>(isampler)) {}
 
-  template <typename V = S> requires(!CompileTime<V>) constexpr auto begin() const {
+  template <typename V = S> requires(!ConstStepper<V>) constexpr auto begin() const {
     return sampler.begin(static_cast<const T&>(path));
   }
 
-  template <typename V = S> requires(!CompileTime<V>) constexpr auto end() const {
+  template <typename V = S> requires(!ConstStepper<V>) constexpr auto end() const {
     return sampler.end(static_cast<const T&>(path));
   }
 
-  template <typename V = S> requires(!CompileTime<V>) std::vector<State> generate() const {
+  template <typename V = S> requires(!ConstStepper<V>) std::vector<State> generate() const {
     std::vector<State> s;
     std::move(begin(), end(), std::back_inserter(s));
     return s;
@@ -27,19 +27,19 @@ public:
 
   // compile time
   template <typename V = S>
-  requires CompileTime<V> consteval PathStepper(T&& ipath, S&& isampler) :
+  requires ConstStepper<V> consteval PathStepper(T&& ipath, S&& isampler) :
     path(std::forward<T>(ipath)), sampler(std::forward<S>(isampler)) {}
 
-  template <typename V = S> requires CompileTime<V> consteval auto begin() const {
+  template <typename V = S> requires ConstStepper<V> consteval auto begin() const {
     return sampler.begin(static_cast<const T&>(path));
   }
 
-  template <typename V = S> requires CompileTime<V> consteval auto end() const {
+  template <typename V = S> requires ConstStepper<V> consteval auto end() const {
     return sampler.end(static_cast<const T&>(path));
   }
 
   template <typename V = S>
-  requires CompileTime<V> consteval std::array<State, V::N> generate() const {
+  requires ConstStepper<V> consteval std::array<State, V::N> generate() const {
     std::array<State, V::N> s;
     for (auto it = begin(); it != end(); ++it) {
       s[it - begin()] = *it;
