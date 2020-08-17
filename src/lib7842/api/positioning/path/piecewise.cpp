@@ -3,7 +3,6 @@
 #include "line.hpp"
 namespace test {
 TEST_CASE("Piecewise") {
-  Piecewise<Line, 2> l({{{0_m, 0_m}, {1_m, 1_m}}, {{0_m, 0_m}, {1_m, 1_m}}});
-  // auto f = &Path::calc;
+  Piecewise l({Line({0_m, 0_m}, {1_m, 1_m}), Line({0_m, 0_m}, {1_m, 1_m})});
 }
 } // namespace test

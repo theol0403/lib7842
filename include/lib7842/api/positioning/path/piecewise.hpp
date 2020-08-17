@@ -33,4 +33,5 @@ protected:
   }
 };
 
+template <typename P, size_t N> Piecewise(P(&&)[N]) -> Piecewise<P, N>;
 } // namespace lib7842
