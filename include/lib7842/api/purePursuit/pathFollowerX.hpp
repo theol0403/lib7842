@@ -28,8 +28,8 @@ public:
    * @param startSpeed Optional. The starting speed of the robot. Defaults to the min speed of the
    *                   path limits. Used to chain paths together without accelerating from zero.
    */
-  void followPath(const std::vector<Waypoint>& ipath, const PursuitLimits& limits,
-                  const std::optional<QSpeed>& istartSpeed = std::nullopt);
+  void followPath(const std::vector<Waypoint>& path, const PursuitLimits& limits,
+                  const std::optional<QSpeed>& startSpeed = std::nullopt);
 
 protected:
   std::shared_ptr<XDriveModel> xModel {nullptr};

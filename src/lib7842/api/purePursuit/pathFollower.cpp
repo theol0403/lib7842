@@ -15,7 +15,7 @@ PathFollower::PathFollower(std::shared_ptr<ChassisModel> imodel,
   driveRadius(idriveRadius.value_or(ilookahead)) {}
 
 void PathFollower::followPath(const std::vector<Waypoint>& path, const PursuitLimits& limits,
-                              bool ibackwards, const std::optional<QSpeed>& istartSpeed) {
+                              bool backwards, const std::optional<QSpeed>& startSpeed) {
   resetPursuit();
 
   auto rate = global::getTimeUtil()->getRate();

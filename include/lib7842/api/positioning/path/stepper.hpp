@@ -4,11 +4,11 @@
 namespace lib7842 {
 template <typename T> concept ConstStepper = requires { T::N; };
 
-template <typename T, typename U, typename S> class PathStepper {
+template <typename T, typename U, typename S> class Stepper {
 public:
   // runtime
   template <typename V = S>
-  requires(!ConstStepper<V>) constexpr PathStepper(T&& ipath, S&& isampler) :
+  requires(!ConstStepper<V>) constexpr Stepper(T&& ipath, S&& isampler) :
     path(std::forward<T>(ipath)), sampler(std::forward<S>(isampler)) {}
 
   template <typename V = S> requires(!ConstStepper<V>) constexpr auto begin() const {
@@ -27,7 +27,7 @@ public:
 
   // compile time
   template <typename V = S>
-  requires ConstStepper<V> consteval PathStepper(T&& ipath, S&& isampler) :
+  requires ConstStepper<V> consteval Stepper(T&& ipath, S&& isampler) :
     path(std::forward<T>(ipath)), sampler(std::forward<S>(isampler)) {}
 
   template <typename V = S> requires ConstStepper<V> consteval auto begin() const {
@@ -55,11 +55,11 @@ protected:
 };
 
 template <typename T, typename S>
-PathStepper(T&&, S&&)
-  -> PathStepper<T,
-                 std::conditional_t<std::is_lvalue_reference_v<T>,
-                                    std::reference_wrapper<std::remove_reference_t<T>>, T>,
-                 S>;
+Stepper(T&&, S&&)
+  -> Stepper<T,
+             std::conditional_t<std::is_lvalue_reference_v<T>,
+                                std::reference_wrapper<std::remove_reference_t<T>>, T>,
+             S>;
 
 namespace StepBy {
 
@@ -77,7 +77,7 @@ public:
   template <typename P> constexpr auto end(const P& ip) const -> iterator<P> { return {ip, c, c}; }
 
 protected:
-  const int c;
+  const int c {};
 
 private:
   template <typename P>

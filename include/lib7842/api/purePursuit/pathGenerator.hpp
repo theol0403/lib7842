@@ -1,5 +1,5 @@
 #pragma once
-#include "lib7842/api/positioning/path/pathStepper.hpp"
+#include "lib7842/api/positioning/path/stepper.hpp"
 #include "pursuitLimits.hpp"
 #include "waypoint.hpp"
 
@@ -15,7 +15,7 @@ public:
    * @return the generated path
    */
   template <typename T, typename U, typename S>
-  static std::vector<Waypoint> generate(const PathStepper<T, U, S>& ipath,
+  static std::vector<Waypoint> generate(const Stepper<T, U, S>& ipath,
                                         const PursuitLimits& limits) {
     auto t = ipath.generate();
     std::vector<Waypoint> path;

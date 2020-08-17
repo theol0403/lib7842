@@ -1,6 +1,6 @@
-#include "lib7842/api/positioning/path/pathStepper.hpp"
 #include "lib7842/api/other/units.hpp"
 #include "lib7842/api/positioning/path/line.hpp"
+#include "lib7842/api/positioning/path/stepper.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 
 #include "lib7842/test/test.hpp"
@@ -15,23 +15,23 @@ public:
 };
 
 consteval auto f() {
-  return PathStepper(Line({0_m, 0_m}, {1_m, 1_m}), StepBy::ConstCount<100>()).generate();
+  return Stepper(Line({0_m, 0_m}, {1_m, 1_m}), StepBy::ConstCount<100>()).generate();
 }
 
 consteval auto f2() { return Line({0_m, 0_m}, {1_m, 1_m}).generate(StepBy::ConstCount<100>()); }
 
-TEST_CASE("PathStepper") {
+TEST_CASE("Stepper") {
 
   SUBCASE("Lvalue") {
     auto p = DontCopy();
-    auto i = PathStepper(p, StepBy::Count(100));
+    auto i = Stepper(p, StepBy::Count(100));
     for (auto&& point : i) {
       REQUIRE(point == State());
     }
   }
 
   SUBCASE("Rvalue") {
-    auto i = PathStepper(DontCopy(), StepBy::Count(100));
+    auto i = Stepper(DontCopy(), StepBy::Count(100));
     for (auto&& point : i) {
       REQUIRE(point == State());
     }
@@ -39,7 +39,7 @@ TEST_CASE("PathStepper") {
 
   SUBCASE("Steppers") {
     SUBCASE("Count") {
-      auto i = PathStepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::Count(100));
+      auto i = Stepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::Count(100));
       auto v = i.generate();
       REQUIRE(v.size() == 101);
       for (size_t j = 0; j < v.size(); ++j) {
@@ -47,7 +47,7 @@ TEST_CASE("PathStepper") {
       }
     }
     SUBCASE("T") {
-      auto i = PathStepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::T(0.01));
+      auto i = Stepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::T(0.01));
       auto v = i.generate();
       REQUIRE(v.size() == 101);
       for (size_t j = 0; j < v.size(); ++j) {
@@ -55,7 +55,7 @@ TEST_CASE("PathStepper") {
       }
     }
     SUBCASE("Dist") {
-      auto i = PathStepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::Dist(0.01_m));
+      auto i = Stepper(Line({0_m, 0_m}, {0_m, 1_m}), StepBy::Dist(0.01_m));
       auto v = i.generate();
       REQUIRE(v.size() == 101);
       for (size_t j = 0; j < v.size(); ++j) {
