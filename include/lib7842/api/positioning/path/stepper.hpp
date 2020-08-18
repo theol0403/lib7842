@@ -70,10 +70,8 @@ public:
     ic > 0 ? true : throw std::invalid_argument("StepBy::Count: count must be greater than zero");
   }
 
-  template <typename P> constexpr auto begin(const P& ip) const -> iterator<P> {
-    return {ip, c, 0};
-  }
-  template <typename P> constexpr auto end(const P& ip) const -> iterator<P> { return {ip, c, c}; }
+  template <typename P> constexpr auto begin(const P& ip) const { return iterator<P>(ip, c, 0); }
+  template <typename P> constexpr auto end(const P& ip) const { return iterator<P>(ip, c, c); }
 
 protected:
   const int c {};
@@ -116,12 +114,8 @@ public:
     id > 0_m ? true : throw std::invalid_argument("StepBy::Dist: dist must be greater than zero");
   }
 
-  template <typename P> constexpr auto begin(const P& ip) const -> iterator<P> {
-    return {ip, d, 0.0};
-  }
-  template <typename P> constexpr auto end(const P& ip) const -> iterator<P> {
-    return {ip, d, 1.0};
-  }
+  template <typename P> constexpr auto begin(const P& ip) const { return iterator<P>(ip, d, 0.0); }
+  template <typename P> constexpr auto end(const P& ip) const { return iterator<P>(ip, d, 1.0); }
 
 protected:
   const QLength d;
@@ -154,8 +148,8 @@ template <size_t C> class ConstCount {
 public:
   consteval ConstCount() = default;
 
-  template <typename P> consteval auto begin(const P& ip) const -> iterator<P> { return {ip, 0}; }
-  template <typename P> consteval auto end(const P& ip) const -> iterator<P> { return {ip, C}; }
+  template <typename P> consteval auto begin(const P& ip) const { return iterator<P>(ip, 0); }
+  template <typename P> consteval auto end(const P& ip) const { return iterator<P>(ip, C); }
 
   constexpr static size_t N = C + 1;
 
