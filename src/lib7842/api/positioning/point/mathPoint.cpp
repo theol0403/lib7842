@@ -7,33 +7,19 @@ MathPoint::MathPoint(double ix, double iy) : x(ix), y(iy) {}
 MathPoint::MathPoint(const Vector& ipoint) :
   MathPoint(ipoint.x.convert(meter), ipoint.y.convert(meter)) {}
 
-MathPoint::operator Vector() const {
-  return {x * meter, y * meter};
-}
+MathPoint::operator Vector() const { return {x * meter, y * meter}; }
 
-MathPoint MathPoint::operator+(const MathPoint& rhs) const {
-  return {x + rhs.x, y + rhs.y};
-}
+MathPoint MathPoint::operator+(const MathPoint& rhs) const { return {x + rhs.x, y + rhs.y}; }
 
-MathPoint MathPoint::operator-(const MathPoint& rhs) const {
-  return {x - rhs.x, y - rhs.y};
-}
+MathPoint MathPoint::operator-(const MathPoint& rhs) const { return {x - rhs.x, y - rhs.y}; }
 
-bool MathPoint::operator==(const MathPoint& rhs) const {
-  return x == rhs.x && y == rhs.y;
-}
+bool MathPoint::operator==(const MathPoint& rhs) const { return x == rhs.x && y == rhs.y; }
 
-bool MathPoint::operator!=(const MathPoint& rhs) const {
-  return !(rhs == *this);
-}
+bool MathPoint::operator!=(const MathPoint& rhs) const { return !(rhs == *this); }
 
-MathPoint MathPoint::operator*(double scalar) const {
-  return {x * scalar, y * scalar};
-}
+MathPoint MathPoint::operator*(double scalar) const { return {x * scalar, y * scalar}; }
 
-MathPoint MathPoint::operator/(double scalar) const {
-  return {x / scalar, y / scalar};
-}
+MathPoint MathPoint::operator/(double scalar) const { return {x / scalar, y / scalar}; }
 
 double MathPoint::dist(const MathPoint& lhs, const MathPoint& rhs) {
   return std::sqrt((lhs.x - rhs.x) * (lhs.x - rhs.x) + (lhs.y - rhs.y) * (lhs.y - rhs.y));

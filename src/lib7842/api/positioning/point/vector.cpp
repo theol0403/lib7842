@@ -1,71 +1,64 @@
 #include "lib7842/api/positioning/point/vector.hpp"
-#include "lib7842/api/other/global.hpp"
-#include "lib7842/api/other/utility.hpp"
-#include "okapi/api/units/QArea.hpp"
-#include <stdexcept>
-#include <string>
 
-namespace lib7842 {
+#include "lib7842/test/test.hpp"
+namespace test {
+TEST_CASE("Vector") {
 
-Vector::Vector(const QLength& ix, const QLength& iy) : x(ix), y(iy) {}
+  GIVEN("a default-constructed point") {
+    Vector point;
+    THEN("the members should be equal to 0") { CHECK(point == (Vector {0_in, 0_in})); }
+  }
 
-Vector::Vector(const Point& ipoint) : Vector(ipoint.x, ipoint.y) {}
+  GIVEN("a point") {
+    Vector point {5_in, 2_in};
 
-QLength& Vector::at(size_t iindex) {
-  switch (iindex) {
-    case 0: return x;
-    case 1: return y;
-    default:
-      GLOBAL_ERROR_THROW("Vector::at():: \"" + std::to_string(iindex) + "\" is invalid index");
+    THEN("the point should contain the proper info") {
+      CHECK(point.x == 5_in);
+      CHECK(point.y == 2_in);
+    }
+
+    WHEN("the copy constructor is called") {
+      Vector point2(point);
+
+      THEN("the new point should be equal to the old point") {
+        CHECK(point2.x == point.x);
+        CHECK(point2.y == point.y);
+      }
+    }
+
+    GIVEN("a point added to itself") {
+      Vector point2 = point + point;
+
+      THEN("the new point members should be twice the old point members") {
+        CHECK(point2.x == point.x * 2);
+        CHECK(point2.y == point.y * 2);
+      }
+
+      THEN("the new point should be the old point times two") { CHECK(point2 == point * 2); }
+
+      THEN("the new point should be the old point divided by .5") { CHECK(point2 == point / 0.5); }
+    }
+
+    THEN("the point should be equal to itself") { CHECK(point == point); }
+
+    THEN("the point plus another point should be equal to itself") {
+      CHECK((point + Vector {1_in, 2_in}) == (point + Vector {1_in, 2_in}));
+      CHECK((point + point) == (point + Vector {5_in, 2_in}));
+    }
+
+    THEN("the point should not be equal to some different points") {
+      CHECK(point != point + point);
+      CHECK(point != point + (Vector {0_in, 4_in}));
+    }
+
+    THEN("the accessor operators should work") {
+      CHECK(point.at(0) == point.x);
+      CHECK(point.at(1) == point.y);
+      CHECK_THROWS_AS(point.at(2), std::runtime_error);
+      CHECK_THROWS_AS(point.at(5), std::runtime_error);
+      CHECK_THROWS_AS(point.at(-1), std::runtime_error);
+    }
   }
 }
 
-const QLength& Vector::at(size_t iindex) const {
-  return const_cast<Vector*>(this)->at(iindex);
-}
-
-Vector Vector::operator+(const Vector& rhs) const {
-  return {x + rhs.x, y + rhs.y};
-}
-
-Vector Vector::operator-(const Vector& rhs) const {
-  return {x - rhs.x, y - rhs.y};
-}
-
-Vector Vector::operator*(double scalar) const {
-  return {x * scalar, y * scalar};
-}
-
-Vector Vector::operator/(double scalar) const {
-  return {x / scalar, y / scalar};
-}
-
-bool Vector::operator==(const Vector& rhs) const {
-  return x == rhs.x && y == rhs.y;
-}
-
-bool Vector::operator!=(const Vector& rhs) const {
-  return !(rhs == *this);
-}
-
-QLength Vector::dist(const Vector& lhs, const Vector& rhs) {
-  return meter *
-         std::sqrt(
-           ((lhs.x - rhs.x) * (lhs.x - rhs.x) + (lhs.y - rhs.y) * (lhs.y - rhs.y)).convert(meter2));
-}
-
-QLength Vector::distTo(const Vector& ipoint) const {
-  return dist(*this, ipoint);
-}
-
-QAngle Vector::angle(const Vector& istart, const Vector& iend) {
-  Vector diff = iend - istart;
-  QAngle angle = (std::atan2(diff.x.convert(meter), diff.y.convert(meter)) * radian);
-  return util::rollAngle180(angle);
-}
-
-QAngle Vector::angleTo(const Vector& ipoint) const {
-  return angle(*this, ipoint);
-}
-
-} // namespace lib7842
+} // namespace test

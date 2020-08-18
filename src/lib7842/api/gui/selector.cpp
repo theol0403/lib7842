@@ -12,9 +12,7 @@ void Selector::initialize() {
   lv_btnm_set_style(btnm, LV_BTNM_STYLE_BTN_REL, &inaStyle);
 }
 
-void Selector::run() {
-  buttons.at(currentIndex).second();
-}
+void Selector::run() { buttons.at(currentIndex).second(); }
 
 lv_res_t Selector::btnAction(lv_obj_t* ibtnm, const char* itxt) {
   Selector& that = *static_cast<Selector*>(lv_obj_get_free_ptr(ibtnm));

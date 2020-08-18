@@ -1,5 +1,4 @@
 #include "lib7842/api/odometry/odomController.hpp"
-
 #include "pros/rtos.hpp"
 #include <utility>
 
@@ -18,7 +17,7 @@ OdomController::OdomController(std::shared_ptr<ChassisModel> imodel,
   distanceController(std::move(idistanceController)),
   angleController(std::move(iangleController)),
   turnController(std::move(iturnController)),
-  driveRadius(idriveRadius) {};
+  driveRadius(idriveRadius) {}
 
 OdomController::Angler OdomController::makeAngler() {
   return [=](const OdomController& /*unused*/) {
@@ -133,7 +132,7 @@ void OdomController::driveToPoint(const Vector& point, double turnScale, Settler
     QLength distanceToTarget = state.distTo(point);
 
     // go backwards
-    if (angleToClose.abs() >= 90_deg) distanceToClose = -distanceToClose;
+    if (angleToClose.abs() >= 90_deg) { distanceToClose = -distanceToClose; }
 
     if (distanceToTarget.abs() < driveRadius) {
       _angleErr = 0_deg;
@@ -158,13 +157,9 @@ void OdomController::driveToPoint(const Vector& point, double turnScale, Settler
   driveVector(model, 0, 0, driveMode);
 }
 
-void OdomController::setDriveMode(motorMode mode) {
-  driveMode = mode;
-}
+void OdomController::setDriveMode(motorMode mode) { driveMode = mode; }
 
-void OdomController::setTurnMode(motorMode mode) {
-  turnMode = mode;
-}
+void OdomController::setTurnMode(motorMode mode) { turnMode = mode; }
 
 void OdomController::setDistanceGains(const IterativePosPIDController::Gains& igains) {
   distanceController->setGains(igains);
@@ -178,88 +173,78 @@ void OdomController::setTurnGains(const IterativePosPIDController::Gains& igains
   turnController->setGains(igains);
 }
 
-State OdomController::getState() const {
-  return State(odometry->getState(StateMode::CARTESIAN));
-}
+State OdomController::getState() const { return State(odometry->getState(StateMode::CARTESIAN)); }
 
-QLength OdomController::getDistanceError() const {
-  return _distanceErr;
-}
+QLength OdomController::getDistanceError() const { return _distanceErr; }
 
-QAngle OdomController::getAngleError() const {
-  return _angleErr;
-}
+QAngle OdomController::getAngleError() const { return _angleErr; }
 
-bool OdomController::isDistanceSettled() const {
-  return distanceController->isSettled();
-}
+bool OdomController::isDistanceSettled() const { return distanceController->isSettled(); }
 
-bool OdomController::isAngleSettled() const {
-  return angleController->isSettled();
-}
+bool OdomController::isAngleSettled() const { return angleController->isSettled(); }
 
-bool OdomController::isTurnSettled() const {
-  return turnController->isSettled();
-}
+bool OdomController::isTurnSettled() const { return turnController->isSettled(); }
 
 Trigger::Function OdomController::distanceTo(const Vector& point, const QLength& trigger) const {
-  return [=] {
+  return [=, this] {
     return getState().distTo(point) < trigger;
   };
 }
 
 Trigger::Function OdomController::angleTo(const Vector& point, const QAngle& trigger) const {
-  return [=] {
+  return [=, this] {
     return getState().angleTo(point) < trigger;
   };
 }
 
 Trigger::Function OdomController::angleTo(const QAngle& angle, const QAngle& trigger) const {
-  return [=] {
+  return [=, this] {
     return (getState().theta - angle).abs() < trigger;
   };
 }
 
 Trigger::Function OdomController::distanceErr(const QLength& trigger) const {
-  return [=] {
+  return [=, this] {
     return getDistanceError() < trigger;
   };
 }
 
 Trigger::Function OdomController::angleErr(const QAngle& trigger) const {
-  return [=] {
+  return [=, this] {
     return getAngleError() < trigger;
   };
 }
 
 Trigger::Function OdomController::distanceSettled() const {
-  return [=] {
+  return [this] {
     return isDistanceSettled();
   };
 }
 
 Trigger::Function OdomController::turnSettled() const {
-  return [=] {
+  return [this] {
     return isTurnSettled();
   };
 }
 
 Trigger::Function OdomController::angleSettled() const {
-  return [=] {
+  return [this] {
     return isAngleSettled();
   };
 }
 
 Trigger::Function OdomController::distanceSettledUtil(const TimeUtil& timeUtil) const {
-  return [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
-    return settledUtil->isSettled(getDistanceError().convert(millimeter));
-  };
+  return
+    [=, this, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
+      return settledUtil->isSettled(getDistanceError().convert(millimeter));
+    };
 }
 
 Trigger::Function OdomController::angleSettledUtil(const TimeUtil& timeUtil) const {
-  return [=, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
-    return settledUtil->isSettled(getAngleError().convert(degree));
-  };
+  return
+    [=, this, settledUtil = std::shared_ptr<SettledUtil>(timeUtil.getSettledUtil())]() mutable {
+      return settledUtil->isSettled(getAngleError().convert(degree));
+    };
 }
 
 void OdomController::resetPid() {
@@ -271,3 +256,29 @@ void OdomController::resetPid() {
 }
 
 } // namespace lib7842
+
+#include "lib7842/api/odometry/customOdometry.hpp"
+#include "lib7842/test/mocks.hpp"
+namespace test {
+class MockOdomController : public OdomController {
+public:
+  using OdomController::OdomController;
+};
+
+TEST_CASE("OdomController") {
+
+  auto model = std::make_shared<MockThreeEncoderXDriveModel>();
+  auto odom =
+    std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}));
+  auto chassis = std::make_shared<MockOdomController>(
+    model, odom, std::make_unique<IterativePosPIDController>(0.015, 0, 0, 0, createTimeUtil()),
+    std::make_unique<IterativePosPIDController>(0.03, 0, 0, 0, createTimeUtil()),
+    std::make_unique<IterativePosPIDController>(0.02, 0, 0, 0, createTimeUtil()), 0_in);
+
+  SUBCASE("moving with default settler should not segfault") {
+    chassis->driveToPoint({0_in, 0_in});
+  }
+
+  SUBCASE("turning with default settler should not segfault") { chassis->turnAngle(0_deg); }
+}
+} // namespace test

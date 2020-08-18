@@ -1,6 +1,7 @@
 #include "main.h"
 
 #include "lib7842/api.hpp"
+#include "lib7842/test/test.hpp"
 
 using namespace lib7842;
 
@@ -12,6 +13,7 @@ using namespace lib7842;
  */
 void initialize() {
   pros::delay(200);
+  test::runUnitTests(0, nullptr);
 }
 
 /**
@@ -139,8 +141,14 @@ void opcontrol() {
 
       // follower.followPath(PathGenerator::generate(path2, limits), true);
 
-      auto path2 = QuinticPath({{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}}, 2).generate(100);
-      follower.followPath(PathGenerator::generate(path2, limits), false);
+      auto p = Parametric<QuinticHermite>({0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg})
+                 .step(StepBy::ConstCount<100>())
+                 .generate();
+
+      // auto p = Stepper(Parametric<QuinticHermite>({0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}),
+      //                  StepBy::Count(100));
+
+      follower.followPath(PathGenerator::generate(p, limits), limits, false);
     }
 
     pros::delay(10);

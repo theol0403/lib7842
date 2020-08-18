@@ -12,12 +12,12 @@ BINDIR=$(ROOT)/bin
 SRCDIR=$(ROOT)/src
 INCDIR=$(ROOT)/include
 
-WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-sign-compare
+WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-sign-compare -Wno-invalid-constexpr -Wno-deprecated
 EXTRA_CFLAGS=
 EXTRA_CXXFLAGS=
 
 # Set to 1 to enable hot/cold linking
-USE_PACKAGE:=0
+USE_PACKAGE:=1
 
 # Add libraries you do not wish to include in the cold image here
 # EXCLUDE_COLD_LIBRARIES:= $(FWDIR)/your_library.a

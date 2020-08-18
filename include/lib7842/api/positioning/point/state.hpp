@@ -12,7 +12,8 @@ namespace lib7842 {
 struct State : public Vector {
   QAngle theta {0_rad};
 
-  State() = default;
+  constexpr State() = default;
+  constexpr ~State() = default;
 
   /**
    * Create a new state
@@ -21,14 +22,15 @@ struct State : public Vector {
    * @param iy The y
    * @param itheta The theta
    */
-  State(const QLength& ix, const QLength& iy, const QAngle& itheta);
+  constexpr State(const QLength& ix, const QLength& iy, const QAngle& itheta) :
+    Vector(ix, iy), theta(itheta) {}
 
   /**
    * Convert a Vector to a State
    *
    * @param ipoint The point
    */
-  explicit State(const Vector& ipoint);
+  constexpr explicit State(const Vector& ipoint) : Vector(ipoint) {};
 
   /**
    * Convert a Vector to a State with an angle
@@ -36,30 +38,48 @@ struct State : public Vector {
    * @param ipoint The point
    * @param itheta The angle
    */
-  State(const Vector& ipoint, const QAngle& itheta);
+  constexpr State(const Vector& ipoint, const QAngle& itheta) : Vector(ipoint), theta(itheta) {};
 
   /**
    * Convert a OdomState to a State
    *
    * @param ipoint The point
    */
-  explicit State(const OdomState& ipoint);
+  constexpr explicit State(const OdomState& ipoint) : State(ipoint.x, ipoint.y, ipoint.theta) {};
 
   /**
    * Binary operators
    */
-  State operator+(const State& rhs) const;
-  State operator-(const State& rhs) const;
-  State operator*(double scalar) const;
-  State operator/(double scalar) const;
-  bool operator==(const State& rhs) const;
-  bool operator!=(const State& rhs) const;
+  constexpr State operator+(const State& rhs) const {
+    return {x + rhs.x, y + rhs.y, theta + rhs.theta};
+  }
+  constexpr State operator-(const State& rhs) const {
+    return {x - rhs.x, y - rhs.y, theta - rhs.theta};
+  }
+  constexpr State operator*(double scalar) const {
+    return {x * scalar, y * scalar, theta * scalar};
+  }
+  constexpr State operator/(double scalar) const {
+    return {x / scalar, y / scalar, theta / scalar};
+  }
+  constexpr bool operator==(const State& rhs) const {
+    return x == rhs.x && y == rhs.y && theta == rhs.theta;
+  }
+  constexpr bool operator!=(const State& rhs) const { return !(*this == rhs); }
 
   /**
    * Calculate angle from the state to a point
    *
    * @param  ipoint The point
    */
-  QAngle angleTo(const Vector& ipoint) const override;
+  constexpr QAngle angleTo(const Vector& ipoint) const {
+    return util::rollAngle180(Vector::angleTo(ipoint) - theta);
+  }
+
+protected:
+  friend inline std::ostream& operator<<(std::ostream& os, const State& rhs) {
+    os << "{" << rhs.x << ", " << rhs.y << ", " << rhs.theta << "}";
+    return os;
+  }
 };
 } // namespace lib7842

@@ -37,10 +37,10 @@ void Odom::initializeField() {
   /**
    * Field
    */
-  lv_obj_t* field = lv_obj_create(container, NULL);
+  lv_obj_t* field = lv_obj_create(container, nullptr);
   fieldDim = std::min(lv_obj_get_width(container), lv_obj_get_height(container));
   lv_obj_set_size(field, fieldDim, fieldDim);
-  lv_obj_align(field, NULL, LV_ALIGN_IN_RIGHT_MID, 0, 0);
+  lv_obj_align(field, nullptr, LV_ALIGN_IN_RIGHT_MID, 0, 0);
 
   /**
    * Field Style
@@ -85,7 +85,7 @@ void Odom::initializeField() {
    */
   for (size_t y = 0; y < side; y++) {
     for (size_t x = 0; x < side; x++) {
-      lv_obj_t* tileObj = lv_btn_create(field, NULL);
+      lv_obj_t* tileObj = lv_btn_create(field, nullptr);
       lv_obj_set_pos(tileObj, x * tileDim, y * tileDim);
       lv_obj_set_size(tileObj, tileDim, tileDim);
       lv_btn_set_action(tileObj, LV_BTN_ACTION_CLICK, tileAction);
@@ -100,7 +100,7 @@ void Odom::initializeField() {
   /**
    * Robot point using lvgl led
    */
-  led = lv_led_create(field, NULL);
+  led = lv_led_create(field, nullptr);
   lv_led_on(led);
   lv_obj_set_size(led, fieldDim / 15.0, fieldDim / 15.0);
 
@@ -116,7 +116,7 @@ void Odom::initializeField() {
   /**
    * Robot line
    */
-  line = lv_line_create(field, NULL);
+  line = lv_line_create(field, nullptr);
   lv_line_set_points(line, linePoints.data(), linePoints.size());
   lv_obj_set_pos(line, 0, 0);
 
@@ -130,7 +130,7 @@ void Odom::initializeField() {
 }
 
 void Odom::initializeText() {
-  statusLabel = lv_label_create(container, NULL);
+  statusLabel = lv_label_create(container, nullptr);
 
   lv_style_copy(&textStyle, &lv_style_plain);
   textStyle.text.color = LV_COLOR_WHITE;
@@ -148,9 +148,9 @@ void Odom::initializeButton() {
   /**
    * Button
    */
-  lv_obj_t* btn = lv_btn_create(container, NULL);
+  lv_obj_t* btn = lv_btn_create(container, nullptr);
   lv_obj_set_size(btn, 100, 40);
-  lv_obj_align(btn, NULL, LV_ALIGN_IN_TOP_MID,
+  lv_obj_align(btn, nullptr, LV_ALIGN_IN_TOP_MID,
                -lv_obj_get_width(container) / 2.0 + (lv_obj_get_width(container) - fieldDim) / 2.0,
                0);
   lv_obj_set_free_ptr(btn, this);
@@ -179,7 +179,7 @@ void Odom::initializeButton() {
   /**
    * Reset Button Label
    */
-  lv_obj_t* label = lv_label_create(btn, NULL);
+  lv_obj_t* label = lv_label_create(btn, nullptr);
   lv_obj_set_style(label, &textStyle);
   lv_label_set_text(label, "Reset");
 }
@@ -215,7 +215,7 @@ void Odom::updateOdom() {
                      "Left: " + std::to_string(sensors[0]) + "\n" +
                      "Right: " + std::to_string(sensors[1]);
 
-  if (sensors.size() > 2) text = text + "\n" + "Middle: " + std::to_string(sensors[2]);
+  if (sensors.size() > 2) { text = text + "\n" + "Middle: " + std::to_string(sensors[2]); }
 
   lv_label_set_text(statusLabel, text.c_str());
 
