@@ -36,10 +36,10 @@ template <typename CRTP> struct RuntimePath {
   template <typename S> requires(!ConstStepper<S>) constexpr auto step(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
   }
-  template <typename S> requires(!ConstStepper<S>) std::vector<State> generate(S&& s) const& {
+  template <typename S> requires(!ConstStepper<S>) auto generate(S&& s) const& {
     return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s)).generate();
   }
-  template <typename S> requires(!ConstStepper<S>) std::vector<State> generate(S&& s) && {
+  template <typename S> requires(!ConstStepper<S>) auto generate(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s)).generate();
   }
 };
@@ -51,12 +51,10 @@ template <typename CRTP> struct ConstPath {
   template <typename S> requires ConstStepper<S> consteval auto step(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
   }
-  template <typename S>
-  requires ConstStepper<S> consteval std::array<State, S::N> generate(S&& s) const& {
+  template <typename S> requires ConstStepper<S> consteval auto generate(S&& s) const& {
     return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s)).generate();
   }
-  template <typename S>
-  requires ConstStepper<S> consteval std::array<State, S::N> generate(S&& s) && {
+  template <typename S> requires ConstStepper<S> consteval auto generate(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s)).generate();
   }
 };
