@@ -27,15 +27,6 @@ public:
   constexpr virtual double t_at_dist_travelled(double t, const QLength& dist) const {
     return t + (dist / velocity(t).abs()).convert(number);
   }
-
-  template <typename S> requires(!ConstStepper<S>) std::vector<State> generate(S&& s) const {
-    return Stepper(*this, std::forward<S>(s)).generate();
-  }
-
-  template <typename S>
-  requires ConstStepper<S> consteval std::array<State, S::N> generate(S&& s) const {
-    return Stepper(*this, std::forward<S>(s)).generate();
-  }
 };
 
 template <typename CRTP> struct RuntimePath {
@@ -44,6 +35,12 @@ template <typename CRTP> struct RuntimePath {
   }
   template <typename S> requires(!ConstStepper<S>) constexpr auto step(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
+  }
+  template <typename S> requires(!ConstStepper<S>) std::vector<State> generate(S&& s) const& {
+    return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s)).generate();
+  }
+  template <typename S> requires(!ConstStepper<S>) std::vector<State> generate(S&& s) && {
+    return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s)).generate();
   }
 };
 template <typename CRTP> struct ConstPath {
@@ -54,10 +51,20 @@ template <typename CRTP> struct ConstPath {
   template <typename S> requires ConstStepper<S> consteval auto step(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
   }
+  template <typename S>
+  requires ConstStepper<S> consteval std::array<State, S::N> generate(S&& s) const& {
+    return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s)).generate();
+  }
+  template <typename S>
+  requires ConstStepper<S> consteval std::array<State, S::N> generate(S&& s) && {
+    return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s)).generate();
+  }
 };
 template <typename CRTP>
 struct PathHelper : public RuntimePath<CRTP>, public ConstPath<CRTP>, public Path {
   using RuntimePath<CRTP>::step;
   using ConstPath<CRTP>::step;
+  using RuntimePath<CRTP>::generate;
+  using ConstPath<CRTP>::generate;
 };
 } // namespace lib7842
