@@ -39,7 +39,6 @@ public:
 };
 
 template <typename CRTP> struct RuntimePath {
-  constexpr RuntimePath() = default;
   template <typename S> requires(!ConstStepper<S>) constexpr auto step(S&& s) const& {
     return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s));
   }

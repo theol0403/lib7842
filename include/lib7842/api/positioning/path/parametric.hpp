@@ -62,7 +62,7 @@ private:
   }
 };
 
-template <ParametricFunction T> Parametric(T&&, T&&) -> Parametric<T>;
+template <ParametricFunction T> Parametric(T&&, T &&) -> Parametric<T>;
 template <size_t N> Parametric(const Vector (&)[N]) -> Parametric<Bezier<N - 1>>;
 
 }; // namespace lib7842

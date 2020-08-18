@@ -55,7 +55,7 @@ protected:
 };
 
 template <typename T, typename S>
-Stepper(T&&, S&&)
+Stepper(T&&, S &&)
   -> Stepper<T,
              std::conditional_t<std::is_lvalue_reference_v<T>,
                                 std::reference_wrapper<std::remove_reference_t<T>>, T>,
