@@ -1,6 +1,5 @@
 #pragma once
 #include "lib7842/api/positioning/point/state.hpp"
-#include "pathContainer.hpp"
 
 namespace lib7842 {
 template <typename T> concept ConstStepper = requires { T::N; };
@@ -23,7 +22,7 @@ public:
   template <typename V = S> requires(!ConstStepper<V>) auto generate() const {
     std::vector<State> s;
     std::move(begin(), end(), std::back_inserter(s));
-    return PathContainer(s);
+    return s;
   }
 
   // compile time
@@ -44,7 +43,7 @@ public:
     for (auto it = begin(); it != end(); ++it) {
       s[it - begin()] = *it;
     }
-    return PathContainer(s);
+    return s;
   }
 
   constexpr const std::remove_reference_t<T>& get() const { return path; }
