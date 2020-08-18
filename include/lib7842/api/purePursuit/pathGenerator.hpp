@@ -1,4 +1,5 @@
 #pragma once
+#include "lib7842/api/positioning/path/path.hpp"
 #include "lib7842/api/positioning/path/stepper.hpp"
 #include "pursuitLimits.hpp"
 #include "waypoint.hpp"
@@ -10,17 +11,33 @@ public:
   /**
    * Generate a PursuitPath containing waypoint information for pure pursuit.
    *
-   * @param  ipath  The path
+   * @param  ip  The path
    * @param  limits The pure pursuit limits
    * @return the generated path
    */
   template <typename T, typename U, typename S>
-  static std::vector<Waypoint> generate(const Stepper<T, U, S>& ipath,
+  requires(!ConstStepper<S>) static std::vector<Waypoint> generate(const Stepper<T, U, S>& ip,
+                                                                   const PursuitLimits& limits) {
+    return generate(ip.generate(), limits);
+  }
+
+  template <size_t N>
+  static std::vector<Waypoint> generate(const std::array<State, N>& ip,
                                         const PursuitLimits& limits) {
-    auto t = ipath.generate();
+    return generate({ip.begin(), ip.end()}, limits);
+  }
+
+  /**
+   * Generate a PursuitPath containing waypoint information for pure pursuit.
+   *
+   * @param  ip      The path
+   * @param  limits  The pure pursuit limits
+   * @return the generated path
+   */
+  static std::vector<Waypoint> generate(const std::vector<State>& ip, const PursuitLimits& limits) {
     std::vector<Waypoint> path;
-    path.reserve(t.size());
-    std::transform(t.begin(), t.end(), std::back_inserter(path),
+    path.reserve(ip.size());
+    std::transform(ip.begin(), ip.end(), std::back_inserter(path),
                    [](const State& p) { return Waypoint(p); });
     setCurvatures(path);
     setVelocity(path, limits);
