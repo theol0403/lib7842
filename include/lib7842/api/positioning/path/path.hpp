@@ -38,13 +38,27 @@ public:
   }
 };
 
-template <typename CRTP> class PathHelper : public Path {
-public:
-  template <typename S> constexpr auto step(S&& s) const& {
-    return Stepper(static_cast<const CRTP&>(*this), s);
+template <typename CRTP> struct RuntimePath {
+  constexpr RuntimePath() = default;
+  template <typename S> requires(!ConstStepper<S>) constexpr auto step(S&& s) const& {
+    return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s));
   }
-  template <typename S> constexpr auto step(S&& s) && {
-    return Stepper(static_cast<CRTP&&>(*this), s);
+  template <typename S> requires(!ConstStepper<S>) constexpr auto step(S&& s) && {
+    return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
   }
+};
+template <typename CRTP> struct ConstPath {
+  consteval ConstPath() = default;
+  template <typename S> requires ConstStepper<S> consteval auto step(S&& s) const& {
+    return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s));
+  }
+  template <typename S> requires ConstStepper<S> consteval auto step(S&& s) && {
+    return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
+  }
+};
+template <typename CRTP>
+struct PathHelper : public RuntimePath<CRTP>, public ConstPath<CRTP>, public Path {
+  using RuntimePath<CRTP>::step;
+  using ConstPath<CRTP>::step;
 };
 } // namespace lib7842

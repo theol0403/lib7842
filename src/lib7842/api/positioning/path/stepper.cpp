@@ -1,6 +1,6 @@
+#include "lib7842/api/positioning/path/stepper.hpp"
 #include "lib7842/api/other/units.hpp"
 #include "lib7842/api/positioning/path/line.hpp"
-#include "lib7842/api/positioning/path/stepper.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 
 #include "lib7842/test/test.hpp"
@@ -19,6 +19,10 @@ consteval auto f() {
 }
 
 consteval auto f2() { return Line({0_m, 0_m}, {1_m, 1_m}).generate(StepBy::ConstCount<100>()); }
+
+consteval auto f3() {
+  return Line({0_m, 0_m}, {1_m, 1_m}).step(StepBy::ConstCount<100>()).generate();
+}
 
 TEST_CASE("Stepper") {
 
@@ -90,6 +94,13 @@ TEST_CASE("Stepper") {
 
   SUBCASE("Compile Time Generate") {
     auto v = f2();
+    for (size_t i = 0; i < v.size(); ++i) {
+      REQUIRE(v.at(i) == State(i / 100.0 * meter, i / 100.0 * meter, 45_deg));
+    }
+  }
+
+  SUBCASE("Compile Time Step") {
+    auto v = f3();
     for (size_t i = 0; i < v.size(); ++i) {
       REQUIRE(v.at(i) == State(i / 100.0 * meter, i / 100.0 * meter, 45_deg));
     }
