@@ -62,6 +62,7 @@ template <typename CRTP> struct ConstPath {
 };
 template <typename CRTP>
 struct PathHelper : public RuntimePath<CRTP>, public ConstPath<CRTP>, public Path {
+  constexpr ~PathHelper() override = default;
   using RuntimePath<CRTP>::step;
   using ConstPath<CRTP>::step;
   using RuntimePath<CRTP>::generate;

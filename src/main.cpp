@@ -141,9 +141,17 @@ void opcontrol() {
 
       // follower.followPath(PathGenerator::generate(path2, limits), true);
 
-      auto path2 = Parametric<QuinticHermite>({0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg})
-                     .step(StepBy::Count(100));
-      follower.followPath(PathGenerator::generate(path2, limits), limits, false);
+      // auto p = []() consteval {
+      //   return Parametric<QuinticHermite>({0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg})
+      //     .step(StepBy::ConstCount<100>());
+      // }
+      // ();
+      // auto p = Parametric<QuinticHermite>({0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg})
+      //            .step(StepBy::ConstCount<100>());
+      auto p = Stepper(Parametric<QuinticHermite>({0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}),
+                       StepBy::Count(100));
+
+      follower.followPath(PathGenerator::generate(p, limits), limits, false);
     }
 
     pros::delay(10);

@@ -10,6 +10,7 @@ class Line : public PathHelper<Line> {
 public:
   constexpr Line(const Vector& istart, const Vector& iend) :
     start(istart, istart.angleTo(iend)), end(iend, start.theta) {}
+  constexpr ~Line() override = default;
 
   constexpr State calc(double t) const override { return start + (end - start) * t; }
 

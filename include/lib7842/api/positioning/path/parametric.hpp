@@ -15,6 +15,7 @@ template <typename T> concept ParametricFunction = requires(T t) {
 template <ParametricFunction T> class Parametric : public PathHelper<Parametric<T>> {
 public:
   constexpr Parametric(T&& x, T&& y) : p(std::forward<T>(x), std::forward<T>(y)) {}
+  constexpr ~Parametric() override = default;
 
   constexpr State calc(double t) const override {
     QLength x_t = p.first.calc(t) * meter;
@@ -62,7 +63,7 @@ private:
   }
 };
 
-template <ParametricFunction T> Parametric(T&&, T &&) -> Parametric<T>;
+template <ParametricFunction T> Parametric(T&&, T&&) -> Parametric<T>;
 template <size_t N> Parametric(const Vector (&)[N]) -> Parametric<Bezier<N - 1>>;
 
 }; // namespace lib7842

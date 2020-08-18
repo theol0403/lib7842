@@ -12,6 +12,7 @@ template <typename P, size_t N> class Piecewise : public PathHelper<Piecewise<P,
 public:
   constexpr Piecewise() = default;
   constexpr explicit Piecewise(P(&&ip)[N]) : p(ip) {}
+  constexpr ~Piecewise() override = default;
 
   constexpr State calc(double t) const override { return get(t, &P::calc); }
   constexpr QCurvature curvature(double t) const override { return get(t, &P::curvature); }
