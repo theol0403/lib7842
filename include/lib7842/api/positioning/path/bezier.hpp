@@ -44,7 +44,7 @@ protected:
   }
 
   static constexpr size_t comb(size_t n, size_t k) {
-    if (k < 0 or k > n) { return 0; }
+    if (k > n) { return 0; }
     if (k > n - k) { k = n - k; }
     if (k == 0 or n <= 1) { return 1; }
     return factorial(n) / (factorial(k) * factorial(n - k));

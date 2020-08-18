@@ -15,14 +15,14 @@ PathFollower::PathFollower(std::shared_ptr<ChassisModel> imodel,
   driveRadius(idriveRadius.value_or(ilookahead)) {}
 
 void PathFollower::followPath(const std::vector<Waypoint>& path, const PursuitLimits& limits,
-                              bool ibackwards, const std::optional<QSpeed>& istartSpeed) {
+                              bool backwards, const std::optional<QSpeed>& startSpeed) {
   resetPursuit();
 
   auto rate = global::getTimeUtil()->getRate();
   auto timer = global::getTimeUtil()->getTimer();
 
   // assume the robot starts at minimum velocity unless otherwise specified
-  QSpeed lastVelocity = istartSpeed.value_or(limits.minVel);
+  QSpeed lastVelocity = startSpeed.value_or(limits.minVel);
 
   bool isFinished = false; // loop until the robot is considered to have finished the path
   while (!isFinished) {
@@ -56,7 +56,7 @@ void PathFollower::followPath(const std::vector<Waypoint>& path, const PursuitLi
     QAngle angleToEnd = pos.angleTo(path.back()).abs();
 
     // we are done the path if the angle is opposite of the drive direction
-    bool pastEnd = ibackwards ? angleToEnd < 90_deg : angleToEnd > 90_deg;
+    bool pastEnd = backwards ? angleToEnd < 90_deg : angleToEnd > 90_deg;
 
     // the robot is considered finished if it has passed the end
     isFinished = pastEnd && withinDriveRadius;
@@ -88,7 +88,7 @@ void PathFollower::followPath(const std::vector<Waypoint>& path, const PursuitLi
 
     // if within the the of the path, ignore the default parameter and drive directly to the end.
     // We are past the end of the path if the angle is above 90, so drive backwards if so.
-    bool driveBackward = withinDriveRadius ? angleToEnd > 90_deg : ibackwards;
+    bool driveBackward = withinDriveRadius ? angleToEnd > 90_deg : backwards;
 
     // negate velocities to drive backward
     if (driveBackward) {
@@ -102,7 +102,7 @@ void PathFollower::followPath(const std::vector<Waypoint>& path, const PursuitLi
       // get exit angle of the path
       auto endAngle = (path.end() - 2)->angleTo(path.back());
       // if backwards, exit angle is flipped
-      if (ibackwards) { endAngle += 180_deg; }
+      if (backwards) { endAngle += 180_deg; }
       // get angle error
       QAngle error = util::wrapAngle90(endAngle - pos.theta);
       // get distance to lookahead

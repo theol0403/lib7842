@@ -38,7 +38,7 @@ public:
     return sqrt(square(p.first.calc_d(t) * meter) + square(p.second.calc_d(t) * meter));
   }
 
-  template <typename U = T, std::enable_if_t<std::is_base_of_v<Hermite<U::order>, U>>* = nullptr>
+  template <typename U = T, typename = std::enable_if_t<std::is_base_of_v<Hermite<U::order>, U>>>
   constexpr Parametric(const State& start, const State& end) :
     p(U(start.x.convert(meter), cos(start.theta).convert(number), end.x.convert(meter),
         cos(end.theta).convert(number)),
@@ -46,7 +46,7 @@ public:
         sin(end.theta).convert(number))) {}
 
   template <typename U = T, size_t N = U::order,
-            std::enable_if_t<std::is_same_v<Bezier<N>, U>>* = nullptr>
+            typename = std::enable_if_t<std::is_same_v<Bezier<N>, U>>>
   constexpr explicit Parametric(const Vector (&ctrls)[N + 1]) :
     p(Bezier(process(ctrls, [](const auto& ip) { return ip.x.convert(meter); })),
       Bezier(process(ctrls, [](const auto& ip) { return ip.y.convert(meter); }))) {}

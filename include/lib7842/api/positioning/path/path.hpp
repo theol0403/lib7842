@@ -2,13 +2,12 @@
 #include "lib7842/api/other/units.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
-#include "pathStepper.hpp"
+#include "stepper.hpp"
 
 namespace lib7842 {
 
 class Path {
 public:
-  constexpr Path() = default;
   constexpr virtual ~Path() = default;
 
   constexpr virtual State calc(double t) const = 0;
@@ -29,21 +28,37 @@ public:
     return t + (dist / velocity(t).abs()).convert(number);
   }
 
-  template <typename S> std::vector<State> generate(S&& s) const {
-    std::vector<State> v;
-    std::move(s.begin(*this), s.end(*this), std::back_inserter(v));
-    return v;
+  template <typename S> requires(!ConstStepper<S>) std::vector<State> generate(S&& s) const {
+    return Stepper(*this, std::forward<S>(s)).generate();
+  }
+
+  template <typename S>
+  requires ConstStepper<S> consteval std::array<State, S::N> generate(S&& s) const {
+    return Stepper(*this, std::forward<S>(s)).generate();
   }
 };
 
-template <typename CRTP> class PathHelper : public Path {
-public:
-  constexpr PathHelper() = default;
-  template <typename S> constexpr auto step(S&& s) const& {
-    return PathStepper(static_cast<const CRTP&>(*this), s);
+template <typename CRTP> struct RuntimePath {
+  constexpr RuntimePath() = default;
+  template <typename S> requires(!ConstStepper<S>) constexpr auto step(S&& s) const& {
+    return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s));
   }
-  template <typename S> constexpr auto step(S&& s) && {
-    return PathStepper(static_cast<CRTP&&>(*this), s);
+  template <typename S> requires(!ConstStepper<S>) constexpr auto step(S&& s) && {
+    return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
   }
+};
+template <typename CRTP> struct ConstPath {
+  consteval ConstPath() = default;
+  template <typename S> requires ConstStepper<S> consteval auto step(S&& s) const& {
+    return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s));
+  }
+  template <typename S> requires ConstStepper<S> consteval auto step(S&& s) && {
+    return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
+  }
+};
+template <typename CRTP>
+struct PathHelper : public RuntimePath<CRTP>, public ConstPath<CRTP>, public Path {
+  using RuntimePath<CRTP>::step;
+  using ConstPath<CRTP>::step;
 };
 } // namespace lib7842

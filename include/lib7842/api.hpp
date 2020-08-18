@@ -26,7 +26,7 @@
 #include "lib7842/api/positioning/path/line.hpp"
 #include "lib7842/api/positioning/path/parametric.hpp"
 #include "lib7842/api/positioning/path/path.hpp"
-#include "lib7842/api/positioning/path/pathStepper.hpp"
+#include "lib7842/api/positioning/path/stepper.hpp"
 #include "lib7842/api/positioning/point/data.hpp"
 #include "lib7842/api/positioning/point/mathPoint.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
