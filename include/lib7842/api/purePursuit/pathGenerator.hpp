@@ -9,11 +9,7 @@ namespace lib7842 {
 class PathGenerator {
 public:
   /**
-   * Generate a PursuitPath containing waypoint information for pure pursuit.
-   *
-   * @param  ip  The path
-   * @param  limits The pure pursuit limits
-   * @return the generated path
+   * Generate a PursuitPath containing waypoint information for pure pursuit, given a Stepper.
    */
   template <typename T, typename U, typename S>
   requires(!ConstStepper<S>) static std::vector<Waypoint> generate(const Stepper<T, U, S>& ip,
@@ -21,6 +17,10 @@ public:
     return generate(ip.generate(), limits);
   }
 
+  /**
+   * Generate a PursuitPath containing waypoint information for pure pursuit, given an array. Simply
+   * transforms the array into a vector.
+   */
   template <size_t N>
   static std::vector<Waypoint> generate(const std::array<State, N>& ip,
                                         const PursuitLimits& limits) {
@@ -30,8 +30,8 @@ public:
   /**
    * Generate a PursuitPath containing waypoint information for pure pursuit.
    *
-   * @param  ip      The path
-   * @param  limits  The pure pursuit limits
+   * @param  ip     The path
+   * @param  limits The pure pursuit limits
    * @return the generated path
    */
   static std::vector<Waypoint> generate(const std::vector<State>& ip, const PursuitLimits& limits) {

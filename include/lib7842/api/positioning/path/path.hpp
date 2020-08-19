@@ -15,7 +15,7 @@ public:
   constexpr virtual ~Path() = default;
 
   /**
-   * Sample the path at t.
+   * Sample the point along the path given t.
    *
    * @param  t Where along the path to sample, in the range of [0, 1]
    * @return the sampled point at t
@@ -89,9 +89,9 @@ template <typename CRTP> struct RuntimePath {
 };
 template <typename CRTP> struct ConstPath {
   consteval ConstPath() = default;
-    /**
-     * Return a Stepper that contains a reference to the path and a given StepBy.
-     */
+  /**
+   * Return a Stepper that contains a reference to the path and a given StepBy.
+   */
   template <typename S> requires ConstStepper<S> consteval auto step(S&& s) const& {
     return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s));
   }
@@ -118,4 +118,3 @@ struct PathHelper : public RuntimePath<CRTP>, public ConstPath<CRTP>, public Pat
   using ConstPath<CRTP>::generate;
 };
 } // namespace lib7842
-
