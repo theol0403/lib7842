@@ -14,10 +14,14 @@ using QuinticBezier = Bezier<5>;
  * A Bezier is a one-dimensional function that uses N+1 number of control points to produce a
  * function of N order. The path begins at the first control point, ends at the last, but does not
  * pass through any middle points. The tangent of the start and end points are equal to the angle to
- * their nearest respective points.
+ * their nearest respective points. https://en.wikipedia.org/wiki/B%C3%A9zier_curve
  *
- * This is designed to be used with the Parametric class to produce a two-dimensional path. There
- * are aliases for a CubicBezier, QuarticBezier, and QuinticBezier.
+ * This class is designed to be used with the Parametric class to produce a two-dimensional path.
+ * There are aliases for a CubicBezier, QuarticBezier, and QuinticBezier.
+ *
+ * The bezier function is calculated using a generic implementation that works with a bezier of any
+ * order using the recursive notation of the binomial coefficient. However, this is quite
+ * inefficient, so template specialization is required for good performance.
  *
  * @tparam N The order of the Bezier.
  */
@@ -33,9 +37,10 @@ public:
 
   /**
    * Calculate the y value of the bezier given x.
+   * https://en.wikipedia.org/wiki/B%C3%A9zier_curve#Terminology
    *
-   * @param  x The input value of the bezier in the range of [0, 1].
-   * @return The calculated y value of the bezier.
+   * @param  x The input value in the range of [0, 1].
+   * @return The calculated y value.
    */
   constexpr double calc(double x) const {
     double sum {0.0};
@@ -47,9 +52,10 @@ public:
 
   /**
    * Calculate the first derivative of the bezier given x.
+   * https://en.wikipedia.org/wiki/B%C3%A9zier_curve#Derivative
    *
-   * @param  x The input value of the bezier in the range of [0, 1].
-   * @return The calculated first derivative of the bezier.
+   * @param  x The input value in the range of [0, 1].
+   * @return The calculated first derivative.
    */
   constexpr double calc_d(double x) const {
     double sum {0.0};
@@ -62,8 +68,8 @@ public:
   /**
    * Calculate the second derivative of the bezier given x.
    *
-   * @param  x The input value of the bezier in the range of [0, 1].
-   * @return The calculated second derivative of the bezier.
+   * @param  x The input value in the range of [0, 1].
+   * @return The calculated second derivative.
    */
   constexpr double calc_d2(double x) const {
     double sum {0.0};
@@ -88,6 +94,7 @@ protected:
 
   /**
    * The binomial coefficient function, also known as the k-comb algorithm.
+   * https://en.wikipedia.org/wiki/Binomial_coefficient
    */
   static constexpr size_t comb(size_t n, size_t k) {
     if (k > n) { return 0; }
