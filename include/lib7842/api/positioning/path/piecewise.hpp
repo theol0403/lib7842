@@ -36,7 +36,17 @@ protected:
 
 template <typename P, size_t N> Piecewise(P(&&)[N]) -> Piecewise<P, N>;
 
-template <typename P, size_t N> constexpr Piecewise<P, N> make_piecewise(P(&&ip)[N]) {
+template <typename P, size_t N> constexpr auto make_piecewise(P(&&ip)[N]) {
   return Piecewise<P, N>(std::move(ip));
+}
+
+template <typename P, size_t N> constexpr auto make_piecewise(State(&&ip)[N]) {
+  // there is one less hermite than points
+  Piecewise<P, N - 1> path;
+  for (size_t i = 0; i < N - 1; ++i) {
+    path.p[i] = P(ip[i], ip[i + 1]);
+  }
+
+  return path;
 }
 } // namespace lib7842
