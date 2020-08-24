@@ -41,8 +41,8 @@ public:
   constexpr QLength length(double /*resolution*/ = 0) const override { return start.distTo(end); }
 
 protected:
-  const State start;
-  const State end;
+  State start;
+  State end;
 };
 
 } // namespace lib7842
