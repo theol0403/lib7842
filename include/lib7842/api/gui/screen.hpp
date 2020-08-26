@@ -42,7 +42,7 @@ public:
    * @tparam T     The Page type to create
    * @return reference to the newly created page
    */
-  template <typename T> T& makePage(const std::string& iname) {
+  template <class T> T& makePage(const std::string& iname) {
     static_assert(std::is_base_of<Page, T>::value, "T is not a Page");
     auto ptr = std::make_shared<T>(newPage(iname), themeColor);
     ptr->initialize();

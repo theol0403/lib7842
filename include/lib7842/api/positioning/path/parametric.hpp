@@ -9,7 +9,7 @@ namespace lib7842 {
  * A parametric function is a one-dimensional function that maps y as a function of x. Examples of
  * this is a Bezier or Hermite.
  */
-template <typename T> concept ParametricFunction = requires(T t) {
+template <class T> concept ParametricFunction = requires(T t) {
   { t.calc(0.0) }
   ->std::convertible_to<double>;
 };
@@ -85,7 +85,7 @@ public:
    * @param  startStretch The start stretch.
    * @param  endStretch   The end stretch.
    */
-  template <typename U = T, typename = std::enable_if_t<std::is_base_of_v<Hermite<U::order>, U>>>
+  template <class U = T, class = std::enable_if_t<std::is_base_of_v<Hermite<U::order>, U>>>
   constexpr Parametric(const State& start, const State& end, double startStretch,
                        double endStretch) :
     p(U(start.x.convert(meter), cos(start.theta).convert(number) * startStretch,
@@ -103,7 +103,7 @@ public:
    * @param  end       The end state.
    * @param  stretch   The stretch for both ends of the hermite (optional).
    */
-  template <typename U = T, typename = std::enable_if_t<std::is_base_of_v<Hermite<U::order>, U>>>
+  template <class U = T, class = std::enable_if_t<std::is_base_of_v<Hermite<U::order>, U>>>
   constexpr Parametric(const State& start, const State& end, double stretch = 1) :
     Parametric(start, end, stretch, stretch) {}
 
@@ -113,8 +113,8 @@ public:
    *
    * @param  ctrls     The array of control points.
    */
-  template <typename U = T, size_t N = U::order,
-            typename = std::enable_if_t<std::is_same_v<Bezier<N>, U>>>
+  template <class U = T, size_t N = U::order,
+            class = std::enable_if_t<std::is_same_v<Bezier<N>, U>>>
   constexpr explicit Parametric(const Vector (&ctrls)[N + 1]) :
     p(Bezier(process(ctrls, [](const auto& ip) { return ip.x.convert(meter); })),
       Bezier(process(ctrls, [](const auto& ip) { return ip.y.convert(meter); }))) {}

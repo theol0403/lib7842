@@ -11,7 +11,7 @@ public:
   /**
    * Generate a PursuitPath containing waypoint information for pure pursuit, given a Stepper.
    */
-  template <typename T, typename U, typename S>
+  template <class T, class U, class S>
   requires(!ConstStepper<S>) static std::vector<Waypoint> generate(const Stepper<T, U, S>& ip,
                                                                    const PursuitLimits& limits) {
     return generate(ip.generate(), limits);

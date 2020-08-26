@@ -12,14 +12,14 @@
 namespace lib7842 {
 
 // forward declaration
-template <typename T> class Data;
+template <class T> class Data;
 using DataPoint = Data<Vector>;
 using DataState = Data<State>;
 
 /**
  * A class that contains information of any type.
  */
-template <typename T> class Data : public T {
+template <class T> class Data : public T {
 public:
   using T::T;
 
@@ -45,7 +45,7 @@ public:
    * @tparam U   The data type
    * @return The data
    */
-  template <typename U> U getData(const std::string& iid) const {
+  template <class U> U getData(const std::string& iid) const {
     const std::any& idata = getID(iid);
     try {
       return std::any_cast<U>(idata);

@@ -66,50 +66,50 @@ public:
   }
 };
 
-template <typename CRTP> struct RuntimePath {
+template <class CRTP> struct RuntimePath {
   /**
    * Return a Stepper that contains a reference to the path and a given StepBy.
    */
-  template <typename S> requires(!ConstStepper<S>) constexpr auto step(S&& s) const& {
+  template <class S> requires(!ConstStepper<S>) constexpr auto step(S&& s) const& {
     return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s));
   }
-  template <typename S> requires(!ConstStepper<S>) constexpr auto step(S&& s) && {
+  template <class S> requires(!ConstStepper<S>) constexpr auto step(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
   }
   /**
    * Generate the path given a StepBy. Generate means to sample the whole path and return an array
    * of points.
    */
-  template <typename S> requires(!ConstStepper<S>) auto generate(S&& s) const& {
+  template <class S> requires(!ConstStepper<S>) auto generate(S&& s) const& {
     return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s)).generate();
   }
-  template <typename S> requires(!ConstStepper<S>) auto generate(S&& s) && {
+  template <class S> requires(!ConstStepper<S>) auto generate(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s)).generate();
   }
 };
-template <typename CRTP> struct ConstPath {
+template <class CRTP> struct ConstPath {
   consteval ConstPath() = default;
   /**
    * Return a Stepper that contains a reference to the path and a given StepBy.
    */
-  template <typename S> requires ConstStepper<S> consteval auto step(S&& s) const& {
+  template <class S> requires ConstStepper<S> consteval auto step(S&& s) const& {
     return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s));
   }
-  template <typename S> requires ConstStepper<S> consteval auto step(S&& s) && {
+  template <class S> requires ConstStepper<S> consteval auto step(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
   }
   /**
    * Generate the path given a StepBy. Generate means to sample the whole path and return an array
    * of points.
    */
-  template <typename S> requires ConstStepper<S> consteval auto generate(S&& s) const& {
+  template <class S> requires ConstStepper<S> consteval auto generate(S&& s) const& {
     return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s)).generate();
   }
-  template <typename S> requires ConstStepper<S> consteval auto generate(S&& s) && {
+  template <class S> requires ConstStepper<S> consteval auto generate(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s)).generate();
   }
 };
-template <typename CRTP>
+template <class CRTP>
 struct PathHelper : public RuntimePath<CRTP>, public ConstPath<CRTP>, public Path {
   constexpr ~PathHelper() override = default;
   using RuntimePath<CRTP>::step;

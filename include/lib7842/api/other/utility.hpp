@@ -18,7 +18,7 @@ using namespace okapi;
  *
  * @param  val The value
  */
-template <typename T> int sgn(T val) { return (T(0) < val) - (val < T(0)); }
+template <class T> int sgn(T val) { return (T(0) < val) - (val < T(0)); }
 
 /**
  * Motor movement modes, voltage or velocity.
@@ -109,7 +109,7 @@ QAngle wrapAngle90(const QAngle& angle);
  * Provides a way to stringify RQuantity units. Mainly used for unit tests.
  */
 namespace okapi {
-template <typename MassDim, typename LengthDim, typename TimeDim, typename AngleDim>
+template <class MassDim, class LengthDim, class TimeDim, class AngleDim>
 std::ostream& operator<<(std::ostream& os,
                          const RQuantity<MassDim, LengthDim, TimeDim, AngleDim>& rhs) {
   os << rhs.getValue();
