@@ -8,7 +8,7 @@
 #define DOCTEST_CONFIG_NO_WINDOWS_SEH
 #define DOCTEST_CONFIG_NO_POSIX_SIGNALS
 
-#include "doctest.h"
+#include "lib7842/deps/doctest.h"
 
 namespace lib7842 {}
 namespace okapi {}

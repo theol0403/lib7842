@@ -1,10 +1,9 @@
 #pragma once
 #include "lib7842/api/other/units.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
-#include "okapi/api/units/QLength.hpp"
+#include "lib7842/deps/fixed_capacity_vector.h"
 #include "parametric.hpp"
 #include "spline.hpp"
-#include <cstddef>
 #include <numeric>
 
 namespace lib7842 {
