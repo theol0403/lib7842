@@ -1453,6 +1453,9 @@ namespace std
 
 
     }  // namespace experimental
+    
+    template <typename T, size_t Capacity>
+    using static_vector = experimental::fixed_capacity_vector<T, Capacity>;
 }  // namespace std
 
 // undefine all the internal macros
