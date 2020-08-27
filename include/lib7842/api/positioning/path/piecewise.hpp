@@ -47,13 +47,13 @@ template <class P, size_t N> constexpr auto make_piecewise(P(&&ip)[N]) {
   return Piecewise<P, N>(std::move(ip));
 }
 
-template <class P, size_t N> constexpr auto make_piecewise(State(&&ip)[N]) {
+template <class P, size_t N>
+requires std::same_as<P, Hermite<P::order>> constexpr auto make_piecewise(State(&&ip)[N]) {
   // there is one less hermite than points
   std::array<std::optional<Parametric<P>>, N - 1> p;
   for (size_t i = 0; i < N - 1; ++i) {
     p[i].emplace(ip[i], ip[i + 1]);
   }
-
   return Piecewise(std::move(p));
 }
 } // namespace lib7842
