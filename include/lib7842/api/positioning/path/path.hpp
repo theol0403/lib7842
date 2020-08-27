@@ -66,7 +66,10 @@ public:
   }
 };
 
-template <class CRTP> struct RuntimePath {
+template <class CRTP> struct PathHelper : public Path {
+  constexpr PathHelper() = default;
+  constexpr ~PathHelper() override = default;
+
   /**
    * Return a Stepper that contains a reference to the path and a given StepBy.
    */
@@ -76,6 +79,13 @@ template <class CRTP> struct RuntimePath {
   template <class S> requires(!ConstStepper<S>) constexpr auto step(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
   }
+  template <class S> requires ConstStepper<S> consteval auto step(S&& s) const& {
+    return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s));
+  }
+  template <class S> requires ConstStepper<S> consteval auto step(S&& s) && {
+    return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
+  }
+
   /**
    * Generate the path given a StepBy. Generate means to sample the whole path and return an array
    * of points.
@@ -86,35 +96,11 @@ template <class CRTP> struct RuntimePath {
   template <class S> requires(!ConstStepper<S>) auto generate(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s)).generate();
   }
-};
-template <class CRTP> struct ConstPath {
-  consteval ConstPath() = default;
-  /**
-   * Return a Stepper that contains a reference to the path and a given StepBy.
-   */
-  template <class S> requires ConstStepper<S> consteval auto step(S&& s) const& {
-    return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s));
-  }
-  template <class S> requires ConstStepper<S> consteval auto step(S&& s) && {
-    return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
-  }
-  /**
-   * Generate the path given a StepBy. Generate means to sample the whole path and return an array
-   * of points.
-   */
   template <class S> requires ConstStepper<S> consteval auto generate(S&& s) const& {
     return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s)).generate();
   }
   template <class S> requires ConstStepper<S> consteval auto generate(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s)).generate();
   }
-};
-template <class CRTP>
-struct PathHelper : public RuntimePath<CRTP>, public ConstPath<CRTP>, public Path {
-  constexpr ~PathHelper() override = default;
-  using RuntimePath<CRTP>::step;
-  using ConstPath<CRTP>::step;
-  using RuntimePath<CRTP>::generate;
-  using ConstPath<CRTP>::generate;
 };
 } // namespace lib7842

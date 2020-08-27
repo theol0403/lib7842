@@ -6,36 +6,15 @@ template <class T> concept ConstStepper = requires { T::N; };
 
 template <class T, class U, class S> class Stepper {
 public:
-  // runtime
-  template <class V = S>
-  requires(!ConstStepper<V>) constexpr Stepper(T&& ipath, S&& isampler) :
+  constexpr Stepper(T&& ipath, S&& isampler) :
     path(std::forward<T>(ipath)), sampler(std::forward<S>(isampler)) {}
 
-  template <class V = S> requires(!ConstStepper<V>) constexpr auto begin() const {
-    return sampler.begin(static_cast<const T&>(path));
-  }
-
-  template <class V = S> requires(!ConstStepper<V>) constexpr auto end() const {
-    return sampler.end(static_cast<const T&>(path));
-  }
+  constexpr const std::remove_reference_t<T>& get() const { return path; }
 
   template <class V = S> requires(!ConstStepper<V>) auto generate() const {
     std::vector<State> s;
     std::move(begin(), end(), std::back_inserter(s));
     return s;
-  }
-
-  // compile time
-  template <class V = S>
-  requires ConstStepper<V> consteval Stepper(T&& ipath, S&& isampler) :
-    path(std::forward<T>(ipath)), sampler(std::forward<S>(isampler)) {}
-
-  template <class V = S> requires ConstStepper<V> consteval auto begin() const {
-    return sampler.begin(static_cast<const T&>(path));
-  }
-
-  template <class V = S> requires ConstStepper<V> consteval auto end() const {
-    return sampler.end(static_cast<const T&>(path));
   }
 
   template <class V = S> requires ConstStepper<V> consteval auto generate() const {
@@ -46,7 +25,21 @@ public:
     return s;
   }
 
-  constexpr const std::remove_reference_t<T>& get() const { return path; }
+  template <class V = S> requires(!ConstStepper<V>) constexpr auto begin() const {
+    return sampler.begin(static_cast<const T&>(path));
+  }
+
+  template <class V = S> requires(!ConstStepper<V>) constexpr auto end() const {
+    return sampler.end(static_cast<const T&>(path));
+  }
+
+  template <class V = S> requires ConstStepper<V> consteval auto begin() const {
+    return sampler.begin(static_cast<const T&>(path));
+  }
+
+  template <class V = S> requires ConstStepper<V> consteval auto end() const {
+    return sampler.end(static_cast<const T&>(path));
+  }
 
 protected:
   const U path;
@@ -54,7 +47,7 @@ protected:
 };
 
 template <class T, class S>
-Stepper(T&&, S &&)
+Stepper(T&&, S&&)
   -> Stepper<T,
              std::conditional_t<std::is_lvalue_reference_v<T>,
                                 std::reference_wrapper<std::remove_reference_t<T>>, T>,
