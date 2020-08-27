@@ -26,19 +26,19 @@ public:
   }
 
   template <class V = S> requires(!ConstStepper<V>) constexpr auto begin() const {
-    return sampler.begin(static_cast<const T&>(path));
+    return sampler.template begin<T>(path);
   }
 
   template <class V = S> requires(!ConstStepper<V>) constexpr auto end() const {
-    return sampler.end(static_cast<const T&>(path));
+    return sampler.template end<T>(path);
   }
 
   template <class V = S> requires ConstStepper<V> consteval auto begin() const {
-    return sampler.begin(static_cast<const T&>(path));
+    return sampler.template begin<T>(path);
   }
 
   template <class V = S> requires ConstStepper<V> consteval auto end() const {
-    return sampler.end(static_cast<const T&>(path));
+    return sampler.template end<T>(path);
   }
 
 protected:
@@ -74,12 +74,10 @@ private:
   class iterator : public std::iterator<const std::forward_iterator_tag, State, int> {
   public:
     constexpr iterator(const P& ip, int ic, int ii) : p(ip), c(ic), i(ii) {}
-
     constexpr bool operator!=(const iterator& rhs) const { return i != (rhs.i + 1); }
     constexpr int operator-(const iterator& rhs) const { return i - rhs.i; }
     constexpr State operator*() const { return p.calc(static_cast<double>(i) / c); }
     constexpr State operator->() const { return *(*this); }
-
     constexpr iterator& operator++() {
       ++i;
       return *this;
@@ -118,11 +116,10 @@ private:
   class iterator : public std::iterator<const std::forward_iterator_tag, State, double> {
   public:
     constexpr iterator(const P& ip, const QLength& id, double it) : p(ip), d(id), t(it) {}
-
     constexpr bool operator!=(const iterator& rhs) const { return static_cast<float>(t) <= rhs.t; }
+    constexpr double operator-(const iterator& rhs) const { return t - rhs.t; }
     constexpr State operator*() const { return p.calc(t); }
     constexpr State operator->() const { return *(*this); }
-
     constexpr iterator& operator++() {
       t = p.t_at_dist_travelled(t, d);
       return *this;
@@ -151,12 +148,10 @@ private:
   class iterator : public std::iterator<const std::forward_iterator_tag, State, int> {
   public:
     consteval iterator(const P& ip, int ii) : p(ip), i(ii) {}
-
     consteval bool operator!=(const iterator& rhs) const { return i != (rhs.i + 1); }
     consteval int operator-(const iterator& rhs) const { return i - rhs.i; }
     consteval State operator*() const { return p.calc(static_cast<double>(i) / C); }
     consteval State operator->() const { return *(*this); }
-
     consteval iterator& operator++() {
       ++i;
       return *this;
