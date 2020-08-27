@@ -4,7 +4,7 @@
 
 namespace lib7842 {
 
-// forward declare
+// forward declaration
 template <size_t N> class HermiteFnc;
 // aliases
 template <size_t N> using Hermite = Parametric<HermiteFnc<N>>;
@@ -107,7 +107,7 @@ constexpr HermiteFnc<5>::HermiteFnc(double start, double start_t, double end, do
 }
 
 /**
- * Specialization for a Parametric<Hermite<N>> which allows construction using a start and end
+ * Specialization for a Parametric<HermiteFnc<N>> which allows construction using a start and end
  * state.
  */
 template <size_t N> class Parametric<HermiteFnc<N>> : public Parametric<HermiteFnc<N>, true> {

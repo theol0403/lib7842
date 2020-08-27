@@ -1,39 +1,43 @@
 #pragma once
+#include "parametric.hpp"
 #include "path.hpp"
+#include <cstddef>
 #include <ranges>
 
 namespace lib7842 {
 
 // forward declaration
-template <size_t N> class Bezier;
+template <size_t N> class BezierFnc;
+// aliases
+template <size_t N> using Bezier = Parametric<BezierFnc<N>>;
 using CubicBezier = Bezier<3>;
 using QuarticBezier = Bezier<4>;
 using QuinticBezier = Bezier<5>;
 
 /**
- * A Bezier is a one-dimensional function that uses N+1 number of control points to produce a
- * function of N order. The path begins at the first control point, ends at the last, but does not
- * pass through any middle points. The tangent of the start and end points are equal to the angle to
- * their nearest respective points. https://en.wikipedia.org/wiki/B%C3%A9zier_curve
+ * A BezierFnc is a one-dimensional function that uses N+1 control points to produce a function of N
+ * order. The path begins at the first control point, ends at the last, but does not pass through
+ * any middle points. The tangent of the start and end points are equal to the angle to their
+ * nearest respective points. The bezier function is calculated using a generic implementation that
+ * works with a bezier of any order using the recursive notation of the binomial coefficient.
+ * However, this is quite inefficient, so template specialization is required for good performance.
+ * https://en.wikipedia.org/wiki/B%C3%A9zier_curve
  *
- * This class is designed to be used with the Parametric class to produce a two-dimensional path.
- * There are aliases for a CubicBezier, QuarticBezier, and QuinticBezier.
+ * This class is designed to be used with the Parametric class to produce a two-dimensional spline.
+ * Bezier<N> is an alias for Parametric<BezierFnc<N>>. There are also aliases for CubicBezier,
+ * QuarticBezier, and QuinticBezier.
  *
- * The bezier function is calculated using a generic implementation that works with a bezier of any
- * order using the recursive notation of the binomial coefficient. However, this is quite
- * inefficient, so template specialization is required for good performance.
- *
- * @tparam N The order of the Bezier.
+ * @tparam N The order of the BezierFnc.
  */
-template <size_t N> class Bezier {
+template <size_t N> class BezierFnc : public ParametricFnc {
 public:
   /**
-   * Create a new bezier given an array of N+1 control points.
+   * Create a new one-dimensional BezierFnc<N> given an array of N+1 control points.
    *
    * @param ictrls The control points.
    */
-  constexpr explicit Bezier(const std::array<double, N + 1>& ictrls) : ctrls(ictrls) {}
-  constexpr ~Bezier() = default;
+  constexpr explicit BezierFnc(const std::array<double, N + 1>& ictrls) : ctrls(ictrls) {}
+  constexpr ~BezierFnc() = default;
 
   /**
    * Calculate the y value of the bezier given x.
@@ -42,7 +46,7 @@ public:
    * @param  x The input value in the range of [0, 1].
    * @return The calculated y value.
    */
-  constexpr double calc(double x) const {
+  constexpr double calc(double x) const override {
     double sum {0.0};
     for (size_t i = 0; i < ctrls.size(); ++i) {
       sum += basis(N, i, x) * ctrls[i];
@@ -57,7 +61,7 @@ public:
    * @param  x The input value in the range of [0, 1].
    * @return The calculated first derivative.
    */
-  constexpr double calc_d(double x) const {
+  constexpr double calc_d(double x) const override {
     double sum {0.0};
     for (size_t i = 0; i < N; ++i) {
       sum += basis(N - 1, i, x) * N * (ctrls[i + 1] - ctrls[i]);
@@ -71,7 +75,7 @@ public:
    * @param  x The input value in the range of [0, 1].
    * @return The calculated second derivative.
    */
-  constexpr double calc_d2(double x) const {
+  constexpr double calc_d2(double x) const override {
     double sum {0.0};
     for (size_t i = 0; i < N - 1; ++i) {
       sum += basis(N - 2, i, x) * N * (N - 1) * (ctrls[i + 2] - 2 * ctrls[i + 1] + ctrls[i]);
@@ -111,6 +115,36 @@ protected:
   }
 };
 
-template <size_t N> Bezier(const std::array<double, N>&) -> Bezier<N - 1>;
+template <size_t N> BezierFnc(const std::array<double, N>&) -> BezierFnc<N - 1>;
+
+/**
+ * Specialization for a Parametric<BezierFnc<N>> which allows construction using an array of 2D
+ * control points.
+ */
+template <size_t N> class Parametric<BezierFnc<N>> : public Parametric<BezierFnc<N>, true> {
+public:
+  /**
+   * Helper method to construct a Piecewise<BezierFnc<N>> given an array of control points.
+   * Separates the x and y component of the control points and delegates them to their respective
+   * functions.
+   *
+   * @param  ctrls     The array of control points.
+   */
+  constexpr explicit Parametric(const Vector (&ctrls)[N + 1]) :
+    Parametric<BezierFnc<N>, true>(
+      BezierFnc(process(ctrls, [](const auto& ip) { return ip.x.convert(meter); })),
+      BezierFnc(process(ctrls, [](const auto& ip) { return ip.y.convert(meter); }))) {}
+
+  constexpr ~Parametric() override = default;
+
+private:
+  constexpr auto process(const Vector (&ctrls)[N + 1], auto&& f) {
+    std::array<double, N + 1> t;
+    std::transform(std::begin(ctrls), std::end(ctrls), std::begin(t), f);
+    return t;
+  }
+};
+
+template <size_t N> Parametric(const Vector (&)[N]) -> Parametric<BezierFnc<N - 1>>;
 
 } // namespace lib7842
