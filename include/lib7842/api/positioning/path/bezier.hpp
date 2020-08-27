@@ -149,5 +149,4 @@ private:
 };
 
 template <size_t N> Parametric(const Vector (&)[N]) -> Parametric<BezierFnc<N - 1>>;
-
 } // namespace lib7842

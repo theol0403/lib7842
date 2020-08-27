@@ -5,6 +5,6 @@ namespace test {
 
 TEST_CASE("Bezier") {
   std::array a {0.0, 1.0, 2.0, 3.0};
-  Bezier b(a);
+  BezierFnc b(a);
 }
 } // namespace test
