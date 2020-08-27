@@ -9,8 +9,26 @@ namespace lib7842 {
  */
 class ParametricFnc {
 public:
+  /**
+   * Calculate the y value of the function given x.
+   *
+   * @param  x The input value in the range of [0, 1].
+   * @return The calculated y value.
+   */
   virtual constexpr double calc(double x) const = 0;
+  /**
+   * Calculate the first derivative of the function given x using the power rule.
+   *
+   * @param  x The input value in the range of [0, 1].
+   * @return The calculated first derivative.
+   */
   virtual constexpr double calc_d(double x) const = 0;
+  /**
+   * Calculate the second derivative of the function given x using the power rule.
+   *
+   * @param  x The input value in the range of [0, 1].
+   * @return The calculated second derivative.
+   */
   virtual constexpr double calc_d2(double x) const = 0;
 };
 
@@ -21,6 +39,9 @@ template <class T> concept IsParametricFnc = std::derived_from<ParametricFnc, T>
  * a function of t.
  *
  * @tparam T The type of ParametricFnc.
+ * @tparam D Used to facilitate specialization, setting the value to true will force the
+ * specializations to be ignored, allowing for the specializations to inherit from this base
+ * implementation.
  */
 template <class T, bool D = false>
 requires IsParametricFnc<T> class Parametric : public PathHelper<Parametric<T>> {
