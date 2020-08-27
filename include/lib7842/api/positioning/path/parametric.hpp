@@ -39,11 +39,11 @@ template <class T> concept IsParametricFnc = std::derived_from<ParametricFnc, T>
  * a function of t.
  *
  * @tparam T The type of ParametricFnc.
- * @tparam D Used to facilitate specialization, setting the value to true will force the
+ * @tparam B Used to facilitate specialization, setting the value to true will force the
  * specializations to be ignored, allowing for the specializations to inherit from this base
  * implementation.
  */
-template <class T, bool D = false>
+template <class T, bool B = false>
 requires IsParametricFnc<T> class Parametric : public PathHelper<Parametric<T>> {
 public:
   /**
