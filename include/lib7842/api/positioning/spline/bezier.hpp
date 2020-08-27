@@ -139,7 +139,7 @@ public:
 
 private:
   /**
-   * Helper method to transform an array of 2D Vector into an array of 1D double.
+   * Helper method to transform an array of 2D Vector into an array of 1D doubles.
    */
   constexpr auto process(const Vector (&ctrls)[N + 1], auto&& f) {
     std::array<double, N + 1> t;
