@@ -1,26 +1,29 @@
 #pragma once
-#include "bezier.hpp"
-#include "hermite.hpp"
 #include "path.hpp"
 
 namespace lib7842 {
 
 /**
- * A parametric function is a one-dimensional function that maps y as a function of x. Examples of
- * this is a Bezier or Hermite.
+ * A parametric function is a one-dimensional function that maps y as a function of x. Examples are
+ * a BezierFnc or HermiteFnc.
  */
-template <class T> concept ParametricFunction = requires(T t) {
-  { t.calc(0.0) }
-  ->std::convertible_to<double>;
+class ParametricFnc {
+public:
+  virtual constexpr double calc(double x) const = 0;
+  virtual constexpr double calc_d(double x) const = 0;
+  virtual constexpr double calc_d2(double x) const = 0;
 };
+
+template <class T> concept IsParametricFnc = std::derived_from<ParametricFnc, T>;
 
 /**
  * A Parametric is a two-dimensional path that uses two one-dimensional functions to map x and y as
  * a function of t.
  *
- * @tparam T The type of ParametricFunction.
+ * @tparam T The type of ParametricFnc.
  */
-template <ParametricFunction T> class Parametric : public PathHelper<Parametric<T>> {
+template <class T, bool D = false>
+requires IsParametricFnc<T> class Parametric : public PathHelper<Parametric<T>> {
 public:
   /**
    * Create a Parametric given two one-dimensional functions.
@@ -75,62 +78,11 @@ public:
     return sqrt(square(p.first.calc_d(t) * meter) + square(p.second.calc_d(t) * meter));
   }
 
-  /**
-   * Helper method to construct a Piecewise<Hermite<N> given a start and end state and their
-   * respective stretch values. The tangents of the functions will be proportional to each other,
-   * and the stretch controls their weight. This method is enabled when T is a Hermite.
-   *
-   * @param  start        The start state.
-   * @param  end          The end state.
-   * @param  startStretch The start stretch.
-   * @param  endStretch   The end stretch.
-   */
-  template <class U = T, class = std::enable_if_t<std::is_base_of_v<Hermite<U::order>, U>>>
-  constexpr Parametric(const State& start, const State& end, double startStretch,
-                       double endStretch) :
-    p(U(start.x.convert(meter), cos(start.theta).convert(number) * startStretch,
-        end.x.convert(meter), cos(end.theta).convert(number) * endStretch),
-      U(start.y.convert(meter), sin(start.theta).convert(number) * startStretch,
-        end.y.convert(meter), sin(end.theta).convert(number) * endStretch)) {}
-
-  /**
-   * Helper method to construct a Piecewise<Hermite<N> given a start and end state and an optional
-   * stretch value for both ends of the hermite. The tangents of the functions will be proportional
-   * to each other, and the stretch controls their weight. This method is enabled when T is a
-   * Hermite.
-   *
-   * @param  start     The start state.
-   * @param  end       The end state.
-   * @param  stretch   The stretch for both ends of the hermite (optional).
-   */
-  template <class U = T, class = std::enable_if_t<std::is_base_of_v<Hermite<U::order>, U>>>
-  constexpr Parametric(const State& start, const State& end, double stretch = 1) :
-    Parametric(start, end, stretch, stretch) {}
-
-  /**
-   * Helper method to construct a Piecewise<Bezier<N>> given an array of control points. Separates
-   * the x and y component of the control points and delegates them to their respective functions.
-   *
-   * @param  ctrls     The array of control points.
-   */
-  template <class U = T, size_t N = U::order,
-            class = std::enable_if_t<std::is_same_v<Bezier<N>, U>>>
-  constexpr explicit Parametric(const Vector (&ctrls)[N + 1]) :
-    p(Bezier(process(ctrls, [](const auto& ip) { return ip.x.convert(meter); })),
-      Bezier(process(ctrls, [](const auto& ip) { return ip.y.convert(meter); }))) {}
+  using type = T;
 
 protected:
   std::pair<T, T> p;
-
-private:
-  template <size_t N> constexpr auto process(const Vector (&ctrls)[N], auto&& f) {
-    std::array<double, N> t;
-    std::transform(std::begin(ctrls), std::end(ctrls), std::begin(t), f);
-    return t;
-  }
 };
 
-template <ParametricFunction T> Parametric(T&&, T &&) -> Parametric<T>;
-template <size_t N> Parametric(const Vector (&)[N]) -> Parametric<Bezier<N - 1>>;
-
+template <class T, bool D = false> Parametric(T&&, T&&) -> Parametric<T, D>;
 }; // namespace lib7842
