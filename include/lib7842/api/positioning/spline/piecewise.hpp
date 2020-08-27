@@ -13,30 +13,26 @@ public:
   constexpr Piecewise() = default;
   constexpr ~Piecewise() override = default;
 
-  constexpr explicit Piecewise(std::array<std::optional<P>, N>&& ip) : p(ip) {}
-
-  constexpr explicit Piecewise(P(&&ip)[N]) {
-    std::move(std::begin(ip), std::end(ip), std::begin(p));
-  }
+  constexpr explicit Piecewise(std::static_vector<P, N>&& ip) : p(ip) {}
+  constexpr explicit Piecewise(P(&&ip)[N]) : p(std::begin(ip), std::end(ip)) {}
 
   constexpr State calc(double t) const override { return get(t, &P::calc); }
   constexpr QCurvature curvature(double t) const override { return get(t, &P::curvature); }
   constexpr QLength velocity(double t) const override { return get(t, &P::velocity) * N; }
   constexpr QLength length(double /*resolution*/) const override {
-    return std::accumulate(std::begin(p), std::end(p), 0_m, [](const QLength& l, const auto& ip) {
-      return l + ip.value().length();
-    });
+    return std::accumulate(std::begin(p), std::end(p), 0_m,
+                           [](const QLength& l, const auto& ip) { return l + ip.length(); });
   }
 
 protected:
-  std::array<std::optional<P>, N> p {};
+  std::static_vector<P, N> p;
 
   constexpr auto get(double t, const auto& f) const {
     size_t i = t * N; // which arc to use
     // use t = 1 for the last arc
     if (i == N) { i = N - 1; }
     double x = t * N - i; // which t to use
-    return std::invoke(f, p[i].value(), x);
+    return std::invoke(f, p[i], x);
   }
 };
 
