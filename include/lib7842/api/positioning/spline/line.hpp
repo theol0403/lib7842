@@ -2,14 +2,14 @@
 #include "lib7842/api/other/units.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "okapi/api/units/QAngle.hpp"
-#include "path.hpp"
+#include "spline.hpp"
 
 namespace lib7842 {
 
 /**
  * This class describes a line which connects two points together.
  */
-class Line : public PathHelper<Line> {
+class Line : public SplineHelper<Line> {
 public:
   /**
    * Create a new line given the coordinates of two points.
@@ -22,7 +22,7 @@ public:
   constexpr ~Line() override = default;
 
   /**
-   * Sample the point along the path which is between the start and end points using linear
+   * Sample the point along the spline which is between the start and end points using linear
    * interpolation given t.
    *
    * @param  t The ratio of interpolation between the two points in the range of [0, 1].

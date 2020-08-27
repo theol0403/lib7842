@@ -1,5 +1,5 @@
-#include "lib7842/api/positioning/path/bezier.hpp"
-#include "lib7842/api/positioning/path/hermite.hpp"
+#include "lib7842/api/positioning/spline/bezier.hpp"
+#include "lib7842/api/positioning/spline/hermite.hpp"
 #include "lib7842/test/test.hpp"
 namespace test {
 

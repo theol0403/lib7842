@@ -1,6 +1,6 @@
 #pragma once
 #include "parametric.hpp"
-#include "path.hpp"
+#include "spline.hpp"
 #include <cstddef>
 #include <ranges>
 
@@ -16,7 +16,7 @@ using QuinticBezier = Bezier<5>;
 
 /**
  * A BezierFnc is a one-dimensional function that uses N+1 control points to produce a function of N
- * order. The path begins at the first control point, ends at the last, but does not pass through
+ * order. The spline begins at the first control point, ends at the last, but does not pass through
  * any middle points. The tangent of the start and end points are equal to the angle to their
  * nearest respective points. The bezier function is calculated using a generic implementation that
  * works with a bezier of any order using the recursive notation of the binomial coefficient.

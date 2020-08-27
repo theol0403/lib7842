@@ -6,10 +6,10 @@ template <class T> concept ConstStepper = requires { T::N; };
 
 template <class T, class U, class S> class Stepper {
 public:
-  constexpr Stepper(T&& ipath, S&& isampler) :
-    path(std::forward<T>(ipath)), sampler(std::forward<S>(isampler)) {}
+  constexpr Stepper(T&& ispline, S&& isampler) :
+    spline(std::forward<T>(ispline)), sampler(std::forward<S>(isampler)) {}
 
-  constexpr const std::remove_reference_t<T>& get() const { return path; }
+  constexpr const std::remove_reference_t<T>& get() const { return spline; }
 
   template <class V = S> requires(!ConstStepper<V>) auto generate() const {
     std::vector<State> s;
@@ -26,23 +26,23 @@ public:
   }
 
   template <class V = S> requires(!ConstStepper<V>) constexpr auto begin() const {
-    return sampler.template begin<T>(path);
+    return sampler.template begin<T>(spline);
   }
 
   template <class V = S> requires(!ConstStepper<V>) constexpr auto end() const {
-    return sampler.template end<T>(path);
+    return sampler.template end<T>(spline);
   }
 
   template <class V = S> requires ConstStepper<V> consteval auto begin() const {
-    return sampler.template begin<T>(path);
+    return sampler.template begin<T>(spline);
   }
 
   template <class V = S> requires ConstStepper<V> consteval auto end() const {
-    return sampler.template end<T>(path);
+    return sampler.template end<T>(spline);
   }
 
 protected:
-  const U path;
+  const U spline;
   const S sampler;
 };
 

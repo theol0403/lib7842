@@ -1,6 +1,6 @@
 #pragma once
 #include "parametric.hpp"
-#include "path.hpp"
+#include "spline.hpp"
 
 namespace lib7842 {
 

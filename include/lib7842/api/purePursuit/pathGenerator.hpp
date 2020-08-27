@@ -1,6 +1,6 @@
 #pragma once
-#include "lib7842/api/positioning/path/path.hpp"
-#include "lib7842/api/positioning/path/stepper.hpp"
+#include "lib7842/api/positioning/spline/spline.hpp"
+#include "lib7842/api/positioning/spline/stepper.hpp"
 #include "pursuitLimits.hpp"
 #include "waypoint.hpp"
 

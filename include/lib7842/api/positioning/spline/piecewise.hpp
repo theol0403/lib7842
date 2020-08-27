@@ -3,13 +3,13 @@
 #include "lib7842/api/positioning/point/state.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include "parametric.hpp"
-#include "path.hpp"
+#include "spline.hpp"
 #include <cstddef>
 #include <numeric>
 
 namespace lib7842 {
 
-template <class P, size_t N> class Piecewise : public PathHelper<Piecewise<P, N>> {
+template <class P, size_t N> class Piecewise : public SplineHelper<Piecewise<P, N>> {
 public:
   constexpr Piecewise() = default;
   constexpr ~Piecewise() override = default;

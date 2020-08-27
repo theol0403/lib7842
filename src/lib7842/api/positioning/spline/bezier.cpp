@@ -1,4 +1,4 @@
-#include "lib7842/api/positioning/path/bezier.hpp"
+#include "lib7842/api/positioning/spline/bezier.hpp"
 #include "lib7842/test/test.hpp"
 #include <iostream>
 namespace test {

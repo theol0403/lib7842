@@ -1,11 +1,11 @@
-#include "lib7842/api/positioning/path/stepper.hpp"
+#include "lib7842/api/positioning/spline/stepper.hpp"
 #include "lib7842/api/other/units.hpp"
-#include "lib7842/api/positioning/path/line.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
+#include "lib7842/api/positioning/spline/line.hpp"
 
 #include "lib7842/test/test.hpp"
 namespace test {
-class DontCopy : public PathHelper<DontCopy> {
+class DontCopy : public SplineHelper<DontCopy> {
 public:
   constexpr DontCopy() = default;
   constexpr DontCopy(const DontCopy&) = delete;

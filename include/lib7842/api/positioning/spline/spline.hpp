@@ -7,44 +7,44 @@
 namespace lib7842 {
 
 /**
- * Base path class. Main method of sampling is via calc, according to a t parameter that is in the
+ * Base spline class. Main method of sampling is via calc, according to a t parameter that is in the
  * range of [0, 1].
  */
-class Path {
+class Spline {
 public:
-  constexpr virtual ~Path() = default;
+  constexpr virtual ~Spline() = default;
 
   /**
-   * Sample the point along the path given t.
+   * Sample the point along the spline given t.
    *
-   * @param  t Where along the path to sample, in the range of [0, 1]
+   * @param  t Where along the spline to sample, in the range of [0, 1]
    * @return the sampled point at t
    */
   constexpr virtual State calc(double t) const = 0;
 
   /**
-   * Sample the curvature of the path at t. Curvature is the inverse of the radius.
+   * Sample the curvature of the spline at t. Curvature is the inverse of the radius.
    *
-   * @param  t Where along the path to sample, in the range of [0, 1]
+   * @param  t Where along the spline to sample, in the range of [0, 1]
    * @return the curvature at t
    */
   constexpr virtual QCurvature curvature(double t) const = 0;
 
   /**
-   * Sample the velocity of the path at t. Velocity is the ratio between distance traveled and
+   * Sample the velocity of the spline at t. Velocity is the ratio between distance traveled and
    * change in t.
    *
-   * @param t Where along the path to sample, in the range of [0, 1]
+   * @param t Where along the spline to sample, in the range of [0, 1]
    * @return the velocity at t
    */
   constexpr virtual QLength velocity(double /*t*/) const { return length(); }
 
   /**
-   * Calculate the length of the path. This method has a default implementation that tries to fit
-   * lines onto the path and sums their length.
+   * Calculate the length of the spline. This method has a default implementation that tries to fit
+   * lines onto the spline and sums their length.
    *
-   * @param  resolution The number of lines to fit to the path.
-   * @return the length of the path
+   * @param  resolution The number of lines to fit to the spline.
+   * @return the length of the spline
    */
   constexpr virtual QLength length(double resolution = 100) const {
     QLength len {0.0};
@@ -55,7 +55,8 @@ public:
   }
 
   /**
-   * Using the velocity of the path, calculate how much to increment t to travel a certain distance.
+   * Using the velocity of the spline, calculate how much to increment t to travel a certain
+   * distance.
    *
    * @param  t    The previous value of t.
    * @param  dist The desired distance to travel.
@@ -67,18 +68,18 @@ public:
 };
 
 /**
- * Provides some aditional path methods that require knowledge of the derived class type. This is
- * solved using a CRTP. All paths should inherit from this class rather than Path.
+ * Provides some additional spline methods that require knowledge of the derived class type. This is
+ * solved using a CRTP. All splines should inherit from this class rather than Spline.
  *
  * @tparam CRTP The derived class type.
  */
-template <class CRTP> class PathHelper : public Path {
+template <class CRTP> class SplineHelper : public Spline {
 public:
-  constexpr PathHelper() = default;
-  constexpr ~PathHelper() override = default;
+  constexpr SplineHelper() = default;
+  constexpr ~SplineHelper() override = default;
 
   /**
-   * Return a Stepper that contains a reference to the path and a given StepBy.
+   * Return a Stepper that contains a reference to the spline and a given StepBy.
    */
   template <class S> requires(!ConstStepper<S>) constexpr auto step(S&& s) const& {
     return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s));
@@ -94,8 +95,8 @@ public:
   }
 
   /**
-   * Generate the path given a StepBy. Generate means to sample the whole path and return an array
-   * of points.
+   * Generate the spline given a StepBy. Generate means to sample the whole spline and return an
+   * array of points.
    */
   template <class S> requires(!ConstStepper<S>) auto generate(S&& s) const& {
     return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s)).generate();

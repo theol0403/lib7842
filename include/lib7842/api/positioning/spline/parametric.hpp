@@ -1,5 +1,5 @@
 #pragma once
-#include "path.hpp"
+#include "spline.hpp"
 
 namespace lib7842 {
 
@@ -35,8 +35,8 @@ public:
 template <class T> concept IsParametricFnc = std::derived_from<ParametricFnc, T>;
 
 /**
- * A Parametric is a two-dimensional path that uses two one-dimensional functions to map x and y as
- * a function of t.
+ * A Parametric is a two-dimensional spline that uses two one-dimensional functions to map x and y
+ * as a function of t.
  *
  * @tparam T The type of ParametricFnc.
  * @tparam B Used to facilitate specialization, setting the value to true will force the
@@ -44,7 +44,7 @@ template <class T> concept IsParametricFnc = std::derived_from<ParametricFnc, T>
  * implementation.
  */
 template <class T, bool B = false>
-requires IsParametricFnc<T> class Parametric : public PathHelper<Parametric<T>> {
+requires IsParametricFnc<T> class Parametric : public SplineHelper<Parametric<T>> {
 public:
   /**
    * Create a Parametric given two one-dimensional functions.
@@ -56,10 +56,10 @@ public:
   constexpr ~Parametric() override = default;
 
   /**
-   * Sample the point along the path given t. The angle of the point is equal to the arctan of the
+   * Sample the point along the spline given t. The angle of the point is equal to the arctan of the
    * derivatives of the two functions.
    *
-   * @param  t Where along the path to sample, in the range of [0, 1].
+   * @param  t Where along the spline to sample, in the range of [0, 1].
    * @return The sampled point at t.
    */
   constexpr State calc(double t) const override {
@@ -73,10 +73,10 @@ public:
   }
 
   /**
-   * Sample the curvature of the path at t. Curvature is the inverse of the radius.
+   * Sample the curvature of the spline at t. Curvature is the inverse of the radius.
    * https://en.wikipedia.org/wiki/Curvature#In_terms_of_a_general_parametrization
    *
-   * @param  t Where along the path to sample, in the range of [0, 1]
+   * @param  t Where along the spline to sample, in the range of [0, 1]
    * @return the curvature at t
    */
   constexpr QCurvature curvature(double t) const override {
@@ -88,11 +88,11 @@ public:
   }
 
   /**
-   * Sample the velocity of the path at t. Velocity is the ratio between distance traveled and
+   * Sample the velocity of the spline at t. Velocity is the ratio between distance traveled and
    * change in t. In this case, the velocity is found by taking the hypotenuse of the derivative of
    * the two functions.
    *
-   * @param t Where along the path to sample, in the range of [0, 1]
+   * @param t Where along the spline to sample, in the range of [0, 1]
    * @return the velocity at t
    */
   constexpr QLength velocity(double t) const override {

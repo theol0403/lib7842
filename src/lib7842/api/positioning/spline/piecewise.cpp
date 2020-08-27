@@ -1,4 +1,4 @@
-#include "lib7842/api/positioning/path/piecewise.hpp"
+#include "lib7842/api/positioning/spline/piecewise.hpp"
 #include "lib7842/test/test.hpp"
 #include "line.hpp"
 namespace test {
