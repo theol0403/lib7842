@@ -66,7 +66,14 @@ public:
   }
 };
 
-template <class CRTP> struct PathHelper : public Path {
+/**
+ * Provides some aditional path methods that require knowledge of the derived class type. This is
+ * solved using a CRTP. All paths should inherit from this class rather than Path.
+ *
+ * @tparam CRTP The derived class type.
+ */
+template <class CRTP> class PathHelper : public Path {
+public:
   constexpr PathHelper() = default;
   constexpr ~PathHelper() override = default;
 

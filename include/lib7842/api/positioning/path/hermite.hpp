@@ -20,8 +20,8 @@ using QuinticHermite = Hermite<5>;
  * to be solved ahead of time. https://en.wikipedia.org/wiki/Cubic_Hermite_spline
  *
  * This class is designed to be used with the Parametric class to produce a two-dimensional spline.
- * Hermite<N> is an alias for Parametric<HermiteFnc<N>>. There are also aliases for CubicHermite
- * and QuinticHermite which are the only orders currently supported.
+ * Hermite<N> is an alias for Parametric<HermiteFnc<N>>. There are also aliases for CubicHermite and
+ * QuinticHermite which are the only orders currently supported.
  *
  * @tparam N The order of the Hermite.
  */
@@ -29,6 +29,11 @@ template <size_t N> class HermiteFnc : public ParametricFnc {
 public:
   /**
    * Create a new one-dimensional HermiteFnc given a start and end value and their tangents.
+   *
+   * @param start   The starting value of the function.
+   * @param start_t The starting tangent of the function.
+   * @param end     The ending value of the function.
+   * @param end_t   The ending tangent of the function.
    */
   constexpr HermiteFnc(double start, double start_t, double end, double end_t);
   constexpr ~HermiteFnc() = default;

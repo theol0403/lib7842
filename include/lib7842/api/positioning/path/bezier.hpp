@@ -128,7 +128,7 @@ public:
    * Separates the x and y component of the control points and delegates them to their respective
    * functions.
    *
-   * @param  ctrls     The array of control points.
+   * @param ctrls The array of control points.
    */
   constexpr explicit Parametric(const Vector (&ctrls)[N + 1]) :
     Parametric<BezierFnc<N>, true>(
@@ -138,6 +138,9 @@ public:
   constexpr ~Parametric() override = default;
 
 private:
+  /**
+   * Helper method to transform an array of 2D Vector into an array of 1D double.
+   */
   constexpr auto process(const Vector (&ctrls)[N + 1], auto&& f) {
     std::array<double, N + 1> t;
     std::transform(std::begin(ctrls), std::end(ctrls), std::begin(t), f);
