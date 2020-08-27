@@ -56,20 +56,6 @@ Stepper(T&&, S&&)
 namespace StepBy {
 
 class Count {
-  template <class P> class iterator;
-
-public:
-  consteval explicit Count(int ic) : c(ic) {
-    ic > 0 ? true : throw std::invalid_argument("StepBy::Count: count must be greater than zero");
-  }
-
-  template <class P> constexpr auto begin(const P& ip) const { return iterator<P>(ip, c, 0); }
-  template <class P> constexpr auto end(const P& ip) const { return iterator<P>(ip, c, c); }
-
-protected:
-  const int c {};
-
-private:
   template <class P>
   class iterator : public std::iterator<const std::forward_iterator_tag, State, int> {
   public:
@@ -88,6 +74,16 @@ private:
     const int c;
     int i;
   };
+
+public:
+  consteval explicit Count(int ic) : c(ic) {
+    ic > 0 ? true : throw std::invalid_argument("StepBy::Count: count must be greater than zero");
+  }
+
+  template <class P> constexpr auto begin(const P& ip) const { return iterator<P>(ip, c, 0); }
+  template <class P> constexpr auto end(const P& ip) const { return iterator<P>(ip, c, c); }
+
+  const int c;
 };
 
 consteval Count T(double t) {
@@ -98,20 +94,6 @@ consteval Count T(double t) {
 }
 
 class Dist {
-  template <class P> class iterator;
-
-public:
-  consteval explicit Dist(const QLength& id) : d(id) {
-    id > 0_m ? true : throw std::invalid_argument("StepBy::Dist: dist must be greater than zero");
-  }
-
-  template <class P> constexpr auto begin(const P& ip) const { return iterator<P>(ip, d, 0.0); }
-  template <class P> constexpr auto end(const P& ip) const { return iterator<P>(ip, d, 1.0); }
-
-protected:
-  const QLength d;
-
-private:
   template <class P>
   class iterator : public std::iterator<const std::forward_iterator_tag, State, double> {
   public:
@@ -130,20 +112,19 @@ private:
     const QLength d;
     double t;
   };
+
+public:
+  consteval explicit Dist(const QLength& id) : d(id) {
+    id > 0_m ? true : throw std::invalid_argument("StepBy::Dist: dist must be greater than zero");
+  }
+
+  template <class P> constexpr auto begin(const P& ip) const { return iterator<P>(ip, d, 0.0); }
+  template <class P> constexpr auto end(const P& ip) const { return iterator<P>(ip, d, 1.0); }
+
+  const QLength d;
 };
 
 template <size_t C> class ConstCount {
-  template <class P> class iterator;
-
-public:
-  consteval ConstCount() = default;
-
-  template <class P> consteval auto begin(const P& ip) const { return iterator<P>(ip, 0); }
-  template <class P> consteval auto end(const P& ip) const { return iterator<P>(ip, C); }
-
-  constexpr static size_t N = C + 1;
-
-private:
   template <class P>
   class iterator : public std::iterator<const std::forward_iterator_tag, State, int> {
   public:
@@ -161,6 +142,14 @@ private:
     const P& p;
     int i;
   };
+
+public:
+  consteval ConstCount() = default;
+
+  template <class P> consteval auto begin(const P& ip) const { return iterator<P>(ip, 0); }
+  template <class P> consteval auto end(const P& ip) const { return iterator<P>(ip, C); }
+
+  constexpr static size_t N = C + 1;
 };
 
 } // namespace StepBy
