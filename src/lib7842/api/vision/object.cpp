@@ -58,9 +58,7 @@ TEST_CASE("Object") {
       }
 
       THEN("a custom query should work") {
-        Query query = [](const Object& iobj) {
-          return iobj.x + iobj.y;
-        };
+        Query query = [](const Object& iobj) { return iobj.x + iobj.y; };
 
         CHECK(obj.get(query) == 150);
         CHECK(query.getFrom(obj) == 150);
