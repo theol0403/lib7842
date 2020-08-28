@@ -1,6 +1,6 @@
 #include "lib7842/api/purePursuit/pathGenerator.hpp"
-#include "lib7842/api/positioning/spline/line.hpp"
 #include "lib7842/api/positioning/point/mathPoint.hpp"
+#include "lib7842/api/positioning/spline/line.hpp"
 
 namespace lib7842 {
 

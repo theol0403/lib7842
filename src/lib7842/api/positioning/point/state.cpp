@@ -93,17 +93,11 @@ TEST_CASE("State") {
       CHECK(Vector(State(point)) == point);
       CHECK(point == Vector(state));
 
-      [&](const Vector& ipoint) {
-        CHECK(ipoint == Vector(state));
-      }(state);
+      [&](const Vector& ipoint) { CHECK(ipoint == Vector(state)); }(state);
 
-      [&](const State& istate) {
-        CHECK(State(Vector(istate)) == State(Vector(state)));
-      }(state);
+      [&](const State& istate) { CHECK(State(Vector(istate)) == State(Vector(state))); }(state);
 
-      [&](const State& istate) {
-        CHECK(State(Vector(istate)) == State(point));
-      }(State(point));
+      [&](const State& istate) { CHECK(State(Vector(istate)) == State(point)); }(State(point));
     }
   }
 }

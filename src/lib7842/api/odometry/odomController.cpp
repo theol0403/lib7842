@@ -20,22 +20,16 @@ OdomController::OdomController(std::shared_ptr<ChassisModel> imodel,
   driveRadius(idriveRadius) {}
 
 OdomController::Angler OdomController::makeAngler() {
-  return [=](const OdomController& /*unused*/) {
-    return 0_deg;
-  };
+  return [=](const OdomController& /*unused*/) { return 0_deg; };
 }
 
 OdomController::Angler OdomController::makeAngler(const QAngle& angle) {
   QAngle iangle = rollAngle180(angle);
-  return [=](const OdomController& odom) {
-    return rollAngle180(iangle - odom.getState().theta);
-  };
+  return [=](const OdomController& odom) { return rollAngle180(iangle - odom.getState().theta); };
 }
 
 OdomController::Angler OdomController::makeAngler(const Vector& point) {
-  return [=](const OdomController& odom) {
-    return odom.getState().angleTo(point);
-  };
+  return [=](const OdomController& odom) { return odom.getState().angleTo(point); };
 }
 
 OdomController::Turner OdomController::pointTurn = [](const std::shared_ptr<ChassisModel>& imodel,
@@ -186,51 +180,35 @@ bool OdomController::isAngleSettled() const { return angleController->isSettled(
 bool OdomController::isTurnSettled() const { return turnController->isSettled(); }
 
 Trigger::Function OdomController::distanceTo(const Vector& point, const QLength& trigger) const {
-  return [=, this] {
-    return getState().distTo(point) < trigger;
-  };
+  return [=, this] { return getState().distTo(point) < trigger; };
 }
 
 Trigger::Function OdomController::angleTo(const Vector& point, const QAngle& trigger) const {
-  return [=, this] {
-    return getState().angleTo(point) < trigger;
-  };
+  return [=, this] { return getState().angleTo(point) < trigger; };
 }
 
 Trigger::Function OdomController::angleTo(const QAngle& angle, const QAngle& trigger) const {
-  return [=, this] {
-    return (getState().theta - angle).abs() < trigger;
-  };
+  return [=, this] { return (getState().theta - angle).abs() < trigger; };
 }
 
 Trigger::Function OdomController::distanceErr(const QLength& trigger) const {
-  return [=, this] {
-    return getDistanceError() < trigger;
-  };
+  return [=, this] { return getDistanceError() < trigger; };
 }
 
 Trigger::Function OdomController::angleErr(const QAngle& trigger) const {
-  return [=, this] {
-    return getAngleError() < trigger;
-  };
+  return [=, this] { return getAngleError() < trigger; };
 }
 
 Trigger::Function OdomController::distanceSettled() const {
-  return [this] {
-    return isDistanceSettled();
-  };
+  return [this] { return isDistanceSettled(); };
 }
 
 Trigger::Function OdomController::turnSettled() const {
-  return [this] {
-    return isTurnSettled();
-  };
+  return [this] { return isTurnSettled(); };
 }
 
 Trigger::Function OdomController::angleSettled() const {
-  return [this] {
-    return isAngleSettled();
-  };
+  return [this] { return isAngleSettled(); };
 }
 
 Trigger::Function OdomController::distanceSettledUtil(const TimeUtil& timeUtil) const {

@@ -125,9 +125,7 @@ TEST_CASE("CustomOdometry") {
     auto odom =
       std::make_shared<CustomOdometry>(model, ChassisScales({{4_in, 10_in, 5_in, 4_in}, 360}));
 
-    auto assertState = [&](const State& istate) {
-      assertOdomState(istate, odom);
-    };
+    auto assertState = [&](const State& istate) { assertOdomState(istate, odom); };
 
     SUBCASE("MockSensorsFunction") {
       model->setSensorVals(10, 20, 30);
