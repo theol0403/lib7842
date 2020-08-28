@@ -19,6 +19,7 @@ public:
    */
   constexpr Line(const Vector& istart, const Vector& iend) :
     start(istart, istart.angleTo(iend)), end(iend, start.theta) {}
+
   constexpr ~Line() override = default;
 
   /**
