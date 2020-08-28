@@ -1,5 +1,6 @@
 #pragma once
 #include "lib7842/api/positioning/point/state.hpp"
+#include "lib7842/deps/fixed_capacity_vector.h"
 
 namespace lib7842 {
 template <class T> concept ConstStepper = requires { T::N; };
@@ -12,15 +13,13 @@ public:
   constexpr const std::remove_reference_t<T>& get() const { return spline; }
 
   template <class V = S> requires(!ConstStepper<V>) auto generate() const {
-    std::vector<State> s;
-    std::move(begin(), end(), std::back_inserter(s));
-    return s;
+    return std::vector<State>(begin(), end());
   }
 
   template <class V = S> requires ConstStepper<V> consteval auto generate() const {
-    std::array<State, V::N> s;
-    for (auto it = begin(); it != end(); ++it) {
-      s[it - begin()] = *it;
+    std::static_vector<State, V::N> s;
+    for (auto&& p : *this) {
+      s.emplace_back(p);
     }
     return s;
   }

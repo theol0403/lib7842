@@ -157,7 +157,7 @@ namespace std
             static constexpr bool Convertible = is_convertible_v<From, To>;
 
             template <typename T>
-            static constexpr bool Trivial = is_trivial_v<T>;
+            static constexpr bool Trivial = is_default_constructible_v<T>;
 
             template <typename T>
             static constexpr bool Const = is_const_v<T>;
@@ -393,7 +393,7 @@ namespace std
                         = default;
                     constexpr zero_sized(zero_sized&&) = default;
                     constexpr zero_sized& operator=(zero_sized&&) = default;
-                    ~zero_sized()                                 = default;
+                    constexpr ~zero_sized()                                 = default;
 
                     /// Constructs an empty storage from an initializer list of
                     /// zero elements.
@@ -541,7 +541,7 @@ namespace std
                         = default;
                     constexpr trivial(trivial&&) noexcept = default;
                     constexpr trivial& operator=(trivial&&) noexcept = default;
-                    ~trivial()                                       = default;
+                    constexpr ~trivial()                                       = default;
 
                   private:
                     template <typename U, FCV_REQUIRES_(Convertible<U, T>)>

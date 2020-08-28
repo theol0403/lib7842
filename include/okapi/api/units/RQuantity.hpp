@@ -30,6 +30,8 @@ class RQuantity {
   explicit constexpr RQuantity(long double val) : value(static_cast<double>(val)) {
   }
 
+  constexpr ~RQuantity() = default;
+
   // The intrinsic operations for a quantity with a unit is addition and subtraction
   constexpr RQuantity const &operator+=(const RQuantity &rhs) {
     value += rhs.value;

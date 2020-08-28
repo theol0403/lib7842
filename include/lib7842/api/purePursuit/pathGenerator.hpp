@@ -22,7 +22,7 @@ public:
    * transforms the array into a vector.
    */
   template <size_t N>
-  static std::vector<Waypoint> generate(const std::array<State, N>& ip,
+  static std::vector<Waypoint> generate(const std::static_vector<State, N>& ip,
                                         const PursuitLimits& limits) {
     return generate({ip.begin(), ip.end()}, limits);
   }
