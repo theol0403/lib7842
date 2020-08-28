@@ -60,7 +60,6 @@ class Count {
   public:
     constexpr iterator(const P& ip, int ic, int ii) : p(ip), c(ic), i(ii) {}
     constexpr bool operator!=(const iterator& rhs) const { return i != (rhs.i + 1); }
-    constexpr int operator-(const iterator& rhs) const { return i - rhs.i; }
     constexpr State operator*() const { return p.calc(static_cast<double>(i) / c); }
     constexpr State operator->() const { return *(*this); }
     constexpr iterator& operator++() {
@@ -78,10 +77,8 @@ public:
   consteval explicit Count(int ic) : c(ic) {
     ic > 0 ? true : throw std::invalid_argument("StepBy::Count: count must be greater than zero");
   }
-
   template <class P> constexpr auto begin(const P& ip) const { return iterator<P>(ip, c, 0); }
   template <class P> constexpr auto end(const P& ip) const { return iterator<P>(ip, c, c); }
-
   const int c;
 };
 
@@ -98,7 +95,6 @@ class Dist {
   public:
     constexpr iterator(const P& ip, const QLength& id, double it) : p(ip), d(id), t(it) {}
     constexpr bool operator!=(const iterator& rhs) const { return static_cast<float>(t) <= rhs.t; }
-    constexpr double operator-(const iterator& rhs) const { return t - rhs.t; }
     constexpr State operator*() const { return p.calc(t); }
     constexpr State operator->() const { return *(*this); }
     constexpr iterator& operator++() {
@@ -116,10 +112,8 @@ public:
   consteval explicit Dist(const QLength& id) : d(id) {
     id > 0_m ? true : throw std::invalid_argument("StepBy::Dist: dist must be greater than zero");
   }
-
   template <class P> constexpr auto begin(const P& ip) const { return iterator<P>(ip, d, 0.0); }
   template <class P> constexpr auto end(const P& ip) const { return iterator<P>(ip, d, 1.0); }
-
   const QLength d;
 };
 
@@ -129,7 +123,6 @@ template <size_t C> class ConstCount {
   public:
     consteval iterator(const P& ip, int ii) : p(ip), i(ii) {}
     consteval bool operator!=(const iterator& rhs) const { return i != (rhs.i + 1); }
-    consteval int operator-(const iterator& rhs) const { return i - rhs.i; }
     consteval State operator*() const { return p.calc(static_cast<double>(i) / C); }
     consteval State operator->() const { return *(*this); }
     consteval iterator& operator++() {
@@ -144,10 +137,8 @@ template <size_t C> class ConstCount {
 
 public:
   consteval ConstCount() = default;
-
   template <class P> consteval auto begin(const P& ip) const { return iterator<P>(ip, 0); }
   template <class P> consteval auto end(const P& ip) const { return iterator<P>(ip, C); }
-
   constexpr static size_t N = C + 1;
 };
 
