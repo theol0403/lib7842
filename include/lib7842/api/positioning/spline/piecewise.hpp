@@ -1,7 +1,7 @@
 #pragma once
 #include "lib7842/api/other/units.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
-#include "lib7842/deps/fixed_capacity_vector.h"
+#include "lib7842/deps/static_vector.h"
 #include "parametric.hpp"
 #include "spline.hpp"
 #include <numeric>

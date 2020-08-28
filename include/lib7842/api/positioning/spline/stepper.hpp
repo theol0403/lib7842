@@ -1,6 +1,6 @@
 #pragma once
 #include "lib7842/api/positioning/point/state.hpp"
-#include "lib7842/deps/fixed_capacity_vector.h"
+#include "lib7842/deps/static_vector.h"
 
 namespace lib7842 {
 template <class T> concept ConstStepper = requires { T::N; };
