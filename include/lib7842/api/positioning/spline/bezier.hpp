@@ -114,6 +114,7 @@ protected:
   }
 };
 
+// deduction guide to create BezierFnc given array of control points.
 template <size_t N> BezierFnc(const std::array<double, N>&) -> BezierFnc<N - 1>;
 
 /**
@@ -123,7 +124,7 @@ template <size_t N> BezierFnc(const std::array<double, N>&) -> BezierFnc<N - 1>;
 template <size_t N> class Parametric<BezierFnc<N>> : public Parametric<BezierFnc<N>, true> {
 public:
   /**
-   * Helper method to construct a Piecewise<BezierFnc<N>> given an array of control points.
+   * Helper method to construct a Piecewise<BezierFnc<N>> given an array of 2D control points.
    * Separates the x and y component of the control points and delegates them to their respective
    * functions.
    *
@@ -136,7 +137,7 @@ public:
 
 private:
   /**
-   * Helper method to transform an array of 2D Vector into an array of 1D doubles.
+   * Helper method to transform an array of 2D Vector into an array of 1D control points.
    */
   constexpr auto process(const Vector (&ctrls)[N + 1], auto&& f) {
     std::array<double, N + 1> t;
@@ -145,5 +146,6 @@ private:
   }
 };
 
+// deduction guide to create Bezier given array of 2D control points.
 template <size_t N> Parametric(const Vector (&)[N]) -> Parametric<BezierFnc<N - 1>>;
 } // namespace lib7842

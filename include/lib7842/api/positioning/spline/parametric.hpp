@@ -104,5 +104,6 @@ protected:
   std::pair<T, T> p;
 };
 
+// deduction guide to create a Parametric.
 template <class T, bool D = false> Parametric(T&&, T&&) -> Parametric<T, D>;
 }; // namespace lib7842
