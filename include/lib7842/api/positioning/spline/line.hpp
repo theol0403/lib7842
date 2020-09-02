@@ -58,7 +58,7 @@ protected:
  */
 template <class P, size_t N>
 requires std::same_as<P, Line> constexpr auto make_piecewise(Vector(&&ip)[N]) {
-  std::optional<P> p[N - 1];
+  std::array<std::optional<P>, N> p;
   for (size_t i = 0; i < N - 1; ++i) {
     p[i].emplace(ip[i], ip[i + 1]);
   }

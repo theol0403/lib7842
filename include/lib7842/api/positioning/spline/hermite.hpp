@@ -162,9 +162,9 @@ public:
  */
 template <class P, size_t N>
 requires std::same_as<P, Hermite<P::type::order>> constexpr auto make_piecewise(State(&&ip)[N]) {
-  std::static_vector<P, N - 1> p;
+  std::array<std::optional<P>, N - 1> p;
   for (size_t i = 0; i < N - 1; ++i) {
-    p.emplace_back(ip[i], ip[i + 1]);
+    p[i].emplace(ip[i], ip[i + 1]);
   }
   return Piecewise(std::move(p));
 }

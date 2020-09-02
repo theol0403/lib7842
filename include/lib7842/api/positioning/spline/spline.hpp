@@ -75,22 +75,13 @@ public:
  */
 template <class CRTP> class SplineHelper : public Spline {
 public:
-  constexpr SplineHelper() = default;
-  constexpr ~SplineHelper() override = default;
-
   /**
    * Return a Stepper that contains a reference to the spline and a given StepBy.
    */
-  template <class S> requires(!ConstStepper<S>) constexpr auto step(S&& s) const& {
+  template <class S> constexpr auto step(S&& s) const& {
     return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s));
   }
-  template <class S> requires(!ConstStepper<S>) constexpr auto step(S&& s) && {
-    return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
-  }
-  template <class S> requires ConstStepper<S> consteval auto step(S&& s) const& {
-    return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s));
-  }
-  template <class S> requires ConstStepper<S> consteval auto step(S&& s) && {
+  template <class S> constexpr auto step(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s));
   }
 
@@ -98,16 +89,10 @@ public:
    * Generate the spline given a StepBy. Generate means to sample the whole spline and return an
    * array of points.
    */
-  template <class S> requires(!ConstStepper<S>) auto generate(S&& s) const& {
+  template <class S> auto generate(S&& s) const& {
     return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s)).generate();
   }
-  template <class S> requires(!ConstStepper<S>) auto generate(S&& s) && {
-    return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s)).generate();
-  }
-  template <class S> requires ConstStepper<S> consteval auto generate(S&& s) const& {
-    return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s)).generate();
-  }
-  template <class S> requires ConstStepper<S> consteval auto generate(S&& s) && {
+  template <class S> auto generate(S&& s) && {
     return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s)).generate();
   }
 };

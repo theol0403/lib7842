@@ -9,10 +9,7 @@ namespace lib7842 {
 
 template <class P, size_t N> class Piecewise : public SplineHelper<Piecewise<P, N>> {
 public:
-  constexpr Piecewise() = default;
-  constexpr ~Piecewise() override = default;
-
-  constexpr explicit Piecewise(std::optional<P>(&&ip)[N]) : p(ip) {}
+  constexpr explicit Piecewise(std::array<std::optional<P>, N>&& ip) : p(ip) {}
 
   constexpr explicit Piecewise(P(&&ip)[N]) {
     std::move(std::begin(ip), std::end(ip), std::begin(p));
@@ -28,7 +25,7 @@ public:
   }
 
 protected:
-  std::optional<P> p[N];
+  std::array<std::optional<P>, N> p;
 
   constexpr auto get(double t, const auto& f) const {
     size_t i = t * N; // which arc to use

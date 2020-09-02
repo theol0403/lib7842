@@ -148,7 +148,7 @@ void opcontrol() {
       //            .generate();
 
       auto p = make_piecewise<Line>({{0_ft, 0_ft}, {2_ft, 2_ft}, {0_ft, 2_ft}})
-                 .step(StepBy::ConstCount<100>())
+                 .step(StepBy::Count(100))
                  .generate();
 
       // auto p =
