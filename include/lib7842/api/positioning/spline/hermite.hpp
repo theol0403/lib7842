@@ -155,7 +155,7 @@ public:
  *
  * @tparam P The type of Hermite, for example CubicHermite.
  * @tparam N The number of points provided.
- * @return a Piecewise<P, N-1>>.
+ * @return A Piecewise<P, N-1>>.
  */
 template <class P, size_t N>
 requires std::same_as<P, Hermite<P::type::order>> constexpr auto make_piecewise(State(&&ip)[N]) {
@@ -165,4 +165,5 @@ requires std::same_as<P, Hermite<P::type::order>> constexpr auto make_piecewise(
   }
   return Piecewise(std::move(p));
 }
+
 } // namespace lib7842

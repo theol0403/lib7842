@@ -40,8 +40,8 @@ template <class T> concept IsParametricFnc = std::derived_from<ParametricFnc, T>
  *
  * @tparam T The type of ParametricFnc.
  * @tparam B Used to facilitate specialization, setting the value to true will force the
- * specializations to be ignored, allowing for the specializations to inherit from this base
- * implementation.
+ *           specializations to be ignored, allowing for the specializations to inherit from this
+ *           base implementation.
  */
 template <class T, bool B = false>
 requires IsParametricFnc<T> class Parametric : public SplineHelper<Parametric<T>> {
@@ -76,7 +76,7 @@ public:
    * https://en.wikipedia.org/wiki/Curvature#In_terms_of_a_general_parametrization
    *
    * @param  t Where along the spline to sample, in the range of [0, 1]
-   * @return the curvature at t
+   * @return The curvature at t
    */
   constexpr QCurvature curvature(double t) const override {
     QLength x_d = p.first.calc_d(t) * meter;
@@ -91,8 +91,8 @@ public:
    * change in t. In this case, the velocity is found by taking the hypotenuse of the derivative of
    * the two functions.
    *
-   * @param t Where along the spline to sample, in the range of [0, 1]
-   * @return the velocity at t
+   * @param t Where along the spline to sample, in the range of [0, 1].
+   * @return The velocity at t.
    */
   constexpr QLength velocity(double t) const override {
     return sqrt(square(p.first.calc_d(t) * meter) + square(p.second.calc_d(t) * meter));
@@ -105,5 +105,6 @@ protected:
 };
 
 // deduction guide to create a Parametric.
-template <class T, bool D = false> Parametric(T&&, T&&) -> Parametric<T, D>;
+template <class T, bool D = false> Parametric(T&&, T &&) -> Parametric<T, D>;
+
 }; // namespace lib7842

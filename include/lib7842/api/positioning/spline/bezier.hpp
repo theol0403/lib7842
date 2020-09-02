@@ -148,4 +148,5 @@ private:
 
 // deduction guide to create Bezier given array of 2D control points.
 template <size_t N> Parametric(const Vector (&)[N]) -> Parametric<BezierFnc<N - 1>>;
+
 } // namespace lib7842

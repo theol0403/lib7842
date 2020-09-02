@@ -15,8 +15,8 @@ public:
   /**
    * Create a new line given the coordinates of two points.
    *
-   * @param istart The start point
-   * @param iend   The end point
+   * @param istart The start point.
+   * @param iend   The end point.
    */
   constexpr Line(const Vector& istart, const Vector& iend) :
     start(istart, istart.angleTo(iend)), end(iend, start.theta) {}
@@ -51,7 +51,7 @@ protected:
  *
  * @tparam P Must be Line.
  * @tparam N The number of points provided.
- * @return a Piecewise<P, N-1>>.
+ * @return A Piecewise<P, N-1>>.
  */
 template <class P, size_t N>
 requires std::same_as<P, Line> constexpr auto make_piecewise(Vector(&&ip)[N]) {
