@@ -53,7 +53,6 @@ public:
    * @param y The function that maps y as a function of t.
    */
   constexpr Parametric(T&& x, T&& y) : p(std::forward<T>(x), std::forward<T>(y)) {}
-  constexpr ~Parametric() override = default;
 
   /**
    * Sample the point along the spline given t. The angle of the point is equal to the arctan of the

@@ -37,7 +37,6 @@ public:
    * @param ictrls The control points.
    */
   constexpr explicit BezierFnc(const std::array<double, N + 1>& ictrls) : ctrls(ictrls) {}
-  constexpr ~BezierFnc() = default;
 
   /**
    * Calculate the y value of the bezier given x.
@@ -134,8 +133,6 @@ public:
     Parametric<BezierFnc<N>, true>(
       BezierFnc(process(ctrls, [](const auto& ip) { return ip.x.convert(meter); })),
       BezierFnc(process(ctrls, [](const auto& ip) { return ip.y.convert(meter); }))) {}
-
-  constexpr ~Parametric() override = default;
 
 private:
   /**

@@ -37,7 +37,6 @@ public:
    * @param end_t   The ending tangent of the function.
    */
   constexpr HermiteFnc(double start, double start_t, double end, double end_t);
-  constexpr ~HermiteFnc() = default;
 
   /**
    * Calculate the y value of the hermite given x.
@@ -147,8 +146,6 @@ public:
    */
   constexpr Parametric(const State& start, const State& end, double stretch = 1) :
     Parametric(start, end, stretch, stretch) {}
-
-  constexpr ~Parametric() override = default;
 };
 
 /**

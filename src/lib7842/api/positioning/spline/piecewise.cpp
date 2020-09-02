@@ -4,7 +4,7 @@
 namespace test {
 TEST_CASE("Piecewise") {
   SUBCASE("Explicit") {
-    auto l = Piecewise<Line, 2>({{{0_m, 0_m}, {1_m, 1_m}}, {{1_m, 1_m}, {2_m, 2_m}}})
+    auto l = make_piecewise<Line, 2>({{{0_m, 0_m}, {1_m, 1_m}}, {{1_m, 1_m}, {2_m, 2_m}}})
                .step(StepBy::Count(5))
                .generate();
     REQUIRE(l.size() == 6);
@@ -14,7 +14,7 @@ TEST_CASE("Piecewise") {
   }
 
   SUBCASE("Deduction") {
-    auto l = Piecewise({Line {{0_m, 0_m}, {1_m, 1_m}}, Line {{1_m, 1_m}, {2_m, 2_m}}})
+    auto l = make_piecewise({Line {{0_m, 0_m}, {1_m, 1_m}}, Line {{1_m, 1_m}, {2_m, 2_m}}})
                .step(StepBy::Count(5))
                .generate();
     REQUIRE(l.size() == 6);

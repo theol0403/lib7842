@@ -21,9 +21,6 @@ public:
   constexpr Line(const Vector& istart, const Vector& iend) :
     start(istart, istart.angleTo(iend)), end(iend, start.theta) {}
 
-  constexpr Line() = default;
-  constexpr ~Line() override = default;
-
   /**
    * Sample the point along the spline which is between the start and end points using linear
    * interpolation given t.
@@ -58,7 +55,7 @@ protected:
  */
 template <class P, size_t N>
 requires std::same_as<P, Line> constexpr auto make_piecewise(Vector(&&ip)[N]) {
-  std::array<std::optional<P>, N> p;
+  std::array<std::optional<P>, N - 1> p;
   for (size_t i = 0; i < N - 1; ++i) {
     p[i].emplace(ip[i], ip[i + 1]);
   }

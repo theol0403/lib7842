@@ -1,7 +1,6 @@
 #pragma once
 #include "lib7842/api/other/units.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
-#include "parametric.hpp"
 #include "spline.hpp"
 #include <numeric>
 
@@ -35,8 +34,6 @@ protected:
     return std::invoke(f, p[i].value(), x);
   }
 };
-
-template <class P, size_t N> Piecewise(P(&&)[N]) -> Piecewise<P, N>;
 
 template <class P, size_t N> constexpr auto make_piecewise(P(&&ip)[N]) {
   return Piecewise<P, N>(std::move(ip));
