@@ -9,6 +9,7 @@ template <class T, class U, class S> class Stepper {
 public:
   constexpr Stepper(T&& ispline, S&& isampler) :
     spline(std::forward<T>(ispline)), sampler(std::forward<S>(isampler)) {}
+  constexpr ~Stepper() = default;
 
   constexpr const std::remove_reference_t<T>& get() const { return spline; }
 
@@ -41,8 +42,8 @@ public:
   }
 
 protected:
-  const U spline;
-  const S sampler;
+  U spline;
+  S sampler;
 };
 
 template <class T, class S>
@@ -59,6 +60,7 @@ class Count {
   class iterator : public std::iterator<const std::forward_iterator_tag, State, size_t> {
   public:
     constexpr iterator(const P& ip, size_t ic, size_t ii) : p(ip), c(ic), i(ii) {}
+    constexpr ~iterator() = default;
     constexpr bool operator!=(const iterator& rhs) const { return i != (rhs.i + 1); }
     constexpr State operator*() const { return p.calc(static_cast<double>(i) / c); }
     constexpr State operator->() const { return *(*this); }
@@ -77,6 +79,7 @@ public:
   consteval explicit Count(size_t ic) : c(ic) {
     ic > 0 ? true : throw std::invalid_argument("StepBy::Count: count must be greater than zero");
   }
+  constexpr ~Count() = default;
   template <class P> constexpr auto begin(const P& ip) const { return iterator<P>(ip, c, 0); }
   template <class P> constexpr auto end(const P& ip) const { return iterator<P>(ip, c, c); }
   const size_t c;
@@ -94,6 +97,7 @@ class Dist {
   class iterator : public std::iterator<const std::forward_iterator_tag, State, double> {
   public:
     constexpr iterator(const P& ip, const QLength& id, double it) : p(ip), d(id), t(it) {}
+    constexpr ~iterator() = default;
     constexpr bool operator!=(const iterator& rhs) const { return static_cast<float>(t) <= rhs.t; }
     constexpr State operator*() const { return p.calc(t); }
     constexpr State operator->() const { return *(*this); }
@@ -112,6 +116,7 @@ public:
   consteval explicit Dist(const QLength& id) : d(id) {
     id > 0_m ? true : throw std::invalid_argument("StepBy::Dist: dist must be greater than zero");
   }
+  constexpr ~Dist() = default;
   template <class P> constexpr auto begin(const P& ip) const { return iterator<P>(ip, d, 0.0); }
   template <class P> constexpr auto end(const P& ip) const { return iterator<P>(ip, d, 1.0); }
   const QLength d;
@@ -123,6 +128,7 @@ template <size_t C> class ConstCount {
   class iterator : public std::iterator<const std::forward_iterator_tag, State, size_t> {
   public:
     consteval iterator(const P& ip, size_t ii) : p(ip), i(ii) {}
+    constexpr ~iterator() = default;
     consteval bool operator!=(const iterator& rhs) const { return i != (rhs.i + 1); }
     consteval State operator*() const { return p.calc(static_cast<double>(i) / C); }
     consteval State operator->() const { return *(*this); }
@@ -138,6 +144,7 @@ template <size_t C> class ConstCount {
 
 public:
   consteval ConstCount() = default;
+  constexpr ~ConstCount() = default;
   template <class P> consteval auto begin(const P& ip) const { return iterator<P>(ip, 0); }
   template <class P> consteval auto end(const P& ip) const { return iterator<P>(ip, C); }
   constexpr static size_t N = C + 1;

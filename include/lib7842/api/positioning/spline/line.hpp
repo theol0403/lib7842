@@ -2,6 +2,7 @@
 #include "lib7842/api/other/units.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "okapi/api/units/QAngle.hpp"
+#include "piecewise.hpp"
 #include "spline.hpp"
 
 namespace lib7842 {
@@ -20,6 +21,7 @@ public:
   constexpr Line(const Vector& istart, const Vector& iend) :
     start(istart, istart.angleTo(iend)), end(iend, start.theta) {}
 
+  constexpr Line() = default;
   constexpr ~Line() override = default;
 
   /**
@@ -45,5 +47,22 @@ protected:
   State start;
   State end;
 };
+
+/**
+ * Helper function used to create a Piecewise<Line> using an array of points. Connects a line
+ * between each point. The number of lines in the piecewise is one less than the number of points.
+ *
+ * @tparam P Must be Line.
+ * @tparam N The number of points provided.
+ * @return a Piecewise<P, N-1>>.
+ */
+template <class P, size_t N>
+requires std::same_as<P, Line> constexpr auto make_piecewise(Vector(&&ip)[N]) {
+  std::optional<P> p[N - 1];
+  for (size_t i = 0; i < N - 1; ++i) {
+    p[i].emplace(ip[i], ip[i + 1]);
+  }
+  return Piecewise(std::move(p));
+}
 
 } // namespace lib7842

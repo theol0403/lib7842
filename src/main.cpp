@@ -1,6 +1,8 @@
 #include "main.h"
 
 #include "lib7842/api.hpp"
+#include "lib7842/api/positioning/spline/piecewise.hpp"
+#include "lib7842/api/positioning/spline/stepper.hpp"
 #include "lib7842/test/test.hpp"
 
 using namespace lib7842;
@@ -141,14 +143,18 @@ void opcontrol() {
 
       // follower.followPath(PathGenerator::generate(path2, limits), true);
 
-      auto p = QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg})
+      // auto p = QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg})
+      //            .step(StepBy::ConstCount<100>())
+      //            .generate();
+
+      auto p = make_piecewise<Line>({{0_ft, 0_ft}, {2_ft, 2_ft}, {0_ft, 2_ft}})
                  .step(StepBy::ConstCount<100>())
                  .generate();
 
       // auto p =
       //   Stepper(QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}), StepBy::Count(100));
 
-      follower.followPath(PathGenerator::generate(p, limits), limits, false);
+      // follower.followPath(PathGenerator::generate(p, limits), limits, false);
     }
 
     pros::delay(10);

@@ -917,6 +917,7 @@ public:
 
   /// Default constructor.
   constexpr static_vector() = default;
+  constexpr ~static_vector() = default;
 
   /// Copy constructor.
   FCV_REQUIRES(fcv_detail::CopyConstructible<value_type>)
