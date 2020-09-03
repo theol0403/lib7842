@@ -3,15 +3,51 @@
 
 namespace lib7842 {
 
+/**
+ * A Stepper is a class that acts like an iterator which samples a spline. This provides a way to
+ * expressively control how a spline is traversed.
+ *
+ * A Stepper contains a Spline and a StepBy. The spline is contained by value or reference depending
+ * on how it was passed to the Stepper constructor. A StepBy is helper class which describes how to
+ * step through the path.
+ *
+ * There are a few StepBy available in the `StepBy` namespace: `Count` (how many steps from start to
+ * end), `T` (the increment in t from 0 to 1), and `Dist` (the increment in distance).
+ *
+ * There are a few ways to use this class:
+ * - If you want a Stepper to use as an iterator (for example, with a for-each loop or std
+ *   algorithm), you can either use the Stepper constructor or `Spline::step`.
+ * - If you want to use a StepBy to produce an array of points, you can use the generate method of
+ *   this class or directly use `Spline::generate`.
+ *
+ * @tparam T The raw spline type.
+ * @tparam U The spline storage type. Either `T` or `std::reference_wrapper<T>` depending on whether
+ *           the spline was passed as an rvalue or lvalue, respectively.
+ * @tparam S The type of StepBy.
+ */
 template <class T, class U, class S> class Stepper {
 public:
+  /**
+   * Create a new Stepper given a Spline and a StepBy.
+   *
+   * @param ispline  The spline to step over. Can be either an rvalue or lvalue.
+   * @param isampler The StepBy used to step through the spline.
+   */
   constexpr Stepper(T&& ispline, S&& isampler) :
     spline(std::forward<T>(ispline)), sampler(std::forward<S>(isampler)) {}
 
-  constexpr const std::remove_reference_t<T>& get() const { return spline; }
-
+  /**
+   * Sample the entire spline according to the StepBy, and return the resulting array of points.
+   *
+   * @return The array of points.
+   */
   auto generate() const { return std::vector<State>(begin(), end()); }
 
+  /**
+   * Iterator methods, return an iterator to the beginning and end of the spline.
+   *
+   * @return An S::iterator which directly samples the spline.
+   */
   constexpr auto begin() const { return sampler.template begin<T>(spline); }
   constexpr auto end() const { return sampler.template end<T>(spline); }
 
