@@ -4,47 +4,47 @@
 namespace lib7842 {
 
 /**
- * A Stepper is a class that acts like an iterator which samples a spline. This provides a way to
- * expressively control how a spline is traversed.
+ * A Stepper is a class that behaves like a container by providing begin and end methods. These
+ * produce iterators which sample a spline according to some strategy. This provides the user a way
+ * to expressively control how a spline is traversed and lazily defer calculation until needed.
  *
- * A Stepper contains a Spline and a StepBy. The spline is contained by value or reference depending
- * on how it was passed to the Stepper constructor. A StepBy is helper class which describes how to
- * step through the path.
- *
- * There are a few StepBy available in the `StepBy` namespace: `Count` (how many steps from start to
- * end), `T` (the increment in t from 0 to 1), and `Dist` (the increment in distance).
+ * A Stepper contains a spline and a sampler. The spline is contained by value or reference
+ * depending on how it was passed to the Stepper constructor. A sampler is helper class which
+ * describes how to step through the path. There are a few samplers available in the `StepBy`
+ * namespace: `Count` (how many steps from start to end), `T` (the increment in t from 0 to 1), and
+ * `Dist` (the increment in distance).
  *
  * There are a few ways to use this class:
  * - If you want a Stepper to use as an iterator (for example, with a for-each loop or std
  *   algorithm), you can either use the Stepper constructor or `Spline::step`.
- * - If you want to use a StepBy to produce an array of points, you can use the generate method of
- *   this class or directly use `Spline::generate`.
+ * - If you want to simply produce an array of points, you can use the generate method of this class
+ *   or directly use `Spline::generate`.
  *
  * @tparam T The raw spline type.
  * @tparam U The spline storage type. Either `T` or `std::reference_wrapper<T>` depending on whether
  *           the spline was passed as an rvalue or lvalue, respectively.
- * @tparam S The type of StepBy.
+ * @tparam S The type of sampler.
  */
 template <class T, class U, class S> class Stepper {
 public:
   /**
-   * Create a new Stepper given a Spline and a StepBy.
+   * Create a new Stepper given a Spline and a sampler.
    *
    * @param ispline  The spline to step over. Can be either an rvalue or lvalue.
-   * @param isampler The StepBy used to step through the spline.
+   * @param isampler The sampler used to step through the spline.
    */
   constexpr Stepper(T&& ispline, S&& isampler) :
     spline(std::forward<T>(ispline)), sampler(std::forward<S>(isampler)) {}
 
   /**
-   * Sample the entire spline according to the StepBy, and return the resulting array of points.
+   * Sample the entire spline according to the sampler, and return the resulting array of points.
    *
    * @return The array of points.
    */
   auto generate() const { return std::vector<State>(begin(), end()); }
 
   /**
-   * Iterator methods, return an iterator to the beginning and end of the spline.
+   * Container iterator methods. These return an iterator to the beginning and end of the spline.
    *
    * @return An S::iterator which directly samples the spline.
    */
@@ -56,6 +56,8 @@ protected:
   S sampler;
 };
 
+// class template deduction guide. If T is an rvalue, then the Stepper has an owning `T` member. If
+// T is an lvalue, then the Stepper has a `std::reference_wrapper<T>` member.
 template <class T, class S>
 Stepper(T&&, S&&)
   -> Stepper<T,
@@ -63,9 +65,24 @@ Stepper(T&&, S&&)
                                 std::reference_wrapper<std::remove_reference_t<T>>, T>,
              S>;
 
+/**
+ * This namespace provides a collection of samplers to be given to `Stepper(spline, sampler)`,
+ * `Spline::step(sampler)`, or `Spline::generate(sampler)`.
+ */
 namespace StepBy {
 
+/**
+ * A Count is a sampler which samples a certain number of steps across the spline. For example, if
+ * the count is 100, then the increment of `t` will be 0.01. However, since there is a beginning and
+ * end to the path, the Count will actually sample 101 points.
+ */
 class Count {
+  /**
+   * This is the internal iterator which does the work by stepping through and sampling the spline.
+   * Count will produce an instance of this class when given the spline to sample.
+   *
+   * @tparam P { description }
+   */
   template <class P>
   class iterator : public std::iterator<const std::forward_iterator_tag, State, size_t> {
   public:
