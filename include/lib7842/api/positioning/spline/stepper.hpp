@@ -5,30 +5,32 @@ namespace lib7842 {
 
 /**
  * A Stepper is a class that behaves like a container by providing begin and end methods. These
- * produce iterators which sample a spline according to some strategy. This provides the user a way
- * to expressively control how a spline is traversed and lazily defer calculation until needed.
+ * methods produce iterators which sample a spline according to some strategy. This gives the user a
+ * way to expressively control how a spline is traversed and lazily defer spline calculation until
+ * needed.
  *
  * A Stepper contains a spline and a sampler. The spline is contained by value or reference
  * depending on how it was passed to the Stepper constructor. A sampler is helper class which
- * describes how to step through the path. There are a few samplers available in the `StepBy`
+ * describes how to step through the spline. There are a few samplers available in the `StepBy`
  * namespace: `Count` (how many steps from start to end), `T` (the increment in t from 0 to 1), and
  * `Dist` (the increment in distance).
  *
  * There are a few ways to use this class:
- * - If you want a Stepper to use as an iterator (for example, with a for-each loop or std
- *   algorithm), you can either use the Stepper constructor or `Spline::step`.
+ * - If you want a Stepper to use as an iterator (for example, with a for-each loop or stl
+ * algorithm), you can either use the Stepper constructor or `Spline::step`.
  * - If you want to simply produce an array of points, you can use the generate method of this class
  *   or directly use `Spline::generate`.
  *
  * @tparam T The raw spline type.
  * @tparam U The spline storage type. Either `T` or `std::reference_wrapper<T>` depending on whether
- *           the spline was passed as an rvalue or lvalue, respectively.
+ *           the spline was passed as an rvalue or lvalue, respectively. This parameter is
+ * automatically set according to the class template deduction guide.
  * @tparam S The type of sampler.
  */
 template <class T, class U, class S> class Stepper {
 public:
   /**
-   * Create a new Stepper given a Spline and a sampler.
+   * Create a new Stepper given a spline and a sampler.
    *
    * @param ispline  The spline to step over. Can be either an rvalue or lvalue.
    * @param isampler The sampler used to step through the spline.
@@ -46,7 +48,7 @@ public:
   /**
    * Container iterator methods. These return an iterator to the beginning and end of the spline.
    *
-   * @return An S::iterator which directly samples the spline.
+   * @return An S::iterator<T> which directly samples the spline.
    */
   constexpr auto begin() const { return sampler.template begin<T>(spline); }
   constexpr auto end() const { return sampler.template end<T>(spline); }
@@ -73,20 +75,17 @@ namespace StepBy {
 
 /**
  * A Count is a sampler which samples a certain number of steps across the spline. For example, if
- * the count is 100, then the increment of `t` will be 0.01. However, since there is a beginning and
- * end to the path, the Count will actually sample 101 points.
+ * the count is 100, then the increment used for `t` will be 0.01. However, since there is a
+ * beginning and end to the spline, there will actually be 101 points sampled.
  */
 class Count {
   /**
-   * This is the internal iterator which does the work by stepping through and sampling the spline.
-   * Count will produce an instance of this class when given the spline to sample.
-   *
-   * @tparam P { description }
+   * This class is the internal iterator which does the work to step through and sample the spline.
    */
-  template <class P>
+  template <class T>
   class iterator : public std::iterator<const std::forward_iterator_tag, State, size_t> {
   public:
-    constexpr iterator(const P& ip, size_t ic, size_t ii) : p(ip), c(ic), i(ii) {}
+    constexpr iterator(const T& ip, size_t ic, size_t ii) : p(ip), c(ic), i(ii) {}
     constexpr bool operator!=(const iterator& rhs) const { return i != (rhs.i + 1); }
     constexpr State operator*() const { return p.calc(static_cast<double>(i) / c); }
     constexpr State operator->() const { return *(*this); }
@@ -96,17 +95,24 @@ class Count {
     }
 
   protected:
-    const P& p;
+    const T& p;
     const size_t c;
     size_t i;
   };
 
 public:
+  /**
+   * Create a new Count.
+   *
+   * @param ic How many points to sample across the spline. Since there is a beginning and end to
+   * the spline, there will actually be one additional point sampled. Must be positive and greater
+   * than zero.
+   */
   consteval explicit Count(size_t ic) : c(ic) {
     ic > 0 ? true : throw std::invalid_argument("StepBy::Count: count must be greater than zero");
   }
-  template <class P> constexpr auto begin(const P& ip) const { return iterator<P>(ip, c, 0); }
-  template <class P> constexpr auto end(const P& ip) const { return iterator<P>(ip, c, c); }
+  template <class T> constexpr auto begin(const T& ip) const { return iterator<T>(ip, c, 0); }
+  template <class T> constexpr auto end(const T& ip) const { return iterator<T>(ip, c, c); }
   const size_t c;
 };
 
@@ -118,10 +124,10 @@ consteval Count T(double t) {
 }
 
 class Dist {
-  template <class P>
+  template <class T>
   class iterator : public std::iterator<const std::forward_iterator_tag, State, double> {
   public:
-    constexpr iterator(const P& ip, const QLength& id, double it) : p(ip), d(id), t(it) {}
+    constexpr iterator(const T& ip, const QLength& id, double it) : p(ip), d(id), t(it) {}
     constexpr bool operator!=(const iterator& rhs) const { return static_cast<float>(t) <= rhs.t; }
     constexpr State operator*() const { return p.calc(t); }
     constexpr State operator->() const { return *(*this); }
@@ -131,7 +137,7 @@ class Dist {
     }
 
   protected:
-    const P& p;
+    const T& p;
     const QLength d;
     double t;
   };
@@ -140,8 +146,8 @@ public:
   consteval explicit Dist(const QLength& id) : d(id) {
     id > 0_m ? true : throw std::invalid_argument("StepBy::Dist: dist must be greater than zero");
   }
-  template <class P> constexpr auto begin(const P& ip) const { return iterator<P>(ip, d, 0.0); }
-  template <class P> constexpr auto end(const P& ip) const { return iterator<P>(ip, d, 1.0); }
+  template <class T> constexpr auto begin(const T& ip) const { return iterator<T>(ip, d, 0.0); }
+  template <class T> constexpr auto end(const T& ip) const { return iterator<T>(ip, d, 1.0); }
   const QLength d;
 };
 
