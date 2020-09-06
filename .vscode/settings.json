@@ -1,0 +1,26 @@
+{
+    "files.exclude": {
+        "**/*.o": true,
+        "**/*.obj": true,
+        "**/*.bin": true,
+        "**/*.elf": true,
+        "**/bin/": true,
+        "**/.vscode/": true,
+        "**/.*-cache/": true,
+        "**/compile_commands.json": true,
+        "**/temp.log": true,
+        "**/temp.errors": true,
+        "**/*.ini": true,
+        "**/.d/": true,
+        "**/test/bin/": true,
+        "test/temp.log": true,
+        "test/temp.errors": true,
+        "**/*.sublime-workspace": true,
+        "**/.clangd": true,
+        "**/.cache": true,
+        "test/include/lv_drivers/**/*.o": true,
+        "test/include/lvgl/**/*.o": true,
+        "test/include/lvgl/**/*.swp": true,
+        "test/include/lvgl/**/*.swo": true
+    }
+}
