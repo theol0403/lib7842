@@ -3,6 +3,7 @@
 #include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 #include "stepper.hpp"
+#include <functional>
 
 namespace lib7842 {
 
@@ -88,10 +89,12 @@ public:
    * array of points.
    */
   template <class S> auto generate(S&& s) const& {
-    return Stepper(static_cast<const CRTP&>(*this), std::forward<S>(s)).generate();
+    return Stepper<CRTP, std::reference_wrapper<CRTP>, S>(static_cast<const CRTP&>(*this),
+                                                          std::forward<S>(s))
+      .generate();
   }
   template <class S> auto generate(S&& s) && {
-    return Stepper(static_cast<CRTP&&>(*this), std::forward<S>(s)).generate();
+    return Stepper<CRTP, CRTP, S>(static_cast<CRTP&&>(*this), std::forward<S>(s)).generate();
   }
 };
 
