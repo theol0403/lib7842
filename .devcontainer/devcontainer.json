@@ -1,4 +1,4 @@
 {
   "name": "lib7842-image",
-  "dockerFile": "../Dockerfile"
+  "dockerFile": "Dockerfile"
 }
