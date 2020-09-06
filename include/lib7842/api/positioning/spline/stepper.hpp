@@ -17,14 +17,14 @@ namespace lib7842 {
  *
  * There are a few ways to use this class:
  * - If you want a Stepper to use as an iterator (for example, with a for-each loop or stl
- * algorithm), you can either use the Stepper constructor or `Spline::step`.
+ *   algorithm), you can either use the Stepper constructor or `Spline::step`.
  * - If you want to simply produce an array of points, you can use the generate method of this class
  *   or directly use `Spline::generate`.
  *
  * @tparam T The raw spline type.
  * @tparam U The spline storage type. Either `T` or `std::reference_wrapper<T>` depending on whether
  *           the spline was passed as an rvalue or lvalue, respectively. This parameter is
- * automatically set according to the class template deduction guide.
+ *           automatically set according to the class template deduction guide.
  * @tparam S The type of sampler.
  */
 template <class T, class U, class S> class Stepper {
@@ -102,11 +102,11 @@ class Count {
 
 public:
   /**
-   * Create a new Count.
+   * Create a new sampler that samples a certain number of points.
    *
    * @param ic How many points to sample across the spline. Since there is a beginning and end to
-   * the spline, there will actually be one additional point sampled. Must be positive and greater
-   * than zero.
+   *           the spline, there will actually be one additional point sampled. Must be positive and
+   *           greater
    */
   consteval explicit Count(size_t ic) : c(ic) {
     ic > 0 ? true : throw std::invalid_argument("StepBy::Count: count must be greater than zero");
@@ -116,9 +116,21 @@ public:
   const size_t c;
 };
 
-consteval Count T(double t) {
-  return Count(t > 0.0 && t <= 1.0
-                 ? static_cast<size_t>(1.0 / t)
+/**
+ * A T is a sampler which uses a constant increment for `t` to sample across the spline. It will
+ * start at 0 and accumulate according to the increment until it reaches 1.0. Internally, it uses a
+ * Count with the inverse of the increment. For example, if the increment is 0.01, then it will
+ * return a Count(100), which in turn samples 101 points. If the increment can't properly fit into a
+ * whole number, it will be rounded up, thus rounding down the Count.
+ *
+ * @param  it What increment to move `t` along the spline. Needs to be above zero and preferably
+ *            have 1.0 as a multiple. Can't be larger than 1.0. Note that if it is 1.0, two points
+ *            will be sampled - the start and the end.
+ * @return A new sampler that samples along a path.
+ */
+consteval Count T(double it) {
+  return Count(it > 0.0 && it <= 1.0
+                 ? static_cast<size_t>(1.0 / it)
                  : throw std::invalid_argument(
                      "StepBy::T: t must be greater than zero and less than or equal to 1"));
 }
