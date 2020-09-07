@@ -106,7 +106,7 @@ public:
    *
    * @param ic How many points to sample across the spline. Since there is a beginning and end to
    *           the spline, there will actually be one additional point sampled. Must be positive and
-   *           greater
+   *           greater than zero.
    */
   consteval explicit Count(size_t ic) : c(ic) {
     ic > 0 ? true : throw std::invalid_argument("StepBy::Count: count must be greater than zero");
@@ -123,22 +123,32 @@ public:
  * return a Count(100), which in turn samples 101 points. If the increment can't properly fit into a
  * whole number, it will be rounded up, thus rounding down the Count.
  *
- * @param  it What increment to move `t` along the spline. Needs to be above zero and preferably
- *            have 1.0 as a multiple. Can't be larger than 1.0. Note that if it is 1.0, two points
- *            will be sampled - the start and the end.
+ * @param  it What increment to move `t` along the spline. Needs to be greater than zero and
+ *            preferably have 1.0 as a multiple. Can't be larger than 1.0. Note that if it is 1.0,
+ *            two points will be sampled - the start and the end.
  * @return A new sampler that samples along a path.
  */
-consteval Count T(double it) {
+consteval auto T(double it) {
   return Count(it > 0.0 && it <= 1.0
                  ? static_cast<size_t>(1.0 / it)
                  : throw std::invalid_argument(
                      "StepBy::T: t must be greater than zero and less than or equal to 1"));
 }
 
+/**
+ * A Dist is a sampler which samples points along a spline that have have constant spacing.
+ * Internally it keeps track of t, and for every step it uses the `t_at_dist_travelled` method to
+ * calculate how much to increase `t`. The sampler starts with `t` at 0 and ends when `t` is greater
+ * than 1.0.
+ */
 class Dist {
   template <class T>
   class iterator : public std::iterator<const std::forward_iterator_tag, State, double> {
   public:
+    /**
+     * This class is the internal iterator which does the work to step through and sample the
+     * spline.
+     */
     constexpr iterator(const T& ip, const QLength& id, double it) : p(ip), d(id), t(it) {}
     constexpr bool operator!=(const iterator& rhs) const { return static_cast<float>(t) <= rhs.t; }
     constexpr State operator*() const { return p.calc(t); }
@@ -155,6 +165,11 @@ class Dist {
   };
 
 public:
+  /**
+   * Create a new sampler that samples points a certain distance apart.
+   *
+   * @param id What spacing to use between the points. Must be positive and greater than zero.
+   */
   consteval explicit Dist(const QLength& id) : d(id) {
     id > 0_m ? true : throw std::invalid_argument("StepBy::Dist: dist must be greater than zero");
   }
