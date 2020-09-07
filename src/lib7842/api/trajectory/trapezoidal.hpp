@@ -6,9 +6,9 @@
 namespace lib7842 {
 
 struct TrapezoidalLimits {
-  QSpeed v;
-  QAngularSpeed w;
-  QAcceleration a;
+  QSpeed v; // max linear velocity
+  QAngularSpeed w; // max angular velocity
+  QAcceleration a; // max acceleration
 };
 
 class Trapezoidal : public Profile {
@@ -20,50 +20,50 @@ public:
     auto& v = limits.v;
 
     // the time it takes to accelerate to full speed
-    t_accel = v / a;
+    accel_t = v / a;
     // the time spent cruising at full speed
-    t_cruise = (length - t_accel * v) / v;
+    cruise_t = (length - accel_t * v) / v;
 
     // if cruise time is negative, time needs to be shaved off the acceleration
-    if (t_cruise < 0_s) {
+    if (cruise_t < 0_s) {
       // this is a triangular profile
-      t_cruise = 0_s;
+      cruise_t = 0_s;
       // maximum attainable speed given time constraints (if triangular)
       vel = sqrt(length * a);
       // time to accelerate to max speed
-      t_accel = vel / a;
+      accel_t = vel / a;
     } else {
       // this is not a triangular profile
       vel = v;
     }
 
     // the time it takes to complete the profile
-    time = t_accel * 2 + t_cruise;
+    time = accel_t * 2 + cruise_t;
 
     // the distance to accelerate to full speed
-    d_accel = 0.5 * a * (t_accel * t_accel);
+    accel_d = 0.5 * a * (accel_t * accel_t);
     // the distance to cruise
-    d_cruise = vel * t_cruise;
+    cruise_d = vel * cruise_t;
   }
 
   constexpr Kinematics calc(const QTime& t) const override {
     Kinematics k;
-    if (t <= t_accel) {
+    if (t <= accel_t) {
       // acceleration
       k.a = limits.a;
       k.v = limits.a * t;
       k.d = 0.5 * limits.a * t * t;
-    } else if (t > t_accel and t < t_accel + t_cruise) {
+    } else if (t > accel_t and t < accel_t + cruise_t) {
       // cruising
       k.a = 0_mps2;
       k.v = vel;
-      k.d = d_accel + vel * (t - t_accel);
+      k.d = accel_d + vel * (t - accel_t);
     } else {
       // deceleration
       k.a = limits.a * -1;
-      QTime t_from_decel = (t - t_accel - t_cruise);
+      QTime t_from_decel = (t - accel_t - cruise_t);
       k.v = vel - t_from_decel * limits.a;
-      k.d = d_accel + d_cruise + vel * t_from_decel - 0.5 * limits.a * t_from_decel * t_from_decel;
+      k.d = accel_d + cruise_d + vel * t_from_decel - 0.5 * limits.a * t_from_decel * t_from_decel;
     }
     k.t = t;
     return k;
@@ -71,15 +71,15 @@ public:
 
   constexpr Kinematics calc(const QLength& d) const override {
     QSpeed v = 0_mps;
-    if (d <= d_accel) {
+    if (d <= accel_d) {
       // acceleration
       v = sqrt(2 * limits.a * d);
-    } else if (d > d_accel and d < length - d_accel) {
+    } else if (d > accel_d and d < length - accel_d) {
       // cruising
       v = vel;
     } else {
       // deceleration
-      QLength d_from_decel = d - d_accel - d_cruise;
+      QLength d_from_decel = d - accel_d - cruise_d;
       auto v_2 = vel * vel - 2 * limits.a * d_from_decel;
       if (v_2 < 0 * mps * mps) {
         v = 0_mps;
@@ -100,10 +100,10 @@ protected:
 
   QSpeed vel; // the top speed reached during the profile
 
-  QTime t_accel; // the time it takes to accelerate to full speed
-  QTime t_cruise; // the time spent cruising at full speed
+  QTime accel_t; // the time it takes to accelerate to full speed
+  QTime cruise_t; // the time spent cruising at full speed
 
-  QLength d_accel; // distance it takes to accelerate to full speed
-  QLength d_cruise; // the distance spent cruising at full speed
+  QLength accel_d; // distance it takes to accelerate to full speed
+  QLength cruise_d; // the distance spent cruising at full speed
 };
 } // namespace lib7842
