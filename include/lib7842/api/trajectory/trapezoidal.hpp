@@ -52,18 +52,14 @@ public:
       // acceleration
       k.a = limits.a;
       k.v = limits.a * t;
-      k.d = 0.5 * limits.a * t * t;
     } else if (t > accel_t and t < accel_t + cruise_t) {
       // cruising
-      k.a = 0_mps2;
       k.v = vel;
-      k.d = accel_d + vel * (t - accel_t);
     } else {
       // deceleration
       k.a = limits.a * -1;
       QTime t_from_decel = (t - accel_t - cruise_t);
       k.v = vel - t_from_decel * limits.a;
-      k.d = accel_d + cruise_d + vel * t_from_decel - 0.5 * limits.a * t_from_decel * t_from_decel;
     }
     k.t = t;
     return k;
@@ -75,12 +71,10 @@ public:
       // acceleration
       k.a = limits.a;
       k.v = sqrt(2 * limits.a * d);
-      k.t = sqrt(2 * d / limits.a);
     } else if (d > accel_d and d < length - accel_d) {
       // cruising
       k.a = 0_mps2;
       k.v = vel;
-      k.t = accel_t + (d - accel_d) / vel;
     } else {
       // deceleration
       k.a = limits.a * -1;
@@ -91,7 +85,6 @@ public:
       } else {
         k.v = sqrt(v_2);
       }
-      k.t = accel_t + cruise_t + sqrt(1 * d_from_decel / limits.a);
     }
     k.d = d;
     return k;
