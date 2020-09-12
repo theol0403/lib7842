@@ -70,25 +70,30 @@ public:
   }
 
   constexpr Kinematics calc(const QLength& d) const override {
-    QSpeed v = 0_mps;
+    Kinematics k;
     if (d <= accel_d) {
       // acceleration
-      v = sqrt(2 * limits.a * d);
+      k.a = limits.a;
+      k.v = sqrt(2 * limits.a * d);
+      k.t = sqrt(2 * d / limits.a);
     } else if (d > accel_d and d < length - accel_d) {
       // cruising
-      v = vel;
+      k.a = 0_mps2;
+      k.v = vel;
+      k.t = accel_t + (d - accel_d) / vel;
     } else {
       // deceleration
+      k.a = limits.a * -1;
       QLength d_from_decel = d - accel_d - cruise_d;
       auto v_2 = vel * vel - 2 * limits.a * d_from_decel;
       if (v_2 < 0 * mps * mps) {
-        v = 0_mps;
+        k.v = 0_mps;
       } else {
-        v = sqrt(v_2);
+        k.v = sqrt(v_2);
       }
+      k.t = accel_t + cruise_t + sqrt(1 * d_from_decel / limits.a);
     }
-    Kinematics k;
-    k.v = v;
+    k.d = d;
     return k;
   }
 
