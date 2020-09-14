@@ -7,7 +7,7 @@
 namespace lib7842 {
 using namespace okapi;
 
-struct Kinematics {
+struct KinematicState {
   QTime t;
   QLength d;
   QAcceleration a;
@@ -18,8 +18,8 @@ class Profile {
 public:
   virtual ~Profile() = default;
 
-  constexpr virtual Kinematics calc(const QTime& t) const = 0;
-  constexpr virtual Kinematics calc(const QLength& d) const = 0;
+  constexpr virtual KinematicState calc(const QTime& t) const = 0;
+  constexpr virtual KinematicState calc(const QLength& d) const = 0;
 };
 
 } // namespace lib7842

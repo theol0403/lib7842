@@ -1,19 +1,12 @@
 #pragma once
-#include "okapi/api/units/QAcceleration.hpp"
-#include "okapi/api/units/QAngularSpeed.hpp"
+#include "limits.hpp"
 #include "profile.hpp"
 
 namespace lib7842 {
 
-struct TrapezoidalLimits {
-  QSpeed v; // max linear velocity
-  QAngularSpeed w; // max angular velocity
-  QAcceleration a; // max acceleration
-};
-
 class Trapezoidal : public Profile {
 public:
-  constexpr Trapezoidal(const TrapezoidalLimits& ilimits, const QLength& ilength) :
+  constexpr Trapezoidal(const Limits& ilimits, const QLength& ilength) :
     limits(ilimits), length(ilength) {
     // load limits
     auto& a = limits.a;
@@ -46,8 +39,8 @@ public:
     cruise_d = vel * cruise_t;
   }
 
-  constexpr Kinematics calc(const QTime& t) const override {
-    Kinematics k;
+  constexpr KinematicState calc(const QTime& t) const override {
+    KinematicState k;
     if (t <= accel_t) {
       // acceleration
       k.a = limits.a;
@@ -65,8 +58,8 @@ public:
     return k;
   }
 
-  constexpr Kinematics calc(const QLength& d) const override {
-    Kinematics k;
+  constexpr KinematicState calc(const QLength& d) const override {
+    KinematicState k;
     if (d <= accel_d) {
       // acceleration
       k.a = limits.a;
@@ -91,7 +84,7 @@ public:
   }
 
 protected:
-  TrapezoidalLimits limits; // the kinematic limits
+  Limits limits; // the kinematic limits
 
   QTime time; // the time it takes to complete the profile
   QLength length; // the length of the profile
