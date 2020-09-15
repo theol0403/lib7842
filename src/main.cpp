@@ -119,12 +119,9 @@ void opcontrol() {
   scr.makePage<GUI::Odom>("Odom").attachOdom(odom).attachResetter([&] { odom->reset(); });
 
   /**
-   * Follower
+   * Trajectory
    */
-  PathFollower follower(model, odom, ChassisScales({2.75_in, 11.5_in}, imev5GreenTPR), 200_rpm,
-                        1.3_ft);
-
-  PursuitLimits limits {2.75_in, 200_rpm, 0.1, 2_s, 1};
+  Limits limits {1_mps, 400_deg / second, 1.5_mps2};
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -132,29 +129,9 @@ void opcontrol() {
                    controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::A)) {
+      auto path = QuinticHermite({0_ft, 0_ft, 0_deg}, {1_ft, 1_ft, 0_deg});
 
-      // auto path =
-      //   QuinticPath({{0_ft, 0_ft, 0_deg}, {-1_ft, 2_ft, -90_deg}, {-2_ft, 0_ft, 180_deg}}, 1.1)
-      //     .generate(100);
-
-      // follower.followPath(PathGenerator::generate(path, limits));
-
-      // auto path2 = QuinticPath({{-2_ft, 0_ft, 0_deg}, {0_ft, 2_ft, 0_deg}}, 2).generate(100);
-
-      // follower.followPath(PathGenerator::generate(path2, limits), true);
-
-      // auto p = QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg})
-      //            .step(StepBy::ConstCount<100>())
-      //            .generate();
-
-      auto p = make_piecewise<Line>({{0_ft, 0_ft}, {2_ft, 2_ft}, {0_ft, 2_ft}})
-                 .step(StepBy::Count(100))
-                 .generate();
-
-      // auto p =
-      //   Stepper(QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}), StepBy::Count(100));
-
-      // follower.followPath(PathGenerator::generate(p, limits), limits, false);
+      auto trajectory = TrajectoryGenerator::generate(path, limits, 10_ms);
     }
 
     pros::delay(10);
