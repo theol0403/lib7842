@@ -32,7 +32,8 @@ public:
   virtual constexpr double calc_d2(double x) const = 0;
 };
 
-template <class T> concept IsParametricFnc = std::derived_from<ParametricFnc, T>;
+// template <class T> concept IsParametricFnc = std::derived_from<ParametricFnc, T>;
+template <class T> concept IsParametricFnc = true;
 
 /**
  * A Parametric is a two-dimensional spline that uses two one-dimensional functions to map x and y
