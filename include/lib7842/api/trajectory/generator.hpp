@@ -19,21 +19,21 @@ public:
   };
 
   template <typename S>
-  requires std::derived_from<Spline, S> std::vector<Step> generate(const Limits& limits, S&& spline,
-                                                                   const QTime& dt) {
+  requires std::derived_from<std::remove_reference_t<S>, Spline> static std::vector<Step>
+    generate(S&& spline, const Limits& limits, const QTime& dt) {
     QLength length = spline.length();
     Trapezoidal profile(limits, length);
 
     std::vector<Step> trajectory;
 
     // setup
-    QTime t = 0_ms;
+    double t = 0;
     QLength dist = 0_m;
     State pos = spline.calc(t);
     QAngle theta = pos.theta;
     QSpeed vel = profile.calc(dt).v;
 
-    while (dist <= length && t <= 1_ms) {
+    while (dist <= length && t <= 1) {
       // limit velocity according to approximation of the curvature during the next timeslice
       QCurvature curvature = spline.curvature(t);
       QSpeed vel_max = std::min(vel, limits.max_vel_at_curvature(curvature));
@@ -62,6 +62,7 @@ public:
       // calculate new velocity
       vel = profile.calc(dist).v;
     }
+    return trajectory;
   }
 };
 
