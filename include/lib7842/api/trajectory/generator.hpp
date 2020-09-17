@@ -21,7 +21,7 @@ public:
   template <typename S>
   requires std::derived_from<std::remove_reference_t<S>, Spline> static std::vector<Step>
     generate(S&& spline, const Limits& limits, const QTime& dt) {
-    QLength length = spline.length();
+    QLength length = spline.length(50);
     Trapezoidal profile(limits, length);
 
     std::vector<Step> trajectory;
@@ -63,6 +63,25 @@ public:
       vel = profile.calc(dist).v;
     }
     return trajectory;
+  }
+
+  static void follow(ChassisModel& chassis, const std::vector<Step>& trajectory,
+                     const ChassisScales& scales, const QAngularSpeed& igearset) {
+    for (const auto& step : trajectory) {
+      QSpeed left = step.v - (step.w / radian * scales.wheelTrack) / 2;
+      QSpeed right = step.v + (step.w / radian * scales.wheelTrack) / 2;
+
+      QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
+      QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
+
+      auto leftSpeed = (leftWheel / igearset).convert(number);
+      auto rightSpeed = (rightWheel / igearset).convert(number);
+
+      /* chassis.tank(leftSpeed, rightSpeed); */
+      chassis.left(leftSpeed);
+      chassis.right(rightSpeed);
+      pros::delay(5);
+    }
   }
 };
 
