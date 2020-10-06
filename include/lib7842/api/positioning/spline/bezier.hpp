@@ -2,7 +2,6 @@
 #include "parametric.hpp"
 #include "spline.hpp"
 #include <cstddef>
-#include <ranges>
 
 namespace lib7842 {
 

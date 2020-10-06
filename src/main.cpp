@@ -121,7 +121,7 @@ void opcontrol() {
   /**
    * Trajectory
    */
-  Limits limits {1_mps, 400_deg / second, 1.5_mps2};
+  Limits limits(scales, 200_rpm, 1.5_s, 1, 1);
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -129,9 +129,11 @@ void opcontrol() {
                    controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::A)) {
-      auto path = QuinticHermite({0_ft, 0_ft, 0_deg}, {1_ft, 1_ft, 0_deg});
-
-      auto trajectory = TrajectoryGenerator::generate(path, limits, 10_ms);
+      // auto path = CubicBezier({{0_ft, 0_ft}, {1_ft, 0_ft}, {1_ft, 2_ft}, {2_ft, 2_ft}});
+      // auto path = Line({0_ft, 0_ft}, {0_ft, 2_ft});
+      auto path = Bezier<3>({{0_ft, 0_ft}, {0_ft, 2_ft}, {2_ft, 2_ft}, {2_ft, 0_ft}});
+      auto trajectory = TrajectoryGenerator::generate(path, limits, 5_ms);
+      TrajectoryGenerator::follow(*model, trajectory, scales, 200_rpm);
     }
 
     pros::delay(10);
