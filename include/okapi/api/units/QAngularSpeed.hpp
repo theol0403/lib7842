@@ -1,8 +1,4 @@
 /*
- * @author Mikhail Semenov
- * @author Benjamin Jurke
- * @author Ryan Benasutti, WPI
- *
  * This code is a modified version of Benjamin Jurke's work in 2015. You can read his blog post
  * here:
  * https://benjaminjurke.com/content/articles/2015/compile-time-numerical-unit-dimension-checking/
@@ -23,6 +19,7 @@ QUANTITY_TYPE(0, 0, -1, 1, QAngularSpeed)
 
 constexpr QAngularSpeed radps = radian / second;
 constexpr QAngularSpeed rpm = (360 * degree) / minute;
+constexpr QAngularSpeed cps = (0.01 * degree) / second; // centidegree per second
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
