@@ -19,25 +19,10 @@ public:
     {}
   }
 
-  std::shared_ptr<ChassisModel> model;
-  Limits limits;
-  ChassisScales scales;
-  QAngularSpeed gearset;
-  QTime dt;
-
-  struct Step {
-    State p;
-    QSpeed v;
-    QAngularSpeed w;
-    QCurvature c;
-  };
-
-  std::vector<Step> generate(const Spline& spline, const QSpeed& start_v = 0_mps,
-                             const QSpeed& end_v = 0_mps) const {
+  void follow(const Spline& spline, bool forward = true, const QSpeed& start_v = 0_mps,
+              const QSpeed& end_v = 0_mps) const {
     QLength length = spline.length();
     Trapezoidal profile(limits, length, start_v, end_v);
-
-    std::vector<Step> trajectory;
 
     // setup
     double t = 0;
@@ -47,6 +32,7 @@ public:
     QSpeed vel = profile.calc(0_s).v;
     if (vel == 0_mps) { vel = profile.calc(dt).v; }
 
+    Rate rate;
     while (dist <= length && t <= 1) {
       // limit velocity according to approximation of the curvature during the next timeslice
       QCurvature curvature = spline.curvature(t);
@@ -68,20 +54,21 @@ public:
       // calculate where along the spline we will be at the end of the timeslice
       t = spline.t_at_dist_travelled(t, d_dist);
 
-      // save trajectory
-      trajectory.emplace_back(pos, vel, angular_vel, curvature);
+      // run trajectory
+      moveStep(vel, angular_vel, forward);
+      rate.delayUntil(dt);
 
       // update new position
       pos = spline.calc(t);
       // calculate new velocity
       vel = profile.calc(dist).v;
     }
-    return trajectory;
+    model->forward(0);
   }
 
-  void moveStep(const Step& step, bool forward) const {
-    QSpeed left = step.v - (step.w / radian * scales.wheelTrack) / 2;
-    QSpeed right = step.v + (step.w / radian * scales.wheelTrack) / 2;
+  void moveStep(const QSpeed& v, const QAngularSpeed& w, bool forward) const {
+    QSpeed left = v - (w / radian * scales.wheelTrack) / 2;
+    QSpeed right = v + (w / radian * scales.wheelTrack) / 2;
 
     QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
     QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
@@ -98,14 +85,12 @@ public:
     // model.right(rightSpeed);
   }
 
-  void follow(const std::vector<Step>& trajectory, bool forward = true) const {
-    Rate rate;
-    for (const auto& step : trajectory) {
-      moveStep(step, forward);
-      rate.delayUntil(10_ms);
-    }
-    model->forward(0);
-  }
+protected:
+  std::shared_ptr<ChassisModel> model;
+  Limits limits;
+  ChassisScales scales;
+  QAngularSpeed gearset;
+  QTime dt;
 };
 
 } // namespace lib7842

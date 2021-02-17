@@ -63,13 +63,12 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 
-void follow(const TrajectoryGenerator& generator, const lib7842::Spline& spline,
-            bool forward = true, const QSpeed& start_v = 0_mps, const QSpeed& end_v = 0_mps) {
-  auto trajectory = generator.generate(spline, start_v, end_v);
-  generator.follow(trajectory, forward);
-}
-
 void opcontrol() {
+  /**
+   * Screen
+   */
+  GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
+
   Controller controller(ControllerId::master);
 
   auto topLeft = std::make_shared<Motor>(11); // top left
@@ -85,49 +84,18 @@ void opcontrol() {
   /**
    * Model
    */
-  auto model = std::make_shared<ThreeEncoderXDriveModel>(
+  auto model = std::make_shared<XDriveModel>(
     // motors
     topLeft, topRight, bottomRight, bottomLeft,
     // sensors
-    std::make_shared<ADIEncoder>(1, 2, true), //
-    std::make_shared<ADIEncoder>(5, 6, true), //
-    std::make_shared<ADIEncoder>(3, 4, true), //
+    std::make_shared<IntegratedEncoder>(11), std::make_shared<IntegratedEncoder>(-5),
     // limits
     200, 12000);
-
-  ChassisScales scales({2.75_in, 11.3_in, 0_in, 2.75_in}, 360);
-
-  /**
-   * Odom
-   */
-  auto odom = std::make_shared<CustomOdometry>(model, scales);
-  odom->startTask("Odometry");
-
-  /**
-   * Controller
-   */
-  auto odomController = std::make_shared<OdomXController>(
-    model, odom,
-    // Distance PID - To mm
-    std::make_unique<IterativePosPIDController>(
-      0.0165, 0.00026, 0.00033, 0, TimeUtilFactory::withSettledUtilParams(10, 5, 150_ms)),
-    // Turn PID - To Degree
-    std::make_unique<IterativePosPIDController>(
-      0.045, 0.002, 0.0006, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
-    // Angle PID - To Degree
-    std::make_unique<IterativePosPIDController>(
-      0.043, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(2, 1, 150_ms)),
-    0_ft);
-
-  /**
-   * Screen
-   */
-  GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
-  scr.makePage<GUI::Odom>("Odom").attachOdom(odom).attachResetter([&] { odom->reset(); });
 
   /**
    * Trajectory
    */
+  ChassisScales scales({2.75_in, 11.3_in, 0_in, 2.75_in}, 360);
   Limits limits(scales, 200_rpm, 1.2_s, 1, 1);
   TrajectoryGenerator generator(model, limits, scales, 200_rpm, 10_ms);
 
@@ -137,12 +105,11 @@ void opcontrol() {
                    controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::A)) {
-      follow(generator, Line({0_m, 0_m}, {0_m, 1.5_ft}));
-      follow(generator, Line({0_m, 0_m}, {0_m, 1.5_ft}), false);
-      follow(generator,
-             CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft}, {1.4_ft, 1_ft}}));
-      follow(generator, CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft}, {1.4_ft, 1_ft}}),
-             false);
+      generator.follow(Line({0_m, 0_m}, {0_m, 1.5_ft}));
+      generator.follow(Line({0_m, 0_m}, {0_m, 1.5_ft}), false);
+      generator.follow(CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft}, {1.4_ft, 1_ft}}));
+      generator.follow(CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft}, {1.4_ft, 1_ft}}),
+                       false);
     }
 
     pros::delay(10);
