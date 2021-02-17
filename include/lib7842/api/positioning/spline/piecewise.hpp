@@ -47,9 +47,9 @@ public:
   constexpr State calc(double t) const override { return get(t, &S::calc); }
   constexpr QCurvature curvature(double t) const override { return get(t, &S::curvature); }
   constexpr QLength velocity(double t) const override { return get(t, &S::velocity) * N; }
-  constexpr QLength length(double /*resolution*/) const override {
-    return std::accumulate(std::begin(p), std::end(p), 0_m, [](const QLength& l, const auto& ip) {
-      return l + ip.value().length();
+  constexpr QLength length(double resolution) const override {
+    return std::accumulate(std::begin(p), std::end(p), 0_m, [&](const QLength& l, const auto& ip) {
+      return l + ip.value().length(resolution);
     });
   }
 

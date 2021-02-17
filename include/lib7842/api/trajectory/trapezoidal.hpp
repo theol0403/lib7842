@@ -48,9 +48,8 @@ public:
   }
 
   constexpr KinematicState calc(QTime t) const override {
-    if (t > time) { t = time; }
-
     KinematicState k;
+    if (t > time) { t = time; }
     if (t <= accel_t) {
       // acceleration
       k.a = limits.a;
@@ -69,9 +68,8 @@ public:
   }
 
   constexpr KinematicState calc(QLength d) const override {
-    if (d > length) { d = length; }
-
     KinematicState k;
+    if (d > length) { d = length; }
     if (d <= accel_d) {
       // acceleration
       k.a = limits.a;
@@ -97,8 +95,8 @@ public:
 protected:
   Limits limits; // the kinematic limits
   QLength length; // the length of the profile
-  QSpeed start_v;
-  QSpeed end_v;
+  QSpeed start_v; // the starting velocity
+  QSpeed end_v; // the ending velocity
 
   QSpeed vel; // the top speed reached during the profile
   QTime time; // the time it takes to complete the profile

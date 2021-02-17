@@ -5,6 +5,7 @@
 #include "lib7842/api/positioning/spline/spline.hpp"
 #include "limits.hpp"
 #include "okapi/api/units/QAngle.hpp"
+#include "okapi/impl/util/rate.hpp"
 #include "trapezoidal.hpp"
 
 namespace lib7842 {
@@ -18,11 +19,11 @@ public:
     QCurvature c;
   };
 
-  template <typename S>
-  requires std::derived_from<std::remove_reference_t<S>, Spline> static std::vector<Step>
-    generate(S&& spline, const Limits& limits, const QTime& dt) {
-    QLength length = spline.length(50);
-    Trapezoidal profile(limits, length);
+  static std::vector<Step> generate(const Spline& spline, const Limits& limits,
+                                    const QSpeed& start_v = 0_mps, const QSpeed& end_v = 0_mps,
+                                    const QTime& dt = 10_ms) {
+    QLength length = spline.length();
+    Trapezoidal profile(limits, length, start_v, end_v);
 
     std::vector<Step> trajectory;
 
@@ -31,7 +32,8 @@ public:
     QLength dist = 0_m;
     State pos = spline.calc(t);
     QAngle theta = pos.theta;
-    QSpeed vel = profile.calc(dt).v;
+    QSpeed vel = profile.calc(0_s).v;
+    if (vel == 0_mps) { vel = profile.calc(dt).v; }
 
     while (dist <= length && t <= 1) {
       // limit velocity according to approximation of the curvature during the next timeslice
@@ -66,7 +68,9 @@ public:
   }
 
   static void follow(ChassisModel& chassis, const std::vector<Step>& trajectory,
-                     const ChassisScales& scales, const QAngularSpeed& igearset) {
+                     const ChassisScales& scales, const QAngularSpeed& igearset,
+                     bool forward = true) {
+    Rate rate;
     for (const auto& step : trajectory) {
       QSpeed left = step.v - (step.w / radian * scales.wheelTrack) / 2;
       QSpeed right = step.v + (step.w / radian * scales.wheelTrack) / 2;
@@ -77,11 +81,16 @@ public:
       auto leftSpeed = (leftWheel / igearset).convert(number);
       auto rightSpeed = (rightWheel / igearset).convert(number);
 
-      /* chassis.tank(leftSpeed, rightSpeed); */
-      chassis.left(leftSpeed);
-      chassis.right(rightSpeed);
-      pros::delay(5);
+      if (forward) {
+        chassis.tank(leftSpeed, rightSpeed);
+      } else {
+        chassis.tank(-rightSpeed, -leftSpeed);
+      }
+      // chassis.left(leftSpeed);
+      // chassis.right(rightSpeed);
+      rate.delayUntil(10_ms);
     }
+    chassis.forward(0);
   }
 };
 
