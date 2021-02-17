@@ -7,11 +7,12 @@ namespace lib7842 {
 class Trapezoidal : public Profile {
 public:
   constexpr Trapezoidal(const Limits& ilimits, const QLength& ilength,
-                        const QSpeed& istart_v = 0_mps, const QSpeed& iend_v = 0_mps) :
+                        const QSpeed& istart_v = 0_mps, const QSpeed& iend_v = 0_mps,
+                        double vel_scale = 1) :
     limits(ilimits), length(ilength), start_v(istart_v), end_v(iend_v) {
     // load limits
     auto& a = limits.a;
-    auto& v = limits.v;
+    auto v = limits.v * vel_scale;
 
     auto offset = (square(start_v) + square(end_v)) / 2.0;
 

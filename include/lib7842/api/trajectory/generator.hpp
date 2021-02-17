@@ -20,9 +20,9 @@ public:
   }
 
   void follow(const Spline& spline, bool forward = true, const QSpeed& start_v = 0_mps,
-              const QSpeed& end_v = 0_mps) const {
+              const QSpeed& end_v = 0_mps, double vel_scale = 1) const {
     QLength length = spline.length();
-    Trapezoidal profile(limits, length, start_v, end_v);
+    Trapezoidal profile(limits, length, start_v, end_v, vel_scale);
 
     // setup
     double t = 0;
