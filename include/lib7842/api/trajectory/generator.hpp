@@ -12,6 +12,19 @@ namespace lib7842 {
 
 class TrajectoryGenerator {
 public:
+  TrajectoryGenerator(std::shared_ptr<ChassisModel> imodel, const Limits& ilimits,
+                      const ChassisScales& iscales, const QAngularSpeed& igearset,
+                      const QTime& idt) :
+    model(std::move(imodel)), limits(ilimits), scales(iscales), gearset(igearset), dt(idt) {
+    {}
+  }
+
+  std::shared_ptr<ChassisModel> model;
+  Limits limits;
+  ChassisScales scales;
+  QAngularSpeed gearset;
+  QTime dt;
+
   struct Step {
     State p;
     QSpeed v;
@@ -19,9 +32,8 @@ public:
     QCurvature c;
   };
 
-  static std::vector<Step> generate(const Spline& spline, const Limits& limits,
-                                    const QSpeed& start_v = 0_mps, const QSpeed& end_v = 0_mps,
-                                    const QTime& dt = 10_ms) {
+  std::vector<Step> generate(const Spline& spline, const QSpeed& start_v = 0_mps,
+                             const QSpeed& end_v = 0_mps) const {
     QLength length = spline.length();
     Trapezoidal profile(limits, length, start_v, end_v);
 
@@ -67,30 +79,32 @@ public:
     return trajectory;
   }
 
-  static void follow(ChassisModel& chassis, const std::vector<Step>& trajectory,
-                     const ChassisScales& scales, const QAngularSpeed& igearset,
-                     bool forward = true) {
+  void moveStep(const Step& step, bool forward) const {
+    QSpeed left = step.v - (step.w / radian * scales.wheelTrack) / 2;
+    QSpeed right = step.v + (step.w / radian * scales.wheelTrack) / 2;
+
+    QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
+    QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
+
+    auto leftSpeed = (leftWheel / gearset).convert(number);
+    auto rightSpeed = (rightWheel / gearset).convert(number);
+
+    if (forward) {
+      model->tank(leftSpeed, rightSpeed);
+    } else {
+      model->tank(-rightSpeed, -leftSpeed);
+    }
+    // model.left(leftSpeed);
+    // model.right(rightSpeed);
+  }
+
+  void follow(const std::vector<Step>& trajectory, bool forward = true) const {
     Rate rate;
     for (const auto& step : trajectory) {
-      QSpeed left = step.v - (step.w / radian * scales.wheelTrack) / 2;
-      QSpeed right = step.v + (step.w / radian * scales.wheelTrack) / 2;
-
-      QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
-      QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
-
-      auto leftSpeed = (leftWheel / igearset).convert(number);
-      auto rightSpeed = (rightWheel / igearset).convert(number);
-
-      if (forward) {
-        chassis.tank(leftSpeed, rightSpeed);
-      } else {
-        chassis.tank(-rightSpeed, -leftSpeed);
-      }
-      // chassis.left(leftSpeed);
-      // chassis.right(rightSpeed);
+      moveStep(step, forward);
       rate.delayUntil(10_ms);
     }
-    chassis.forward(0);
+    model->forward(0);
   }
 };
 

@@ -62,13 +62,20 @@ void autonomous() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+void follow(const TrajectoryGenerator& generator, const lib7842::Spline& spline,
+            bool forward = true, const QSpeed& start_v = 0_mps, const QSpeed& end_v = 0_mps) {
+  auto trajectory = generator.generate(spline, start_v, end_v);
+  generator.follow(trajectory, forward);
+}
+
 void opcontrol() {
   Controller controller(ControllerId::master);
 
-  auto topLeft = std::make_shared<Motor>(1); // top left
-  auto topRight = std::make_shared<Motor>(-8); // top right
-  auto bottomRight = std::make_shared<Motor>(-3); // bottom right
-  auto bottomLeft = std::make_shared<Motor>(6); // bottom left
+  auto topLeft = std::make_shared<Motor>(11); // top left
+  auto topRight = std::make_shared<Motor>(-5); // top right
+  auto bottomRight = std::make_shared<Motor>(-6); // bottom right
+  auto bottomLeft = std::make_shared<Motor>(2); // bottom left
 
   topLeft->setBrakeMode(AbstractMotor::brakeMode::brake);
   topRight->setBrakeMode(AbstractMotor::brakeMode::brake);
@@ -121,7 +128,8 @@ void opcontrol() {
   /**
    * Trajectory
    */
-  Limits limits(scales, 200_rpm, 1.5_s, 1, 1);
+  Limits limits(scales, 200_rpm, 1.2_s, 1, 1);
+  TrajectoryGenerator generator(model, limits, scales, 200_rpm, 10_ms);
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -129,11 +137,12 @@ void opcontrol() {
                    controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::A)) {
-      // auto path = CubicBezier({{0_ft, 0_ft}, {1_ft, 0_ft}, {1_ft, 2_ft}, {2_ft, 2_ft}});
-      // auto path = Line({0_ft, 0_ft}, {0_ft, 2_ft});
-      auto path = Bezier<3>({{0_ft, 0_ft}, {0_ft, 2_ft}, {2_ft, 2_ft}, {2_ft, 0_ft}});
-      auto trajectory = TrajectoryGenerator::generate(path, limits, 5_ms);
-      TrajectoryGenerator::follow(*model, trajectory, scales, 200_rpm);
+      follow(generator, Line({0_m, 0_m}, {0_m, 1.5_ft}));
+      follow(generator, Line({0_m, 0_m}, {0_m, 1.5_ft}), false);
+      follow(generator,
+             CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft}, {1.4_ft, 1_ft}}));
+      follow(generator, CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft}, {1.4_ft, 1_ft}}),
+             false);
     }
 
     pros::delay(10);
