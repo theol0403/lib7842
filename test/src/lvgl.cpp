@@ -11,13 +11,13 @@ void lvglTest() {
   scr.makePage<GUI::Odom>("Odom")->attachOdom(nullptr).attachResetter(nullptr);
 
   scr.makePage<GUI::Graph>("Graph")
-    .withRange(0, 100)
+    ->withRange(0, 100)
     .withSeries("Series 1", LV_COLOR_RED, []() { return 40; })
     .withSeries("Series 2", LV_COLOR_GREEN, []() { return 50; })
     .withSeries("Series 3", LV_COLOR_PURPLE, []() { return 60; });
 
   scr.makePage<GUI::Actions>("Actions")
-    .button("Action 1", [&]() { std::cout << "Doing Action 1" << std::endl; })
+    ->button("Action 1", [&]() { std::cout << "Doing Action 1" << std::endl; })
     .button("Action 2", [&]() { std::cout << "Doing Action 2" << std::endl; })
     .newRow()
     .button("Action 3", [&]() { std::cout << "Doing Action 3" << std::endl; })
@@ -25,7 +25,7 @@ void lvglTest() {
     .build();
 
   scr.makePage<GUI::Selector>("Selector")
-    .button("Option 1", [&]() { std::cout << "Running Option 1" << std::endl; })
+    ->button("Option 1", [&]() { std::cout << "Running Option 1" << std::endl; })
     .button("Option 2", [&]() { std::cout << "Running Option 2" << std::endl; })
     .newRow()
     .button("Option 3", [&]() { std::cout << "Running Option 3" << std::endl; })
