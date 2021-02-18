@@ -16,7 +16,7 @@ TEST_CASE("Object") {
     Object obj;
 
     THEN("all the values should be zero-initialized") {
-      CHECK(obj.sig == 0);
+      CHECK(obj.sig == 255);
       CHECK(obj.x == 0);
       CHECK(obj.y == 0);
       CHECK(obj.width == 0);

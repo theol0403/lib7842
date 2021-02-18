@@ -7,7 +7,7 @@ namespace lib7842::Vision {
 struct Object {
   double get(const Query& iquery) const;
 
-  uint16_t sig {0};
+  uint16_t sig {255};
   double x {0};
   double y {0};
   double width {0};

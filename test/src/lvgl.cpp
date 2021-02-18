@@ -8,16 +8,16 @@ using namespace test;
 void lvglTest() {
   GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
 
-  scr.makePage<GUI::Odom>("Odom").attachOdom(nullptr).attachResetter(nullptr);
+  scr.makePage<GUI::Odom>("Odom")->attachOdom(nullptr).attachResetter(nullptr);
 
   scr.makePage<GUI::Graph>("Graph")
-    .withRange(0, 100)
+    ->withRange(0, 100)
     .withSeries("Series 1", LV_COLOR_RED, []() { return 40; })
     .withSeries("Series 2", LV_COLOR_GREEN, []() { return 50; })
     .withSeries("Series 3", LV_COLOR_PURPLE, []() { return 60; });
 
   scr.makePage<GUI::Actions>("Actions")
-    .button("Action 1", [&]() { std::cout << "Doing Action 1" << std::endl; })
+    ->button("Action 1", [&]() { std::cout << "Doing Action 1" << std::endl; })
     .button("Action 2", [&]() { std::cout << "Doing Action 2" << std::endl; })
     .newRow()
     .button("Action 3", [&]() { std::cout << "Doing Action 3" << std::endl; })
@@ -25,23 +25,23 @@ void lvglTest() {
     .build();
 
   scr.makePage<GUI::Selector>("Selector")
-    .button("Option 1", [&]() { std::cout << "Running Option 1" << std::endl; })
+    ->button("Option 1", [&]() { std::cout << "Running Option 1" << std::endl; })
     .button("Option 2", [&]() { std::cout << "Running Option 2" << std::endl; })
     .newRow()
     .button("Option 3", [&]() { std::cout << "Running Option 3" << std::endl; })
     .button("Option 4", [&]() { std::cout << "Running Option 4" << std::endl; })
     .build();
 
-  auto& vision = scr.makePage<GUI::VisionPage>("Vision");
+  auto vision = scr.makePage<GUI::VisionPage>("Vision");
 
   Vision::Container container;
   container.add({1, 20, 20, 50, 50, 100, 100});
 
-  vision.makeLayer().draw(container);
+  vision->makeLayer().draw(container);
 
   Vision::Container container2;
   container2.add({2, 30, 30, 50, 50, 100, 100});
-  vision.makeLayer()
+  vision->makeLayer()
     .withColor(LV_COLOR_YELLOW)
     .withColor(LV_COLOR_WHITE, LV_COLOR_GREEN, 2)
     .draw(container2);
