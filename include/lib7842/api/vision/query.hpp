@@ -8,7 +8,8 @@ struct Object;
 class Query : public std::function<double(const Object& obj)> {
 public:
   using function::function;
-  static Query sig, x, y, width, height, fovWidth, fovHeight, area, avgDim, centerX, centerY;
+  static Query sig, x, y, width, height, fovWidth, fovHeight, area, avgDim, centerX, centerY,
+    offsetCenterX, offsetCenterY;
 
   double getFrom(const Object& obj) const;
 };
