@@ -25,6 +25,14 @@ Query Query::centerX = [](const Object& obj) { return obj.x + obj.width / 2.0; }
 
 Query Query::centerY = [](const Object& obj) { return obj.y + obj.height / 2.0; };
 
+Query Query::offsetCenterX = [](const Object& obj) {
+  return Query::centerX(obj) - Query::fovWidth(obj) / 2;
+};
+
+Query Query::offsetCenterY = [](const Object& obj) {
+  return Query::centerY(obj) - Query::fovHeight(obj) / 2;
+};
+
 double Query::getFrom(const Object& obj) const { return (*this)(obj); }
 
 } // namespace lib7842::Vision
