@@ -46,6 +46,7 @@ private:
   void updateOdom();
 
   // field
+  static const int side {6}; // number of tiles on one axis
   double fieldDim = 0; // width and height of field container
   lv_style_t fStyle;
 

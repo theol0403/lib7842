@@ -7,20 +7,21 @@ PROJECTROOT=..
 
 BINDIR=$(ROOT)/bin
 SRCDIR=$(PROJECTROOT)/src/lib7842/api
+SRCTESTDIR=$(PROJECTROOT)/src/lib7842/test
 INCDIR=$(PROJECTROOT)/include
 TESTDIR=$(ROOT)/src
-OUTBIN:=$(BINDIR)/main.exe
+OUTBIN:=$(BINDIR)/main
 
-WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function -Wnull-dereference -Wno-sign-compare -Wno-narrowing
-EXTRA_CXXFLAGS= -std=gnu++17 -g -pthread -D THREADS_STD 
+WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function -Wnull-dereference -Wno-sign-compare -Wno-narrowing -Wno-deprecated
+EXTRA_CXXFLAGS= -std=gnu++20 -g -pthread -D THREADS_STD -O3
 EXTRA_CXXFLAGS+= -fsanitize=undefined -fsanitize=vptr -fsanitize=integer-divide-by-zero -fsanitize=null
 # EXTRA_CXXFLAGS+= -fsanitize=address 
 
 CXXFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -I ./include
 LDFLAGS= $(WARNFLAGS) $(EXTRA_CXXFLAGS) -lm -lgcc -lstdc++ -lsupc++ ./firmware/libOkapiLibV5.a ./firmware/lvgl.a -lSDL2
 
-CXX:=g++-9
-LD:=g++-9
+CXX:=g++-10
+LD:=g++-10
 
 rwildcard=$(foreach d,$(filter-out $3,$(wildcard $1*)),$(call rwildcard,$d/,$2,$3)$(filter $(subst *,%,$2),$d))
 NO_COLOR=\x1b[0m
@@ -51,10 +52,13 @@ INCLUDE=-iquote$(INCDIR)
 CXXSRC=$(call rwildcard, $(SRCDIR),*.cpp, $1)
 CXXOBJ=$(addprefix $(BINDIR)/,$(patsubst $(SRCDIR)/%,%.o,$(call CXXSRC,$1)))
 
+CXXTESTSRC=$(call rwildcard, $(SRCTESTDIR),*.cpp, $1)
+CXXTESTOBJ=$(addprefix $(BINDIR)/,$(patsubst $(SRCTESTDIR)/%,%.o,$(call CXXTESTSRC,$1)))
+
 CXXSRCTEST=$(call rwildcard, $(TESTDIR),*.cpp, $1)
 CXXOBJTEST=$(addprefix $(BINDIR)/,$(patsubst $(TESTDIR)/%,%.o,$(call CXXSRCTEST,$1)))
 
-GETALLOBJ=$(sort $(call CXXOBJ,$1) $(call CXXOBJTEST,$1))
+GETALLOBJ=$(sort $(call CXXOBJ,$1) $(call CXXOBJTEST,$1) $(call CXXTESTOBJ,$1))
 
 .DEFAULT_GOAL=quick
 
@@ -88,3 +92,10 @@ $(BINDIR)/%.$1.o: $(TESTDIR)/%.$1
 endef
 $(eval $(call cxx_rule_test,cpp))
 
+define cxx_rule_src_test
+$(BINDIR)/%.$1.o: $(SRCTESTDIR)/%.$1
+	$(VV)mkdir -p $$(dir $$@)
+	@echo -n "Compiling $$< "
+	$$(call test_output,$D$(CXX) -c $(INCLUDE) -iquote$(INCDIR)/$$(dir $$*) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o $$@ $(shell pwd)/$$<,$(OK_STRING))
+endef
+$(eval $(call cxx_rule_src_test,cpp))

@@ -10,7 +10,7 @@
  * This file should not be modified by users, since it gets replaced whenever
  * a kernel upgrade occurs.
  *
- * Copyright (c) 2017-2020, Purdue University ACM SIGBots.
+ * Copyright (c) 2017-2021, Purdue University ACM SIGBots.
  * All rights reservered.
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -196,6 +196,7 @@ class Controller {
 	 * failed, setting errno.
 	 */
 	std::int32_t set_text(std::uint8_t line, std::uint8_t col, const char* str);
+	std::int32_t set_text(std::uint8_t line, std::uint8_t col, const std::string& str);
 
 	/**
 	 * Clears an individual line of the controller screen.

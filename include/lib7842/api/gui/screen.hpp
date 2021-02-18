@@ -26,9 +26,6 @@ public:
    */
   explicit Screen(lv_obj_t* iparent, lv_color_t icolor);
 
-  Screen(const Screen& iscreen) = delete;
-  Screen(Screen&& iscreen) = default;
-
   /**
    * Create a new tab and return the LVGL pointer.
    *
@@ -45,7 +42,7 @@ public:
    * @tparam T     The Page type to create
    * @return reference to the newly created page
    */
-  template <typename T> T& makePage(const std::string& iname) {
+  template <class T> T& makePage(const std::string& iname) {
     static_assert(std::is_base_of<Page, T>::value, "T is not a Page");
     auto ptr = std::make_shared<T>(newPage(iname), themeColor);
     ptr->initialize();
@@ -67,12 +64,12 @@ private:
   lv_obj_t* tabview {nullptr};
   std::vector<std::shared_ptr<Page>> pages {};
 
-  lv_style_t style_bg;
-  lv_style_t style_indic;
-  lv_style_t style_btn_bg;
-  lv_style_t style_rel;
-  lv_style_t style_tgl_rel;
-  lv_style_t style_pr;
-  lv_style_t pageStyle;
+  lv_style_t style_bg {};
+  lv_style_t style_indic {};
+  lv_style_t style_btn_bg {};
+  lv_style_t style_rel {};
+  lv_style_t style_tgl_rel {};
+  lv_style_t style_pr {};
+  lv_style_t pageStyle {};
 };
 } // namespace lib7842::GUI

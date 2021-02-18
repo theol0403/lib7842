@@ -1,12 +1,14 @@
 #pragma once
-#include "lib7842/api/positioning/point/state.hpp"
-#include "lib7842/api/positioning/point/vector.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/chassis/model/xDriveModel.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include <memory>
 
-namespace lib7842::util {
+namespace lib7842 {
+struct Vector;
+struct State;
+
+namespace util {
 
 using namespace okapi;
 
@@ -16,9 +18,7 @@ using namespace okapi;
  *
  * @param  val The value
  */
-template <typename T> int sgn(T val) {
-  return (T(0) < val) - (val < T(0));
-}
+template <class T> int sgn(T val) { return (T(0) < val) - (val < T(0)); }
 
 /**
  * Motor movement modes, voltage or velocity.
@@ -89,7 +89,9 @@ QAngle rollAngle360(const QAngle& angle);
  * @param  angle The input angle
  * @return The constrained angle
  */
-QAngle rollAngle180(const QAngle& angle);
+constexpr QAngle rollAngle180(const QAngle& angle) {
+  return angle - 360.0 * floor((angle + 180.0_deg) / 360.0, degree);
+}
 
 /**
  * Rotate a given angle to be within the constraints of [-90, 90] degrees. Finds the nearest angle
@@ -100,4 +102,17 @@ QAngle rollAngle180(const QAngle& angle);
  */
 QAngle wrapAngle90(const QAngle& angle);
 
-} // namespace lib7842::util
+} // namespace util
+} // namespace lib7842
+
+/**
+ * Provides a way to stringify RQuantity units. Mainly used for unit tests.
+ */
+namespace okapi {
+template <class MassDim, class LengthDim, class TimeDim, class AngleDim>
+std::ostream& operator<<(std::ostream& os,
+                         const RQuantity<MassDim, LengthDim, TimeDim, AngleDim>& rhs) {
+  os << rhs.getValue();
+  return os;
+}
+} // namespace okapi

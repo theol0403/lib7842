@@ -52,15 +52,13 @@ VisionPage& VisionPage::draw(const Vision::Container& icontainer, const lv_color
   return *this;
 }
 
-VisionLayer VisionPage::makeLayer() {
-  return VisionLayer(*this);
-}
+VisionLayer VisionPage::makeLayer() { return VisionLayer(*this); }
 
 VisionPage::ScreenObject& VisionPage::addObject() {
   auto attempt = iterator;
   ++attempt;
   if (attempt == objects.end()) {
-    auto object = std::make_pair(lv_obj_create(container, NULL), lv_style_t());
+    auto object = std::make_pair(lv_obj_create(container, nullptr), lv_style_t());
     auto& [obj, style] = object;
     lv_obj_set_hidden(obj, true);
     lv_style_copy(&style, &lv_style_pretty_color);

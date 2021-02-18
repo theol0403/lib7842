@@ -16,8 +16,10 @@ namespace lib7842::GUI {
  */
 class Page {
 public:
-  Page(const Page& ipage) = delete;
-  Page(Page&& ipage);
+  Page(const Page&) = delete;
+  Page operator=(const Page&) = delete;
+  Page(Page&& ipage) noexcept;
+  Page& operator=(Page&& ipage) noexcept;
   virtual ~Page();
 
   /**
@@ -54,7 +56,7 @@ public:
 
 protected:
   lv_obj_t* container;
-  lv_style_t cStyle;
-  const lv_color_t themeColor;
+  lv_style_t cStyle {};
+  lv_color_t themeColor {};
 };
 } // namespace lib7842::GUI

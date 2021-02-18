@@ -3,7 +3,7 @@
 namespace lib7842::GUI {
 
 void Actions::initialize() {
-  btnm = lv_btnm_create(container, NULL);
+  btnm = lv_btnm_create(container, nullptr);
   lv_obj_set_size(btnm, lv_obj_get_width(container), lv_obj_get_height(container));
   lv_btnm_set_action(btnm, btnAction);
   lv_obj_set_free_ptr(btnm, this);

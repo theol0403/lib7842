@@ -37,10 +37,10 @@ void Odom::initializeField() {
   /**
    * Field
    */
-  lv_obj_t* field = lv_obj_create(container, NULL);
+  lv_obj_t* field = lv_obj_create(container, nullptr);
   fieldDim = std::min(lv_obj_get_width(container), lv_obj_get_height(container));
   lv_obj_set_size(field, fieldDim, fieldDim);
-  lv_obj_align(field, NULL, LV_ALIGN_IN_RIGHT_MID, 0, 0);
+  lv_obj_align(field, nullptr, LV_ALIGN_IN_RIGHT_MID, 0, 0);
 
   /**
    * Field Style
@@ -70,36 +70,37 @@ void Odom::initializeField() {
   /**
    * Tile Layout
    */
-  lv_style_t* tileData[6][6] = {{&gry, &red, &gry, &gry, &blu, &gry}, //
-                                {&red, &gry, &gry, &gry, &gry, &blu}, //
-                                {&gry, &gry, &gry, &gry, &gry, &gry}, //
-                                {&gry, &gry, &gry, &gry, &gry, &gry}, //
-                                {&gry, &gry, &gry, &gry, &gry, &gry}, //
-                                {&gry, &gry, &gry, &gry, &gry, &gry}};
+  std::array<std::array<lv_style_t*, side>, side> tileData = {
+    {{&gry, &red, &gry, &gry, &blu, &gry}, //
+     {&red, &gry, &gry, &gry, &gry, &blu}, //
+     {&gry, &gry, &gry, &gry, &gry, &gry}, //
+     {&gry, &gry, &gry, &gry, &gry, &gry}, //
+     {&gry, &gry, &gry, &gry, &gry, &gry}, //
+     {&gry, &gry, &gry, &gry, &gry, &gry}}};
 
-  double tileDim = fieldDim / 6; // tile dimention
+  double tileDim = fieldDim / side; // tile dimension
 
   /**
    * Create tile matrix, register callbacks, assign each tile an ID
    */
-  for (size_t y = 0; y < 6; y++) {
-    for (size_t x = 0; x < 6; x++) {
-      lv_obj_t* tileObj = lv_btn_create(field, NULL);
+  for (size_t y = 0; y < side; y++) {
+    for (size_t x = 0; x < side; x++) {
+      lv_obj_t* tileObj = lv_btn_create(field, nullptr);
       lv_obj_set_pos(tileObj, x * tileDim, y * tileDim);
       lv_obj_set_size(tileObj, tileDim, tileDim);
       lv_btn_set_action(tileObj, LV_BTN_ACTION_CLICK, tileAction);
-      lv_obj_set_free_num(tileObj, y * 6 + x);
+      lv_obj_set_free_num(tileObj, y * side + x);
       lv_obj_set_free_ptr(tileObj, this);
       lv_btn_set_toggle(tileObj, false);
-      lv_btn_set_style(tileObj, LV_BTN_STYLE_PR, tileData[y][x]);
-      lv_btn_set_style(tileObj, LV_BTN_STYLE_REL, tileData[y][x]);
+      lv_btn_set_style(tileObj, LV_BTN_STYLE_PR, tileData.at(y).at(x));
+      lv_btn_set_style(tileObj, LV_BTN_STYLE_REL, tileData.at(y).at(x));
     }
   }
 
   /**
    * Robot point using lvgl led
    */
-  led = lv_led_create(field, NULL);
+  led = lv_led_create(field, nullptr);
   lv_led_on(led);
   lv_obj_set_size(led, fieldDim / 15.0, fieldDim / 15.0);
 
@@ -115,11 +116,11 @@ void Odom::initializeField() {
   /**
    * Robot line
    */
-  line = lv_line_create(field, NULL);
+  line = lv_line_create(field, nullptr);
   lv_line_set_points(line, linePoints.data(), linePoints.size());
   lv_obj_set_pos(line, 0, 0);
 
-  lineLength = fieldDim / 6;
+  lineLength = static_cast<int>(fieldDim) / side;
 
   lv_style_copy(&lineStyle, &lv_style_plain);
   lineStyle.line.width = 3;
@@ -129,7 +130,7 @@ void Odom::initializeField() {
 }
 
 void Odom::initializeText() {
-  statusLabel = lv_label_create(container, NULL);
+  statusLabel = lv_label_create(container, nullptr);
 
   lv_style_copy(&textStyle, &lv_style_plain);
   textStyle.text.color = LV_COLOR_WHITE;
@@ -147,9 +148,9 @@ void Odom::initializeButton() {
   /**
    * Button
    */
-  lv_obj_t* btn = lv_btn_create(container, NULL);
+  lv_obj_t* btn = lv_btn_create(container, nullptr);
   lv_obj_set_size(btn, 100, 40);
-  lv_obj_align(btn, NULL, LV_ALIGN_IN_TOP_MID,
+  lv_obj_align(btn, nullptr, LV_ALIGN_IN_TOP_MID,
                -lv_obj_get_width(container) / 2.0 + (lv_obj_get_width(container) - fieldDim) / 2.0,
                0);
   lv_obj_set_free_ptr(btn, this);
@@ -178,7 +179,7 @@ void Odom::initializeButton() {
   /**
    * Reset Button Label
    */
-  lv_obj_t* label = lv_label_create(btn, NULL);
+  lv_obj_t* label = lv_label_create(btn, nullptr);
   lv_obj_set_style(label, &textStyle);
   lv_label_set_text(label, "Reset");
 }
@@ -196,10 +197,12 @@ void Odom::updateOdom() {
                  (c_y * fieldDim) - lv_obj_get_height(led) / 2.0 - 1.0);
 
   // move start and end of line
-  linePoints.at(0) = {(int16_t)((c_x * fieldDim)), (int16_t)((c_y * fieldDim) - (3.0 / 2.0))};
+  linePoints.at(0) = {static_cast<int16_t>((c_x * fieldDim)),
+                      static_cast<int16_t>((c_y * fieldDim) - (3.0 / 2.0))};
   double newY = lineLength * cos(c_theta);
   double newX = lineLength * sin(c_theta);
-  linePoints.at(1) = {(int16_t)(newX + linePoints.at(0).x), (int16_t)(-newY + linePoints.at(0).y)};
+  linePoints.at(1) = {static_cast<int16_t>(newX + linePoints.at(0).x),
+                      static_cast<int16_t>(-newY + linePoints.at(0).y)};
 
   lv_line_set_points(line, linePoints.data(), linePoints.size());
   lv_obj_invalidate(line);
@@ -212,7 +215,7 @@ void Odom::updateOdom() {
                      "Left: " + std::to_string(sensors[0]) + "\n" +
                      "Right: " + std::to_string(sensors[1]);
 
-  if (sensors.size() > 2) text = text + "\n" + "Middle: " + std::to_string(sensors[2]);
+  if (sensors.size() > 2) { text = text + "\n" + "Middle: " + std::to_string(sensors[2]); }
 
   lv_label_set_text(statusLabel, text.c_str());
 
@@ -228,8 +231,8 @@ void Odom::updateOdom() {
 lv_res_t Odom::tileAction(lv_obj_t* tileObj) {
   Odom* that = static_cast<Odom*>(lv_obj_get_free_ptr(tileObj));
   int num = lv_obj_get_free_num(tileObj);
-  int y = num / 6;
-  int x = num - y * 6;
+  int y = num / side;
+  int x = num - y * side;
   if (that->odom) {
     that->odom->setState({x * tile + 0.5_tile, 1_court - y * tile - 0.5_tile, 0_deg},
                          StateMode::CARTESIAN);

@@ -6,13 +6,12 @@
 namespace lib7842 {
 
 /**
- * A helper class for running actions asynchronously.
+ * A helper class for running actions asynchronously. You use the class by passing it a function to
+ * run and an optional trigger. It will then run the function in a separate task after the trigger
+ * has fired.
  */
 class Async : public TaskWrapper {
 public:
-  Async(const Async& itask) = delete;
-  Async(Async&& itask) = default;
-
   /**
    * Run a function asynchronously.
    *
