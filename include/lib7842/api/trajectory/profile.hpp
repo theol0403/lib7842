@@ -20,6 +20,12 @@ public:
 
   constexpr virtual KinematicState calc(QTime t) const = 0;
   constexpr virtual KinematicState calc(QLength d) const = 0;
+
+  constexpr virtual KinematicState begin() const { return calc(0_s); }
+  constexpr virtual KinematicState end() const { return calc(time); }
+
+protected:
+  QTime time {0_s}; // the time it takes to complete the profile
 };
 
 } // namespace lib7842

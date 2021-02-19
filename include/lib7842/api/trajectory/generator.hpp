@@ -19,10 +19,10 @@ public:
     {}
   }
 
-  void follow(const Spline& spline, bool forward = true, const QSpeed& start_v = 0_mps,
-              const QSpeed& end_v = 0_mps, double vel_scale = 1) const {
+  void follow(const Spline& spline, bool forward = true, const Number& istart_v = 0_pct,
+              const Number& iend_v = 0_pct, const Number& itop_v = 100_pct) const {
     QLength length = spline.length();
-    Trapezoidal profile(limits, length, start_v, end_v, vel_scale);
+    Trapezoidal profile(limits, length, istart_v, iend_v, itop_v);
 
     // setup
     double t = 0;
@@ -63,7 +63,7 @@ public:
       // calculate new velocity
       vel = profile.calc(dist).v;
     }
-    model->forward(0);
+    moveStep(profile.end().v, 0_rpm, forward);
   }
 
   void moveStep(const QSpeed& v, const QAngularSpeed& w, bool forward) const {
