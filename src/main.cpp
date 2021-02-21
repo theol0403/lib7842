@@ -97,7 +97,7 @@ void opcontrol() {
    */
   ChassisScales scales({2.75_in, 11.3_in, 0_in, 2.75_in}, 360);
   Limits limits(scales, 200_rpm, 1.2_s, 1, 1);
-  TrajectoryGenerator generator(model, limits, scales, 200_rpm, 10_ms);
+  SkidSteerGenerator generator(model, 200_rpm, limits, scales, 10_ms);
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),

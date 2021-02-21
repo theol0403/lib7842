@@ -10,15 +10,8 @@
 
 namespace lib7842 {
 
-class TrajectoryGenerator {
+class Generator {
 public:
-  TrajectoryGenerator(std::shared_ptr<ChassisModel> imodel, const Limits& ilimits,
-                      const ChassisScales& iscales, const QAngularSpeed& igearset,
-                      const QTime& idt) :
-    model(std::move(imodel)), limits(ilimits), scales(iscales), gearset(igearset), dt(idt) {
-    {}
-  }
-
   struct Step {
     State p;
     KinematicState k;
@@ -27,10 +20,14 @@ public:
 
   using Runner = std::function<void(const Step&)>;
 
-  void generate(const Spline& spline, const Runner& runner, const Number& istart_v = 0_pct,
-                const Number& iend_v = 0_pct, const Number& itop_v = 100_pct) const {
+  virtual ~Generator() = default;
+
+  Generator(const Limits& ilimits, const ChassisScales& iscales, const QTime& idt) :
+    limits(ilimits), scales(iscales), dt(idt) {}
+
+  void generate(const Spline& spline, const Runner& runner, const ProfileFlags& iflags = {}) const {
     QLength length = spline.length();
-    Trapezoidal profile(limits, length, istart_v, iend_v, itop_v);
+    Trapezoidal profile(limits, length, iflags);
 
     // setup
     double t = 0;
@@ -73,8 +70,21 @@ public:
     if (end.v == 0_mps) { runner({pos, end, 0_rpm}); }
   }
 
-  void follow(const Spline& spline, bool forward = true, const Number& istart_v = 0_pct,
-              const Number& iend_v = 0_pct, const Number& itop_v = 100_pct) {
+protected:
+  Limits limits;
+  ChassisScales scales;
+  QTime dt;
+};
+
+class SkidSteerGenerator : public Generator {
+public:
+  SkidSteerGenerator(std::shared_ptr<ChassisModel> imodel, const QAngularSpeed& igearset,
+                     const Limits& ilimits, const ChassisScales& iscales, const QTime& idt) :
+    Generator(ilimits, iscales, idt), model(std::move(imodel)), gearset(igearset) {
+    {}
+  }
+
+  void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {}) {
     generate(
       spline,
       [&, rate = std::shared_ptr<Rate>()](const Step& s) {
@@ -97,15 +107,12 @@ public:
 
         rate->delayUntil(dt);
       },
-      istart_v, iend_v, itop_v);
+      flags);
   }
 
 protected:
   std::shared_ptr<ChassisModel> model;
-  Limits limits;
-  ChassisScales scales;
   QAngularSpeed gearset;
-  QTime dt;
 };
 
 } // namespace lib7842

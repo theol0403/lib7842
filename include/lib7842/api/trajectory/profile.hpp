@@ -14,6 +14,12 @@ struct KinematicState {
   QSpeed v {0_mps};
 };
 
+struct ProfileFlags {
+  Number start_v = 0_pct;
+  Number end_v = 0_pct;
+  Number top_v = 100_pct;
+};
+
 class Profile {
 public:
   virtual ~Profile() = default;
