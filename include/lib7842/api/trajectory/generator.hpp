@@ -40,7 +40,6 @@ public:
     KinematicState k = profile.begin();
     if (k.v == 0_mps) { k = profile.calc(dt); }
 
-    Rate rate;
     while (dist <= length && t <= 1) {
       // limit velocity according to approximation of the curvature during the next timeslice
       QCurvature curvature = spline.curvature(t);
@@ -64,8 +63,6 @@ public:
 
       // run trajectory
       runner({pos, k, angular_vel});
-      // moveStep(vel, angular_vel);
-      // rate.delayUntil(dt);
 
       // update new position
       pos = spline.calc(t);
@@ -80,7 +77,7 @@ public:
               const Number& iend_v = 0_pct, const Number& itop_v = 100_pct) {
     generate(
       spline,
-      [&](const Step& s) {
+      [&, rate = std::shared_ptr<Rate>()](const Step& s) {
         QSpeed left = s.k.v - (s.w / radian * scales.wheelTrack) / 2;
         QSpeed right = s.k.v + (s.w / radian * scales.wheelTrack) / 2;
 
@@ -97,6 +94,8 @@ public:
         }
         // model.left(leftSpeed);
         // model.right(rightSpeed);
+
+        rate->delayUntil(dt);
       },
       istart_v, iend_v, itop_v);
   }
