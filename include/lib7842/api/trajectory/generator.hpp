@@ -18,6 +18,8 @@ public:
     QAngularSpeed w;
     QCurvature c;
     QSpeed p_vel;
+    Number left {0_pct};
+    Number right {0_pct};
   };
 
   using Runner = std::function<void(const Step&)>;
@@ -27,7 +29,8 @@ public:
   Generator(const Limits& ilimits, const ChassisScales& iscales, const QTime& idt) :
     limits(ilimits), scales(iscales), dt(idt) {}
 
-  void generate(const Spline& spline, const Runner& runner, const ProfileFlags& iflags = {}) const {
+  Trapezoidal generate(const Spline& spline, const Runner& runner,
+                       const ProfileFlags& iflags = {}) const {
     QLength length = spline.length();
     Trapezoidal profile(limits, length, iflags);
 
@@ -71,6 +74,7 @@ public:
     }
     KinematicState end = profile.end();
     if (end.v == 0_mps) { runner({pos, end, 0_rpm, 0 / 1_m, end.v}); }
+    return profile;
   }
 
 protected:
@@ -115,6 +119,34 @@ public:
 protected:
   std::shared_ptr<ChassisModel> model;
   QAngularSpeed gearset;
+};
+
+class XTestGenerator : public Generator {
+public:
+  using Generator::Generator;
+  std::tuple<std::vector<Step>, Trapezoidal> follow(const Spline& spline, bool /*forward*/ = true,
+                                                    const ProfileFlags& flags = {}) {
+    std::vector<Step> trajectory;
+    auto profile = generate(
+      spline,
+      [&](const Step& s) {
+        QSpeed left = s.k.v / sqrt(2) - (s.w / radian * scales.wheelTrack) / 2;
+        QSpeed right = s.k.v / sqrt(2) + (s.w / radian * scales.wheelTrack) / 2;
+
+        QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
+        QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
+
+        auto leftSpeed = leftWheel / 200_rpm;
+        auto rightSpeed = rightWheel / 200_rpm;
+
+        Step ns = s;
+        ns.left = leftSpeed;
+        ns.right = rightSpeed;
+        trajectory.emplace_back(ns);
+      },
+      flags);
+    return {trajectory, profile};
+  }
 };
 
 class TestGenerator : public Generator {

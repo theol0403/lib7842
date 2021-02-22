@@ -74,17 +74,17 @@ plt.xlabel("Time (s)")
 plt.ylabel("Angular Velocity (rad/s)")
 plt.grid()
 
-# # wheel speeds
-# plt.subplot(2, 3, 6)
-# plt.title("Wheel Speeds")
+# wheel speeds
+plt.subplot(2, 3, 6)
+plt.title("Wheel Speeds")
 
-# plt.plot(time_range, wheel_speeds[0], label="Left")
-# plt.plot(time_range, wheel_speeds[1], label="Right")
+plt.plot(time_range, [step[7] for step in trajectory], label="Left")
+plt.plot(time_range, [step[8] for step in trajectory], label="Right")
 
-# plt.xlabel("Time (s)")
-# plt.ylabel("Velocity (m/s)")
-# plt.grid()
-# plt.legend()
+plt.xlabel("Time (s)")
+plt.ylabel("Velocity (m/s)")
+plt.grid()
+plt.legend()
 
 plt.gcf().set_tight_layout(True)
 plt.show()
