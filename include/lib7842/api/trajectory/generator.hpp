@@ -16,6 +16,8 @@ public:
     State p;
     KinematicState k;
     QAngularSpeed w;
+    QCurvature c;
+    QSpeed p_vel;
   };
 
   using Runner = std::function<void(const Step&)>;
@@ -38,6 +40,7 @@ public:
     if (k.v == 0_mps) { k = profile.calc(dt); }
 
     while (dist <= length && t <= 1) {
+      auto profiled_vel = k.v; // used for logging
       // limit velocity according to approximation of the curvature during the next timeslice
       QCurvature curvature = spline.curvature(t);
       QSpeed vel_max = std::min(k.v, limits.max_vel_at_curvature(curvature));
@@ -59,7 +62,7 @@ public:
       t = spline.t_at_dist_travelled(t, d_dist);
 
       // run trajectory
-      runner({pos, k, angular_vel});
+      runner({pos, k, angular_vel, curvature, profiled_vel});
 
       // update new position
       pos = spline.calc(t);
@@ -67,7 +70,7 @@ public:
       k = profile.calc(dist);
     }
     KinematicState end = profile.end();
-    if (end.v == 0_mps) { runner({pos, end, 0_rpm}); }
+    if (end.v == 0_mps) { runner({pos, end, 0_rpm, 0 / 1_m, end.v}); }
   }
 
 protected:

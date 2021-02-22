@@ -15,13 +15,30 @@ int main(int argc, char** argv) {
     return lvglMain();
   }
 
-  for (size_t i = 0; i < 10000; ++i) {
-    auto path = QuinticHermite({0_ft, 0_ft, 0_deg}, {1_ft, 1_ft, 0_deg});
-    Limits limits(1.5_mps2, 1_mps, 400_deg / second);
-    // auto trajectory = TrajectoryGenerator::generate(path, limits, 10_ms);
+  ChassisScales scales({3.25_in, 11.3_in}, 360);
+  Limits limits(scales, 200_rpm, 1.2_s, std::sqrt(2), 1);
+  TestGenerator generator(limits, scales, 10_ms);
+
+  if (argc > 1 && std::string(argv[1]) == "bench") {
+    std::cout << "Running benchmark:" << std::endl;
+    for (size_t i = 0; i < 10000; ++i) {
+      auto path = QuinticHermite({0_ft, 0_ft, 0_deg}, {1_ft, 1_ft, 0_deg});
+      auto trajectory = generator.follow(path);
+    }
   }
 
-  return runUnitTests(argc, argv);
+  if (argc > 1 && std::string(argv[1]) == "print") {
+    auto t = generator.follow(QuinticHermite({{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}}));
+    for (auto&& step : t) {
+      std::cout << step.p.x.convert(foot) << "," << step.p.y.convert(foot) << ","
+                << step.p.theta.convert(degree) << "," << step.c.convert(1 / meter) << ","
+                << step.p_vel << "," << step.k.v << "," << step.w.convert(degree / second)
+                << std::endl;
+    }
+  } else {
+    return runUnitTests(argc, argv);
+  }
+
   return 0;
 }
 
