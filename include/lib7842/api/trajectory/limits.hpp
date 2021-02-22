@@ -20,7 +20,7 @@ struct Limits {
 
   Limits(const QLength& idiam, const QAngularSpeed& igearset, const QLength& itrack,
          const QTime& ia, double iv = 1, double iw = 1) :
-    Limits(ia, iv * idiam * pi * igearset / 360_deg, iw * 2 * idiam * igearset / itrack) {}
+    Limits(ia, iv * idiam * pi * igearset / 360_deg, iw * idiam * igearset / itrack) {}
 
   Limits(const ChassisScales& iscales, const QAngularSpeed& igearset, const QTime& ia,
          double iv = 1, double iw = 1) :
