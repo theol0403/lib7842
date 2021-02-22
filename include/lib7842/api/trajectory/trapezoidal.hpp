@@ -58,14 +58,17 @@ public:
       // acceleration
       k.a = limits.a;
       k.v = start_v + limits.a * t;
+      k.d = start_v * t + 0.5 * limits.a * square(t);
     } else if (t > accel_t && t < accel_t + cruise_t) {
       // cruising
       k.v = vel;
+      k.d = accel_d + vel * (t - accel_t);
     } else {
       // deceleration
       k.a = limits.a * -1;
       QTime t_from_decel = (t - accel_t - cruise_t);
       k.v = vel - t_from_decel * limits.a;
+      k.d = accel_d + cruise_d + end_v * t_from_decel + 0.5 * limits.a * square(t_from_decel);
     }
     k.t = t;
     return k;
