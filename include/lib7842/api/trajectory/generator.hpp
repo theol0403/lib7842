@@ -87,7 +87,7 @@ public:
   void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {}) {
     generate(
       spline,
-      [&, rate = std::shared_ptr<Rate>()](const Step& s) {
+      [&, rate = std::make_shared<Rate>()](const Step& s) {
         QSpeed left = s.k.v - (s.w / radian * scales.wheelTrack) / 2;
         QSpeed right = s.k.v + (s.w / radian * scales.wheelTrack) / 2;
 
@@ -104,7 +104,6 @@ public:
         }
         // model.left(leftSpeed);
         // model.right(rightSpeed);
-
         rate->delayUntil(dt);
       },
       flags);
@@ -113,6 +112,17 @@ public:
 protected:
   std::shared_ptr<ChassisModel> model;
   QAngularSpeed gearset;
+};
+
+class TestGenerator : public Generator {
+public:
+  using Generator::Generator;
+  std::vector<Step> follow(const Spline& spline, const ProfileFlags& flags = {}) {
+    std::vector<Step> trajectory;
+    generate(
+      spline, [&](const Step& s) { trajectory.emplace_back(s); }, flags);
+    return trajectory;
+  }
 };
 
 } // namespace lib7842

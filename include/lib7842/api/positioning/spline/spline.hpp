@@ -13,6 +13,8 @@ namespace lib7842 {
  */
 class Spline {
 public:
+  constexpr virtual ~Spline() = default;
+
   /**
    * Sample the point along the spline given t.
    *

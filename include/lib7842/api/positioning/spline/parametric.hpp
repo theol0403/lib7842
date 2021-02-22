@@ -9,6 +9,8 @@ namespace lib7842 {
  */
 class ParametricFnc {
 public:
+  constexpr virtual ~ParametricFnc() = default;
+
   /**
    * Calculate the y value of the function given x.
    *
@@ -33,7 +35,8 @@ public:
 };
 
 // template <class T> concept IsParametricFnc = std::derived_from<ParametricFnc, T>;
-template <class T> concept IsParametricFnc = true;
+template <class T>
+concept IsParametricFnc = true;
 
 /**
  * A Parametric is a two-dimensional spline that uses two one-dimensional functions to map x and y
@@ -45,7 +48,8 @@ template <class T> concept IsParametricFnc = true;
  *           base implementation.
  */
 template <class T, bool B = false>
-requires IsParametricFnc<T> class Parametric : public SplineHelper<Parametric<T>> {
+requires IsParametricFnc<T>
+class Parametric : public SplineHelper<Parametric<T>> {
 public:
   /**
    * Create a Parametric given two one-dimensional functions.
