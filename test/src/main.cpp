@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
   }
 
   ChassisScales scales({3.25_in, 11_in}, 360);
-  Limits limits(scales, 200_rpm, 1.2_s, std::sqrt(2), 1);
+  Limits limits(scales, 200_rpm, 0.6_s, std::sqrt(2), 1);
   XTestGenerator generator(limits, scales, 10_ms);
 
   auto [t, profile] = generator.follow(QuinticHermite({{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}}));
@@ -29,10 +29,11 @@ int main(int argc, char** argv) {
                 << step.left << "," << step.right << std::endl;
     }
   } else {
+    std::cout << std::endl;
     std::cout << "Velocity: " << limits.v << " m/s" << std::endl;
     std::cout << "Acceleration: " << limits.a << " m/s2" << std::endl;
     std::cout << "Angular Velocity: " << limits.w.convert(degree / second) << " deg/s" << std::endl;
-    std::cout << "" << std::endl;
+    std::cout << std::endl;
     std::cout << "Length: " << profile.end().d.convert(foot) << " ft" << std::endl;
     std::cout << "Time: " << profile.end().t << " s" << std::endl;
   }

@@ -95,8 +95,8 @@ void opcontrol() {
   /**
    * Trajectory
    */
-  ChassisScales scales({2.75_in, 11.3_in, 0_in, 2.75_in}, 360);
-  Limits limits(scales, 200_rpm, 1.2_s, 1, 1);
+  ChassisScales scales({3.25_in, 11_in}, 360);
+  Limits limits(scales, 200_rpm, 1_s, std::sqrt(2), 1);
   SkidSteerGenerator generator(model, 200_rpm, limits, scales, 10_ms);
 
   while (true) {
@@ -105,11 +105,14 @@ void opcontrol() {
                    controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::A)) {
-      generator.follow(Line({0_m, 0_m}, {0_m, 1.5_ft}));
-      generator.follow(Line({0_m, 0_m}, {0_m, 1.5_ft}), false);
-      generator.follow(CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft}, {1.4_ft, 1_ft}}));
-      generator.follow(CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft}, {1.4_ft, 1_ft}}),
-                       false);
+      // generator.follow(Line({0_m, 0_m}, {0_m, 1.5_ft}));
+      // generator.follow(Line({0_m, 0_m}, {0_m, 1.5_ft}), false);
+      // generator.follow(CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft}, {1.4_ft,
+      // 1_ft}})); generator.follow(CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft},
+      // {1.4_ft, 1_ft}}),
+      //                  false);
+
+      generator.follow(QuinticBezier({{0_ft, 0_ft}, {1_ft, 1_ft}}));
     }
 
     pros::delay(10);
