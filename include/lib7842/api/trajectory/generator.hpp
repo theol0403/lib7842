@@ -38,7 +38,6 @@ public:
     double t = 0;
     QLength dist = 0_m;
     State pos = spline.calc(t);
-    QAngle theta = pos.theta;
     KinematicState k = profile.begin();
     if (k.v == 0_mps) { k = profile.calc(dt); }
 
@@ -52,9 +51,8 @@ public:
       State pos_new = spline.calc(t_n);
 
       // find out how fast we need to turn to achieve change in theta to reach next point in dt
-      QAngularSpeed angular_vel = (pos_new.theta - theta) / dt;
+      QAngularSpeed angular_vel = (pos_new.theta - pos.theta) / dt;
       // update internal theta representation
-      theta += angular_vel * dt;
       // limit profiled velocity to angular velocity
       k.v = std::min(k.v, limits.max_vel_at_w(angular_vel));
 
