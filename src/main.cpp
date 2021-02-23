@@ -112,8 +112,17 @@ void opcontrol() {
       // {1.4_ft, 1_ft}}),
       //                  false);
 
-      generator.follow(make_piecewise<QuinticHermite>(
-        {{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}, {0_ft, 4_ft, 10_deg}}));
+      // generator.follow(make_piecewise<QuinticHermite>(
+      //   {{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}, {0_ft, 4_ft, 0_deg}}));
+
+      generator.follow(Bezier<7>({{0_ft, 0_ft},
+                                  {0_ft, 1.5_ft},
+                                  {2_ft, 0.5_ft},
+                                  {2_ft, 2_ft},
+                                  {2_ft, 2_ft},
+                                  {2_ft, 3.5_ft},
+                                  {0_ft, 2.5_ft},
+                                  {0_ft, 4_ft}}));
     }
 
     pros::delay(10);
