@@ -18,8 +18,6 @@ public:
     QAngularSpeed w;
     QCurvature c;
     QSpeed p_vel;
-    Number left {0_pct};
-    Number right {0_pct};
   };
 
   using Runner = std::function<void(const Step&)>;
@@ -153,45 +151,6 @@ public:
 protected:
   std::shared_ptr<XDriveModel> model;
   QAngularSpeed gearset;
-};
-
-class XTestGenerator : public Generator {
-public:
-  using Generator::Generator;
-  std::tuple<std::vector<Step>, Trapezoidal> follow(const Spline& spline, bool /*forward*/ = true,
-                                                    const ProfileFlags& flags = {}) {
-    std::vector<Step> trajectory;
-    auto profile = generate(
-      spline,
-      [&](const Step& s) {
-        QSpeed left = s.k.v / sqrt(2) - (s.w / radian * scales.wheelTrack) / 2;
-        QSpeed right = s.k.v / sqrt(2) + (s.w / radian * scales.wheelTrack) / 2;
-
-        QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
-        QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
-
-        auto leftSpeed = leftWheel / 200_rpm;
-        auto rightSpeed = rightWheel / 200_rpm;
-
-        Step ns = s;
-        ns.left = leftSpeed;
-        ns.right = rightSpeed;
-        trajectory.emplace_back(ns);
-      },
-      flags);
-    return {trajectory, profile};
-  }
-};
-
-class TestGenerator : public Generator {
-public:
-  using Generator::Generator;
-  std::vector<Step> follow(const Spline& spline, const ProfileFlags& flags = {}) {
-    std::vector<Step> trajectory;
-    generate(
-      spline, [&](const Step& s) { trajectory.emplace_back(s); }, flags);
-    return trajectory;
-  }
 };
 
 } // namespace lib7842
