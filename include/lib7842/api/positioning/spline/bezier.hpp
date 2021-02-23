@@ -1,5 +1,6 @@
 #pragma once
 #include "parametric.hpp"
+#include "piecewise.hpp"
 #include "spline.hpp"
 
 namespace lib7842 {
@@ -146,5 +147,22 @@ private:
 
 // deduction guide to create Bezier given array of 2D control points.
 template <size_t N> Parametric(const Vector (&)[N]) -> Parametric<BezierFnc<N - 1>>;
+
+/**
+ * Helper function used to create a Piecewise<Bezier<N>> using groups of Points.
+ *
+ * @tparam P The type of Bezier, for example CubicBezier.
+ * @tparam N The number of groups provided.
+ * @return A Piecewise<P, N>>.
+ */
+template <class P, size_t N>
+requires std::same_as<P, Bezier<P::type::order>>
+constexpr auto make_piecewise(const Vector (&ctrls)[N][P::type::order + 1]) {
+  std::array<std::optional<P>, N> p;
+  for (size_t i = 0; i < N; ++i) {
+    p[i].emplace(ctrls[i]);
+  }
+  return Piecewise(std::move(p));
+}
 
 } // namespace lib7842

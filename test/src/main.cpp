@@ -15,13 +15,43 @@ int main(int argc, char** argv) {
     return lvglMain();
   }
 
-  for (size_t i = 0; i < 10000; ++i) {
-    auto path = QuinticHermite({0_ft, 0_ft, 0_deg}, {1_ft, 1_ft, 0_deg});
-    Limits limits(1.5_mps2, 1_mps, 400_deg / second);
-    // auto trajectory = TrajectoryGenerator::generate(path, limits, 10_ms);
+  ChassisScales scales({3.25_in, 13_in}, 360);
+  Limits limits(scales, 200_rpm, 0.6_s, std::sqrt(2), 1);
+  XTestGenerator generator(limits, scales, 10_ms);
+
+  auto [t, profile] = generator.follow(Bezier<7>({{0_ft, 0_ft},
+                                                  {0_ft, 1.5_ft},
+                                                  {2_ft, 0.5_ft},
+                                                  {2_ft, 2_ft},
+                                                  {2_ft, 2_ft},
+                                                  {2_ft, 3.5_ft},
+                                                  {0_ft, 2.5_ft},
+                                                  {0_ft, 4_ft}}));
+
+  if (argc > 1 && std::string(argv[1]) == "print") {
+    for (auto&& step : t) {
+      std::cout << step.p.x.convert(foot) << "," << step.p.y.convert(foot) << ","
+                << step.p.theta.convert(degree) << "," << step.c.convert(1 / meter) << ","
+                << step.p_vel << "," << step.k.v << "," << step.w.convert(degree / second) << ","
+                << step.left << "," << step.right << std::endl;
+    }
+  } else {
+    std::cout << std::endl;
+    std::cout << "Velocity: " << limits.v << " m/s" << std::endl;
+    std::cout << "Acceleration: " << limits.a << " m/s2" << std::endl;
+    std::cout << "Angular Velocity: " << limits.w.convert(degree / second) << " deg/s" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Length: " << profile.end().d.convert(foot) << " ft" << std::endl;
+    std::cout << "Time: " << profile.end().t << " s" << std::endl;
   }
 
-  return runUnitTests(argc, argv);
+  // std::cout << "Running benchmark:" << std::endl;
+  // for (size_t i = 0; i < 1000; ++i) {
+  //   auto t = generator.follow(QuinticHermite({{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}}));
+  // }
+
+  // return runUnitTests(argc, argv);
+
   return 0;
 }
 

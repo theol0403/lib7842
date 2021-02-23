@@ -7,6 +7,15 @@ namespace lib7842 {
 using namespace okapi;
 QUANTITY_TYPE(0, -1, 0, 0, QCurvature);
 
+/**
+ * Units that represent a percentage
+ */
+constexpr Number percent(0.01);
+constexpr Number operator"" _pct(long double x) { return static_cast<double>(x) * percent; }
+constexpr Number operator"" _pct(unsigned long long int x) {
+  return static_cast<double>(x) * percent;
+}
+
 namespace units {
 
 /**

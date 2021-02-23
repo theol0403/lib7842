@@ -7,12 +7,15 @@ namespace lib7842 {
 class Trapezoidal : public Profile {
 public:
   constexpr Trapezoidal(const Limits& ilimits, const QLength& ilength,
-                        const QSpeed& istart_v = 0_mps, const QSpeed& iend_v = 0_mps,
-                        double vel_scale = 1) :
-    limits(ilimits), length(ilength), start_v(istart_v), end_v(iend_v) {
+                        const ProfileFlags& iflags = {}) :
+    limits(ilimits),
+    length(ilength),
+    start_v(limits.v * iflags.start_v),
+    end_v(limits.v * iflags.end_v) {
+
     // load limits
     auto& a = limits.a;
-    auto v = limits.v * vel_scale;
+    auto v = limits.v * iflags.top_v;
 
     auto offset = (square(start_v) + square(end_v)) / 2.0;
 
@@ -55,14 +58,17 @@ public:
       // acceleration
       k.a = limits.a;
       k.v = start_v + limits.a * t;
+      k.d = start_v * t + 0.5 * limits.a * square(t);
     } else if (t > accel_t && t < accel_t + cruise_t) {
       // cruising
       k.v = vel;
+      k.d = accel_d + vel * (t - accel_t);
     } else {
       // deceleration
       k.a = limits.a * -1;
       QTime t_from_decel = (t - accel_t - cruise_t);
       k.v = vel - t_from_decel * limits.a;
+      k.d = accel_d + cruise_d + end_v * t_from_decel + 0.5 * limits.a * square(t_from_decel);
     }
     k.t = t;
     return k;
@@ -100,7 +106,6 @@ protected:
   QSpeed end_v; // the ending velocity
 
   QSpeed vel; // the top speed reached during the profile
-  QTime time; // the time it takes to complete the profile
 
   QTime accel_t; // the time it takes to accelerate to full speed
   QTime decel_t; // the time it takes to decelerate
