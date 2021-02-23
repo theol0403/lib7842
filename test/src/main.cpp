@@ -15,11 +15,12 @@ int main(int argc, char** argv) {
     return lvglMain();
   }
 
-  Limits limits(scales, 200_rpm, 0.6_s, std::sqrt(2), 1);
   ChassisScales scales({3.25_in, 13_in}, 360);
+  Limits limits(scales, 200_rpm, 0.6_s, std::sqrt(2), 1);
   XTestGenerator generator(limits, scales, 10_ms);
 
-  auto [t, profile] = generator.follow(QuinticHermite({{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}}));
+  auto [t, profile] = generator.follow(
+    make_piecewise<CubicBezier>({{{0_m, 0_m}, {1_m, 1_m}}, {{1_m, 1_m}, {2_m, 2_m}}}));
 
   if (argc > 1 && std::string(argv[1]) == "print") {
     for (auto&& step : t) {
