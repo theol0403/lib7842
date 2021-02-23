@@ -119,6 +119,42 @@ protected:
   QAngularSpeed gearset;
 };
 
+class XGenerator : public Generator {
+public:
+  XGenerator(std::shared_ptr<XDriveModel> imodel, const QAngularSpeed& igearset,
+             const Limits& ilimits, const ChassisScales& iscales, const QTime& idt) :
+    Generator(ilimits, iscales, idt), model(std::move(imodel)), gearset(igearset) {
+    {}
+  }
+
+  void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {}) {
+    generate(
+      spline,
+      [&, rate = std::make_shared<Rate>()](const Step& s) {
+        QSpeed left = s.k.v / std::sqrt(2) - (s.w / radian * scales.wheelTrack) / 2;
+        QSpeed right = s.k.v / std::sqrt(2) + (s.w / radian * scales.wheelTrack) / 2;
+
+        QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
+        QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
+
+        auto leftSpeed = (leftWheel / gearset).convert(number);
+        auto rightSpeed = (rightWheel / gearset).convert(number);
+
+        if (forward) {
+          model->tank(leftSpeed, rightSpeed);
+        } else {
+          model->tank(-rightSpeed, -leftSpeed);
+        }
+        rate->delayUntil(dt);
+      },
+      flags);
+  }
+
+protected:
+  std::shared_ptr<XDriveModel> model;
+  QAngularSpeed gearset;
+};
+
 class XTestGenerator : public Generator {
 public:
   using Generator::Generator;

@@ -95,9 +95,9 @@ void opcontrol() {
   /**
    * Trajectory
    */
-  ChassisScales scales({3.25_in, 11_in}, 360);
+  ChassisScales scales({3.25_in, 15_in}, 360);
   Limits limits(scales, 200_rpm, 1_s, std::sqrt(2), 1);
-  SkidSteerGenerator generator(model, 200_rpm, limits, scales, 10_ms);
+  XGenerator generator(model, 200_rpm, limits, scales, 10_ms);
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -112,7 +112,8 @@ void opcontrol() {
       // {1.4_ft, 1_ft}}),
       //                  false);
 
-      generator.follow(QuinticBezier({{0_ft, 0_ft}, {1_ft, 1_ft}}));
+      generator.follow(make_piecewise<QuinticHermite>(
+        {{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}, {0_ft, 4_ft, 10_deg}}));
     }
 
     pros::delay(10);

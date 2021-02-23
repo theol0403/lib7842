@@ -130,10 +130,10 @@ public:
   constexpr Parametric(const State& start, const State& end, double startStretch,
                        double endStretch) :
     Parametric<HermiteFnc<N>, true>(
-      HermiteFnc<N>(start.x.convert(meter), cos(start.theta).convert(number) * startStretch,
-                    end.x.convert(meter), cos(end.theta).convert(number) * endStretch),
-      HermiteFnc<N>(start.y.convert(meter), sin(start.theta).convert(number) * startStretch,
-                    end.y.convert(meter), sin(end.theta).convert(number) * endStretch)) {}
+      HermiteFnc<N>(start.x.convert(meter), sin(start.theta).convert(number) * startStretch,
+                    end.x.convert(meter), sin(end.theta).convert(number) * endStretch),
+      HermiteFnc<N>(start.y.convert(meter), cos(start.theta).convert(number) * startStretch,
+                    end.y.convert(meter), cos(end.theta).convert(number) * endStretch)) {}
 
   /**
    * Helper method to construct a Parametric<HermiteFnc<N> given a start and end state and an
@@ -158,7 +158,8 @@ public:
  * @return A Piecewise<P, N-1>>.
  */
 template <class P, size_t N>
-requires std::same_as<P, Hermite<P::type::order>> constexpr auto make_piecewise(State(&&ip)[N]) {
+requires std::same_as<P, Hermite<P::type::order>>
+constexpr auto make_piecewise(State(&&ip)[N]) {
   std::array<std::optional<P>, N - 1> p;
   for (size_t i = 0; i < N - 1; ++i) {
     p[i].emplace(ip[i], ip[i + 1]);

@@ -15,8 +15,8 @@ int main(int argc, char** argv) {
     return lvglMain();
   }
 
-  ChassisScales scales({3.25_in, 11_in}, 360);
   Limits limits(scales, 200_rpm, 0.6_s, std::sqrt(2), 1);
+  ChassisScales scales({3.25_in, 13_in}, 360);
   XTestGenerator generator(limits, scales, 10_ms);
 
   auto [t, profile] = generator.follow(QuinticHermite({{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}}));
