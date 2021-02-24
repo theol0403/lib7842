@@ -42,6 +42,7 @@
 
 #include "lib7842/api/trajectory/generator.hpp"
 #include "lib7842/api/trajectory/limits.hpp"
+#include "lib7842/api/trajectory/piecewise_trapezoidal.hpp"
 #include "lib7842/api/trajectory/profile.hpp"
 #include "lib7842/api/trajectory/trapezoidal.hpp"
 
