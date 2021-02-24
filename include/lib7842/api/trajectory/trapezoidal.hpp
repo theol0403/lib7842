@@ -99,6 +99,14 @@ public:
     return k;
   }
 
+  constexpr KinematicState begin() const override {
+    return KinematicState {0_s, 0_m, limits.a, start_v};
+  }
+
+  constexpr KinematicState end() const override {
+    return KinematicState {time, length, -1 * limits.a, end_v};
+  }
+
 protected:
   Limits limits; // the kinematic limits
   QLength length; // the length of the profile
