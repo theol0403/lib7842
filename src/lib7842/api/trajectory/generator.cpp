@@ -55,32 +55,35 @@ PiecewiseTrapezoidal
 
 XGenerator::XGenerator(std::shared_ptr<XDriveModel> imodel, const QAngularSpeed& igearset,
                        const Limits& ilimits, const ChassisScales& iscales, const QTime& idt) :
-  Generator(ilimits, iscales, idt), model(std::move(imodel)), gearset(igearset) {
+  Generator(ilimits, iscales, idt),
+  model(std::move(imodel)),
+  gearset(igearset),
+  rate(std::shared_ptr<AbstractRate>(global::getTimeUtil()->getRate())) {
   {}
 }
 
 void XGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
                         const std::vector<std::pair<Number, Number>>& markers) {
   generate(
-    spline,
-    [&, rate = std::shared_ptr<AbstractRate>(global::getTimeUtil()->getRate())](const Step& s) {
-      QSpeed left = s.k.v / std::sqrt(2) - (s.w / radian * scales.wheelTrack) / 2;
-      QSpeed right = s.k.v / std::sqrt(2) + (s.w / radian * scales.wheelTrack) / 2;
+    spline, [this, forward](const Step& s) { run(s, forward); }, flags, markers);
+}
 
-      QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
-      QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
+void XGenerator::run(const Generator::Step& s, bool forward) {
+  QSpeed left = s.k.v / std::sqrt(2) - (s.w / radian * scales.wheelTrack) / 2;
+  QSpeed right = s.k.v / std::sqrt(2) + (s.w / radian * scales.wheelTrack) / 2;
 
-      auto leftSpeed = (leftWheel / gearset).convert(number);
-      auto rightSpeed = (rightWheel / gearset).convert(number);
+  QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
+  QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
 
-      if (forward) {
-        model->tank(leftSpeed, rightSpeed);
-      } else {
-        model->tank(-rightSpeed, -leftSpeed);
-      }
-      rate->delayUntil(dt);
-    },
-    flags, markers);
+  auto leftSpeed = (leftWheel / gearset).convert(number);
+  auto rightSpeed = (rightWheel / gearset).convert(number);
+
+  if (forward) {
+    model->tank(leftSpeed, rightSpeed);
+  } else {
+    model->tank(-rightSpeed, -leftSpeed);
+  }
+  rate->delayUntil(dt);
 }
 
 std::tuple<std::vector<Generator::Step>, PiecewiseTrapezoidal>
