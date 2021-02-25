@@ -6,7 +6,9 @@
 #include "limits.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include "okapi/impl/util/rate.hpp"
+#include "piecewise_trapezoidal.hpp"
 #include "trapezoidal.hpp"
+#include <queue>
 
 namespace lib7842 {
 
@@ -29,10 +31,23 @@ public:
   Generator(const Limits& ilimits, const ChassisScales& iscales, const QTime& idt) :
     limits(ilimits), scales(iscales), dt(idt) {}
 
-  Trapezoidal generate(const Spline& spline, const Runner& runner,
-                       const ProfileFlags& iflags = {}) const {
+  PiecewiseTrapezoidal generate(const Spline& spline, const Runner& runner,
+                                const ProfileFlags& flags = {},
+                                const std::vector<std::pair<Number, Number>>& markers = {}) const {
     QLength length = spline.length();
-    Trapezoidal profile(limits, length, iflags);
+
+    auto allMarkers = std::deque<std::pair<Number, Number>>(markers.begin(), markers.end());
+    allMarkers.emplace_front(0_pct, flags.start_v);
+    allMarkers.emplace_back(100_pct, flags.end_v);
+
+    std::vector<std::pair<QLength, ProfileFlags>> segments;
+    for (size_t i = 1; i < segments.size(); ++i) {
+      segments.emplace_back(
+        allMarkers[i].first * length,
+        ProfileFlags {allMarkers[i - 1].second, allMarkers[i].second, flags.top_v});
+    }
+
+    PiecewiseTrapezoidal profile(limits, segments);
 
     // setup
     double t = 0;
@@ -81,43 +96,44 @@ protected:
   QTime dt;
 };
 
-class SkidSteerGenerator : public Generator {
-public:
-  SkidSteerGenerator(std::shared_ptr<ChassisModel> imodel, const QAngularSpeed& igearset,
-                     const Limits& ilimits, const ChassisScales& iscales, const QTime& idt) :
-    Generator(ilimits, iscales, idt), model(std::move(imodel)), gearset(igearset) {
-    {}
-  }
+// class SkidSteerGenerator : public Generator {
+// public:
+//   SkidSteerGenerator(std::shared_ptr<ChassisModel> imodel, const QAngularSpeed& igearset,
+//                      const Limits& ilimits, const ChassisScales& iscales, const QTime& idt) :
+//     Generator(ilimits, iscales, idt), model(std::move(imodel)), gearset(igearset) {
+//     {}
+//   }
 
-  void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {}) {
-    generate(
-      spline,
-      [&, rate = std::make_shared<Rate>()](const Step& s) {
-        QSpeed left = s.k.v - (s.w / radian * scales.wheelTrack) / 2;
-        QSpeed right = s.k.v + (s.w / radian * scales.wheelTrack) / 2;
+//   void follow(const Spline& spline, bool forward = true,
+//               const std::pair<Number, ProfileFlags>& segments = {0_pct, {}}) {
+//     generate(
+//       spline,
+//       [&, rate = std::make_shared<Rate>()](const Step& s) {
+//         QSpeed left = s.k.v - (s.w / radian * scales.wheelTrack) / 2;
+//         QSpeed right = s.k.v + (s.w / radian * scales.wheelTrack) / 2;
 
-        QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
-        QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
+//         QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
+//         QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
 
-        auto leftSpeed = (leftWheel / gearset).convert(number);
-        auto rightSpeed = (rightWheel / gearset).convert(number);
+//         auto leftSpeed = (leftWheel / gearset).convert(number);
+//         auto rightSpeed = (rightWheel / gearset).convert(number);
 
-        if (forward) {
-          model->tank(leftSpeed, rightSpeed);
-        } else {
-          model->tank(-rightSpeed, -leftSpeed);
-        }
-        // model.left(leftSpeed);
-        // model.right(rightSpeed);
-        rate->delayUntil(dt);
-      },
-      flags);
-  }
+//         if (forward) {
+//           model->tank(leftSpeed, rightSpeed);
+//         } else {
+//           model->tank(-rightSpeed, -leftSpeed);
+//         }
+//         // model.left(leftSpeed);
+//         // model.right(rightSpeed);
+//         rate->delayUntil(dt);
+//       },
+//       flags);
+//   }
 
-protected:
-  std::shared_ptr<ChassisModel> model;
-  QAngularSpeed gearset;
-};
+// protected:
+//   std::shared_ptr<ChassisModel> model;
+//   QAngularSpeed gearset;
+// };
 
 class XGenerator : public Generator {
 public:
@@ -127,7 +143,8 @@ public:
     {}
   }
 
-  void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {}) {
+  void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {},
+              const std::vector<std::pair<Number, Number>>& markers = {}) {
     generate(
       spline,
       [&, rate = std::make_shared<Rate>()](const Step& s) {
@@ -147,7 +164,7 @@ public:
         }
         rate->delayUntil(dt);
       },
-      flags);
+      flags, markers);
   }
 
 protected:
@@ -158,8 +175,9 @@ protected:
 class XTestGenerator : public Generator {
 public:
   using Generator::Generator;
-  std::tuple<std::vector<Step>, Trapezoidal> follow(const Spline& spline, bool /*forward*/ = true,
-                                                    const ProfileFlags& flags = {}) {
+  std::tuple<std::vector<Step>, PiecewiseTrapezoidal>
+    follow(const Spline& spline, bool /*forward*/ = true, const ProfileFlags& flags = {},
+           const std::vector<std::pair<Number, Number>>& markers = {}) {
     std::vector<Step> trajectory;
     auto profile = generate(
       spline,
@@ -178,7 +196,7 @@ public:
         ns.right = rightSpeed;
         trajectory.emplace_back(ns);
       },
-      flags);
+      flags, markers);
     return {trajectory, profile};
   }
 };
