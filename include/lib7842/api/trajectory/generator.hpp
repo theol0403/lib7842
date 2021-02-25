@@ -8,7 +8,6 @@
 #include "okapi/impl/util/rate.hpp"
 #include "piecewise_trapezoidal.hpp"
 #include "trapezoidal.hpp"
-#include <queue>
 
 namespace lib7842 {
 
@@ -35,19 +34,7 @@ public:
                                 const ProfileFlags& flags = {},
                                 const std::vector<std::pair<Number, Number>>& markers = {}) const {
     QLength length = spline.length();
-
-    auto allMarkers = std::deque<std::pair<Number, Number>>(markers.begin(), markers.end());
-    allMarkers.emplace_front(0_pct, flags.start_v);
-    allMarkers.emplace_back(100_pct, flags.end_v);
-
-    std::vector<std::pair<QLength, ProfileFlags>> segments;
-    for (size_t i = 1; i < allMarkers.size(); ++i) {
-      segments.emplace_back(
-        allMarkers.at(i).first * length - allMarkers.at(i - 1).first * length,
-        ProfileFlags {allMarkers.at(i - 1).second, allMarkers[i].second, flags.top_v});
-    }
-
-    PiecewiseTrapezoidal profile(limits, segments);
+    PiecewiseTrapezoidal profile(limits, length, flags, markers);
 
     // setup
     double t = 0;
