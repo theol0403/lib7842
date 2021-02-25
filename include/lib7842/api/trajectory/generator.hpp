@@ -41,10 +41,10 @@ public:
     allMarkers.emplace_back(100_pct, flags.end_v);
 
     std::vector<std::pair<QLength, ProfileFlags>> segments;
-    for (size_t i = 1; i < segments.size(); ++i) {
+    for (size_t i = 1; i < allMarkers.size(); ++i) {
       segments.emplace_back(
-        allMarkers[i].first * length,
-        ProfileFlags {allMarkers[i - 1].second, allMarkers[i].second, flags.top_v});
+        allMarkers.at(i).first * length - allMarkers.at(i - 1).first * length,
+        ProfileFlags {allMarkers.at(i - 1).second, allMarkers[i].second, flags.top_v});
     }
 
     PiecewiseTrapezoidal profile(limits, segments);
@@ -86,7 +86,7 @@ public:
       k = profile.calc(dist);
     }
     KinematicState end = profile.end();
-    if (end.v == 0_mps) { runner({pos, end, 0_rpm, 0 / 1_m, end.v}); }
+    if (end.v == 0_mps) { runner({pos, end, 0_rpm, spline.curvature(1), end.v}); }
     return profile;
   }
 
@@ -201,15 +201,15 @@ public:
   }
 };
 
-class TestGenerator : public Generator {
-public:
-  using Generator::Generator;
-  std::vector<Step> follow(const Spline& spline, const ProfileFlags& flags = {}) {
-    std::vector<Step> trajectory;
-    generate(
-      spline, [&](const Step& s) { trajectory.emplace_back(s); }, flags);
-    return trajectory;
-  }
-};
+// class TestGenerator : public Generator {
+// public:
+//   using Generator::Generator;
+//   std::vector<Step> follow(const Spline& spline, const ProfileFlags& flags = {}) {
+//     std::vector<Step> trajectory;
+//     generate(
+//       spline, [&](const Step& s) { trajectory.emplace_back(s); }, flags);
+//     return trajectory;
+//   }
+// };
 
 } // namespace lib7842

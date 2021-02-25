@@ -19,14 +19,16 @@ int main(int argc, char** argv) {
   Limits limits(scales, 200_rpm, 0.6_s, std::sqrt(2), 1);
   XTestGenerator generator(limits, scales, 10_ms);
 
-  auto [t, profile] = generator.follow(Bezier<7>({{0_ft, 0_ft},
-                                                  {0_ft, 1.5_ft},
-                                                  {2_ft, 0.5_ft},
-                                                  {2_ft, 2_ft},
-                                                  {2_ft, 2_ft},
-                                                  {2_ft, 3.5_ft},
-                                                  {0_ft, 2.5_ft},
-                                                  {0_ft, 4_ft}}));
+  auto [t, profile] =
+    generator.follow(Bezier<7>({{0_ft, 0_ft},
+                                {0_ft, 1.5_ft},
+                                {2_ft, 0.5_ft},
+                                {2_ft, 2_ft},
+                                {2_ft, 2_ft},
+                                {2_ft, 3.5_ft},
+                                {0_ft, 2.5_ft},
+                                {0_ft, 4_ft}}),
+                     true, {}, {{25_pct, 50_pct}, {50_pct, 100_pct}, {75_pct, 50_pct}});
 
   if (argc > 1 && std::string(argv[1]) == "print") {
     for (auto&& step : t) {
