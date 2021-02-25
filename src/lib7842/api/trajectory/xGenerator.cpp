@@ -1,5 +1,6 @@
 #include "lib7842/api/trajectory/xGenerator.hpp"
 #include "lib7842/api/other/global.hpp"
+#include <iostream>
 
 namespace lib7842 {
 
@@ -23,13 +24,14 @@ PiecewiseTrapezoidal
   while (dist <= length && t <= 1) {
     auto profiled_vel = k.v; // used for logging
     // limit velocity according to approximation of the curvature during the next timeslice
-    QSpeed vel_max = std::min(k.v, maxSpeedAtTheta(pos.theta));
+    QSpeed vel_max = std::min(k.v, limits.v / maxSpeedAtTheta(pos.theta));
+    // std::cout << maxSpeedAtTheta(pos.theta) << std::endl;
     // project where along the spline we will be after dt, given approximate velocity
     double t_n = spline.t_at_dist_travelled(t, vel_max * dt);
     State pos_new = spline.calc(t_n);
 
     // limit profiled velocity to angle
-    k.v = std::min(k.v, maxSpeedAtTheta(pos_new.theta));
+    k.v = std::min(k.v, limits.v / maxSpeedAtTheta(pos_new.theta));
 
     // calculate distance traveled
     QLength d_dist = k.v * dt;
@@ -50,9 +52,8 @@ PiecewiseTrapezoidal
   return profile;
 }
 
-QSpeed StrafeGenerator::maxSpeedAtTheta(const QAngle& angle) const {
-  auto rot = angle + 45_deg;
-  return limits.v * (sin(rot) + cos(rot)) / std::sqrt(2);
+Number StrafeGenerator::maxSpeedAtTheta(const QAngle& angle) const {
+  return sin(angle).abs() + cos(angle).abs();
 }
 
 XStrafeGenerator::XStrafeGenerator(std::shared_ptr<XDriveModel> imodel,
@@ -72,23 +73,23 @@ void XStrafeGenerator::follow(const Spline& spline, bool forward, const ProfileF
 }
 
 void XStrafeGenerator::run(const StrafeGenerator::Step& s, bool forward) {
-  QSpeed outSpeed = s.k.v * maxSpeedAtTheta(s.p.theta) / limits.v;
+  // QSpeed outSpeed = s.k.v / maxSpeedAtTheta(s.p.theta);
 
-  auto wheelDirection = (s.p.theta + 45_deg).convert(radian);
-  auto scaleTopLeft = sin(wheelDirection);
-  auto scaleTopRight = cos(wheelDirection);
+  // auto wheelDirection = (s.p.theta + 45_deg).convert(radian);
+  // auto scaleTopLeft = sin(wheelDirection);
+  // auto scaleTopRight = cos(wheelDirection);
 
-  QAngularSpeed topLeft = (outSpeed * scaleTopLeft / (1_pi * scales.wheelDiameter)) * 360_deg;
-  QAngularSpeed topRight = (outSpeed * scaleTopRight / (1_pi * scales.wheelDiameter)) * 360_deg;
+  // QAngularSpeed topLeft = (outSpeed * scaleTopLeft / (1_pi * scales.wheelDiameter)) * 360_deg;
+  // QAngularSpeed topRight = (outSpeed * scaleTopRight / (1_pi * scales.wheelDiameter)) * 360_deg;
 
-  auto topLeftSpeed = (topLeft / gearset).convert(number);
-  auto topRightSpeed = (topRight / gearset).convert(number);
+  // auto topLeftSpeed = (topLeft / gearset).convert(number);
+  // auto topRightSpeed = (topRight / gearset).convert(number);
 
-  model->getTopLeftMotor()->moveVoltage(topLeftSpeed * 12000);
-  model->getTopRightMotor()->moveVoltage(topRightSpeed * 12000);
-  model->getBottomLeftMotor()->moveVoltage(topRightSpeed * 12000);
-  model->getBottomRightMotor()->moveVoltage(topLeftSpeed * 12000);
-  rate->delayUntil(dt);
+  // model->getTopLeftMotor()->moveVoltage(topLeftSpeed * 12000);
+  // model->getTopRightMotor()->moveVoltage(topRightSpeed * 12000);
+  // model->getBottomLeftMotor()->moveVoltage(topRightSpeed * 12000);
+  // model->getBottomRightMotor()->moveVoltage(topLeftSpeed * 12000);
+  // rate->delayUntil(dt);
 }
 
 std::tuple<std::vector<StrafeGenerator::Step>, PiecewiseTrapezoidal>
@@ -98,11 +99,10 @@ std::tuple<std::vector<StrafeGenerator::Step>, PiecewiseTrapezoidal>
   auto profile = generate(
     spline,
     [&](const Step& s) {
-      QSpeed outSpeed = s.k.v * maxSpeedAtTheta(s.p.theta) / limits.v;
+      QSpeed outSpeed = s.k.v;
 
-      auto wheelDirection = (s.p.theta + 45_deg).convert(radian);
-      auto scaleTopLeft = sin(wheelDirection);
-      auto scaleTopRight = cos(wheelDirection);
+      auto scaleTopLeft = sin(s.p.theta + 45_deg);
+      auto scaleTopRight = sin(s.p.theta - 45_deg);
 
       QAngularSpeed topLeft = (outSpeed * scaleTopLeft / (1_pi * scales.wheelDiameter)) * 360_deg;
       QAngularSpeed topRight = (outSpeed * scaleTopRight / (1_pi * scales.wheelDiameter)) * 360_deg;

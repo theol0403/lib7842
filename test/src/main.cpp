@@ -17,24 +17,24 @@ int main(int argc, char** argv) {
 
   ChassisScales scales({3.25_in, 13_in}, 360);
   Limits limits(scales, 200_rpm, 0.6_s, std::sqrt(2), 1);
-  XTestGenerator generator(limits, scales, 10_ms);
+  XStrafeTestGenerator generator(limits, scales, 10_ms);
 
-  auto [t, profile] =
-    generator.follow(Bezier<7>({{0_ft, 0_ft},
-                                {0_ft, 1.5_ft},
-                                {2_ft, 0.5_ft},
-                                {2_ft, 2_ft},
-                                {2_ft, 2_ft},
-                                {2_ft, 3.5_ft},
-                                {0_ft, 2.5_ft},
-                                {0_ft, 4_ft}}),
-                     true, {}, {{25_pct, 50_pct}, {50_pct, 100_pct}, {75_pct, 50_pct}});
+  auto [t, profile] = generator.follow(Bezier<7>({{0_ft, 0_ft},
+                                                  {0_ft, 1.5_ft},
+                                                  {2_ft, 0.5_ft},
+                                                  {2_ft, 2_ft},
+                                                  {2_ft, 2_ft},
+                                                  {2_ft, 3.5_ft},
+                                                  {0_ft, 2.5_ft},
+                                                  {0_ft, 4_ft}}),
+                                       true, {}, {});
+
+  /* auto [t, profile] = generator.follow(Line({1_m, 1_m}, {2_m, 0_m}), true, {}, {}); */
 
   if (argc > 1 && std::string(argv[1]) == "print") {
     for (auto&& step : t) {
       std::cout << step.p.x.convert(foot) << "," << step.p.y.convert(foot) << ","
-                << step.p.theta.convert(degree) << "," << step.c.convert(1 / meter) << ","
-                << step.p_vel << "," << step.k.v << "," << step.w.convert(degree / second) << ","
+                << step.p.theta.convert(degree) << "," << step.p_vel << "," << step.k.v << ","
                 << step.left << "," << step.right << std::endl;
     }
   } else {

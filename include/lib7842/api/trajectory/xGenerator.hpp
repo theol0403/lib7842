@@ -31,7 +31,7 @@ public:
                                 const ProfileFlags& flags = {},
                                 const std::vector<std::pair<Number, Number>>& markers = {}) const;
 
-  QSpeed maxSpeedAtTheta(const QAngle& angle) const;
+  Number maxSpeedAtTheta(const QAngle& angle) const;
 
 protected:
   Limits limits;
