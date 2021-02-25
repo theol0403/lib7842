@@ -45,6 +45,7 @@
 #include "lib7842/api/trajectory/piecewise_trapezoidal.hpp"
 #include "lib7842/api/trajectory/profile.hpp"
 #include "lib7842/api/trajectory/trapezoidal.hpp"
+#include "lib7842/api/trajectory/xGenerator.hpp"
 
 #include "lib7842/api/vision/container.hpp"
 #include "lib7842/api/vision/object.hpp"
