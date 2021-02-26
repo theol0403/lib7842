@@ -97,7 +97,7 @@ void opcontrol() {
    */
   ChassisScales scales({3.25_in, 15_in}, 360);
   Limits limits(scales, 200_rpm, 1_s, std::sqrt(2), 1);
-  XGenerator generator(model, 200_rpm, limits, scales, 10_ms);
+  XStrafeGenerator generator(model, 200_rpm, limits, scales, 10_ms);
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),

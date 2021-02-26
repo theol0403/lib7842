@@ -23,15 +23,8 @@ PiecewiseTrapezoidal
 
   while (dist <= length && t <= 1) {
     auto profiled_vel = k.v; // used for logging
-    // limit velocity according to approximation of the curvature during the next timeslice
-    QSpeed vel_max = std::min(k.v, limits.v / maxSpeedAtTheta(pos.theta));
-    // std::cout << maxSpeedAtTheta(pos.theta) << std::endl;
-    // project where along the spline we will be after dt, given approximate velocity
-    double t_n = spline.t_at_dist_travelled(t, vel_max * dt);
-    State pos_new = spline.calc(t_n);
-
     // limit profiled velocity to angle
-    k.v = std::min(k.v, limits.v / maxSpeedAtTheta(pos_new.theta));
+    k.v = std::min(k.v, limits.v / maxSpeedAtTheta(pos.theta));
 
     // calculate distance traveled
     QLength d_dist = k.v * dt;
@@ -59,37 +52,35 @@ Number StrafeGenerator::maxSpeedAtTheta(const QAngle& angle) const {
 XStrafeGenerator::XStrafeGenerator(std::shared_ptr<XDriveModel> imodel,
                                    const QAngularSpeed& igearset, const Limits& ilimits,
                                    const ChassisScales& iscales, const QTime& idt) :
-  StrafeGenerator(ilimits, iscales, idt),
-  model(std::move(imodel)),
-  gearset(igearset),
-  rate(std::shared_ptr<AbstractRate>(global::getTimeUtil()->getRate())) {
+  StrafeGenerator(ilimits, iscales, idt), model(std::move(imodel)), gearset(igearset) {
   {}
 }
 
 void XStrafeGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
                               const std::vector<std::pair<Number, Number>>& markers) {
+  auto rate = std::shared_ptr<AbstractRate>(global::getTimeUtil()->getRate());
   generate(
-    spline, [this, forward](const Step& s) { run(s, forward); }, flags, markers);
+    spline, [&](const Step& s) { run(s, rate, forward); }, flags, markers);
 }
 
-void XStrafeGenerator::run(const StrafeGenerator::Step& s, bool forward) {
-  // QSpeed outSpeed = s.k.v / maxSpeedAtTheta(s.p.theta);
+void XStrafeGenerator::run(const StrafeGenerator::Step& s,
+                           const std::shared_ptr<AbstractRate>& rate, bool forward) {
+  QSpeed outSpeed = s.k.v;
 
-  // auto wheelDirection = (s.p.theta + 45_deg).convert(radian);
-  // auto scaleTopLeft = sin(wheelDirection);
-  // auto scaleTopRight = cos(wheelDirection);
+  auto scaleTopLeft = sin(s.p.theta + 45_deg);
+  auto scaleTopRight = sin(s.p.theta - 45_deg);
 
-  // QAngularSpeed topLeft = (outSpeed * scaleTopLeft / (1_pi * scales.wheelDiameter)) * 360_deg;
-  // QAngularSpeed topRight = (outSpeed * scaleTopRight / (1_pi * scales.wheelDiameter)) * 360_deg;
+  QAngularSpeed topLeft = (outSpeed * scaleTopLeft / (1_pi * scales.wheelDiameter)) * 360_deg;
+  QAngularSpeed topRight = (outSpeed * scaleTopRight / (1_pi * scales.wheelDiameter)) * 360_deg;
 
-  // auto topLeftSpeed = (topLeft / gearset).convert(number);
-  // auto topRightSpeed = (topRight / gearset).convert(number);
+  auto topLeftSpeed = (topLeft / gearset).convert(number);
+  auto topRightSpeed = (topRight / gearset).convert(number);
 
-  // model->getTopLeftMotor()->moveVoltage(topLeftSpeed * 12000);
-  // model->getTopRightMotor()->moveVoltage(topRightSpeed * 12000);
-  // model->getBottomLeftMotor()->moveVoltage(topRightSpeed * 12000);
-  // model->getBottomRightMotor()->moveVoltage(topLeftSpeed * 12000);
-  // rate->delayUntil(dt);
+  model->getTopLeftMotor()->moveVoltage(topLeftSpeed * 12000);
+  model->getTopRightMotor()->moveVoltage(topRightSpeed * 12000);
+  model->getBottomLeftMotor()->moveVoltage(topRightSpeed * 12000);
+  model->getBottomRightMotor()->moveVoltage(topLeftSpeed * 12000);
+  rate->delayUntil(dt);
 }
 
 std::tuple<std::vector<StrafeGenerator::Step>, PiecewiseTrapezoidal>

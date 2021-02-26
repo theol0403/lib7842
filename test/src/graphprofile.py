@@ -14,7 +14,7 @@ dt = 0.01
 time_range = np.linspace(0, len(trajectory) * dt, len(trajectory))
 
 # path
-plt.subplot(2, 3, 1)
+plt.subplot(2, 2, 1)
 plt.title("Path")
 
 x = [step[0] for step in trajectory]
@@ -28,7 +28,7 @@ plt.grid()
 plt.legend()
 
 # angle
-plt.subplot(2, 3, 2)
+plt.subplot(2, 2, 2)
 plt.title("Angle")
 
 a = [step[2] for step in trajectory]
@@ -50,7 +50,7 @@ plt.grid()
 # plt.grid()
 
 # velocity
-plt.subplot(2, 3, 4)
+plt.subplot(2, 2, 3)
 plt.title("Velocity")
 
 v = [step[3] for step in trajectory]
@@ -75,7 +75,7 @@ plt.legend()
 # plt.grid()
 
 # wheel speeds
-plt.subplot(2, 3, 6)
+plt.subplot(2, 2, 4)
 plt.title("Wheel Speeds")
 
 plt.plot(time_range, [step[5] for step in trajectory], label="Left")

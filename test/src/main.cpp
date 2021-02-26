@@ -29,8 +29,6 @@ int main(int argc, char** argv) {
                                                   {0_ft, 4_ft}}),
                                        true, {}, {});
 
-  /* auto [t, profile] = generator.follow(Line({1_m, 1_m}, {2_m, 0_m}), true, {}, {}); */
-
   if (argc > 1 && std::string(argv[1]) == "print") {
     for (auto&& step : t) {
       std::cout << step.p.x.convert(foot) << "," << step.p.y.convert(foot) << ","

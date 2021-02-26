@@ -47,12 +47,11 @@ public:
   void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {},
               const std::vector<std::pair<Number, Number>>& markers = {});
 
-  void run(const Step& s, bool forward = true);
+  void run(const Step& s, const std::shared_ptr<AbstractRate>& rate, bool forward = true);
 
 protected:
   std::shared_ptr<XDriveModel> model;
   QAngularSpeed gearset;
-  std::shared_ptr<AbstractRate> rate;
 };
 
 class XStrafeTestGenerator : public StrafeGenerator {
