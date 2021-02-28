@@ -1,4 +1,4 @@
-#include "lib7842/api/trajectory/generator.hpp"
+#include "lib7842/api/trajectory/generator/generator.hpp"
 #include "lib7842/api/other/global.hpp"
 
 namespace lib7842 {

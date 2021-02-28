@@ -4,9 +4,9 @@
 #include "lib7842/api/other/utility.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/spline/spline.hpp"
-#include "limits.hpp"
+#include "lib7842/api/trajectory/profile/limits.hpp"
+#include "lib7842/api/trajectory/profile/piecewise_trapezoidal.hpp"
 #include "okapi/impl/util/rate.hpp"
-#include "piecewise_trapezoidal.hpp"
 
 namespace lib7842 {
 

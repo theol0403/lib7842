@@ -42,11 +42,11 @@
 #include "lib7842/api/purePursuit/pursuitLimits.hpp"
 #include "lib7842/api/purePursuit/waypoint.hpp"
 
-#include "lib7842/api/trajectory/generator.hpp"
-#include "lib7842/api/trajectory/limits.hpp"
-#include "lib7842/api/trajectory/piecewise_trapezoidal.hpp"
-#include "lib7842/api/trajectory/profile.hpp"
-#include "lib7842/api/trajectory/trapezoidal.hpp"
+#include "lib7842/api/trajectory/generator/generator.hpp"
+#include "lib7842/api/trajectory/profile/limits.hpp"
+#include "lib7842/api/trajectory/profile/piecewise_trapezoidal.hpp"
+#include "lib7842/api/trajectory/profile/profile.hpp"
+#include "lib7842/api/trajectory/profile/trapezoidal.hpp"
 
 #include "lib7842/api/vision/container.hpp"
 #include "lib7842/api/vision/object.hpp"
