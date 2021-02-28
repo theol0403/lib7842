@@ -44,7 +44,10 @@ Number Generator::toWheel(const QSpeed& v, const ChassisScales& scales,
 Generator::Output
   SkidSteerGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
                              const std::vector<std::pair<Number, Number>>& markers) {
+  std::vector<Generator::Step> trajectory;
   auto modifier = [&](double t, KinematicState& k) {
+    auto profiled_vel = k.v; // used for logging
+
     // get the curvature along the path
     auto curvature = spline.curvature(t);
     // limit the velocity according to curvature.
@@ -64,12 +67,15 @@ Generator::Output
     Number leftSpeed = Generator::toWheel(left, scales, gearset);
     Number rightSpeed = Generator::toWheel(right, scales, gearset);
 
+    trajectory.emplace_back(spline.calc(t), k, w, curvature, profiled_vel, leftSpeed, rightSpeed);
+
     if (!forward) { return std::make_pair(-rightSpeed, -leftSpeed); }
     return std::make_pair(leftSpeed, rightSpeed);
   };
 
   auto e = [&](const Generator::DriveCommand& c) { executor(c); };
-  Generator::generate(limits, modifier, e, spline, dt, flags, markers);
+  auto profile = Generator::generate(limits, modifier, e, spline, dt, flags, markers);
+  return std::make_pair(profile, trajectory);
 }
 
 void SkidSteerGenerator::executor(const Generator::DriveCommand& c) {
@@ -80,7 +86,10 @@ void SkidSteerGenerator::executor(const Generator::DriveCommand& c) {
 
 Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& flags,
                                      const std::vector<std::pair<Number, Number>>& markers) {
+  std::vector<Generator::Step> trajectory;
   auto modifier = [&](double t, KinematicState& k) {
+    auto profiled_vel = k.v; // used for logging
+
     // get the location on the spline
     auto pos = spline.calc(t);
     auto& theta = pos.theta;
@@ -95,11 +104,15 @@ Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& f
     Number topLeftSpeed = Generator::toWheel(left, scales, gearset);
     Number topRightSpeed = Generator::toWheel(right, scales, gearset);
 
+    trajectory.emplace_back(pos, k, 0_rpm, spline.curvature(t), profiled_vel, topLeftSpeed,
+                            topRightSpeed);
+
     return std::make_pair(topLeftSpeed, topRightSpeed);
   };
 
   auto e = [&](const Generator::DriveCommand& c) { executor(c); };
-  Generator::generate(limits, modifier, e, spline, dt, flags, markers);
+  auto profile = Generator::generate(limits, modifier, e, spline, dt, flags, markers);
+  return std::make_pair(profile, trajectory);
 }
 
 void XGenerator::executor(const Generator::DriveCommand& c) {

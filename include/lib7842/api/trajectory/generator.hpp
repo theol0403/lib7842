@@ -40,7 +40,7 @@ public:
     Number right {0_pct};
   };
 
-  using Output = std::pair<std::vector<Step>, PiecewiseTrapezoidal>;
+  using Output = std::pair<PiecewiseTrapezoidal, std::vector<Step>>;
 };
 
 class SkidSteerGenerator {
