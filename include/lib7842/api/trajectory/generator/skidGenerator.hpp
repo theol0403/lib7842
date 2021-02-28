@@ -23,8 +23,6 @@ public:
                            const ProfileFlags& flags = {},
                            const std::vector<std::pair<Number, Number>>& markers = {});
 
-  virtual void executor(const Generator::DriveCommand& c);
-
 protected:
   std::shared_ptr<ChassisModel> model;
   QAngularSpeed gearset;

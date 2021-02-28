@@ -3,9 +3,9 @@
 
 namespace lib7842 {
 
-PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Modifier& modifier,
-                                         const Executor& executor, const Spline& spline,
-                                         const QTime& dt, const ProfileFlags& flags,
+PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Runner& runner,
+                                         const Spline& spline, const QTime& dt,
+                                         const ProfileFlags& flags,
                                          const std::vector<std::pair<Number, Number>>& markers) {
   auto rate = global::getTimeUtil()->getRate();
   QLength length = spline.length();
@@ -19,7 +19,7 @@ PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Modifier& m
 
   while (dist <= length && t <= 1) {
     // calculate and run motion along trajectory
-    executor(modifier(t, k));
+    runner(t, k);
 
     // calculate distance traveled
     QLength d_dist = k.v * dt;
@@ -34,7 +34,7 @@ PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Modifier& m
 #endif
   }
   KinematicState end = profile.end();
-  if (end.v == 0_mps) { executor(modifier(1, end)); }
+  if (end.v == 0_mps) { runner(1, end); }
   return profile;
 }
 

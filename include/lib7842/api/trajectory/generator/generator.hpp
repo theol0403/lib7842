@@ -11,19 +11,13 @@ namespace lib7842 {
 
 class Generator {
 public:
-  // wheel speed pct for left and right
-  using DriveCommand = std::pair<Number, Number>;
-
-  // return speed and motor power as a function of location on the path and profiled speed
-  using Modifier = std::function<DriveCommand(double, KinematicState&)>;
-
-  // run or record the motor speeds
-  using Executor = std::function<void(const DriveCommand&)>;
+  // execute trajectory as a function of location on the path and profiled speed
+  using Runner = std::function<void(double, KinematicState&)>;
 
   // method that brings everything together
-  static PiecewiseTrapezoidal generate(const Limits& limits, const Modifier& modifier,
-                                       const Executor& executor, const Spline& spline,
-                                       const QTime& dt = 10_ms, const ProfileFlags& flags = {},
+  static PiecewiseTrapezoidal generate(const Limits& limits, const Runner& runner,
+                                       const Spline& spline, const QTime& dt = 10_ms,
+                                       const ProfileFlags& flags = {},
                                        const std::vector<std::pair<Number, Number>>& markers = {});
 
   // convert wheel velocity to wheel percentage

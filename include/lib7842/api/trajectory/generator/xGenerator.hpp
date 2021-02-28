@@ -16,8 +16,6 @@ public:
   Generator::Output follow(const Spline& spline, const ProfileFlags& flags = {},
                            const std::vector<std::pair<Number, Number>>& markers = {});
 
-  virtual void executor(const Generator::DriveCommand& c);
-
 protected:
   std::shared_ptr<XDriveModel> model;
   QAngularSpeed gearset;

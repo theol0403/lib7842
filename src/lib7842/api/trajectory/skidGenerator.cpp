@@ -6,7 +6,7 @@ Generator::Output
   SkidSteerGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
                              const std::vector<std::pair<Number, Number>>& markers) {
   std::vector<Generator::Step> trajectory;
-  auto modifier = [&](double t, KinematicState& k) {
+  auto runner = [&](double t, KinematicState& k) {
     auto profiled_vel = k.v; // used for logging
 
     // get the curvature along the path
@@ -28,22 +28,21 @@ Generator::Output
     Number leftSpeed = Generator::toWheel(left, scales, gearset);
     Number rightSpeed = Generator::toWheel(right, scales, gearset);
 
-    trajectory.emplace_back(spline.calc(t), k, w, curvature, profiled_vel, leftSpeed, rightSpeed);
+    if (model) {
+      double leftMotor = leftSpeed.convert(number);
+      double rightMotor = rightSpeed.convert(number);
+      if (forward) {
+        model->tank(leftMotor, rightMotor);
+      } else {
+        model->tank(-rightMotor, -leftMotor);
+      }
+    }
 
-    if (!forward) { return std::make_pair(-rightSpeed, -leftSpeed); }
-    return std::make_pair(leftSpeed, rightSpeed);
+    trajectory.emplace_back(spline.calc(t), k, w, curvature, profiled_vel, leftSpeed, rightSpeed);
   };
 
-  auto e = [&](const Generator::DriveCommand& c) { executor(c); };
-  auto profile = Generator::generate(limits, modifier, e, spline, dt, flags, markers);
+  auto profile = Generator::generate(limits, runner, spline, dt, flags, markers);
   return std::make_pair(profile, trajectory);
-}
-
-void SkidSteerGenerator::executor(const Generator::DriveCommand& c) {
-  if (!model) { return; }
-  double left = c.first.convert(number);
-  double right = c.second.convert(number);
-  model->tank(left, right);
 }
 
 } // namespace lib7842
