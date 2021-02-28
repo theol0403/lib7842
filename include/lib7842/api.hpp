@@ -26,6 +26,7 @@
 #include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/point/vector.hpp"
 
+#include "lib7842/api/positioning/spline/arc.hpp"
 #include "lib7842/api/positioning/spline/bezier.hpp"
 #include "lib7842/api/positioning/spline/hermite.hpp"
 #include "lib7842/api/positioning/spline/line.hpp"
