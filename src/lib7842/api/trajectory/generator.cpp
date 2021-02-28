@@ -29,7 +29,9 @@ PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Modifier& m
     // calculate new velocity
     k = profile.calc(dist);
 
+#ifndef THREADS_STD
     rate->delayUntil(dt);
+#endif
   }
   KinematicState end = profile.end();
   if (end.v == 0_mps) { executor(modifier(1, end)); }
