@@ -76,6 +76,13 @@ struct State : public Vector {
     return util::rollAngle180(Vector::angleTo(ipoint) - theta);
   }
 
+  /**
+   * Transform a compass rose angle to a unit circle angle
+   *
+   * @return The transformed state
+   */
+  constexpr State transform() const { return {x, y, -1 * theta + 90_deg}; }
+
 protected:
   friend inline std::ostream& operator<<(std::ostream& os, const State& rhs) {
     os << "{" << rhs.x << ", " << rhs.y << ", " << rhs.theta << "}";
