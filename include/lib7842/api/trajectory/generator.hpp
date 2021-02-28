@@ -33,6 +33,18 @@ public:
 
   // convert wheel velocity to wheel percentage
   static Number toWheel(const QSpeed& v, const ChassisScales& scales, const QAngularSpeed& gearset);
+
+  struct Step {
+    State p;
+    KinematicState k;
+    QAngularSpeed w;
+    QCurvature c;
+    QSpeed p_vel;
+    Number left {0_pct};
+    Number right {0_pct};
+  };
+
+  using Output = std::tuple<std::vector<Step>, PiecewiseTrapezoidal>;
 };
 
 class SkidSteerGenerator {
@@ -51,8 +63,9 @@ public:
     if (isXdrive) { limits.v *= std::sqrt(2); }
   };
 
-  void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {},
-              const std::vector<std::pair<Number, Number>>& markers = {});
+  Generator::Output follow(const Spline& spline, bool forward = true,
+                           const ProfileFlags& flags = {},
+                           const std::vector<std::pair<Number, Number>>& markers = {});
 
   virtual void executor(const Generator::DriveCommand& c);
 
@@ -75,8 +88,8 @@ public:
     limits.v *= std::sqrt(2);
   };
 
-  void follow(const Spline& spline, const ProfileFlags& flags = {},
-              const std::vector<std::pair<Number, Number>>& markers = {});
+  Generator::Output follow(const Spline& spline, const ProfileFlags& flags = {},
+                           const std::vector<std::pair<Number, Number>>& markers = {});
 
   virtual void executor(const Generator::DriveCommand& c);
 

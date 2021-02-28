@@ -44,8 +44,9 @@ Number Generator::toWheel(const QSpeed& v, const ChassisScales& scales,
   return (v / (1_pi * scales.wheelDiameter * gearset)) * 360_deg;
 }
 
-void SkidSteerGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
-                                const std::vector<std::pair<Number, Number>>& markers) {
+Generator::Output
+  SkidSteerGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
+                             const std::vector<std::pair<Number, Number>>& markers) {
   auto limiter = [&](double t) { return limits.max_vel_at_curvature(spline.curvature(t)); };
 
   auto modifier = [&](double t, const KinematicState& k) {
@@ -73,8 +74,8 @@ void SkidSteerGenerator::executor(const Generator::DriveCommand& c) {
   model->tank(left, right);
 }
 
-void XGenerator::follow(const Spline& spline, const ProfileFlags& flags,
-                        const std::vector<std::pair<Number, Number>>& markers) {
+Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& flags,
+                                     const std::vector<std::pair<Number, Number>>& markers) {
   auto limiter = [&](double t) {
     auto pos = spline.calc(t);
     auto& theta = pos.theta;
