@@ -30,6 +30,7 @@
 #include "lib7842/api/positioning/spline/bezier.hpp"
 #include "lib7842/api/positioning/spline/hermite.hpp"
 #include "lib7842/api/positioning/spline/line.hpp"
+#include "lib7842/api/positioning/spline/mesh.hpp"
 #include "lib7842/api/positioning/spline/parametric.hpp"
 #include "lib7842/api/positioning/spline/piecewise.hpp"
 #include "lib7842/api/positioning/spline/spline.hpp"

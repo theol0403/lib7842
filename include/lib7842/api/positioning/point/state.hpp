@@ -83,6 +83,13 @@ struct State : public Vector {
    */
   constexpr State transform() const { return {x, y, -1 * theta + 90_deg}; }
 
+  /**
+   * Convert to a vector
+   *
+   * @return The new vector
+   */
+  constexpr Vector vector() const { return {x, y}; }
+
 protected:
   friend inline std::ostream& operator<<(std::ostream& os, const State& rhs) {
     os << "{" << rhs.x << ", " << rhs.y << ", " << rhs.theta << "}";
