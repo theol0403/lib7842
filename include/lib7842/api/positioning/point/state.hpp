@@ -76,6 +76,13 @@ struct State : public Vector {
     return util::rollAngle180(Vector::angleTo(ipoint) - theta);
   }
 
+  /**
+   * Convert to a vector
+   *
+   * @return The new vector
+   */
+  constexpr Vector vector() const { return {x, y}; }
+
 protected:
   friend inline std::ostream& operator<<(std::ostream& os, const State& rhs) {
     os << "{" << rhs.x << ", " << rhs.y << ", " << rhs.theta << "}";

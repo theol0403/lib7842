@@ -67,7 +67,7 @@ void opcontrol() {
   /**
    * Screen
    */
-  GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
+  // GUI::Screen scr(lv_scr_act(), LV_COLOR_ORANGE);
 
   Controller controller(ControllerId::master);
 
@@ -96,8 +96,8 @@ void opcontrol() {
    * Trajectory
    */
   ChassisScales scales({3.25_in, 15_in}, 360);
-  Limits limits(scales, 200_rpm, 1_s, std::sqrt(2), 1);
-  XGenerator generator(model, 200_rpm, limits, scales, 10_ms);
+  Limits limits(scales, 200_rpm, 0.8_s, std::sqrt(2), 1);
+  XGenerator generator(model, 200_rpm, scales, limits, 10_ms);
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -113,16 +113,11 @@ void opcontrol() {
       //                  false);
 
       // generator.follow(make_piecewise<QuinticHermite>(
-      //   {{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}, {0_ft, 4_ft, 0_deg}}));
+      //                    {{0_ft, 0_ft, 0_deg}, {1.5_ft, 2_ft, 0_deg}, {0_ft, 4_ft, 0_deg}}),
+      //                  {.top_v = 70_pct});
 
-      generator.follow(Bezier<7>({{0_ft, 0_ft},
-                                  {0_ft, 1.5_ft},
-                                  {2_ft, 0.5_ft},
-                                  {2_ft, 2_ft},
-                                  {2_ft, 2_ft},
-                                  {2_ft, 3.5_ft},
-                                  {0_ft, 2.5_ft},
-                                  {0_ft, 4_ft}}));
+      generator.follow(Bezier<3>({{0_ft, 0_ft}, {0_ft, 3.5_ft}, {2_ft, 0.5_ft}, {2_ft, 4_ft}}),
+                       {.end_v = 20_pct, .top_v = 80_pct}, {});
     }
 
     pros::delay(10);
