@@ -25,9 +25,9 @@ public:
   using Executor = std::function<void(const DriveCommand&)>;
 
   // method that brings everything together
-  static PiecewiseTrapezoidal generate(const Limits& ilimits, const Limiter& ilimiter,
-                                       const Modifier& imodifier, const Executor& iexecutor,
-                                       const Spline& spline, const QTime& idt = 10_ms,
+  static PiecewiseTrapezoidal generate(const Limits& limits, const Limiter& limiter,
+                                       const Modifier& modifier, const Executor& executor,
+                                       const Spline& spline, const QTime& dt = 10_ms,
                                        const ProfileFlags& flags = {},
                                        const std::vector<std::pair<Number, Number>>& markers = {});
 };
