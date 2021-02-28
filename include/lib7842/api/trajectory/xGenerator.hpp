@@ -44,10 +44,10 @@ public:
   XStrafeGenerator(std::shared_ptr<XDriveModel> imodel, const QAngularSpeed& igearset,
                    const Limits& ilimits, const ChassisScales& iscales, const QTime& idt);
 
-  void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {},
+  void follow(const Spline& spline, const ProfileFlags& flags = {},
               const std::vector<std::pair<Number, Number>>& markers = {});
 
-  void run(const Step& s, const std::shared_ptr<AbstractRate>& rate, bool forward = true);
+  void run(const Step& s);
 
 protected:
   std::shared_ptr<XDriveModel> model;
@@ -58,7 +58,7 @@ class XStrafeTestGenerator : public StrafeGenerator {
 public:
   using StrafeGenerator::StrafeGenerator;
   std::tuple<std::vector<Step>, PiecewiseTrapezoidal>
-    follow(const Spline& spline, bool /*forward*/ = true, const ProfileFlags& flags = {},
+    follow(const Spline& spline, const ProfileFlags& flags = {},
            const std::vector<std::pair<Number, Number>>& markers = {});
 
   void run(const Step& s);

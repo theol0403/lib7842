@@ -11,6 +11,7 @@ StrafeGenerator::StrafeGenerator(const Limits& ilimits, const ChassisScales& isc
 PiecewiseTrapezoidal
   StrafeGenerator::generate(const Spline& spline, const Runner& runner, const ProfileFlags& flags,
                             const std::vector<std::pair<Number, Number>>& markers) const {
+  auto rate = global::getTimeUtil()->getRate();
   QLength length = spline.length();
   PiecewiseTrapezoidal profile(limits, length, flags, markers);
 
@@ -34,6 +35,7 @@ PiecewiseTrapezoidal
 
     // run trajectory
     runner({pos, k, profiled_vel});
+    rate->delayUntil(dt);
 
     // update new position
     pos = spline.calc(t);
@@ -56,15 +58,13 @@ XStrafeGenerator::XStrafeGenerator(std::shared_ptr<XDriveModel> imodel,
   {}
 }
 
-void XStrafeGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
+void XStrafeGenerator::follow(const Spline& spline, const ProfileFlags& flags,
                               const std::vector<std::pair<Number, Number>>& markers) {
-  auto rate = std::shared_ptr<AbstractRate>(global::getTimeUtil()->getRate());
   generate(
-    spline, [&](const Step& s) { run(s, rate, forward); }, flags, markers);
+    spline, [&](const Step& s) { run(s); }, flags, markers);
 }
 
-void XStrafeGenerator::run(const StrafeGenerator::Step& s,
-                           const std::shared_ptr<AbstractRate>& rate, bool forward) {
+void XStrafeGenerator::run(const StrafeGenerator::Step& s) {
   QSpeed outSpeed = s.k.v;
 
   auto scaleTopLeft = sin(s.p.theta + 45_deg);
@@ -80,11 +80,10 @@ void XStrafeGenerator::run(const StrafeGenerator::Step& s,
   model->getTopRightMotor()->moveVoltage(topRightSpeed * 12000);
   model->getBottomLeftMotor()->moveVoltage(topRightSpeed * 12000);
   model->getBottomRightMotor()->moveVoltage(topLeftSpeed * 12000);
-  rate->delayUntil(dt);
 }
 
 std::tuple<std::vector<StrafeGenerator::Step>, PiecewiseTrapezoidal>
-  XStrafeTestGenerator::follow(const Spline& spline, bool /*forward*/, const ProfileFlags& flags,
+  XStrafeTestGenerator::follow(const Spline& spline, const ProfileFlags& flags,
                                const std::vector<std::pair<Number, Number>>& markers) {
   std::vector<Step> trajectory;
   auto profile = generate(
