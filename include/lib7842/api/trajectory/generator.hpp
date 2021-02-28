@@ -37,12 +37,24 @@ public:
 
 class SkidSteerGenerator {
 public:
+  virtual ~SkidSteerGenerator() = default;
+
   SkidSteerGenerator(std::shared_ptr<ChassisModel> imodel, const QAngularSpeed& igearset,
-                     const ChassisScales& iscales, const Limits& ilimits, const QTime& idt) :
-    model(std::move(imodel)), gearset(igearset), scales(iscales), limits(ilimits), dt(idt) {};
+                     const ChassisScales& iscales, const Limits& ilimits, const QTime& idt,
+                     bool iisXdrive = false) :
+    model(std::move(imodel)),
+    gearset(igearset),
+    scales(iscales),
+    limits(ilimits),
+    dt(idt),
+    isXdrive(iisXdrive) {
+    if (isXdrive) { limits.v *= std::sqrt(2); }
+  };
 
   void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {},
               const std::vector<std::pair<Number, Number>>& markers = {});
+
+  virtual void executor(const Generator::DriveCommand& c);
 
 protected:
   std::shared_ptr<ChassisModel> model;
@@ -50,21 +62,23 @@ protected:
   ChassisScales scales;
   Limits limits;
   QTime dt;
+  bool isXdrive;
 };
 
 class XGenerator {
 public:
+  virtual ~XGenerator() = default;
+
   XGenerator(std::shared_ptr<XDriveModel> imodel, const QAngularSpeed& igearset,
              const ChassisScales& iscales, const Limits& ilimits, const QTime& idt) :
     model(std::move(imodel)), gearset(igearset), scales(iscales), limits(ilimits), dt(idt) {
     limits.v *= std::sqrt(2);
   };
 
-  void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {},
+  void follow(const Spline& spline, const ProfileFlags& flags = {},
               const std::vector<std::pair<Number, Number>>& markers = {});
 
-  void followX(const Spline& spline, bool forward = true, const ProfileFlags& flags = {},
-               const std::vector<std::pair<Number, Number>>& markers = {});
+  virtual void executor(const Generator::DriveCommand& c);
 
 protected:
   std::shared_ptr<XDriveModel> model;

@@ -50,58 +50,31 @@ void SkidSteerGenerator::follow(const Spline& spline, bool forward, const Profil
 
   auto modifier = [&](double t, const KinematicState& k) {
     QAngularSpeed w = spline.curvature(t) * k.v * radian;
-    QSpeed left = k.v - (w / radian * scales.wheelTrack) / 2;
-    QSpeed right = k.v + (w / radian * scales.wheelTrack) / 2;
+    auto vel = k.v;
+    if (isXdrive) { vel /= std::sqrt(2); }
+
+    QSpeed left = vel - (w / radian * scales.wheelTrack) / 2;
+    QSpeed right = vel + (w / radian * scales.wheelTrack) / 2;
 
     Number leftSpeed = Generator::toWheel(left, scales, gearset);
     Number rightSpeed = Generator::toWheel(right, scales, gearset);
 
+    if (!forward) { return std::make_pair(-rightSpeed, -leftSpeed); }
     return std::make_pair(leftSpeed, rightSpeed);
   };
 
-  auto executor = [&](const Generator::DriveCommand& c) {
-    double left = c.first.convert(number);
-    double right = c.second.convert(number);
-    if (forward) {
-      model->tank(left, right);
-    } else {
-      model->tank(-right, -left);
-    }
-  };
-
-  Generator::generate(limits, limiter, modifier, executor, spline, dt, flags, markers);
+  auto e = [&](const Generator::DriveCommand& c) { executor(c); };
+  Generator::generate(limits, limiter, modifier, e, spline, dt, flags, markers);
 }
 
-void XGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
+void SkidSteerGenerator::executor(const Generator::DriveCommand& c) {
+  double left = c.first.convert(number);
+  double right = c.second.convert(number);
+  model->tank(left, right);
+}
+
+void XGenerator::follow(const Spline& spline, const ProfileFlags& flags,
                         const std::vector<std::pair<Number, Number>>& markers) {
-  auto limiter = [&](double t) { return limits.max_vel_at_curvature(spline.curvature(t)); };
-
-  auto modifier = [&](double t, const KinematicState& k) {
-    QAngularSpeed w = spline.curvature(t) * k.v * radian;
-    QSpeed left = k.v / std::sqrt(2) - (w / radian * scales.wheelTrack) / 2;
-    QSpeed right = k.v / std::sqrt(2) + (w / radian * scales.wheelTrack) / 2;
-
-    Number leftSpeed = Generator::toWheel(left, scales, gearset);
-    Number rightSpeed = Generator::toWheel(right, scales, gearset);
-
-    return std::make_pair(leftSpeed, rightSpeed);
-  };
-
-  auto executor = [&](const Generator::DriveCommand& c) {
-    double left = c.first.convert(number);
-    double right = c.second.convert(number);
-    if (forward) {
-      model->tank(left, right);
-    } else {
-      model->tank(-right, -left);
-    }
-  };
-
-  Generator::generate(limits, limiter, modifier, executor, spline, dt, flags, markers);
-}
-
-void XGenerator::followX(const Spline& spline, bool forward, const ProfileFlags& flags,
-                         const std::vector<std::pair<Number, Number>>& markers) {
   auto limiter = [&](double t) {
     auto pos = spline.calc(t);
     auto& theta = pos.theta;
@@ -121,17 +94,18 @@ void XGenerator::followX(const Spline& spline, bool forward, const ProfileFlags&
     return std::make_pair(topLeftSpeed, topRightSpeed);
   };
 
-  auto executor = [&](const Generator::DriveCommand& c) {
-    double topLeft = c.first.convert(number);
-    double topRight = c.second.convert(number);
+  auto e = [&](const Generator::DriveCommand& c) { executor(c); };
+  Generator::generate(limits, limiter, modifier, e, spline, dt, flags, markers);
+}
 
-    model->getTopLeftMotor()->moveVoltage(topLeft * 12000);
-    model->getTopRightMotor()->moveVoltage(topRight * 12000);
-    model->getBottomLeftMotor()->moveVoltage(topRight * 12000);
-    model->getBottomRightMotor()->moveVoltage(topLeft * 12000);
-  };
+void XGenerator::executor(const Generator::DriveCommand& c) {
+  double topLeft = c.first.convert(number);
+  double topRight = c.second.convert(number);
 
-  Generator::generate(limits, limiter, modifier, executor, spline, dt, flags, markers);
+  model->getTopLeftMotor()->moveVoltage(topLeft * 12000);
+  model->getTopRightMotor()->moveVoltage(topRight * 12000);
+  model->getBottomLeftMotor()->moveVoltage(topRight * 12000);
+  model->getBottomRightMotor()->moveVoltage(topLeft * 12000);
 }
 
 } // namespace lib7842
