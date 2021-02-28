@@ -7,9 +7,11 @@ namespace lib7842 {
 
 class PiecewiseTrapezoidal : public Profile {
 public:
+  // a list of distance and velocity percentages that mark the piecewise
+  using Markers = std::vector<std::pair<Number, Number>>;
+
   PiecewiseTrapezoidal(const Limits& ilimits, const QLength& ilength,
-                       const ProfileFlags& iflags = {},
-                       const std::vector<std::pair<Number, Number>>& imarkers = {}) {
+                       const ProfileFlags& iflags = {}, const Markers& imarkers = {}) {
 
     auto allMarkers = std::deque<std::pair<Number, Number>>(imarkers.begin(), imarkers.end());
     allMarkers.emplace_front(0_pct, iflags.start_v);

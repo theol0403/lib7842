@@ -14,7 +14,7 @@ public:
   };
 
   Generator::Output follow(const Spline& spline, const ProfileFlags& flags = {},
-                           const std::vector<std::pair<Number, Number>>& markers = {});
+                           const PiecewiseTrapezoidal::Markers& markers = {});
 
 protected:
   std::shared_ptr<XDriveModel> model;

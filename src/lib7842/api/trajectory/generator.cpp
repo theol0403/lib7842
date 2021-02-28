@@ -6,7 +6,7 @@ namespace lib7842 {
 PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Runner& runner,
                                          const Spline& spline, const QTime& dt,
                                          const ProfileFlags& flags,
-                                         const std::vector<std::pair<Number, Number>>& markers) {
+                                         const PiecewiseTrapezoidal::Markers& markers) {
   auto rate = global::getTimeUtil()->getRate();
   QLength length = spline.length();
   PiecewiseTrapezoidal profile(limits, length, flags, markers);

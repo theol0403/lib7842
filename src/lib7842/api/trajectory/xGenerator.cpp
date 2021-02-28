@@ -3,7 +3,7 @@
 namespace lib7842 {
 
 Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& flags,
-                                     const std::vector<std::pair<Number, Number>>& markers) {
+                                     const PiecewiseTrapezoidal::Markers& markers) {
   std::vector<Generator::Step> trajectory;
   auto runner = [&](double t, KinematicState& k) {
     auto profiled_vel = k.v; // used for logging
@@ -22,14 +22,15 @@ Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& f
     Number topLeftSpeed = Generator::toWheel(left, scales, gearset);
     Number topRightSpeed = Generator::toWheel(right, scales, gearset);
 
-    if (!model) { return; }
-    double topLeft = topLeftSpeed.convert(number);
-    double topRight = topRightSpeed.convert(number);
+    if (model) {
+      double topLeft = topLeftSpeed.convert(number);
+      double topRight = topRightSpeed.convert(number);
 
-    model->getTopLeftMotor()->moveVoltage(topLeft * 12000);
-    model->getTopRightMotor()->moveVoltage(topRight * 12000);
-    model->getBottomLeftMotor()->moveVoltage(topRight * 12000);
-    model->getBottomRightMotor()->moveVoltage(topLeft * 12000);
+      model->getTopLeftMotor()->moveVoltage(topLeft * 12000);
+      model->getTopRightMotor()->moveVoltage(topRight * 12000);
+      model->getBottomLeftMotor()->moveVoltage(topRight * 12000);
+      model->getBottomRightMotor()->moveVoltage(topLeft * 12000);
+    }
 
     trajectory.emplace_back(pos, k, 0_rpm, spline.curvature(t), profiled_vel, topLeftSpeed,
                             topRightSpeed);

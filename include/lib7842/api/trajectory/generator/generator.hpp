@@ -18,7 +18,7 @@ public:
   static PiecewiseTrapezoidal generate(const Limits& limits, const Runner& runner,
                                        const Spline& spline, const QTime& dt = 10_ms,
                                        const ProfileFlags& flags = {},
-                                       const std::vector<std::pair<Number, Number>>& markers = {});
+                                       const PiecewiseTrapezoidal::Markers& markers = {});
 
   // convert wheel velocity to wheel percentage
   static Number toWheel(const QSpeed& v, const ChassisScales& scales, const QAngularSpeed& gearset);

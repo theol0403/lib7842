@@ -2,9 +2,9 @@
 
 namespace lib7842 {
 
-Generator::Output
-  SkidSteerGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
-                             const std::vector<std::pair<Number, Number>>& markers) {
+Generator::Output SkidSteerGenerator::follow(const Spline& spline, bool forward,
+                                             const ProfileFlags& flags,
+                                             const PiecewiseTrapezoidal::Markers& markers) {
   std::vector<Generator::Step> trajectory;
   auto runner = [&](double t, KinematicState& k) {
     auto profiled_vel = k.v; // used for logging

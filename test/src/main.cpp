@@ -17,14 +17,14 @@ int main(int argc, char** argv) {
 
   ChassisScales scales({3.25_in, 13_in}, 360);
   Limits limits(scales, 200_rpm, 0.6_s);
-  SkidSteerGenerator generator(nullptr, 200_rpm, scales, limits, 10_ms, true);
+  XGenerator generator(nullptr, 200_rpm, scales, limits, 10_ms);
 
   // auto [t, profile] = generator.follow(
   //   Bezier<3>({{0_ft, 0_ft}, {0_ft, 4_ft}, {2_ft, 0_ft},  {2_ft, 4_ft}}), {.top_v = 100_pct},
   //   {});
 
   auto [profile, t] =
-    generator.follow(Mesh({0_m, 0_m, 0_deg}, {1_ft, 3_ft, 60_deg}), true, {.top_v = 100_pct}, {});
+    generator.follow(Mesh({0_m, 0_m, 0_deg}, {1_ft, 3_ft, 60_deg}), {.top_v = 100_pct}, {});
 
   // auto [t, profile] = generator.follow(Line({0_m, 0_m}, {1_ft, 0_ft}), {.top_v = 100_pct}, {});
 
