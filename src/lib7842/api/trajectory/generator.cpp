@@ -3,10 +3,9 @@
 
 namespace lib7842 {
 
-PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Limiter& limiter,
-                                         const Modifier& modifier, const Executor& executor,
-                                         const Spline& spline, const QTime& dt,
-                                         const ProfileFlags& flags,
+PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Modifier& modifier,
+                                         const Executor& executor, const Spline& spline,
+                                         const QTime& dt, const ProfileFlags& flags,
                                          const std::vector<std::pair<Number, Number>>& markers) {
   auto rate = global::getTimeUtil()->getRate();
   QLength length = spline.length();
@@ -19,12 +18,8 @@ PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Limiter& li
   if (k.v == 0_mps) { k = profile.calc(dt); }
 
   while (dist <= length && t <= 1) {
-    // limit the linear velocity according to the abilities of the robot at a spot on the spline
-    k.v = std::min(k.v, limiter(t));
-
     // calculate and run motion along trajectory
     executor(modifier(t, k));
-    rate->delayUntil(dt);
 
     // calculate distance traveled
     QLength d_dist = k.v * dt;
@@ -33,6 +28,8 @@ PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Limiter& li
     t = spline.t_at_dist_travelled(t, d_dist);
     // calculate new velocity
     k = profile.calc(dist);
+
+    rate->delayUntil(dt);
   }
   KinematicState end = profile.end();
   if (end.v == 0_mps) { executor(modifier(1, end)); }
@@ -47,10 +44,17 @@ Number Generator::toWheel(const QSpeed& v, const ChassisScales& scales,
 Generator::Output
   SkidSteerGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
                              const std::vector<std::pair<Number, Number>>& markers) {
-  auto limiter = [&](double t) { return limits.max_vel_at_curvature(spline.curvature(t)); };
+  auto modifier = [&](double t, KinematicState& k) {
+    // get the curvature along the path
+    auto curvature = spline.curvature(t);
+    // limit the velocity according to curvature.
+    // since this is passed by reference it will affect the generator code
+    k.v = std::min(k.v, limits.max_vel_at_curvature(curvature));
 
-  auto modifier = [&](double t, const KinematicState& k) {
-    QAngularSpeed w = spline.curvature(t) * k.v * radian;
+    // angular speed is curvature times limited speed
+    QAngularSpeed w = curvature * k.v * radian;
+
+    // scale down motor speed if x drive
     auto vel = k.v;
     if (isXdrive) { vel /= std::sqrt(2); }
 
@@ -65,7 +69,7 @@ Generator::Output
   };
 
   auto e = [&](const Generator::DriveCommand& c) { executor(c); };
-  Generator::generate(limits, limiter, modifier, e, spline, dt, flags, markers);
+  Generator::generate(limits, modifier, e, spline, dt, flags, markers);
 }
 
 void SkidSteerGenerator::executor(const Generator::DriveCommand& c) {
@@ -76,15 +80,14 @@ void SkidSteerGenerator::executor(const Generator::DriveCommand& c) {
 
 Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& flags,
                                      const std::vector<std::pair<Number, Number>>& markers) {
-  auto limiter = [&](double t) {
+  auto modifier = [&](double t, KinematicState& k) {
+    // get the location on the spline
     auto pos = spline.calc(t);
     auto& theta = pos.theta;
-    return limits.v / (sin(theta).abs() + cos(theta).abs());
-  };
 
-  auto modifier = [&](double t, const KinematicState& k) {
-    auto pos = spline.calc(t);
-    auto& theta = pos.theta;
+    // limit the velocity according to path angle.
+    // since this is passed by reference it will affect the generator code
+    k.v = std::min(k.v, limits.v / (sin(theta).abs() + cos(theta).abs()));
 
     auto left = k.v * sin(theta + 45_deg);
     auto right = k.v * sin(theta - 45_deg);
@@ -96,7 +99,7 @@ Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& f
   };
 
   auto e = [&](const Generator::DriveCommand& c) { executor(c); };
-  Generator::generate(limits, limiter, modifier, e, spline, dt, flags, markers);
+  Generator::generate(limits, modifier, e, spline, dt, flags, markers);
 }
 
 void XGenerator::executor(const Generator::DriveCommand& c) {

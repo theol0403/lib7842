@@ -15,20 +15,16 @@ public:
   // wheel speed pct for left and right
   using DriveCommand = std::pair<Number, Number>;
 
-  // return max speed as a fuction of location on the path
-  using Limiter = std::function<QSpeed(double)>;
-
-  // return motor power as a function of location on the path and profiled speed
-  using Modifier = std::function<DriveCommand(double, const KinematicState&)>;
+  // return speed and motor power as a function of location on the path and profiled speed
+  using Modifier = std::function<DriveCommand(double, KinematicState&)>;
 
   // run or record the motor speeds
   using Executor = std::function<void(const DriveCommand&)>;
 
   // method that brings everything together
-  static PiecewiseTrapezoidal generate(const Limits& limits, const Limiter& limiter,
-                                       const Modifier& modifier, const Executor& executor,
-                                       const Spline& spline, const QTime& dt = 10_ms,
-                                       const ProfileFlags& flags = {},
+  static PiecewiseTrapezoidal generate(const Limits& limits, const Modifier& modifier,
+                                       const Executor& executor, const Spline& spline,
+                                       const QTime& dt = 10_ms, const ProfileFlags& flags = {},
                                        const std::vector<std::pair<Number, Number>>& markers = {});
 
   // convert wheel velocity to wheel percentage
@@ -44,7 +40,7 @@ public:
     Number right {0_pct};
   };
 
-  using Output = std::tuple<std::vector<Step>, PiecewiseTrapezoidal>;
+  using Output = std::pair<std::vector<Step>, PiecewiseTrapezoidal>;
 };
 
 class SkidSteerGenerator {
