@@ -29,7 +29,7 @@ public:
   }
 
   constexpr State calc(double t) const override {
-    QLength x;
+    QLength x = 0_m;
     QLength y = 0_m;
     if (std::isnan(r.convert(meter))) {
       y = s * t;
@@ -39,7 +39,6 @@ public:
     }
 
     QAngle new_theta = rotate - 90_deg;
-
     QLength x_r = x * cos(new_theta) - y * sin(new_theta);
     QLength y_r = y * cos(new_theta) + x * sin(new_theta);
 
@@ -55,6 +54,38 @@ public:
   }
 
   constexpr QLength length(double /*resolution*/ = 0) const override { return s; }
+
+  constexpr Vector calc_d(double t) const {
+    QLength x = 0_m;
+    QLength y = 0_m;
+    if (std::isnan(r.convert(meter))) {
+      y = s;
+    } else {
+      x = r * theta / radian * -sin(t * theta);
+      y = r * theta / radian * cos(t * theta);
+    }
+
+    QAngle new_theta = rotate - 90_deg;
+    QLength x_r = x * cos(new_theta) - y * sin(new_theta);
+    QLength y_r = y * cos(new_theta) + x * sin(new_theta);
+
+    return {x_r, y_r};
+  }
+
+  constexpr Vector calc_d2(double t) const {
+    QLength x = 0_m;
+    QLength y = 0_m;
+    if (!std::isnan(r.convert(meter))) {
+      x = r * square(theta / radian) * -cos(t * theta);
+      y = r * square(theta / radian) * -sin(t * theta);
+    }
+
+    QAngle new_theta = rotate - 90_deg;
+    QLength x_r = x * cos(new_theta) - y * sin(new_theta);
+    QLength y_r = y * cos(new_theta) + x * sin(new_theta);
+
+    return {x_r, y_r};
+  }
 
 protected:
   Vector start; // the start point
