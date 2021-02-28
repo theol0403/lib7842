@@ -39,6 +39,11 @@ PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Limiter& li
   return profile;
 }
 
+Number Generator::toWheel(const QSpeed& v, const ChassisScales& scales,
+                          const QAngularSpeed& gearset) {
+  return (v / (1_pi * scales.wheelDiameter * gearset)) * 360_deg;
+}
+
 void SkidSteerGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
                                 const std::vector<std::pair<Number, Number>>& markers) {
   auto limiter = [&](double t) { return limits.max_vel_at_curvature(spline.curvature(t)); };
@@ -48,11 +53,8 @@ void SkidSteerGenerator::follow(const Spline& spline, bool forward, const Profil
     QSpeed left = k.v - (w / radian * scales.wheelTrack) / 2;
     QSpeed right = k.v + (w / radian * scales.wheelTrack) / 2;
 
-    QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
-    QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
-
-    auto leftSpeed = leftWheel / gearset;
-    auto rightSpeed = rightWheel / gearset;
+    Number leftSpeed = Generator::toWheel(left, scales, gearset);
+    Number rightSpeed = Generator::toWheel(right, scales, gearset);
 
     return std::make_pair(leftSpeed, rightSpeed);
   };
@@ -79,11 +81,8 @@ void XGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& 
     QSpeed left = k.v / std::sqrt(2) - (w / radian * scales.wheelTrack) / 2;
     QSpeed right = k.v / std::sqrt(2) + (w / radian * scales.wheelTrack) / 2;
 
-    QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
-    QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
-
-    auto leftSpeed = leftWheel / gearset;
-    auto rightSpeed = rightWheel / gearset;
+    Number leftSpeed = Generator::toWheel(left, scales, gearset);
+    Number rightSpeed = Generator::toWheel(right, scales, gearset);
 
     return std::make_pair(leftSpeed, rightSpeed);
   };
@@ -113,14 +112,11 @@ void XGenerator::followX(const Spline& spline, bool forward, const ProfileFlags&
     auto pos = spline.calc(t);
     auto& theta = pos.theta;
 
-    auto scaleTopLeft = sin(theta + 45_deg);
-    auto scaleTopRight = sin(theta - 45_deg);
+    auto left = k.v * sin(theta + 45_deg);
+    auto right = k.v * sin(theta - 45_deg);
 
-    QAngularSpeed topLeft = (k.v * scaleTopLeft / (1_pi * scales.wheelDiameter)) * 360_deg;
-    QAngularSpeed topRight = (k.v * scaleTopRight / (1_pi * scales.wheelDiameter)) * 360_deg;
-
-    auto topLeftSpeed = topLeft / gearset;
-    auto topRightSpeed = topRight / gearset;
+    Number topLeftSpeed = Generator::toWheel(left, scales, gearset);
+    Number topRightSpeed = Generator::toWheel(right, scales, gearset);
 
     return std::make_pair(topLeftSpeed, topRightSpeed);
   };

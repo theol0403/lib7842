@@ -30,6 +30,9 @@ public:
                                        const Spline& spline, const QTime& dt = 10_ms,
                                        const ProfileFlags& flags = {},
                                        const std::vector<std::pair<Number, Number>>& markers = {});
+
+  // convert wheel velocity to wheel percentage
+  static Number toWheel(const QSpeed& v, const ChassisScales& scales, const QAngularSpeed& gearset);
 };
 
 class SkidSteerGenerator {
