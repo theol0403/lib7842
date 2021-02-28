@@ -14,7 +14,7 @@ dt = 0.01
 time_range = np.linspace(0, len(trajectory) * dt, len(trajectory))
 
 # path
-plt.subplot(2, 2, 1)
+plt.subplot(2, 3, 1)
 plt.title("Path")
 plt.axis("equal")
 
@@ -29,7 +29,7 @@ plt.grid()
 plt.legend()
 
 # angle
-plt.subplot(2, 2, 2)
+plt.subplot(2, 3, 2)
 plt.title("Angle")
 
 a = [step[2] for step in trajectory]
@@ -39,24 +39,24 @@ plt.xlabel("Time (s)")
 plt.ylabel("Degrees")
 plt.grid()
 
-# # curvature
-# plt.subplot(2, 3, 3)
-# plt.title("Curvature")
+# curvature
+plt.subplot(2, 3, 3)
+plt.title("Curvature")
 
-# c = [step[3] for step in trajectory]
-# plt.plot(time_range, c)
+c = [step[3] for step in trajectory]
+plt.plot(time_range, c)
 
-# plt.xlabel("Time (s)")
-# plt.ylabel("Curvature (1/r)")
-# plt.grid()
+plt.xlabel("Time (s)")
+plt.ylabel("Curvature (1/r)")
+plt.grid()
 
 # velocity
-plt.subplot(2, 2, 3)
+plt.subplot(2, 3, 4)
 plt.title("Velocity")
 
-v = [step[3] for step in trajectory]
-plt.plot(time_range, v, label="Raw")
 v = [step[4] for step in trajectory]
+plt.plot(time_range, v, label="Raw")
+v = [step[5] for step in trajectory]
 plt.plot(time_range, v, label="Limited")
 
 plt.xlabel("Time (s)")
@@ -64,23 +64,23 @@ plt.ylabel("Velocity (m/s)")
 plt.grid()
 plt.legend()
 
-# # angular velocity
-# plt.subplot(2, 3, 5)
-# plt.title("Angular Velocity")
+# angular velocity
+plt.subplot(2, 3, 5)
+plt.title("Angular Velocity")
 
-# w = [step[6] for step in trajectory]
-# plt.plot(time_range, w)
+w = [step[6] for step in trajectory]
+plt.plot(time_range, w)
 
-# plt.xlabel("Time (s)")
-# plt.ylabel("Angular Velocity (rad/s)")
-# plt.grid()
+plt.xlabel("Time (s)")
+plt.ylabel("Angular Velocity (rad/s)")
+plt.grid()
 
 # wheel speeds
-plt.subplot(2, 2, 4)
+plt.subplot(2, 3, 6)
 plt.title("Wheel Speeds")
 
-plt.plot(time_range, [step[5] for step in trajectory], label="Left")
-plt.plot(time_range, [step[6] for step in trajectory], label="Right")
+plt.plot(time_range, [step[7] for step in trajectory], label="Left")
+plt.plot(time_range, [step[8] for step in trajectory], label="Right")
 
 plt.xlabel("Time (s)")
 plt.ylabel("Velocity (m/s)")
