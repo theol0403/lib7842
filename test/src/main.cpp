@@ -7,24 +7,6 @@
 using namespace test;
 int lvglMain();
 
-class SkidSteerGeneratorTest : public SkidSteerGenerator {
-public:
-  SkidSteerGeneratorTest(const QAngularSpeed& igearset, const ChassisScales& iscales,
-                         const Limits& ilimits, const QTime& idt, bool iisXdrive = false) :
-    SkidSteerGenerator(nullptr, igearset, iscales, ilimits, idt, iisXdrive) {}
-
-  void executor(const Generator::DriveCommand& c) override {}
-};
-
-class XGeneratorTest : public XGenerator {
-public:
-  XGeneratorTest(const QAngularSpeed& igearset, const ChassisScales& iscales, const Limits& ilimits,
-                 const QTime& idt) :
-    XGenerator(nullptr, igearset, iscales, ilimits, idt) {}
-
-  void executor(const Generator::DriveCommand& c) override {}
-};
-
 int main(int argc, char** argv) {
   global::setTimeUtil(std::make_shared<TimeUtil>(createTimeUtil()));
 
@@ -35,7 +17,7 @@ int main(int argc, char** argv) {
 
   ChassisScales scales({3.25_in, 13_in}, 360);
   Limits limits(scales, 200_rpm, 0.6_s);
-  SkidSteerGeneratorTest generator(200_rpm, scales, limits, 10_ms, false);
+  SkidSteerGenerator generator(nullptr, 200_rpm, scales, limits, 10_ms, true);
 
   // auto [t, profile] = generator.follow(
   //   Bezier<3>({{0_ft, 0_ft}, {0_ft, 4_ft}, {2_ft, 0_ft},  {2_ft, 4_ft}}), {.top_v = 100_pct},

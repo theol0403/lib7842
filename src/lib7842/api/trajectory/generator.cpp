@@ -79,6 +79,7 @@ Generator::Output
 }
 
 void SkidSteerGenerator::executor(const Generator::DriveCommand& c) {
+  if (!model) { return; }
   double left = c.first.convert(number);
   double right = c.second.convert(number);
   model->tank(left, right);
@@ -116,6 +117,7 @@ Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& f
 }
 
 void XGenerator::executor(const Generator::DriveCommand& c) {
+  if (!model) { return; }
   double topLeft = c.first.convert(number);
   double topRight = c.second.convert(number);
 
