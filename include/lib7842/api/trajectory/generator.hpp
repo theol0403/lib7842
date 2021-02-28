@@ -32,17 +32,17 @@ public:
                                        const std::vector<std::pair<Number, Number>>& markers = {});
 };
 
-class XGenerator {
+class SkidSteerGenerator {
 public:
-  XGenerator(std::shared_ptr<XDriveModel> imodel, const QAngularSpeed& igearset,
-             const ChassisScales& iscales, const Limits& ilimits, const QTime& idt) :
+  SkidSteerGenerator(std::shared_ptr<XDriveModel> imodel, const QAngularSpeed& igearset,
+                     const ChassisScales& iscales, const Limits& ilimits, const QTime& idt) :
     model(std::move(imodel)), gearset(igearset), scales(iscales), limits(ilimits), dt(idt) {};
 
   void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {},
               const std::vector<std::pair<Number, Number>>& markers = {});
 
 protected:
-  std::shared_ptr<XDriveModel> model;
+  std::shared_ptr<ChassisModel> model;
   QAngularSpeed gearset;
   ChassisScales scales;
   Limits limits;

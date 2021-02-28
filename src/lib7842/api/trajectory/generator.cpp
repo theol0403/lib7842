@@ -42,14 +42,14 @@ PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Limiter& li
   return profile;
 }
 
-void XGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
-                        const std::vector<std::pair<Number, Number>>& markers) {
+void SkidSteerGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
+                                const std::vector<std::pair<Number, Number>>& markers) {
   auto limiter = [&](double t) { return limits.max_vel_at_curvature(spline.curvature(t)); };
 
   auto modifier = [&](double t, const KinematicState& k) {
     QAngularSpeed w = spline.curvature(t) * k.v * radian;
-    QSpeed left = k.v / std::sqrt(2) - (w / radian * scales.wheelTrack) / 2;
-    QSpeed right = k.v / std::sqrt(2) + (w / radian * scales.wheelTrack) / 2;
+    QSpeed left = k.v - (w / radian * scales.wheelTrack) / 2;
+    QSpeed right = k.v + (w / radian * scales.wheelTrack) / 2;
 
     QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
     QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
@@ -61,10 +61,12 @@ void XGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& 
   };
 
   auto executor = [&](const Generator::DriveCommand& c) {
+    double left = c.first.convert(number);
+    double right = c.second.convert(number);
     if (forward) {
-      model->tank(c.first.convert(number), c.second.convert(number));
+      model->tank(left, right);
     } else {
-      model->tank(-c.second.convert(number), -c.first.convert(number));
+      model->tank(-right, -left);
     }
   };
 
