@@ -75,7 +75,7 @@ struct Vector {
    */
   constexpr static QAngle angle(const Vector& istart, const Vector& iend) {
     Vector diff = iend - istart;
-    QAngle angle = atan2(diff.y, diff.x);
+    QAngle angle = atan2(diff.x, diff.y);
     return util::rollAngle180(angle);
   }
 

@@ -14,7 +14,7 @@ namespace lib7842 {
 class Arc : public SplineHelper<Arc> {
 public:
   constexpr Arc(const State& istart, const State& iend) : start(istart), end(iend) {
-    theta = iend.transform().theta - istart.transform().theta;
+    theta = iend.theta - istart.theta;
     c = start.distTo(end);
 
     if (theta == 0_rad) {
@@ -45,7 +45,7 @@ public:
     x_r += start.x;
     y_r += start.y;
 
-    return {x_r, y_r, rotate + theta * t};
+    return {y_r, x_r, -(rotate + theta * t) + 90_deg};
   }
 
   constexpr QCurvature curvature(double /*t*/) const override {
@@ -69,7 +69,7 @@ public:
     QLength x_r = x * cos(new_theta) - y * sin(new_theta);
     QLength y_r = y * cos(new_theta) + x * sin(new_theta);
 
-    return {x_r, y_r};
+    return {y_r, x_r};
   }
 
   constexpr Vector calc_d2(double t) const {
@@ -84,7 +84,7 @@ public:
     QLength x_r = x * cos(new_theta) - y * sin(new_theta);
     QLength y_r = y * cos(new_theta) + x * sin(new_theta);
 
-    return {x_r, y_r};
+    return {y_r, x_r};
   }
 
 protected:

@@ -77,13 +77,6 @@ struct State : public Vector {
   }
 
   /**
-   * Transform a compass rose angle to a unit circle angle
-   *
-   * @return The transformed state
-   */
-  constexpr State transform() const { return {x, y, -1 * theta + 90_deg}; }
-
-  /**
    * Convert to a vector
    *
    * @return The new vector
