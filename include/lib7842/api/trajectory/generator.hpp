@@ -34,7 +34,7 @@ public:
 
 class SkidSteerGenerator {
 public:
-  SkidSteerGenerator(std::shared_ptr<XDriveModel> imodel, const QAngularSpeed& igearset,
+  SkidSteerGenerator(std::shared_ptr<ChassisModel> imodel, const QAngularSpeed& igearset,
                      const ChassisScales& iscales, const Limits& ilimits, const QTime& idt) :
     model(std::move(imodel)), gearset(igearset), scales(iscales), limits(ilimits), dt(idt) {};
 
@@ -43,6 +43,28 @@ public:
 
 protected:
   std::shared_ptr<ChassisModel> model;
+  QAngularSpeed gearset;
+  ChassisScales scales;
+  Limits limits;
+  QTime dt;
+};
+
+class XGenerator {
+public:
+  XGenerator(std::shared_ptr<XDriveModel> imodel, const QAngularSpeed& igearset,
+             const ChassisScales& iscales, const Limits& ilimits, const QTime& idt) :
+    model(std::move(imodel)), gearset(igearset), scales(iscales), limits(ilimits), dt(idt) {
+    limits.v *= std::sqrt(2);
+  };
+
+  void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {},
+              const std::vector<std::pair<Number, Number>>& markers = {});
+
+  void followX(const Spline& spline, bool forward = true, const ProfileFlags& flags = {},
+               const std::vector<std::pair<Number, Number>>& markers = {});
+
+protected:
+  std::shared_ptr<XDriveModel> model;
   QAngularSpeed gearset;
   ChassisScales scales;
   Limits limits;

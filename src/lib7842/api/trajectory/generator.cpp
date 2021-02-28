@@ -15,7 +15,6 @@ PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Limiter& li
   // setup
   double t = 0;
   QLength dist = 0_m;
-  State pos = spline.calc(t);
   KinematicState k = profile.begin();
   if (k.v == 0_mps) { k = profile.calc(dt); }
 
@@ -32,8 +31,6 @@ PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Limiter& li
     dist += d_dist;
     // calculate where along the spline we will be at the end of the timeslice
     t = spline.t_at_dist_travelled(t, d_dist);
-    // update new position
-    pos = spline.calc(t);
     // calculate new velocity
     k = profile.calc(dist);
   }
@@ -54,8 +51,8 @@ void SkidSteerGenerator::follow(const Spline& spline, bool forward, const Profil
     QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
     QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
 
-    auto leftSpeed = (leftWheel / gearset);
-    auto rightSpeed = (rightWheel / gearset);
+    auto leftSpeed = leftWheel / gearset;
+    auto rightSpeed = rightWheel / gearset;
 
     return std::make_pair(leftSpeed, rightSpeed);
   };
@@ -68,6 +65,74 @@ void SkidSteerGenerator::follow(const Spline& spline, bool forward, const Profil
     } else {
       model->tank(-right, -left);
     }
+  };
+
+  Generator::generate(limits, limiter, modifier, executor, spline, dt, flags, markers);
+}
+
+void XGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
+                        const std::vector<std::pair<Number, Number>>& markers) {
+  auto limiter = [&](double t) { return limits.max_vel_at_curvature(spline.curvature(t)); };
+
+  auto modifier = [&](double t, const KinematicState& k) {
+    QAngularSpeed w = spline.curvature(t) * k.v * radian;
+    QSpeed left = k.v / std::sqrt(2) - (w / radian * scales.wheelTrack) / 2;
+    QSpeed right = k.v / std::sqrt(2) + (w / radian * scales.wheelTrack) / 2;
+
+    QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
+    QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
+
+    auto leftSpeed = leftWheel / gearset;
+    auto rightSpeed = rightWheel / gearset;
+
+    return std::make_pair(leftSpeed, rightSpeed);
+  };
+
+  auto executor = [&](const Generator::DriveCommand& c) {
+    double left = c.first.convert(number);
+    double right = c.second.convert(number);
+    if (forward) {
+      model->tank(left, right);
+    } else {
+      model->tank(-right, -left);
+    }
+  };
+
+  Generator::generate(limits, limiter, modifier, executor, spline, dt, flags, markers);
+}
+
+void XGenerator::followX(const Spline& spline, bool forward, const ProfileFlags& flags,
+                         const std::vector<std::pair<Number, Number>>& markers) {
+  auto limiter = [&](double t) {
+    auto pos = spline.calc(t);
+    auto& theta = pos.theta;
+    return limits.v / (sin(theta).abs() + cos(theta).abs());
+  };
+
+  auto modifier = [&](double t, const KinematicState& k) {
+    auto pos = spline.calc(t);
+    auto& theta = pos.theta;
+
+    auto scaleTopLeft = sin(theta + 45_deg);
+    auto scaleTopRight = sin(theta - 45_deg);
+
+    QAngularSpeed topLeft = (k.v * scaleTopLeft / (1_pi * scales.wheelDiameter)) * 360_deg;
+    QAngularSpeed topRight = (k.v * scaleTopRight / (1_pi * scales.wheelDiameter)) * 360_deg;
+
+    auto topLeftSpeed = topLeft / gearset;
+    auto topRightSpeed = topRight / gearset;
+
+    return std::make_pair(topLeftSpeed, topRightSpeed);
+  };
+
+  auto executor = [&](const Generator::DriveCommand& c) {
+    double topLeft = c.first.convert(number);
+    double topRight = c.second.convert(number);
+
+    model->getTopLeftMotor()->moveVoltage(topLeft * 12000);
+    model->getTopRightMotor()->moveVoltage(topRight * 12000);
+    model->getBottomLeftMotor()->moveVoltage(topRight * 12000);
+    model->getBottomRightMotor()->moveVoltage(topLeft * 12000);
   };
 
   Generator::generate(limits, limiter, modifier, executor, spline, dt, flags, markers);
