@@ -1,5 +1,4 @@
 #pragma once
-
 #include "lib7842/api/other/units.hpp"
 #include "lib7842/api/other/utility.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
@@ -42,59 +41,4 @@ public:
 
   using Output = std::pair<PiecewiseTrapezoidal, std::vector<Step>>;
 };
-
-class SkidSteerGenerator {
-public:
-  virtual ~SkidSteerGenerator() = default;
-
-  SkidSteerGenerator(std::shared_ptr<ChassisModel> imodel, const QAngularSpeed& igearset,
-                     const ChassisScales& iscales, const Limits& ilimits, const QTime& idt,
-                     bool iisXdrive = false) :
-    model(std::move(imodel)),
-    gearset(igearset),
-    scales(iscales),
-    limits(ilimits),
-    dt(idt),
-    isXdrive(iisXdrive) {
-    if (isXdrive) { limits.v *= std::sqrt(2); }
-  };
-
-  Generator::Output follow(const Spline& spline, bool forward = true,
-                           const ProfileFlags& flags = {},
-                           const std::vector<std::pair<Number, Number>>& markers = {});
-
-  virtual void executor(const Generator::DriveCommand& c);
-
-protected:
-  std::shared_ptr<ChassisModel> model;
-  QAngularSpeed gearset;
-  ChassisScales scales;
-  Limits limits;
-  QTime dt;
-  bool isXdrive;
-};
-
-class XGenerator {
-public:
-  virtual ~XGenerator() = default;
-
-  XGenerator(std::shared_ptr<XDriveModel> imodel, const QAngularSpeed& igearset,
-             const ChassisScales& iscales, const Limits& ilimits, const QTime& idt) :
-    model(std::move(imodel)), gearset(igearset), scales(iscales), limits(ilimits), dt(idt) {
-    limits.v *= std::sqrt(2);
-  };
-
-  Generator::Output follow(const Spline& spline, const ProfileFlags& flags = {},
-                           const std::vector<std::pair<Number, Number>>& markers = {});
-
-  virtual void executor(const Generator::DriveCommand& c);
-
-protected:
-  std::shared_ptr<XDriveModel> model;
-  QAngularSpeed gearset;
-  ChassisScales scales;
-  Limits limits;
-  QTime dt;
-};
-
 } // namespace lib7842

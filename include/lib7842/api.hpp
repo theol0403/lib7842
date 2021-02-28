@@ -43,6 +43,8 @@
 #include "lib7842/api/purePursuit/waypoint.hpp"
 
 #include "lib7842/api/trajectory/generator/generator.hpp"
+#include "lib7842/api/trajectory/generator/skidGenerator.hpp"
+#include "lib7842/api/trajectory/generator/xGenerator.hpp"
 #include "lib7842/api/trajectory/profile/limits.hpp"
 #include "lib7842/api/trajectory/profile/piecewise_trapezoidal.hpp"
 #include "lib7842/api/trajectory/profile/profile.hpp"
