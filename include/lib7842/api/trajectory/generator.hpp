@@ -1,68 +1,52 @@
 #pragma once
+
 #include "lib7842/api/other/units.hpp"
 #include "lib7842/api/other/utility.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "lib7842/api/positioning/spline/spline.hpp"
 #include "limits.hpp"
-#include "okapi/api/units/QAngle.hpp"
 #include "okapi/impl/util/rate.hpp"
 #include "piecewise_trapezoidal.hpp"
-#include "trapezoidal.hpp"
 
 namespace lib7842 {
 
 class Generator {
 public:
-  struct Step {
-    State p;
-    KinematicState k;
-    QAngularSpeed w;
-    QCurvature c;
-    QSpeed p_vel;
-    Number left {0_pct};
-    Number right {0_pct};
-  };
+  // wheel speed pct for left and right
+  using DriveCommand = std::pair<Number, Number>;
 
-  using Runner = std::function<void(const Step&)>;
+  // return max speed as a fuction of location on the path
+  using Limiter = std::function<QSpeed(double)>;
 
-  virtual ~Generator() = default;
+  // return motor power as a function of location on the path and profiled speed
+  using Modifier = std::function<DriveCommand(double, const KinematicState&)>;
 
-  Generator(const Limits& ilimits, const ChassisScales& iscales, const QTime& idt);
+  // run or record the motor speeds
+  using Executor = std::function<void(const DriveCommand&)>;
 
-  PiecewiseTrapezoidal generate(const Spline& spline, const Runner& runner,
-                                const ProfileFlags& flags = {},
-                                const std::vector<std::pair<Number, Number>>& markers = {}) const;
-
-protected:
-  Limits limits;
-  ChassisScales scales;
-  QTime dt;
+  // method that brings everything together
+  static PiecewiseTrapezoidal generate(const Limits& ilimits, const Limiter& ilimiter,
+                                       const Modifier& imodifier, const Executor& iexecutor,
+                                       const Spline& spline, const QTime& idt = 10_ms,
+                                       const ProfileFlags& flags = {},
+                                       const std::vector<std::pair<Number, Number>>& markers = {});
 };
 
-class XGenerator : public Generator {
+class XGenerator {
 public:
   XGenerator(std::shared_ptr<XDriveModel> imodel, const QAngularSpeed& igearset,
-             const Limits& ilimits, const ChassisScales& iscales, const QTime& idt);
+             const ChassisScales& iscales, const Limits& ilimits, const QTime& idt) :
+    model(std::move(imodel)), gearset(igearset), scales(iscales), limits(ilimits), dt(idt) {};
 
   void follow(const Spline& spline, bool forward = true, const ProfileFlags& flags = {},
               const std::vector<std::pair<Number, Number>>& markers = {});
 
-  void run(const Step& s, bool forward = true);
-
 protected:
   std::shared_ptr<XDriveModel> model;
   QAngularSpeed gearset;
-  std::shared_ptr<AbstractRate> rate;
-};
-
-class XTestGenerator : public Generator {
-public:
-  using Generator::Generator;
-  std::tuple<std::vector<Step>, PiecewiseTrapezoidal>
-    follow(const Spline& spline, bool /*forward*/ = true, const ProfileFlags& flags = {},
-           const std::vector<std::pair<Number, Number>>& markers = {});
-
-  void run(const Step& s);
+  ChassisScales scales;
+  Limits limits;
+  QTime dt;
 };
 
 } // namespace lib7842
