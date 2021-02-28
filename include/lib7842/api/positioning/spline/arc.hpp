@@ -1,5 +1,6 @@
 #pragma once
 #include "lib7842/api/other/units.hpp"
+#include "lib7842/api/other/utility.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include "piecewise.hpp"
@@ -14,7 +15,7 @@ namespace lib7842 {
 class Arc : public SplineHelper<Arc> {
 public:
   constexpr Arc(const State& istart, const State& iend) : start(istart), end(iend) {
-    theta = iend.theta - istart.theta;
+    theta = util::rollAngle180(iend.theta - istart.theta);
     c = start.distTo(end);
 
     if (theta == 0_rad) {

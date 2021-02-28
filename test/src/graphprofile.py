@@ -16,6 +16,7 @@ time_range = np.linspace(0, len(trajectory) * dt, len(trajectory))
 # path
 plt.subplot(2, 2, 1)
 plt.title("Path")
+plt.axis("equal")
 
 x = [step[0] for step in trajectory]
 y = [step[1] for step in trajectory]
