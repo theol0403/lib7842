@@ -11,6 +11,7 @@ public:
              const ChassisScales& iscales, const Limits& ilimits, const QTime& idt) :
     model(std::move(imodel)), gearset(igearset), scales(iscales), limits(ilimits), dt(idt) {
     limits.v *= std::sqrt(2);
+    limits.a *= std::sqrt(2);
   };
 
   Generator::Output follow(const Spline& spline, const ProfileFlags& flags = {},
