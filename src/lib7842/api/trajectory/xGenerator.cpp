@@ -1,4 +1,5 @@
 #include "lib7842/api/trajectory/generator/xGenerator.hpp"
+#include "pros/rtos.hpp"
 
 namespace lib7842 {
 
