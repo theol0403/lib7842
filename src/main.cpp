@@ -93,6 +93,7 @@ void opcontrol() {
   Limits limits(scales, 200_rpm, 0.7_s, 1, 1);
 
   XGenerator generator(model, 200_rpm, scales, limits, 10_ms);
+  SkidSteerGenerator sgenerator(model, 200_rpm, scales, limits, 10_ms);
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -100,19 +101,15 @@ void opcontrol() {
                    controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::A)) {
-      // generator.follow(Line({0_m, 0_m}, {0_m, 1.5_ft}));
-      // generator.follow(Line({0_m, 0_m}, {0_m, 1.5_ft}), false);
-      // generator.follow(CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft}, {1.4_ft,
-      // 1_ft}})); generator.follow(CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft},
-      // {1.4_ft, 1_ft}}),
-      //                  false);
-
-      // generator.follow(make_piecewise<QuinticHermite>(
-      //                    {{0_ft, 0_ft, 0_deg}, {1.5_ft, 2_ft, 0_deg}, {0_ft, 4_ft, 0_deg}}),
-      //                  {.top_v = 70_pct});
-
-      generator.follow(Bezier<3>({{0_ft, 0_ft}, {0_ft, 3.5_ft}, {2_ft, 0.5_ft}, {2_ft, 4_ft}}),
-                       {.end_v = 20_pct, .top_v = 80_pct}, {});
+      // auto [profile, t] = generator.follow(Mesh({0_m, 0_m, 0_deg}, {1_ft, 3_ft, 60_deg}));
+      // auto [profile, t] =
+      //   generator.follow(Bezier<3>({{0_ft, 0_ft}, {0_ft, 3_ft}, {2_ft, 1_ft}, {2_ft, 4_ft}}));
+      auto [profile, t] =
+        generator.follow(QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 4_ft, 0_deg}));
+    }
+    if (controller.getDigital(ControllerDigital::B)) {
+      auto [profile, t] =
+        sgenerator.follow(QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 4_ft, 0_deg}));
     }
 
     pros::delay(10);

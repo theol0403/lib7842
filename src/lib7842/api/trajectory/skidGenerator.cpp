@@ -1,4 +1,5 @@
 #include "lib7842/api/trajectory/generator/skidGenerator.hpp"
+#include "pros/rtos.hpp"
 
 namespace lib7842 {
 
@@ -6,6 +7,11 @@ Generator::Output SkidSteerGenerator::follow(const Spline& spline, bool forward,
                                              const ProfileFlags& flags,
                                              const PiecewiseTrapezoidal::Markers& markers) {
   std::vector<Generator::Step> trajectory;
+  if (model && flags.start_v == 0_pct) {
+    model->stop();
+    pros::delay(10);
+  }
+
   auto runner = [&](double t, KinematicState& k) {
     auto profiled_vel = k.v; // used for logging
 
@@ -30,14 +36,15 @@ Generator::Output SkidSteerGenerator::follow(const Spline& spline, bool forward,
 
     if (model) {
       if (forward) {
-        model->tank(leftSpeed, rightSpeed);
+        model->left(leftSpeed);
+        model->right(rightSpeed);
       } else {
-        model->tank(-rightSpeed, -leftSpeed);
+        model->left(-rightSpeed);
+        model->right(-leftSpeed);
       }
     }
 
-    trajectory.emplace_back(spline.calc(t), k, w, curvature, profiled_vel, leftSpeed, rightSpeed,
-                            0_deg);
+    trajectory.emplace_back(spline.calc(t), k, w, curvature, profiled_vel, leftSpeed, rightSpeed);
   };
 
   auto profile = Generator::generate(limits, runner, spline, dt, flags, markers);

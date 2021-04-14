@@ -81,16 +81,19 @@ plt.title("Wheel Speeds")
 
 plt.plot(time_range, [step[7] for step in trajectory], label="Left")
 plt.plot(time_range, [step[8] for step in trajectory], label="Right")
+plt.plot(time_range, [step[9] for step in trajectory], label="LeftBack")
+plt.plot(time_range, [step[10] for step in trajectory], label="RightBack")
 
 plt.xlabel("Time (s)")
 plt.ylabel("Velocity (m/s)")
 plt.grid()
 plt.legend()
 
+# robot angle
 plt.subplot(2, 4, 7)
 plt.title("Robot")
 
-a = [step[9] for step in trajectory]
+a = [step[11] for step in trajectory]
 plt.plot(time_range, a)
 
 plt.xlabel("Time (s)")

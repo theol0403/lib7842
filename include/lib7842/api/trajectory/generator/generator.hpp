@@ -31,7 +31,9 @@ public:
     QSpeed p_vel;
     double left {0};
     double right {0};
-    QAngle robot;
+    double leftBack {0};
+    double rightBack {0};
+    QAngle robot {0_deg};
   };
 
   using Output = std::pair<PiecewiseTrapezoidal, std::vector<Step>>;
