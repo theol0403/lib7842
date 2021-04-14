@@ -3,6 +3,7 @@
 #include "lib7842/api/positioning/point/state.hpp"
 #include "spline.hpp"
 #include <numeric>
+#include <optional>
 
 namespace lib7842 {
 
