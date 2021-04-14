@@ -14,8 +14,7 @@ Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& f
 
     // limit the velocity according to path angle.
     // since this is passed by reference it will affect the generator code
-    // k.v = k.v / (sin(theta).abs() + cos(theta).abs());
-    k.v = std::min(k.v, limits.v / (sin(theta).abs() + cos(theta).abs()));
+    k.v = k.v / (sin(theta).abs() + cos(theta).abs());
 
     auto left = k.v * sin(theta + 45_deg);
     auto right = k.v * sin(theta - 45_deg);
