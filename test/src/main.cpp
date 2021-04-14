@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
       std::cout << step.p.x.convert(foot) << "," << step.p.y.convert(foot) << ","
                 << step.p.theta.convert(degree) << "," << step.c.convert(1 / meter) << ","
                 << step.p_vel << "," << step.k.v << "," << step.w.convert(degree / second) << ","
-                << step.left << "," << step.right << std::endl;
+                << step.left << "," << step.right << "," << step.robot << std::endl;
     }
   } else {
     std::cout << std::endl;
@@ -48,11 +48,6 @@ int main(int argc, char** argv) {
     std::cout << "Length: " << profile.end().d.convert(foot) << " ft" << std::endl;
     std::cout << "Time: " << profile.end().t << " s" << std::endl;
   }
-
-  // std::cout << "Running benchmark:" << std::endl;
-  // for (size_t i = 0; i < 1000; ++i) {
-  //   auto t = generator.follow(QuinticHermite({{0_ft, 0_ft, 0_deg}, {2_ft, 2_ft, 0_deg}}));
-  // }
 
   // return runUnitTests(argc, argv);
 

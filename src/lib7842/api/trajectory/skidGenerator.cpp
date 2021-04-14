@@ -25,20 +25,19 @@ Generator::Output SkidSteerGenerator::follow(const Spline& spline, bool forward,
     QSpeed left = vel - (w / radian * scales.wheelTrack) / 2;
     QSpeed right = vel + (w / radian * scales.wheelTrack) / 2;
 
-    Number leftSpeed = Generator::toWheel(left, scales, gearset);
-    Number rightSpeed = Generator::toWheel(right, scales, gearset);
+    auto leftSpeed = Generator::toWheel(left, scales, gearset).convert(number);
+    auto rightSpeed = Generator::toWheel(right, scales, gearset).convert(number);
 
     if (model) {
-      double leftMotor = leftSpeed.convert(number);
-      double rightMotor = rightSpeed.convert(number);
       if (forward) {
-        model->tank(leftMotor, rightMotor);
+        model->tank(leftSpeed, rightSpeed);
       } else {
-        model->tank(-rightMotor, -leftMotor);
+        model->tank(-rightSpeed, -leftSpeed);
       }
     }
 
-    trajectory.emplace_back(spline.calc(t), k, w, curvature, profiled_vel, leftSpeed, rightSpeed);
+    trajectory.emplace_back(spline.calc(t), k, w, curvature, profiled_vel, leftSpeed, rightSpeed,
+                            0_deg);
   };
 
   auto profile = Generator::generate(limits, runner, spline, dt, flags, markers);

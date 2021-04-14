@@ -29,8 +29,9 @@ public:
     QAngularSpeed w;
     QCurvature c;
     QSpeed p_vel;
-    Number left {0_pct};
-    Number right {0_pct};
+    double left {0};
+    double right {0};
+    QAngle robot;
   };
 
   using Output = std::pair<PiecewiseTrapezoidal, std::vector<Step>>;
