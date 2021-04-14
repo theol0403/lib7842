@@ -8,6 +8,14 @@ Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& f
   auto runner = [&](double t, KinematicState& k) {
     auto profiled_vel = k.v; // used for logging
 
+    if (model && flags.start_v == 0_pct) {
+      model->getTopLeftMotor()->moveVelocity(0);
+      model->getTopRightMotor()->moveVelocity(0);
+      model->getBottomLeftMotor()->moveVelocity(0);
+      model->getBottomRightMotor()->moveVelocity(0);
+      pros::delay(10);
+    }
+
     // get the location on the spline
     auto pos = spline.calc(t);
     auto& theta = pos.theta;
