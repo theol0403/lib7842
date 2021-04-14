@@ -72,8 +72,8 @@ void opcontrol() {
   Controller controller(ControllerId::master);
 
   auto topLeft = std::make_shared<Motor>(11); // top left
-  auto topRight = std::make_shared<Motor>(-5); // top right
-  auto bottomRight = std::make_shared<Motor>(-6); // bottom right
+  auto topRight = std::make_shared<Motor>(-18); // top right
+  auto bottomRight = std::make_shared<Motor>(-19); // bottom right
   auto bottomLeft = std::make_shared<Motor>(2); // bottom left
 
   topLeft->setBrakeMode(AbstractMotor::brakeMode::brake);
@@ -81,9 +81,6 @@ void opcontrol() {
   bottomRight->setBrakeMode(AbstractMotor::brakeMode::brake);
   bottomLeft->setBrakeMode(AbstractMotor::brakeMode::brake);
 
-  /**
-   * Model
-   */
   auto model = std::make_shared<XDriveModel>(
     // motors
     topLeft, topRight, bottomRight, bottomLeft,
@@ -92,11 +89,9 @@ void opcontrol() {
     // limits
     200, 12000);
 
-  /**
-   * Trajectory
-   */
-  ChassisScales scales({3.25_in, 15_in}, 360);
-  Limits limits(scales, 200_rpm, 0.8_s, std::sqrt(2), 1);
+  ChassisScales scales({3.25_in, 16_in}, 360);
+  Limits limits(scales, 200_rpm, 0.7_s, 1, 1);
+
   XGenerator generator(model, 200_rpm, scales, limits, 10_ms);
 
   while (true) {
