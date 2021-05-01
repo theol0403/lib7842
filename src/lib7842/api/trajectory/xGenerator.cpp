@@ -3,7 +3,7 @@
 
 namespace lib7842 {
 
-Generator::Output XGenerator::follow(const Spline& spline, const QAngle& start,
+Generator::Output XGenerator::follow(const Spline& spline, const xMovement& movement,
                                      const ProfileFlags& flags,
                                      const PiecewiseTrapezoidal::Markers& markers) {
   std::vector<Generator::Step> trajectory;
@@ -14,10 +14,11 @@ Generator::Output XGenerator::follow(const Spline& spline, const QAngle& start,
   }
 
   // the robots heading
-  QAngle robot = start;
+  QAngle robot = movement.start;
 
   auto runner = [&](double t, KinematicState& k) {
     auto profiled_vel = k.v; // used for logging
+    auto w = movement.rotator(k);
 
     // get the location on the spline
     auto pos = spline.calc(t);
@@ -27,14 +28,16 @@ Generator::Output XGenerator::follow(const Spline& spline, const QAngle& start,
     // this is experimental
     auto scale = (sin(pos.theta).abs() + cos(pos.theta).abs());
     k.v = k.v / scale;
-    // k.v = std::min(k.v, (limits.w * limits.v / scale) /
-    //                       (curvature.abs() * limits.v / scale * radian + limits.w));
-    auto speed = 30_deg / second;
-    k.v = std::min(k.v, limits.v / scale - speed.abs() * limits.v / limits.w);
+    if (movement.curvature) {
+      k.v = std::min(k.v, (limits.w * limits.v / scale) /
+                            (curvature.abs() * limits.v / scale * radian + limits.w));
+    } else {
+      k.v = std::min(k.v, limits.v / scale - w.abs() * limits.v / limits.w);
+    }
 
     // angular speed is curvature times limited speed
-    // QAngularSpeed w = curvature * k.v * radian;
-    QAngularSpeed w = speed;
+    if (movement.curvature) { w += curvature * k.v * radian; }
+
     robot += w * dt;
 
     auto turning = -(w / radian * scales.wheelTrack) / 2;
