@@ -14,7 +14,8 @@ public:
     limits.a *= std::sqrt(2);
   };
 
-  Generator::Output follow(const Spline& spline, const ProfileFlags& flags = {},
+  Generator::Output follow(const Spline& spline, const QAngle& start = 0_deg,
+                           const ProfileFlags& flags = {},
                            const PiecewiseTrapezoidal::Markers& markers = {});
 
 protected:

@@ -3,7 +3,8 @@
 
 namespace lib7842 {
 
-Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& flags,
+Generator::Output XGenerator::follow(const Spline& spline, const QAngle& start,
+                                     const ProfileFlags& flags,
                                      const PiecewiseTrapezoidal::Markers& markers) {
   std::vector<Generator::Step> trajectory;
 
@@ -13,7 +14,7 @@ Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& f
   }
 
   // the robots heading
-  QAngle robot = spline.calc(0).theta - 90_deg;
+  QAngle robot = start;
 
   auto runner = [&](double t, KinematicState& k) {
     auto profiled_vel = k.v; // used for logging
@@ -21,22 +22,24 @@ Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& f
     // get the location on the spline
     auto pos = spline.calc(t);
     auto curvature = spline.curvature(t);
-    auto theta = pos.theta - robot;
+    pos.theta = pos.theta - robot;
 
     // this is experimental
-    auto scale = (sin(theta).abs() + cos(theta).abs());
+    auto scale = (sin(pos.theta).abs() + cos(pos.theta).abs());
     k.v = k.v / scale;
-    k.v = std::min(k.v, (limits.w * limits.v / scale) /
-                          (curvature.abs() * limits.v / scale * radian + limits.w));
+    // k.v = std::min(k.v, (limits.w * limits.v / scale) /
+    //                       (curvature.abs() * limits.v / scale * radian + limits.w));
+    auto speed = 30_deg / second;
+    k.v = std::min(k.v, limits.v / scale - speed.abs() * limits.v / limits.w);
 
     // angular speed is curvature times limited speed
-    QAngularSpeed w = curvature * k.v * radian;
-    // QAngularSpeed w = 0_rpm;
+    // QAngularSpeed w = curvature * k.v * radian;
+    QAngularSpeed w = speed;
     robot += w * dt;
 
     auto turning = -(w / radian * scales.wheelTrack) / 2;
-    auto left = k.v * sin(theta + 45_deg);
-    auto right = k.v * sin(theta - 45_deg);
+    auto left = k.v * sin(pos.theta + 45_deg);
+    auto right = k.v * sin(pos.theta - 45_deg);
 
     auto topLeft = left + turning;
     auto topRight = right - turning;
