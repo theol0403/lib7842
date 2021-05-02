@@ -81,20 +81,24 @@ public:
       // acceleration
       k.a = limits.a;
       k.v = sqrt(square(start_v) + 2 * limits.a * d);
+      auto desc = sqrt(start_v * start_v + 2 * limits.a * d);
+      k.t = (desc - start_v) / limits.a;
     } else if (d > accel_d && d < accel_d + cruise_d) {
       // cruising
       k.v = vel;
+      k.t = accel_t + (d - accel_d) / vel;
     } else {
       // deceleration
       k.a = limits.a * -1;
       auto d_from_decel = d - accel_d - cruise_d;
       auto v_2 = square(vel) - 2 * limits.a * d_from_decel;
-      if (v_2 < decltype(typename Profile<Unit>::Speed {0.0} *
-                         typename Profile<Unit>::Speed {0.0}) {0.0}) {
+      if (v_2 < decltype(v_2) {0.0}) {
         k.v = typename Profile<Unit>::Speed {0.0};
       } else {
         k.v = sqrt(v_2);
       }
+      auto desc = sqrt(vel * vel - 2 * limits.a * d_from_decel);
+      k.t = accel_t + cruise_t + (desc - vel) / limits.a * -1;
     }
     k.d = d;
     return k;
