@@ -74,7 +74,7 @@ public:
     return k;
   }
 
-  constexpr typename Profile<Unit>::State calc(QLength d) const override {
+  constexpr typename Profile<Unit>::State calc(Unit d) const override {
     typename Profile<Unit>::State k;
     if (d > length) { d = length; }
     if (d <= accel_d) {
@@ -87,10 +87,11 @@ public:
     } else {
       // deceleration
       k.a = limits.a * -1;
-      QLength d_from_decel = d - accel_d - cruise_d;
+      auto d_from_decel = d - accel_d - cruise_d;
       auto v_2 = square(vel) - 2 * limits.a * d_from_decel;
-      if (v_2 < 0 * mps * mps) {
-        k.v = 0_mps;
+      if (v_2 < decltype(typename Profile<Unit>::Speed {0.0} *
+                         typename Profile<Unit>::Speed {0.0}) {0.0}) {
+        k.v = typename Profile<Unit>::Speed {0.0};
       } else {
         k.v = sqrt(v_2);
       }
@@ -100,7 +101,7 @@ public:
   }
 
   constexpr typename Profile<Unit>::State begin() const override {
-    return {0_s, 0_m, limits.a, start_v};
+    return {0_s, Unit {0.0}, limits.a, start_v};
   }
 
   constexpr typename Profile<Unit>::State end() const override {

@@ -13,10 +13,10 @@ public:
   using Accel = decltype(Speed {1.0} / QTime {1.0});
 
   struct State {
-    QTime t {0_s};
-    Unit d {0_m};
-    Accel a {0_mps2};
-    Speed v {0_mps};
+    QTime t {0.0};
+    Unit d {0.0};
+    Accel a {0.0};
+    Speed v {0.0};
   };
 
   struct Flags {

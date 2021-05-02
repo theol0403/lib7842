@@ -9,12 +9,9 @@ constexpr auto makeRotator(const QAngularSpeed& speed) {
   return [=](const Profile<>::State& /*ignore*/) { return speed; };
 }
 
-constexpr auto makeRotator(const QTime& time, const QAngularSpeed& speed,
-                           const QAngularSpeed& maxSpeed = 1000_rpm) {
-  return [=](const Profile<>::State& k) {
-    return std::min(maxSpeed, k.t < time / 2 ? speed * k.t / (time / 2)
-                                             : speed * (k.t - k.t / 2) / (time / 2));
-  };
+inline auto makeRotator(const QAngle& angle, const Limits<QAngle>& limits) {
+  Trapezoidal<QAngle> profile(limits, angle);
+  return [=](const Profile<>::State& k) { return profile.calc(k.t); };
 }
 
 struct xMovement {
