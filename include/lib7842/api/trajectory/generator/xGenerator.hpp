@@ -11,7 +11,7 @@ constexpr auto makeRotator(const QAngularSpeed& speed) {
 
 inline auto makeRotator(const QAngle& angle, const Limits<QAngle>& limits) {
   Trapezoidal<QAngle> profile(limits, angle);
-  return [=](const Profile<>::State& k) { return profile.calc(k.t); };
+  return [=](const Profile<>::State& k) { return profile.calc(k.t).v; };
 }
 
 struct xMovement {

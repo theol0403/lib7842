@@ -15,9 +15,9 @@ template <class Unit = QLength> struct Limits {
   Accel a; // max acceleration
   Speed v; // max linear velocity
 
-  Limits(const QAcceleration& ia, const QSpeed& iv) : a(ia), v(iv) {}
+  Limits(const QAcceleration& ia, const Speed& iv) : a(ia), v(iv) {}
 
-  Limits(const QTime& ia, const QSpeed& iv) : a(iv / ia), v(iv) {}
+  Limits(const QTime& ia, const Speed& iv) : a(iv / ia), v(iv) {}
 };
 
 template <> struct Limits<> {
