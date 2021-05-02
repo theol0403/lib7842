@@ -14,7 +14,7 @@ inline auto makeRotator(const QAngle& angle, const Limits<QAngle>& limits) {
   return [=](const Profile<>::State& k) { return profile.calc(k.t).v; };
 }
 
-struct xMovement {
+struct XFlags : public Profile<>::Flags {
   bool curvature {false};
   Rotator rotator {makeRotator(0_rpm)};
   QAngle start {0_deg};
@@ -31,8 +31,7 @@ public:
     limits.a *= std::sqrt(2);
   };
 
-  Generator::Output follow(const Spline& spline, const xMovement& movement = {},
-                           const Profile<>::Flags& flags = {},
+  Generator::Output follow(const Spline& spline, const XFlags& flags = {},
                            const PiecewiseTrapezoidal::Markers& markers = {});
 
 protected:
