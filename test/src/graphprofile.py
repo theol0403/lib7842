@@ -14,7 +14,7 @@ dt = 0.01
 time_range = np.linspace(0, len(trajectory) * dt, len(trajectory))
 
 # path
-plt.subplot(2, 3, 1)
+plt.subplot(2, 4, 1)
 plt.title("Path")
 plt.axis("equal")
 
@@ -29,7 +29,7 @@ plt.grid()
 plt.legend()
 
 # angle
-plt.subplot(2, 3, 2)
+plt.subplot(2, 4, 2)
 plt.title("Angle")
 
 a = [step[2] for step in trajectory]
@@ -40,7 +40,7 @@ plt.ylabel("Degrees")
 plt.grid()
 
 # curvature
-plt.subplot(2, 3, 3)
+plt.subplot(2, 4, 3)
 plt.title("Curvature")
 
 c = [step[3] for step in trajectory]
@@ -51,7 +51,7 @@ plt.ylabel("Curvature (1/r)")
 plt.grid()
 
 # velocity
-plt.subplot(2, 3, 4)
+plt.subplot(2, 4, 4)
 plt.title("Velocity")
 
 v = [step[4] for step in trajectory]
@@ -65,7 +65,7 @@ plt.grid()
 plt.legend()
 
 # angular velocity
-plt.subplot(2, 3, 5)
+plt.subplot(2, 4, 5)
 plt.title("Angular Velocity")
 
 w = [step[6] for step in trajectory]
@@ -76,16 +76,29 @@ plt.ylabel("Angular Velocity (rad/s)")
 plt.grid()
 
 # wheel speeds
-plt.subplot(2, 3, 6)
+plt.subplot(2, 4, 6)
 plt.title("Wheel Speeds")
 
 plt.plot(time_range, [step[7] for step in trajectory], label="Left")
 plt.plot(time_range, [step[8] for step in trajectory], label="Right")
+plt.plot(time_range, [step[9] for step in trajectory], label="LeftBack")
+plt.plot(time_range, [step[10] for step in trajectory], label="RightBack")
 
 plt.xlabel("Time (s)")
 plt.ylabel("Velocity (m/s)")
 plt.grid()
 plt.legend()
+
+# robot angle
+plt.subplot(2, 4, 7)
+plt.title("Robot")
+
+a = [step[11] for step in trajectory]
+plt.plot(time_range, a)
+
+plt.xlabel("Time (s)")
+plt.ylabel("Degrees")
+plt.grid()
 
 plt.gcf().set_tight_layout(True)
 plt.show()

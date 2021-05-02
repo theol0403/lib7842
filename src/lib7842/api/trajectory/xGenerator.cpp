@@ -1,38 +1,69 @@
 #include "lib7842/api/trajectory/generator/xGenerator.hpp"
+#include "pros/rtos.hpp"
 
 namespace lib7842 {
 
-Generator::Output XGenerator::follow(const Spline& spline, const ProfileFlags& flags,
-                                     const std::vector<std::pair<Number, Number>>& markers) {
+Generator::Output XGenerator::follow(const Spline& spline, const xMovement& movement,
+                                     const Profile<>::Flags& flags,
+                                     const PiecewiseTrapezoidal::Markers& markers) {
   std::vector<Generator::Step> trajectory;
-  auto runner = [&](double t, KinematicState& k) {
+
+  if (model && flags.start_v == 0_pct) {
+    model->stop();
+    pros::delay(10);
+  }
+
+  // the robots heading
+  QAngle robot = movement.start;
+
+  auto runner = [&](double t, Profile<>::State& k) {
     auto profiled_vel = k.v; // used for logging
+    auto w = movement.rotator(k);
 
     // get the location on the spline
     auto pos = spline.calc(t);
-    auto& theta = pos.theta;
+    auto curvature = spline.curvature(t);
+    pos.theta = pos.theta - robot;
 
-    // limit the velocity according to path angle.
-    // since this is passed by reference it will affect the generator code
-    k.v = std::min(k.v, limits.v / (sin(theta).abs() + cos(theta).abs()));
+    // this is experimental
+    auto scale = (sin(pos.theta).abs() + cos(pos.theta).abs());
+    k.v = k.v / scale;
+    if (movement.curvature) {
+      k.v = std::min(k.v, (limits.w * limits.v / scale) /
+                            (curvature.abs() * limits.v / scale * radian + limits.w));
+    } else {
+      k.v = std::min(k.v, limits.v / scale - w.abs() * limits.v / limits.w);
+    }
 
-    auto left = k.v * sin(theta + 45_deg);
-    auto right = k.v * sin(theta - 45_deg);
+    // angular speed is curvature times limited speed
+    if (movement.curvature) { w += curvature * k.v * radian; }
 
-    Number topLeftSpeed = Generator::toWheel(left, scales, gearset);
-    Number topRightSpeed = Generator::toWheel(right, scales, gearset);
+    robot += w * dt;
 
-    if (!model) { return; }
-    double topLeft = topLeftSpeed.convert(number);
-    double topRight = topRightSpeed.convert(number);
+    auto turning = -(w / radian * scales.wheelTrack) / 2;
+    auto left = k.v * sin(pos.theta + 45_deg);
+    auto right = k.v * sin(pos.theta - 45_deg);
 
-    model->getTopLeftMotor()->moveVoltage(topLeft * 12000);
-    model->getTopRightMotor()->moveVoltage(topRight * 12000);
-    model->getBottomLeftMotor()->moveVoltage(topRight * 12000);
-    model->getBottomRightMotor()->moveVoltage(topLeft * 12000);
+    auto topLeft = left + turning;
+    auto topRight = right - turning;
+    auto bottomLeft = right + turning;
+    auto bottomRight = left - turning;
 
-    trajectory.emplace_back(pos, k, 0_rpm, spline.curvature(t), profiled_vel, topLeftSpeed,
-                            topRightSpeed);
+    auto topLeftSpeed = Generator::toWheel(topLeft, scales, gearset).convert(number);
+    auto topRightSpeed = Generator::toWheel(topRight, scales, gearset).convert(number);
+    auto bottomLeftSpeed = Generator::toWheel(bottomLeft, scales, gearset).convert(number);
+    auto bottomRightSpeed = Generator::toWheel(bottomRight, scales, gearset).convert(number);
+
+    if (model) {
+      model->getTopLeftMotor()->moveVelocity(topLeftSpeed * gearset.convert(rpm));
+      model->getTopRightMotor()->moveVelocity(topRightSpeed * gearset.convert(rpm));
+      model->getBottomLeftMotor()->moveVelocity(bottomLeftSpeed * gearset.convert(rpm));
+      model->getBottomRightMotor()->moveVelocity(bottomRightSpeed * gearset.convert(rpm));
+    }
+
+    trajectory.emplace_back(pos, k, w, spline.curvature(t), profiled_vel, topLeftSpeed,
+                            topRightSpeed, bottomLeftSpeed, bottomRightSpeed,
+                            pos.theta - 90_deg - robot);
   };
 
   auto profile = Generator::generate(limits, runner, spline, dt, flags, markers);

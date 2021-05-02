@@ -47,7 +47,7 @@ public:
    * @param  resolution The number of lines to fit to the spline.
    * @return The length of the spline.
    */
-  constexpr virtual QLength length(double resolution = 100) const {
+  constexpr virtual QLength length(double resolution = 300) const {
     QLength len {0.0};
     for (size_t i = 0; i < resolution; i++) {
       len += calc(i / resolution).distTo(calc((i + 1) / resolution));

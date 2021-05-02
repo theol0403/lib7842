@@ -72,8 +72,8 @@ void opcontrol() {
   Controller controller(ControllerId::master);
 
   auto topLeft = std::make_shared<Motor>(11); // top left
-  auto topRight = std::make_shared<Motor>(-5); // top right
-  auto bottomRight = std::make_shared<Motor>(-6); // bottom right
+  auto topRight = std::make_shared<Motor>(-18); // top right
+  auto bottomRight = std::make_shared<Motor>(-19); // bottom right
   auto bottomLeft = std::make_shared<Motor>(2); // bottom left
 
   topLeft->setBrakeMode(AbstractMotor::brakeMode::brake);
@@ -81,9 +81,6 @@ void opcontrol() {
   bottomRight->setBrakeMode(AbstractMotor::brakeMode::brake);
   bottomLeft->setBrakeMode(AbstractMotor::brakeMode::brake);
 
-  /**
-   * Model
-   */
   auto model = std::make_shared<XDriveModel>(
     // motors
     topLeft, topRight, bottomRight, bottomLeft,
@@ -92,12 +89,11 @@ void opcontrol() {
     // limits
     200, 12000);
 
-  /**
-   * Trajectory
-   */
-  ChassisScales scales({3.25_in, 15_in}, 360);
-  Limits limits(scales, 200_rpm, 0.8_s, std::sqrt(2), 1);
+  ChassisScales scales({3.25_in, 16_in}, 360);
+  Limits<> limits(scales, 200_rpm, 0.7_s, 1, 1);
+
   XGenerator generator(model, 200_rpm, scales, limits, 10_ms);
+  // SkidSteerGenerator sgenerator(model, 200_rpm, scales, limits, 10_ms);
 
   while (true) {
     model->xArcade(controller.getAnalog(ControllerAnalog::rightX),
@@ -105,19 +101,14 @@ void opcontrol() {
                    controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::A)) {
-      // generator.follow(Line({0_m, 0_m}, {0_m, 1.5_ft}));
-      // generator.follow(Line({0_m, 0_m}, {0_m, 1.5_ft}), false);
-      // generator.follow(CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft}, {1.4_ft,
-      // 1_ft}})); generator.follow(CubicBezier({{0_ft, 0_ft}, {0.7_ft, 0_ft}, {0.7_ft, 1_ft},
-      // {1.4_ft, 1_ft}}),
-      //                  false);
-
-      // generator.follow(make_piecewise<QuinticHermite>(
-      //                    {{0_ft, 0_ft, 0_deg}, {1.5_ft, 2_ft, 0_deg}, {0_ft, 4_ft, 0_deg}}),
-      //                  {.top_v = 70_pct});
-
-      generator.follow(Bezier<3>({{0_ft, 0_ft}, {0_ft, 3.5_ft}, {2_ft, 0.5_ft}, {2_ft, 4_ft}}),
-                       {.end_v = 20_pct, .top_v = 80_pct}, {});
+      // auto [profile, t] = generator.follow(Mesh({0_m, 0_m, 0_deg}, {1_ft, 3_ft, 60_deg}));
+      // auto [profile, t] =
+      //   generator.follow(Bezier<3>({{0_ft, 0_ft}, {0_ft, 3_ft}, {2_ft, 1_ft}, {2_ft, 4_ft}}));
+      // auto [profile, t] =
+      //   generator.follow(QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 4_ft, 0_deg}));
+      auto [profile, t] = generator.follow(
+        Bezier<3>({{0_ft, 0_ft}, {0_ft, -1.5_ft}, {-2_ft, -1.5_ft}, {-2.5_ft, 0.5_ft}}),
+        {.rotator = makeRotator(40_deg, Limits<QAngle>(0.5_s, 50_deg / second))});
     }
 
     pros::delay(10);

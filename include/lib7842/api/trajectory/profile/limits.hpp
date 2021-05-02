@@ -8,7 +8,19 @@
 namespace lib7842 {
 using namespace okapi;
 
-struct Limits {
+template <class Unit = QLength> struct Limits {
+  using Speed = decltype(Unit {1.0} / QTime {1.0});
+  using Accel = decltype(Speed {1.0} / QTime {1.0});
+
+  Accel a; // max acceleration
+  Speed v; // max linear velocity
+
+  Limits(const QAcceleration& ia, const Speed& iv) : a(ia), v(iv) {}
+
+  Limits(const QTime& ia, const Speed& iv) : a(iv / ia), v(iv) {}
+};
+
+template <> struct Limits<> {
   QAcceleration a; // max acceleration
   QSpeed v; // max linear velocity
   QAngularSpeed w; // max angular velocity

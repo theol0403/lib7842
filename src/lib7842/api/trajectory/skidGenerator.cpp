@@ -1,12 +1,18 @@
 #include "lib7842/api/trajectory/generator/skidGenerator.hpp"
+#include "pros/rtos.hpp"
 
 namespace lib7842 {
 
-Generator::Output
-  SkidSteerGenerator::follow(const Spline& spline, bool forward, const ProfileFlags& flags,
-                             const std::vector<std::pair<Number, Number>>& markers) {
+Generator::Output SkidSteerGenerator::follow(const Spline& spline, bool forward,
+                                             const Profile<>::Flags& flags,
+                                             const PiecewiseTrapezoidal::Markers& markers) {
   std::vector<Generator::Step> trajectory;
-  auto runner = [&](double t, KinematicState& k) {
+  if (model && flags.start_v == 0_pct) {
+    model->stop();
+    pros::delay(10);
+  }
+
+  auto runner = [&](double t, Profile<>::State& k) {
     auto profiled_vel = k.v; // used for logging
 
     // get the curvature along the path
@@ -25,16 +31,16 @@ Generator::Output
     QSpeed left = vel - (w / radian * scales.wheelTrack) / 2;
     QSpeed right = vel + (w / radian * scales.wheelTrack) / 2;
 
-    Number leftSpeed = Generator::toWheel(left, scales, gearset);
-    Number rightSpeed = Generator::toWheel(right, scales, gearset);
+    auto leftSpeed = Generator::toWheel(left, scales, gearset).convert(number);
+    auto rightSpeed = Generator::toWheel(right, scales, gearset).convert(number);
 
     if (model) {
-      double leftMotor = leftSpeed.convert(number);
-      double rightMotor = rightSpeed.convert(number);
       if (forward) {
-        model->tank(leftMotor, rightMotor);
+        model->left(leftSpeed);
+        model->right(rightSpeed);
       } else {
-        model->tank(-rightMotor, -leftMotor);
+        model->left(-rightSpeed);
+        model->right(-leftSpeed);
       }
     }
 

@@ -8,7 +8,7 @@ public:
   virtual ~SkidSteerGenerator() = default;
 
   SkidSteerGenerator(std::shared_ptr<ChassisModel> imodel, const QAngularSpeed& igearset,
-                     const ChassisScales& iscales, const Limits& ilimits, const QTime& idt,
+                     const ChassisScales& iscales, const Limits<>& ilimits, const QTime& idt,
                      bool iisXdrive = false) :
     model(std::move(imodel)),
     gearset(igearset),
@@ -20,14 +20,14 @@ public:
   };
 
   Generator::Output follow(const Spline& spline, bool forward = true,
-                           const ProfileFlags& flags = {},
-                           const std::vector<std::pair<Number, Number>>& markers = {});
+                           const Profile<>::Flags& flags = {},
+                           const PiecewiseTrapezoidal::Markers& markers = {});
 
 protected:
   std::shared_ptr<ChassisModel> model;
   QAngularSpeed gearset;
   ChassisScales scales;
-  Limits limits;
+  Limits<> limits;
   QTime dt;
   bool isXdrive;
 };
