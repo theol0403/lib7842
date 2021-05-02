@@ -4,7 +4,7 @@
 namespace lib7842 {
 
 Generator::Output XGenerator::follow(const Spline& spline, const xMovement& movement,
-                                     const ProfileFlags& flags,
+                                     const Profile<>::Flags& flags,
                                      const PiecewiseTrapezoidal::Markers& markers) {
   std::vector<Generator::Step> trajectory;
 
@@ -16,7 +16,7 @@ Generator::Output XGenerator::follow(const Spline& spline, const xMovement& move
   // the robots heading
   QAngle robot = movement.start;
 
-  auto runner = [&](double t, KinematicState& k) {
+  auto runner = [&](double t, Profile<>::State& k) {
     auto profiled_vel = k.v; // used for logging
     auto w = movement.rotator(k);
 

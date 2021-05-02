@@ -3,15 +3,15 @@
 
 namespace lib7842 {
 
-using Rotator = std::function<QAngularSpeed(const KinematicState&)>;
+using Rotator = std::function<QAngularSpeed(const Profile<>::State&)>;
 
 constexpr auto makeRotator(const QAngularSpeed& speed) {
-  return [=](const KinematicState& /*ignore*/) { return speed; };
+  return [=](const Profile<>::State& /*ignore*/) { return speed; };
 }
 
 constexpr auto makeRotator(const QTime& time, const QAngularSpeed& speed,
                            const QAngularSpeed& maxSpeed = 1000_rpm) {
-  return [=](const KinematicState& k) {
+  return [=](const Profile<>::State& k) {
     return std::min(maxSpeed, k.t < time / 2 ? speed * k.t / (time / 2)
                                              : speed * (k.t - k.t / 2) / (time / 2));
   };
@@ -28,21 +28,21 @@ public:
   virtual ~XGenerator() = default;
 
   XGenerator(std::shared_ptr<XDriveModel> imodel, const QAngularSpeed& igearset,
-             const ChassisScales& iscales, const Limits& ilimits, const QTime& idt) :
+             const ChassisScales& iscales, const Limits<>& ilimits, const QTime& idt) :
     model(std::move(imodel)), gearset(igearset), scales(iscales), limits(ilimits), dt(idt) {
     limits.v *= std::sqrt(2);
     limits.a *= std::sqrt(2);
   };
 
   Generator::Output follow(const Spline& spline, const xMovement& movement = {},
-                           const ProfileFlags& flags = {},
+                           const Profile<>::Flags& flags = {},
                            const PiecewiseTrapezoidal::Markers& markers = {});
 
 protected:
   std::shared_ptr<XDriveModel> model;
   QAngularSpeed gearset;
   ChassisScales scales;
-  Limits limits;
+  Limits<> limits;
   QTime dt;
 };
 

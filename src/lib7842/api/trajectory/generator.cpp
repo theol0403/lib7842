@@ -3,9 +3,9 @@
 
 namespace lib7842 {
 
-PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Runner& runner,
+PiecewiseTrapezoidal Generator::generate(const Limits<>& limits, const Runner& runner,
                                          const Spline& spline, const QTime& dt,
-                                         const ProfileFlags& flags,
+                                         const Profile<>::Flags& flags,
                                          const PiecewiseTrapezoidal::Markers& markers) {
   auto rate = global::getTimeUtil()->getRate();
   QLength length = spline.length();
@@ -14,7 +14,7 @@ PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Runner& run
   // setup
   double t = 0;
   QLength dist = 0_m;
-  KinematicState k = profile.begin();
+  Profile<>::State k = profile.begin();
   if (k.v == 0_mps) { k = profile.calc(dt); }
 
   while (dist <= length && t <= 1) {
@@ -33,7 +33,7 @@ PiecewiseTrapezoidal Generator::generate(const Limits& limits, const Runner& run
     rate->delayUntil(dt);
 #endif
   }
-  KinematicState end = profile.end();
+  Profile<>::State end = profile.end();
   if (end.v == 0_mps) { runner(1, end); }
   return profile;
 }

@@ -90,7 +90,7 @@ void opcontrol() {
     200, 12000);
 
   ChassisScales scales({3.25_in, 16_in}, 360);
-  Limits limits(scales, 200_rpm, 0.7_s, 1, 1);
+  Limits<> limits(scales, 200_rpm, 0.7_s, 1, 1);
 
   XGenerator generator(model, 200_rpm, scales, limits, 10_ms);
   SkidSteerGenerator sgenerator(model, 200_rpm, scales, limits, 10_ms);

@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
   }
 
   ChassisScales scales({3.25_in, 13_in}, 360);
-  Limits limits(scales, 200_rpm, 0.6_s);
+  Limits<> limits(scales, 200_rpm, 0.6_s);
   XGenerator generator(nullptr, 200_rpm, scales, limits, 10_ms);
 
   // auto [profile, t] =

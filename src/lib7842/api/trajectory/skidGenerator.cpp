@@ -4,7 +4,7 @@
 namespace lib7842 {
 
 Generator::Output SkidSteerGenerator::follow(const Spline& spline, bool forward,
-                                             const ProfileFlags& flags,
+                                             const Profile<>::Flags& flags,
                                              const PiecewiseTrapezoidal::Markers& markers) {
   std::vector<Generator::Step> trajectory;
   if (model && flags.start_v == 0_pct) {
@@ -12,7 +12,7 @@ Generator::Output SkidSteerGenerator::follow(const Spline& spline, bool forward,
     pros::delay(10);
   }
 
-  auto runner = [&](double t, KinematicState& k) {
+  auto runner = [&](double t, Profile<>::State& k) {
     auto profiled_vel = k.v; // used for logging
 
     // get the curvature along the path

@@ -4,10 +4,10 @@
 
 namespace lib7842 {
 
-class Trapezoidal : public Profile {
+template <class Unit = QLength> class Trapezoidal : public Profile<Unit> {
 public:
-  constexpr Trapezoidal(const Limits& ilimits, const QLength& ilength,
-                        const ProfileFlags& iflags = {}) :
+  constexpr Trapezoidal(const Limits<Unit>& ilimits, const Unit& ilength,
+                        const typename Profile<Unit>::Flags& iflags = {}) :
     limits(ilimits),
     length(ilength),
     start_v(limits.v * iflags.start_v),
@@ -23,9 +23,9 @@ public:
     cruise_d = length + (offset - square(v)) / a;
 
     // if cruise distance is negative, time needs to be shaved off the acceleration
-    if (cruise_d < 0_m) {
+    if (cruise_d < Unit {0.0}) {
       // this is a triangular profile
-      cruise_d = 0_m;
+      cruise_d = Unit {0.0};
       // maximum attainable speed given time constraints (if triangular)
       vel = sqrt(a * length + offset);
     } else {
@@ -48,12 +48,12 @@ public:
     cruise_t = cruise_d / vel;
 
     // the time it takes to complete the profile
-    time = accel_t + decel_t + cruise_t;
+    Profile<Unit>::time = accel_t + decel_t + cruise_t;
   }
 
-  constexpr KinematicState calc(QTime t) const override {
-    KinematicState k;
-    if (t > time) { t = time; }
+  constexpr typename Profile<Unit>::State calc(QTime t) const override {
+    typename Profile<Unit>::State k;
+    if (t > Profile<Unit>::time) { t = Profile<Unit>::time; }
     if (t <= accel_t) {
       // acceleration
       k.a = limits.a;
@@ -74,8 +74,8 @@ public:
     return k;
   }
 
-  constexpr KinematicState calc(QLength d) const override {
-    KinematicState k;
+  constexpr typename Profile<Unit>::State calc(QLength d) const override {
+    typename Profile<Unit>::State k;
     if (d > length) { d = length; }
     if (d <= accel_d) {
       // acceleration
@@ -99,28 +99,28 @@ public:
     return k;
   }
 
-  constexpr KinematicState begin() const override {
-    return KinematicState {0_s, 0_m, limits.a, start_v};
+  constexpr typename Profile<Unit>::State begin() const override {
+    return {0_s, 0_m, limits.a, start_v};
   }
 
-  constexpr KinematicState end() const override {
-    return KinematicState {time, length, -1 * limits.a, end_v};
+  constexpr typename Profile<Unit>::State end() const override {
+    return {Profile<Unit>::time, length, -1 * limits.a, end_v};
   }
 
 protected:
-  Limits limits; // the kinematic limits
-  QLength length; // the length of the profile
-  QSpeed start_v; // the starting velocity
-  QSpeed end_v; // the ending velocity
+  Limits<Unit> limits; // the kinematic limits
+  Unit length; // the length of the profile
+  typename Profile<Unit>::Speed start_v; // the starting velocity
+  typename Profile<Unit>::Speed end_v; // the ending velocity
 
-  QSpeed vel; // the top speed reached during the profile
+  typename Profile<Unit>::Speed vel; // the top speed reached during the profile
 
   QTime accel_t; // the time it takes to accelerate to full speed
   QTime decel_t; // the time it takes to decelerate
   QTime cruise_t; // the time spent cruising at full speed
 
-  QLength accel_d; // distance it takes to accelerate to full speed
-  QLength decel_d; // distance it takes to decelerate
-  QLength cruise_d; // the distance spent cruising at full speed
+  Unit accel_d; // distance it takes to accelerate to full speed
+  Unit decel_d; // distance it takes to decelerate
+  Unit cruise_d; // the distance spent cruising at full speed
 };
 } // namespace lib7842
