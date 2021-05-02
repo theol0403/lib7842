@@ -27,7 +27,7 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
     // this is experimental
     auto scale = (sin(pos.theta).abs() + cos(pos.theta).abs());
     k.v = k.v / scale;
-    if (flags.curvature) {
+    if (flags.curve) {
       k.v = std::min(k.v, (limits.w * limits.v / scale) /
                             (curvature.abs() * limits.v / scale * radian + limits.w));
     } else {
@@ -35,7 +35,7 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
     }
 
     // angular speed is curvature times limited speed
-    if (flags.curvature) { w += curvature * k.v * radian; }
+    if (flags.curve) { w += curvature * k.v * radian; }
 
     robot += w * dt;
 
@@ -61,8 +61,7 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
     }
 
     trajectory.emplace_back(pos, k, w, spline.curvature(t), profiled_vel, topLeftSpeed,
-                            topRightSpeed, bottomLeftSpeed, bottomRightSpeed,
-                            pos.theta - 90_deg - robot);
+                            topRightSpeed, bottomLeftSpeed, bottomRightSpeed);
   };
 
   auto profile = Generator::generate(limits, runner, spline, dt, flags, markers);

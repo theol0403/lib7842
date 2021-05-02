@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
                 << step.p.theta.convert(degree) << "," << step.c.convert(1 / meter) << ","
                 << step.p_vel << "," << step.k.v << "," << step.w.convert(degree / second) << ","
                 << step.left << "," << step.right << "," << step.leftBack << "," << step.rightBack
-                << "," << step.robot << std::endl;
+                << std::endl;
     }
   } else {
     std::cout << std::endl;

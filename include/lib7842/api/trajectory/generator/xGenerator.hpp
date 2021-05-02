@@ -15,7 +15,7 @@ inline auto makeRotator(const QAngle& angle, const Limits<QAngle>& limits) {
 }
 
 struct XFlags : public Profile<>::Flags {
-  bool curvature {false};
+  bool curve {false};
   Rotator rotator {makeRotator(0_rpm)};
   QAngle start {0_deg};
 };
