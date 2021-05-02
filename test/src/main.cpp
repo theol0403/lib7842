@@ -26,7 +26,19 @@ int main(int argc, char** argv) {
 
   // auto [profile, t] = generator.follow(Line({0_m, 0_m}, {1_ft, 0_ft}));
 
-  auto [profile, t] = generator.follow(QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 4_ft, 0_deg}));
+  // auto [profile, t] = generator.follow(QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 4_ft, 0_deg}));
+
+  // auto [profile, t] =
+  //   generator.follow(Bezier<3>({{0_ft, 0_ft}, {0_ft, -1_ft}, {-1.3_ft, -1_ft}, {-1.7_ft,
+  //   0.5_ft}}));
+
+  // auto [profile, t] =
+  //   generator.follow(Bezier<3>({{0_ft, 0_ft}, {0_ft, -1_ft}, {-2_ft, -1_ft}, {-2.5_ft,
+  //   0.5_ft}}));
+
+  auto [profile, t] =
+    generator.follow(QuinticHermite({{0_ft, 0_ft, -180_deg}, {-2.5_ft, 0.5_ft, -45_deg}}),
+                     {.rotator = makeRotator(15_deg, Limits<QAngle>(0.5_s, 20_deg / second))});
 
   if (argc > 1 && std::string(argv[1]) == "print") {
     for (auto&& step : t) {
