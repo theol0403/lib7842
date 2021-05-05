@@ -1,5 +1,6 @@
 #pragma once
 #include "generator.hpp"
+#include "lib7842/api/other/utility.hpp"
 
 namespace lib7842 {
 
@@ -10,14 +11,17 @@ constexpr auto makeRotator(const QAngularSpeed& speed) {
 }
 
 inline auto makeRotator(const QAngle& angle, const Limits<QAngle>& limits) {
-  Trapezoidal<QAngle> profile(limits, angle);
-  return [=](const Profile<>::State& k) { return profile.calc(k.t).v; };
+  Trapezoidal<QAngle> profile(limits, angle.abs());
+  return [=](const Profile<>::State& k) { return -util::sgn(angle) * profile.calc(k.t).v; };
 }
 
-struct xMovement {
-  bool curvature {false};
-  Rotator rotator {makeRotator(0_rpm)};
+struct XFlags {
+  Number start_v = 0_pct;
+  Number end_v = 0_pct;
+  Number top_v = 100_pct;
+  bool curve {false};
   QAngle start {0_deg};
+  Rotator rotator {makeRotator(0_rpm)};
 };
 
 class XGenerator {
@@ -31,8 +35,7 @@ public:
     limits.a *= std::sqrt(2);
   };
 
-  Generator::Output follow(const Spline& spline, const xMovement& movement = {},
-                           const Profile<>::Flags& flags = {},
+  Generator::Output follow(const Spline& spline, const XFlags& flags = {},
                            const PiecewiseTrapezoidal::Markers& markers = {});
 
 protected:

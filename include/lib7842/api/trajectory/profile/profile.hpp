@@ -17,6 +17,10 @@ public:
     Unit d {0.0};
     Accel a {0.0};
     Speed v {0.0};
+
+    Unit length {0.0}; // destination length
+    Speed vel {0.0}; // top achivable velocity
+    QTime time {0.0}; // destination time
   };
 
   struct Flags {

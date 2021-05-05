@@ -130,10 +130,10 @@ public:
   constexpr Parametric(const State& start, const State& end, double startStretch,
                        double endStretch) :
     Parametric<HermiteFnc<N>, true>(
-      HermiteFnc<N>(start.x.convert(meter), sin(start.theta).convert(number) * startStretch,
-                    end.x.convert(meter), sin(end.theta).convert(number) * endStretch),
-      HermiteFnc<N>(start.y.convert(meter), cos(start.theta).convert(number) * startStretch,
-                    end.y.convert(meter), cos(end.theta).convert(number) * endStretch)) {}
+      HermiteFnc<N>(start.x.convert(meter), cos(start.theta).convert(number) * startStretch,
+                    end.x.convert(meter), cos(end.theta).convert(number) * endStretch),
+      HermiteFnc<N>(start.y.convert(meter), sin(start.theta).convert(number) * startStretch,
+                    end.y.convert(meter), sin(end.theta).convert(number) * endStretch)) {}
 
   /**
    * Helper method to construct a Parametric<HermiteFnc<N> given a start and end state and an

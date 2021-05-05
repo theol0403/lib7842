@@ -46,7 +46,7 @@ public:
     x_r += start.x;
     y_r += start.y;
 
-    return {y_r, x_r, -(rotate + theta * t) + 90_deg};
+    return {x_r, y_r, rotate + theta * t};
   }
 
   constexpr QCurvature curvature(double /*t*/) const override {
@@ -70,7 +70,7 @@ public:
     QLength x_r = x * cos(new_theta) - y * sin(new_theta);
     QLength y_r = y * cos(new_theta) + x * sin(new_theta);
 
-    return {y_r, x_r};
+    return {x_r, y_r};
   }
 
   constexpr Vector calc_d2(double t) const {
@@ -85,7 +85,7 @@ public:
     QLength x_r = x * cos(new_theta) - y * sin(new_theta);
     QLength y_r = y * cos(new_theta) + x * sin(new_theta);
 
-    return {y_r, x_r};
+    return {x_r, y_r};
   }
 
 protected:

@@ -3,8 +3,7 @@
 
 namespace lib7842 {
 
-Generator::Output XGenerator::follow(const Spline& spline, const xMovement& movement,
-                                     const Profile<>::Flags& flags,
+Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
                                      const PiecewiseTrapezoidal::Markers& markers) {
   std::vector<Generator::Step> trajectory;
 
@@ -14,11 +13,11 @@ Generator::Output XGenerator::follow(const Spline& spline, const xMovement& move
   }
 
   // the robots heading
-  QAngle robot = movement.start;
+  QAngle robot = flags.start;
 
   auto runner = [&](double t, Profile<>::State& k) {
     auto profiled_vel = k.v; // used for logging
-    auto w = movement.rotator(k);
+    auto w = flags.rotator(k);
 
     // get the location on the spline
     auto pos = spline.calc(t);
@@ -28,7 +27,7 @@ Generator::Output XGenerator::follow(const Spline& spline, const xMovement& move
     // this is experimental
     auto scale = (sin(pos.theta).abs() + cos(pos.theta).abs());
     k.v = k.v / scale;
-    if (movement.curvature) {
+    if (flags.curve) {
       k.v = std::min(k.v, (limits.w * limits.v / scale) /
                             (curvature.abs() * limits.v / scale * radian + limits.w));
     } else {
@@ -36,13 +35,13 @@ Generator::Output XGenerator::follow(const Spline& spline, const xMovement& move
     }
 
     // angular speed is curvature times limited speed
-    if (movement.curvature) { w += curvature * k.v * radian; }
+    if (flags.curve) { w += curvature * k.v * radian; }
 
     robot += w * dt;
 
     auto turning = -(w / radian * scales.wheelTrack) / 2;
-    auto left = k.v * sin(pos.theta + 45_deg);
-    auto right = k.v * sin(pos.theta - 45_deg);
+    auto left = k.v * cos(pos.theta + 45_deg);
+    auto right = k.v * cos(pos.theta - 45_deg);
 
     auto topLeft = left + turning;
     auto topRight = right - turning;
@@ -62,11 +61,11 @@ Generator::Output XGenerator::follow(const Spline& spline, const xMovement& move
     }
 
     trajectory.emplace_back(pos, k, w, spline.curvature(t), profiled_vel, topLeftSpeed,
-                            topRightSpeed, bottomLeftSpeed, bottomRightSpeed,
-                            pos.theta - 90_deg - robot);
+                            topRightSpeed, bottomLeftSpeed, bottomRightSpeed);
   };
 
-  auto profile = Generator::generate(limits, runner, spline, dt, flags, markers);
+  auto profile = Generator::generate(limits, runner, spline, dt,
+                                     {flags.start_v, flags.end_v, flags.top_v}, markers);
   return std::make_pair(profile, trajectory);
 }
 

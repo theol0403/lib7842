@@ -18,7 +18,7 @@ using namespace okapi;
  *
  * @param  val The value
  */
-template <class T> int sgn(T val) { return (T(0) < val) - (val < T(0)); }
+template <class T> int sgn(T val) { return (T(0.0) < val) - (val < T(0.0)); }
 
 /**
  * Motor movement modes, voltage or velocity.

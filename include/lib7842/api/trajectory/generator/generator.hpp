@@ -33,7 +33,6 @@ public:
     double right {0};
     double leftBack {0};
     double rightBack {0};
-    QAngle robot {0_deg};
   };
 
   using Output = std::pair<PiecewiseTrapezoidal, std::vector<Step>>;

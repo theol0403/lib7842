@@ -71,6 +71,9 @@ public:
       k.d = accel_d + cruise_d + end_v * t_from_decel + 0.5 * limits.a * square(t_from_decel);
     }
     k.t = t;
+    k.length = length;
+    k.time = Profile<Unit>::time;
+    k.vel = vel;
     return k;
   }
 
@@ -101,6 +104,9 @@ public:
       k.t = accel_t + cruise_t + (desc - vel) / limits.a * -1;
     }
     k.d = d;
+    k.length = length;
+    k.time = Profile<Unit>::time;
+    k.vel = vel;
     return k;
   }
 
