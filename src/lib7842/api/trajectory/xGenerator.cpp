@@ -40,8 +40,8 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
     robot += w * dt;
 
     auto turning = -(w / radian * scales.wheelTrack) / 2;
-    auto left = k.v * sin(pos.theta + 45_deg);
-    auto right = k.v * sin(pos.theta - 45_deg);
+    auto left = k.v * cos(pos.theta + 45_deg);
+    auto right = k.v * cos(pos.theta - 45_deg);
 
     auto topLeft = left + turning;
     auto topRight = right - turning;

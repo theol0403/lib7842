@@ -19,7 +19,7 @@ public:
    * @param iend   The end point.
    */
   constexpr Line(const Vector& istart, const Vector& iend) :
-    start(istart, -istart.angleTo(iend) + 90_deg), end(iend, start.theta) {}
+    start(istart, istart.angleTo(iend)), end(iend, start.theta) {}
 
   /**
    * Sample the point along the spline which is between the start and end points using linear
