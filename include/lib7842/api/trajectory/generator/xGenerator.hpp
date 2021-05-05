@@ -1,5 +1,6 @@
 #pragma once
 #include "generator.hpp"
+#include "lib7842/api/other/utility.hpp"
 
 namespace lib7842 {
 
@@ -10,8 +11,8 @@ constexpr auto makeRotator(const QAngularSpeed& speed) {
 }
 
 inline auto makeRotator(const QAngle& angle, const Limits<QAngle>& limits) {
-  Trapezoidal<QAngle> profile(limits, angle);
-  return [=](const Profile<>::State& k) { return profile.calc(k.t).v; };
+  Trapezoidal<QAngle> profile(limits, angle.abs());
+  return [=](const Profile<>::State& k) { return -util::sgn(angle) * profile.calc(k.t).v; };
 }
 
 struct XFlags : public Profile<>::Flags {

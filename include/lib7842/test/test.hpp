@@ -7,9 +7,9 @@
 #define DOCTEST_CONFIG_NO_WINDOWS_SEH
 #define DOCTEST_CONFIG_NO_POSIX_SIGNALS
 
-#ifndef THREADS_STD
-  #define DOCTEST_CONFIG_DISABLE
-#endif
+// #ifndef THREADS_STD
+#define DOCTEST_CONFIG_DISABLE
+// #endif
 
 #include "lib7842/deps/doctest.h"
 
