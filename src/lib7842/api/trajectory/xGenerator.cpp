@@ -64,7 +64,8 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
                             topRightSpeed, bottomLeftSpeed, bottomRightSpeed);
   };
 
-  auto profile = Generator::generate(limits, runner, spline, dt, flags, markers);
+  auto profile = Generator::generate(limits, runner, spline, dt,
+                                     {flags.start_v, flags.end_v, flags.top_v}, markers);
   return std::make_pair(profile, trajectory);
 }
 

@@ -15,10 +15,13 @@ inline auto makeRotator(const QAngle& angle, const Limits<QAngle>& limits) {
   return [=](const Profile<>::State& k) { return -util::sgn(angle) * profile.calc(k.t).v; };
 }
 
-struct XFlags : public Profile<>::Flags {
+struct XFlags {
+  Number start_v = 0_pct;
+  Number end_v = 0_pct;
+  Number top_v = 100_pct;
   bool curve {false};
-  Rotator rotator {makeRotator(0_rpm)};
   QAngle start {0_deg};
+  Rotator rotator {makeRotator(0_rpm)};
 };
 
 class XGenerator {
