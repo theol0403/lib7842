@@ -29,6 +29,9 @@ public:
     rotate = start.angleTo(end) - theta / 2.0;
   }
 
+  constexpr explicit Arc(const State& iend) : Arc({0_m, 0_m, 0_deg}, iend) {}
+  constexpr Arc(const QAngle& istart, const State& iend) : Arc({0_m, 0_m, istart}, iend) {}
+
   constexpr State calc(double t) const override {
     QLength x = 0_m;
     QLength y = 0_m;

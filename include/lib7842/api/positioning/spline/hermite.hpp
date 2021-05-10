@@ -146,6 +146,55 @@ public:
    */
   constexpr Parametric(const State& start, const State& end, double stretch = 1) :
     Parametric(start, end, stretch, stretch) {}
+
+  /**
+   * Helper method to construct a Piecewise<HermiteFnc<N> given an end state and stretch values. The
+   * start state is assumed to be at the origin. The tangents of the functions will be proportional
+   * to each other, and the stretch controls their weight.
+   *
+   * @param end          The end state.
+   * @param startStretch The start stretch.
+   * @param endStretch   The end stretch.
+   */
+  constexpr Parametric(const State& end, double startStretch, double endStretch) :
+    Parametric({0_m, 0_m, 0_deg}, end, startStretch, endStretch) {}
+
+  /**
+   * Helper method to construct a Parametric<HermiteFnc<N> given an end state and an optional
+   * stretch value for both ends of the hermite. The start state is assumed to be at the origin. The
+   * tangents of the functions will be proportional to each other, and the stretch controls their
+   * weight.
+   *
+   * @param end     The end state.
+   * @param stretch The stretch for both ends of the hermite (optional).
+   */
+  constexpr explicit Parametric(const State& end, double stretch = 1) :
+    Parametric({0_m, 0_m, 0_deg}, end, stretch, stretch) {}
+
+  /**
+   * Helper method to construct a Piecewise<HermiteFnc<N> given a starting angle, end state, and
+   * stretch values. The start state is assumed to be at the origin. The tangents of the functions
+   * will be proportional to each other, and the stretch controls their weight.
+   *
+   * @param end          The end state.
+   * @param startStretch The start stretch.
+   * @param endStretch   The end stretch.
+   */
+  constexpr Parametric(const QAngle& start, const State& end, double startStretch,
+                       double endStretch) :
+    Parametric({0_m, 0_m, start}, end, startStretch, endStretch) {}
+
+  /**
+   * Helper method to construct a Piecewise<HermiteFnc<N> given a starting angle, end state, and an
+   * optional stretch value for both ends of the hermite. The start state is assumed to be at the
+   * origin. The tangents of the functions will be proportional to each other, and the stretch
+   * controls their weight.
+   *
+   * @param end     The end state.
+   * @param stretch The stretch for both ends of the hermite (optional).
+   */
+  constexpr explicit Parametric(const QAngle& start, const State& end, double stretch = 1) :
+    Parametric({0_m, 0_m, start}, end, stretch, stretch) {}
 };
 
 /**
