@@ -13,11 +13,12 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
   }
 
   // the robots heading
-  QAngle robot = flags.start;
+  QAngle robot = flags.start.value_or(spline.calc(0).theta);
 
   auto runner = [&](double t, Profile<>::State& k) {
     auto profiled_vel = k.v; // used for logging
-    auto w = flags.rotator(k);
+    auto angler = flags.steerer(k);
+    auto w = flags.rotator(k) + angler;
 
     // get the location on the spline
     auto pos = spline.calc(t);
@@ -37,7 +38,7 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
     // angular speed is curvature times limited speed
     if (flags.curve) { w += curvature * k.v * radian; }
 
-    robot += w * dt;
+    robot += (w - angler) * dt;
 
     auto turning = -(w / radian * scales.wheelTrack) / 2;
     auto left = k.v * cos(pos.theta + 45_deg);
