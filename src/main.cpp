@@ -108,7 +108,7 @@ void opcontrol() {
       //   generator.follow(QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 4_ft, 0_deg}));
       auto [profile, t] = generator.follow(
         Bezier<3>({{0_ft, 0_ft}, {0_ft, -1.5_ft}, {-2_ft, -1.5_ft}, {-2.5_ft, 0.5_ft}}),
-        {.rotator = makeRotator(40_deg, Limits<QAngle>(0.5_s, 50_deg / second))});
+        {.rotator = makeAngler(40_deg, Limits<QAngle>(0.5_s, 50_deg / second))});
     }
 
     pros::delay(10);

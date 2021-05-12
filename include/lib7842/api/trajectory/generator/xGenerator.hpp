@@ -1,6 +1,7 @@
 #pragma once
 #include "generator.hpp"
 #include "lib7842/api/other/utility.hpp"
+#include <optional>
 
 namespace lib7842 {
 
