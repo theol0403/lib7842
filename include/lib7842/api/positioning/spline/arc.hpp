@@ -19,11 +19,11 @@ public:
     c = start.distTo(end);
 
     if (theta == 0_rad) {
-      r = NAN * meter;
+      r = std::nullopt;
       s = c;
     } else {
       r = c / (2.0 * sin(theta / 2.0));
-      s = r / radian * theta;
+      s = r.value() / radian * theta;
     }
 
     rotate = start.angleTo(end) - theta / 2.0;
@@ -35,11 +35,11 @@ public:
   constexpr State calc(double t) const override {
     QLength x = 0_m;
     QLength y = 0_m;
-    if (std::isnan(r.convert(meter))) {
+    if (!r) {
       y = s * t;
     } else {
-      x = r * cos(t * theta) - r;
-      y = r * sin(t * theta);
+      x = r.value() * cos(t * theta) - r;
+      y = r.value() * sin(t * theta);
     }
 
     QAngle new_theta = rotate - 90_deg;
@@ -53,8 +53,8 @@ public:
   }
 
   constexpr QCurvature curvature(double /*t*/) const override {
-    if (std::isnan(r.convert(meter))) { return 0 / meter; }
-    return 1.0 / r;
+    if (!r) { return 0 / meter; }
+    return 1.0 / r.value();
   }
 
   constexpr QLength length(double /*resolution*/ = 0) const override { return s; }
@@ -62,11 +62,11 @@ public:
   constexpr Vector calc_d(double t) const {
     QLength x = 0_m;
     QLength y = 0_m;
-    if (std::isnan(r.convert(meter))) {
+    if (!r) {
       y = s;
     } else {
-      x = r * theta / radian * -sin(t * theta);
-      y = r * theta / radian * cos(t * theta);
+      x = r.value() * theta / radian * -sin(t * theta);
+      y = r.value() * theta / radian * cos(t * theta);
     }
 
     QAngle new_theta = rotate - 90_deg;
@@ -79,9 +79,9 @@ public:
   constexpr Vector calc_d2(double t) const {
     QLength x = 0_m;
     QLength y = 0_m;
-    if (!std::isnan(r.convert(meter))) {
-      x = r * square(theta / radian) * -cos(t * theta);
-      y = r * square(theta / radian) * -sin(t * theta);
+    if (r) {
+      x = r.value() * square(theta / radian) * -cos(t * theta);
+      y = r.value() * square(theta / radian) * -sin(t * theta);
     }
 
     QAngle new_theta = rotate - 90_deg;
@@ -96,7 +96,7 @@ protected:
   Vector end; // the end point
   QAngle theta; // the arc angle of the arc
   QLength c; // the chord length
-  QLength r; // the arc radius
+  std::optional<QLength> r; // the arc radius
   QLength s; // the arc length
   QAngle rotate; // how much the arc should be rotated
 };
