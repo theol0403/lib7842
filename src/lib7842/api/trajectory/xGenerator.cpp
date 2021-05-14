@@ -23,7 +23,7 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
     // get the location on the spline
     auto pos = spline.calc(t);
     auto curvature = spline.curvature(t);
-    pos.theta = pos.theta - robot;
+    pos.theta = pos.theta - robot + flags.strafer(k);
 
     // this is experimental
     auto scale = (sin(pos.theta).abs() + cos(pos.theta).abs());

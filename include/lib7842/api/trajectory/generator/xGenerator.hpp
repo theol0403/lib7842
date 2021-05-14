@@ -7,6 +7,7 @@ namespace lib7842 {
 
 // an angler is a function that accepts a state and returns an angular velocity
 using Angler = std::function<QAngularSpeed(const Profile<>::State&)>;
+using Strafer = std::function<QAngle(const Profile<>::State&)>;
 
 // make an angler that returns a constant velocity
 constexpr auto makeAngler(const QAngularSpeed& speed) {
@@ -32,6 +33,9 @@ struct XFlags {
                                       // without shifting the robot's frame of reference
   Angler steerer {
     makeAngler(0_rpm)}; // uses an angler to steer the robot, shifting its frame of reference
+
+  Strafer strafer {
+    [=](const Profile<>::State& /*ignore*/) { return 0_deg; }}; // uses a strafer to modify angle
 };
 
 class XGenerator {
