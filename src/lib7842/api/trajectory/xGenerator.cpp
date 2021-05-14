@@ -9,10 +9,10 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
   std::vector<Generator::Step> trajectory;
 #endif
 
-  if (model && flags.start_v == 0_pct) {
-    model->stop();
-    pros::delay(10);
-  }
+  // if (model && flags.start_v == 0_pct) {
+  //   model->stop();
+  //   pros::delay(10);
+  // }
 
   // the robots heading
   QAngle robot = flags.start.value_or(spline.calc(0).theta);
@@ -23,6 +23,7 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
 #endif
     auto angler = flags.steerer(k);
     auto w = flags.rotator(k) + angler;
+    w = std::clamp(w, -limits.w, limits.w);
 
     // get the location on the spline
     auto pos = spline.calc(t);
