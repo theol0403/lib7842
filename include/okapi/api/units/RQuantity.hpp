@@ -265,7 +265,7 @@ square(const RQuantity<M, L, T, A> &rhs) {
   return RQuantity<std::ratio_multiply<M, std::ratio<2>>,
                    std::ratio_multiply<L, std::ratio<2>>,
                    std::ratio_multiply<T, std::ratio<2>>,
-                   std::ratio_multiply<A, std::ratio<2>>>(std::pow(rhs.getValue(), 2));
+                   std::ratio_multiply<A, std::ratio<2>>>(rhs.getValue()*rhs.getValue());
 }
 
 template <typename M, typename L, typename T, typename A>
@@ -277,7 +277,7 @@ cube(const RQuantity<M, L, T, A> &rhs) {
   return RQuantity<std::ratio_multiply<M, std::ratio<3>>,
                    std::ratio_multiply<L, std::ratio<3>>,
                    std::ratio_multiply<T, std::ratio<3>>,
-                   std::ratio_multiply<A, std::ratio<3>>>(std::pow(rhs.getValue(), 3));
+                   std::ratio_multiply<A, std::ratio<3>>>(rhs.getValue()*rhs.getValue()*rhs.getValue());
 }
 
 template <typename M, typename L, typename T, typename A>

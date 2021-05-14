@@ -13,7 +13,7 @@ TESTDIR=$(ROOT)/src
 OUTBIN:=$(BINDIR)/main
 
 WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-unused-function -Wnull-dereference -Wno-sign-compare -Wno-narrowing -Wno-deprecated
-EXTRA_CXXFLAGS= -std=gnu++20 -g -pthread -D THREADS_STD -O3
+EXTRA_CXXFLAGS= -std=gnu++20 -g -pthread -D THREADS_STD -Ofast
 EXTRA_CXXFLAGS+= -fsanitize=undefined -fsanitize=vptr -fsanitize=integer-divide-by-zero -fsanitize=null
 # EXTRA_CXXFLAGS+= -fsanitize=address 
 
