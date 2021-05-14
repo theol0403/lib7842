@@ -5,7 +5,9 @@ namespace lib7842 {
 
 Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
                                      const PiecewiseTrapezoidal::Markers& markers) {
+#ifdef THREADS_STD
   std::vector<Generator::Step> trajectory;
+#endif
 
   if (model && flags.start_v == 0_pct) {
     model->stop();
@@ -16,7 +18,9 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
   QAngle robot = flags.start.value_or(spline.calc(0).theta);
 
   auto runner = [&](double t, Profile<>::State& k) {
+#ifdef THREADS_STD
     auto profiled_vel = k.v; // used for logging
+#endif
     auto angler = flags.steerer(k);
     auto w = flags.rotator(k) + angler;
 
@@ -61,13 +65,19 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
       model->getBottomRightMotor()->moveVelocity(bottomRightSpeed * gearset.convert(rpm));
     }
 
+#ifdef THREADS_STD
     trajectory.emplace_back(pos, k, w, spline.curvature(t), profiled_vel, topLeftSpeed,
                             topRightSpeed, bottomLeftSpeed, bottomRightSpeed);
+#endif
   };
 
   auto profile = Generator::generate(limits, runner, spline, dt,
                                      {flags.start_v, flags.end_v, flags.top_v}, markers);
+#ifdef THREADS_STD
   return std::make_pair(profile, trajectory);
+#else
+  return profile;
+#endif
 }
 
 } // namespace lib7842

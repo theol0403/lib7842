@@ -38,7 +38,7 @@ public:
     if (!r) {
       y = s * t;
     } else {
-      x = r.value() * cos(t * theta) - r;
+      x = r.value() * cos(t * theta) - r.value();
       y = r.value() * sin(t * theta);
     }
 

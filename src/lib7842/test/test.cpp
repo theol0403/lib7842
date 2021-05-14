@@ -2,6 +2,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "lib7842/test/mocks.hpp"
 
+#ifndef DOCTEST_CONFIG_DISABLE
 namespace test {
 int runUnitTests(int argc, char** argv) {
   global::setLogger(
@@ -12,3 +13,4 @@ int runUnitTests(int argc, char** argv) {
   return context.run(); // run
 }
 } // namespace test
+#endif
