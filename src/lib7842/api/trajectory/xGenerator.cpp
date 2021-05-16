@@ -32,7 +32,6 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
 
     // this is experimental
     auto scale = (sin(pos.theta).abs() + cos(pos.theta).abs());
-    k.v = k.v / scale;
     if (flags.curve) {
       k.v = std::min(k.v, (limits.w * limits.v / scale) /
                             (curvature.abs() * limits.v / scale * radian + limits.w));
@@ -48,6 +47,7 @@ Generator::Output XGenerator::follow(const Spline& spline, const XFlags& flags,
     auto turning = -(w / radian * scales.wheelTrack) / 2;
     auto left = k.v * cos(pos.theta + 45_deg);
     auto right = k.v * cos(pos.theta - 45_deg);
+    k.v = k.v / scale;
 
     auto topLeft = left + turning;
     auto topRight = right - turning;
