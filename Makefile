@@ -27,7 +27,7 @@ EXCLUDE_COLD_LIBRARIES:= #$(BINDIR)/lib7842.a
 IS_LIBRARY:=1
 # TODO: CHANGE THIS!
 LIBNAME:=lib7842
-VERSION:=1.18.0
+VERSION:=1.19.0
 # EXCLUDE_SRC_FROM_LIB= $(SRCDIR)/unpublishedfile.c
 # this line excludes opcontrol.c and similar files
 EXCLUDE_SRC_FROM_LIB+=$(foreach file, $(SRCDIR)/main,$(foreach cext,$(CEXTS),$(file).$(cext)) $(foreach cxxext,$(CXXEXTS),$(file).$(cxxext)))
