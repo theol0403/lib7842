@@ -9,10 +9,10 @@ Generator::Output SkidSteerGenerator::follow(const Spline& spline, bool forward,
 #ifdef THREADS_STD
   std::vector<Generator::Step> trajectory;
 #endif
-  // if (model && flags.start_v == 0_pct) {
-  //   model->stop();
-  //   pros::delay(10);
-  // }
+  if (model && flags.start_v == 0_pct) {
+    model->stop();
+    pros::delay(10);
+  }
 
   auto runner = [&](double t, Profile<>::State& k) {
 #ifdef THREADS_STD
