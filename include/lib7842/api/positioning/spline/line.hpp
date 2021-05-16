@@ -22,6 +22,14 @@ public:
     start(istart, istart.angleTo(iend)), end(iend, start.theta) {}
 
   /**
+   * Create a new line given the coordinates of two points.
+   * The start point is assumed to be at the origin.
+   *
+   * @param iend The end point.
+   */
+  constexpr explicit Line(const Vector& iend) : Line({0_m, 0_m}, iend) {}
+
+  /**
    * Sample the point along the spline which is between the start and end points using linear
    * interpolation given t.
    *

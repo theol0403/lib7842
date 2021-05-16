@@ -2,12 +2,14 @@
 #include "okapi/api/units/QTime.hpp"
 #include "pros/rtos.hpp"
 
+#ifndef DOCTEST_CONFIG_DISABLE
+
 namespace test {
 
-#ifndef THREADS_STD
+  #ifndef THREADS_STD
 MockTimer::MockTimer() : AbstractTimer(pros::millis() * millisecond) {}
 QTime MockTimer::millis() const { return pros::millis() * millisecond; }
-#else
+  #else
 std::chrono::system_clock::time_point epoch = std::chrono::high_resolution_clock::from_time_t(0);
 
 MockTimer::MockTimer() :
@@ -21,7 +23,7 @@ QTime MockTimer::millis() const {
            .count() *
          millisecond;
 }
-#endif
+  #endif
 
 ConstantMockTimer::ConstantMockTimer(const QTime idt) : AbstractTimer(0_ms), dtToReturn(idt) {}
 QTime ConstantMockTimer::millis() const { return 0_ms; }
@@ -39,10 +41,10 @@ bool ConstantMockTimer::repeat(QFrequency) { return false; }
 QTime ConstantMockTimer::clearMark() { return 0_ms; }
 
 MockRate::MockRate() = default;
-#ifndef THREADS_STD
+  #ifndef THREADS_STD
 void MockRate::delay(QFrequency ihz) { pros::delay(1000 / static_cast<int>(ihz.convert(Hz))); }
 void MockRate::delayUntil(uint32_t ims) { pros::delay(ims); }
-#else
+  #else
 void MockRate::delay(QFrequency ihz) {
   std::this_thread::sleep_for(std::chrono::milliseconds(1000 / static_cast<int>(ihz.convert(Hz))));
 }
@@ -50,7 +52,7 @@ void MockRate::delay(QFrequency ihz) {
 void MockRate::delayUntil(uint32_t ims) {
   std::this_thread::sleep_for(std::chrono::milliseconds(ims));
 }
-#endif
+  #endif
 void MockRate::delayUntil(QTime itime) {
   delayUntil(static_cast<uint32_t>(itime.convert(millisecond)));
 }
@@ -178,3 +180,5 @@ int32_t MockMotor::getCurrentLimit() { return 2500; }
 AbstractMotor::encoderUnits MockMotor::getEncoderUnits() { return encoderUnits; }
 AbstractMotor::gearset MockMotor::getGearing() { return gearset; }
 } // namespace test
+
+#endif

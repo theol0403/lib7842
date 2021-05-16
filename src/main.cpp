@@ -15,7 +15,9 @@ using namespace lib7842;
  */
 void initialize() {
   pros::delay(200);
+#ifndef DOCTEST_CONFIG_DISABLE
   test::runUnitTests(0, nullptr);
+#endif
 }
 
 /**
@@ -106,9 +108,9 @@ void opcontrol() {
       //   generator.follow(Bezier<3>({{0_ft, 0_ft}, {0_ft, 3_ft}, {2_ft, 1_ft}, {2_ft, 4_ft}}));
       // auto [profile, t] =
       //   generator.follow(QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 4_ft, 0_deg}));
-      auto [profile, t] = generator.follow(
+      generator.follow(
         Bezier<3>({{0_ft, 0_ft}, {0_ft, -1.5_ft}, {-2_ft, -1.5_ft}, {-2.5_ft, 0.5_ft}}),
-        {.rotator = makeRotator(40_deg, Limits<QAngle>(0.5_s, 50_deg / second))});
+        {.rotator = makeAngler(40_deg, Limits<QAngle>(0.5_s, 50_deg / second))});
     }
 
     pros::delay(10);

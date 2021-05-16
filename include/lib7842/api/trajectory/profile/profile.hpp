@@ -19,7 +19,7 @@ public:
     Speed v {0.0};
 
     Unit length {0.0}; // destination length
-    Speed vel {0.0}; // top achivable velocity
+    Speed vel {0.0}; // top achievable velocity
     QTime time {0.0}; // destination time
   };
 

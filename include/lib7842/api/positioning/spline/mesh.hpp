@@ -13,6 +13,9 @@ public:
     first(istart, State(iend.x, iend.y, 2 * istart.Vector::angleTo(iend) - istart.theta)),
     second(State(istart.x, istart.y, 2 * istart.Vector::angleTo(iend) - iend.theta), iend) {}
 
+  constexpr explicit Mesh(const State& iend) : Mesh({0_m, 0_m, 0_deg}, iend) {}
+  constexpr Mesh(const QAngle& istart, const State& iend) : Mesh({0_m, 0_m, istart}, iend) {}
+
   constexpr State calc(double t) const override {
     auto first_p = first.calc(t);
     auto second_p = second.calc(t);

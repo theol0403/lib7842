@@ -1,5 +1,6 @@
 #include "lib7842/api.hpp"
 #include "lib7842/api/other/global.hpp"
+#include "lib7842/api/positioning/spline/bezier.hpp"
 #include "lib7842/test/mocks.hpp"
 #include <iostream>
 #include <sys/unistd.h>
@@ -19,38 +20,38 @@ int main(int argc, char** argv) {
   Limits<> limits(scales, 200_rpm, 0.6_s);
   XGenerator generator(nullptr, 200_rpm, scales, limits, 10_ms);
 
-  // auto [profile, t] =
-  //   generator.follow(Bezier<3>({{0_ft, 0_ft}, {0_ft, 3_ft}, {2_ft, 1_ft}, {2_ft, 4_ft}}));
+#define move auto [profile, t] = generator.follow
 
-  // auto [profile, t] = generator.follow(Mesh({0_m, 0_m, 0_deg}, {1_ft, 3_ft, 60_deg}));
+  // move(QuarticBezier({{0_ft, 0_ft}, {0_ft, 1_ft}, {-2_ft, 2_ft}, {2_ft, 4_ft}, {2_ft, 6_ft}}),
+  //      {.curve = true, .start = 90_deg});
+  // move(QuinticHermite(-180_deg, {-0.1_ft, -2.0_ft, -45_deg}, 1.1),
+  //      {.rotator = makeAngler(-42_deg, Limits<QAngle>(0.5_s, 60_deg / second))});
+  // move(QuinticHermite({0_ft, 0_ft, 135_deg}, {-3.6_ft, 3.7_ft, 180_deg}),
+  //      {.curve = true, .start = -45_deg});
+  // move(QuinticHermite(110_deg, {3.2_ft, 2.0_ft, 0_deg}, 1.7, 3), {
+  //                                                                  .curve = true,
+  //                                                                });
 
-  // auto [profile, t] = generator.follow(Line({0_m, 0_m}, {1_ft, 0_ft}));
+  // move(QuinticHermite({0_ft, 0_ft, -180_deg}, {-0.1_ft, -2.0_ft, -45_deg}, 1.1),
+  //      {.rotator = makeAngler(-42_deg, Limits<QAngle>(0.5_s, 60_deg / second))});
 
-  // auto [profile, t] = generator.follow(QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 4_ft, 0_deg}));
+  move(QuinticHermite(225_deg, {-2.5_ft, -0.3_ft, 90_deg}, 2, 1.5),
+       {.start = 45_deg, .rotator = makeAngler(39_deg, Limits<QAngle>(0.5_s, 60_deg / second))});
 
-  // auto [profile, t] =
-  //   generator.follow(Bezier<3>({{0_ft, 0_ft}, {0_ft, -1_ft}, {-1.3_ft, -1_ft}, {-1.7_ft,
-  //   0.5_ft}}));
-
-  // auto [profile, t] =
-  //   generator.follow(Bezier<3>({{0_ft, 0_ft}, {0_ft, -1_ft}, {-2_ft, -1_ft}, {-2.5_ft,
-  //   0.5_ft}}));
-
-  // auto [profile, t] =
-  //   generator.follow(QuinticHermite({{0_ft, 0_ft, -180_deg}, {-2.5_ft, 0.5_ft, -45_deg}}),
-  //                    {.rotator = makeRotator(15_deg, Limits<QAngle>(0.5_s, 20_deg / second))});
-
-  auto [profile, t] = generator.follow(
-    Bezier<3>({{0_ft, 0_ft}, {0_ft, -1.5_ft}, {-2_ft, -1.5_ft}, {-2.5_ft, 0.5_ft}}),
-    {.rotator = makeRotator(45_deg, Limits<QAngle>(0.5_s, 50_deg / second))});
-
-  if (argc > 1 && std::string(argv[1]) == "print") {
-    for (auto&& step : t) {
-      std::cout << step.p.x.convert(foot) << "," << step.p.y.convert(foot) << ","
-                << step.p.theta.convert(degree) << "," << step.c.convert(1 / meter) << ","
-                << step.p_vel << "," << step.k.v << "," << step.w.convert(degree / second) << ","
-                << step.left << "," << step.right << "," << step.leftBack << "," << step.rightBack
-                << std::endl;
+  if (argc > 1) {
+    if (std::string(argv[1]) == "print") {
+      for (auto&& step : t) {
+        std::cout << step.p.x.convert(foot) << "," << step.p.y.convert(foot) << ","
+                  << step.p.theta.convert(degree) << "," << step.c.convert(1 / meter) << ","
+                  << step.p_vel << "," << step.k.v << "," << step.w.convert(degree / second) << ","
+                  << step.left << "," << step.right << "," << step.leftBack << "," << step.rightBack
+                  << std::endl;
+      }
+    } else if (std::string(argv[1]) == "bench") {
+      for (size_t i = 0; i < 1000; i++) {
+        move(QuarticBezier({{0_ft, 0_ft}, {0_ft, 1_ft}, {-2_ft, 2_ft}, {2_ft, 4_ft}, {2_ft, 6_ft}}),
+             {.curve = true, .start = 90_deg});
+      }
     }
   } else {
     std::cout << std::endl;

@@ -111,11 +111,11 @@ public:
   }
 
   constexpr typename Profile<Unit>::State begin() const override {
-    return {0_s, Unit {0.0}, limits.a, start_v};
+    return {0_s, Unit {0.0}, limits.a, start_v, length, vel, Profile<Unit>::time};
   }
 
   constexpr typename Profile<Unit>::State end() const override {
-    return {Profile<Unit>::time, length, -1 * limits.a, end_v};
+    return {Profile<Unit>::time, length, -1 * limits.a, end_v, length, vel, Profile<Unit>::time};
   }
 
 protected:

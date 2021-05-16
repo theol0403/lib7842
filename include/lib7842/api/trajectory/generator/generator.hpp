@@ -35,6 +35,10 @@ public:
     double rightBack {0};
   };
 
+#ifdef THREADS_STD
   using Output = std::pair<PiecewiseTrapezoidal, std::vector<Step>>;
+#else
+  using Output = PiecewiseTrapezoidal;
+#endif
 };
 } // namespace lib7842
