@@ -35,10 +35,9 @@ void PathFollower::followPath(const std::vector<Waypoint>& path, const PursuitLi
     // the robot is on the path if the distance to the closest point is smaller than the lookahead
     bool onPath = Vector::dist(pos, *closest) <= lookahead;
 
-    // project the lookahead point onto the lookahead radius. When the than the lookahead radius,
-    // this can cause some problems with the robot curvature calculation.  The projected point will
-    // cause the robot to rotate more The projected point will cause the robot to rotate more
-    // appropriately.
+    // project the lookahead point onto the lookahead radius. When the lookahead point is further
+    // than the lookahead radius, this can cause some problems with the robot curvature calculation.
+    // The projected point will cause the robot to rotate more appropriately.
     Vector projectedLook = (MathPoint::normalize(lookPoint - pos) * lookahead.convert(meter)) + pos;
 
     // if the robot is on the path, use the normal lookahead. If not, use the projected.
