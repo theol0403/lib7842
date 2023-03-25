@@ -26,8 +26,7 @@ is available in my
 [change up competition code](https://github.com/theol0403/7842B-Change-Up).
 
 Demonstration of open-loop trajectory generator:
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/MCc2HaYdREA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+[![](trajectory.png)](https://www.youtube.com/watch?v=MCc2HaYdREA)
 
 ## Features
 
