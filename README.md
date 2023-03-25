@@ -26,7 +26,10 @@ is available in my
 [change up competition code](https://github.com/theol0403/7842B-Change-Up).
 
 Demonstration of open-loop trajectory generator:
+
 [![](trajectory.png)](https://www.youtube.com/watch?v=MCc2HaYdREA)
+
+<img src="https://cdn.discordapp.com/attachments/483837039305949184/719683853664649297/unknown.png" height="300"> <img src="https://cdn.discordapp.com/attachments/564997657693782036/838295873917288448/unknown.png" height="300">
 
 ## Features
 
