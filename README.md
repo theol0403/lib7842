@@ -49,7 +49,7 @@ Demonstration of open-loop trajectory generator:
   - Easy selectors, buttons, graphs, odom display, vision display, and more
 - V5 Vision Sensor Filtering and Processing
   ([`api/vision`](https://github.com/theol0403/lib7842/tree/develop/include/lib7842/api/vision)
-  | `Container/Vision`)
+  | `Container/Vision` | [Writeup](https://theol0403.github.io/7842B-Journal/2021-02-19/vision-alignment/))
 
 ### Odometry
 
