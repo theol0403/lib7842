@@ -29,7 +29,9 @@ Demonstration of open-loop trajectory generator:
 
 [![](trajectory.png)](https://www.youtube.com/watch?v=MCc2HaYdREA)
 
-<img src="https://cdn.discordapp.com/attachments/483837039305949184/719683853664649297/unknown.png" height="301"> <img src="https://cdn.discordapp.com/attachments/564997657693782036/838295873917288448/unknown.png" height="301">
+<img src="https://github.com/theol0403/lib7842/assets/16546293/a4d22008-00de-4b6d-9426-1191b16c893c" height="300">
+<img src="https://github.com/theol0403/lib7842/assets/16546293/cf62ce92-9dd8-4e76-ac0f-50de7854e5a3" height="300">
+
 
 ## Features
 
