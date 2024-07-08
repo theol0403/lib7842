@@ -35,6 +35,24 @@ Demonstration of open-loop trajectory generator:
 
 ## Features
 
+### Trajectory Generation
+
+- [Introduction](https://theol0403.github.io/7842B-Journal/2020-06-01/introduction/)
+  |
+  [Journal](https://theol0403.github.io/7842B-Journal/2020-06-22/trajectory-journal/)
+  | [Python Implementation](https://github.com/theol0403/python-profile)
+- 1D Trapezoidal Motion Profile, parameterized for distance, supporting
+  piecewise velocity waypoints
+  ([`api/trajectory/profile`](https://github.com/theol0403/lib7842/tree/develop/include/lib7842/api/trajectory/profile))
+- Skid-steer open-loop trajectory generation
+  ([`trajectory/skidGenerator`](https://github.com/theol0403/lib7842/blob/develop/include/lib7842/api/trajectory/generator/skidGenerator.hpp)),
+  with high-speed computation and oversaturation protection.
+- X-drive open-loop trajectory generation
+  ([`trajectory/xGenerator`](https://github.com/theol0403/lib7842/blob/develop/include/lib7842/api/trajectory/generator/xGenerator.hpp)),
+  with arbitrary heading profiling and waypoints
+  - supports following the trajectory like a skid-steer (at an arbitrary start
+    heading), or rotating while driving
+
 ### Convenience
 
 - Async actions for chassis controllers
@@ -83,24 +101,6 @@ Demonstration of open-loop trajectory generator:
     ([`PathFollower`](https://github.com/theol0403/lib7842/blob/develop/include/lib7842/api/purePursuit/pathFollower.hpp))
   - X-drive pure pursuit controller with custom turning-while-strafing behaviour
     ([`PathFollowerX`](https://github.com/theol0403/lib7842/blob/develop/include/lib7842/api/purePursuit/pathFollowerX.hpp))
-
-### Trajectory Generation
-
-- [Introduction](https://theol0403.github.io/7842B-Journal/2020-06-01/introduction/)
-  |
-  [Journal](https://theol0403.github.io/7842B-Journal/2020-06-22/trajectory-journal/)
-  | [Python Implementation](https://github.com/theol0403/python-profile)
-- 1D Trapezoidal Motion Profile, parameterized for distance, supporting
-  piecewise velocity waypoints
-  ([`api/trajectory/profile`](https://github.com/theol0403/lib7842/tree/develop/include/lib7842/api/trajectory/profile))
-- Skid-steer open-loop trajectory generation
-  ([`trajectory/skidGenerator`](https://github.com/theol0403/lib7842/blob/develop/include/lib7842/api/trajectory/generator/skidGenerator.hpp)),
-  with high-speed computation and oversaturation protection.
-- X-drive open-loop trajectory generation
-  ([`trajectory/xGenerator`](https://github.com/theol0403/lib7842/blob/develop/include/lib7842/api/trajectory/generator/xGenerator.hpp)),
-  with arbitrary heading profiling and waypoints
-  - supports following the trajectory like a skid-steer (at an arbitrary start
-    heading), or rotating while driving
 
 ## Architecture
 
